@@ -1,6 +1,6 @@
 dependencies:
   chalk: 3.0.0
-  discord.js: github.com/discordjs/discord.js/0e44ecd420ba94b490c2cba1f7a30d1fa5878183_8a7e6dbe9a26f4d3faf2fe462b6965bd
+  discord.js: 12.1.1_8a7e6dbe9a26f4d3faf2fe462b6965bd
   dotenv: 8.2.0
   winston: 3.2.1
 devDependencies:
@@ -491,6 +491,46 @@ packages:
       node: '>=0.3.1'
     resolution:
       integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
+  /discord.js/12.1.1_8a7e6dbe9a26f4d3faf2fe462b6965bd:
+    dependencies:
+      '@discordjs/collection': 0.1.5
+      abort-controller: 3.0.0
+      bufferutil: 4.0.1
+      erlpack: github.com/discordapp/erlpack/5d0064f9e106841e1eead711a6451f99b0d289fd
+      form-data: 3.0.0
+      node-fetch: 2.6.0
+      prism-media: 1.2.1_@discordjs+opus@0.1.0
+      setimmediate: 1.0.5
+      tweetnacl: 1.0.3
+      utf-8-validate: 5.0.2
+      ws: 7.2.3_5290a7aab7631971258e1bd11475725e
+      zlib-sync: 0.1.6
+    dev: false
+    engines:
+      node: '>=12.0.0'
+    peerDependencies:
+      '@discordjs/opus': '*'
+      bufferutil: ^4.0.1
+      erlpack: discordapp/erlpack
+      libsodium-wrappers: ^0.7.6
+      sodium: ^3.0.2
+      utf-8-validate: ^5.0.2
+      zlib-sync: ^0.1.6
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      erlpack:
+        optional: true
+      libsodium-wrappers:
+        optional: true
+      sodium:
+        optional: true
+      utf-8-validate:
+        optional: true
+      zlib-sync:
+        optional: true
+    resolution:
+      integrity: sha512-Y6+QfAUZkb9cy27cfNqUigAgYVSKTw9jPF3mN4UDMih3Em3VQ0WjGBdX1UbE8CwFkLOu5XWQSNPdsoStTR8c2Q==
   /doctrine/3.0.0:
     dependencies:
       esutils: 2.0.3
@@ -1789,51 +1829,9 @@ packages:
     name: erlpack
     requiresBuild: true
     resolution:
+      registry: 'https://registry.npmjs.org/'
       tarball: 'https://codeload.github.com/discordapp/erlpack/tar.gz/5d0064f9e106841e1eead711a6451f99b0d289fd'
     version: 0.1.3
-  github.com/discordjs/discord.js/0e44ecd420ba94b490c2cba1f7a30d1fa5878183_8a7e6dbe9a26f4d3faf2fe462b6965bd:
-    dependencies:
-      '@discordjs/collection': 0.1.5
-      abort-controller: 3.0.0
-      bufferutil: 4.0.1
-      erlpack: github.com/discordapp/erlpack/5d0064f9e106841e1eead711a6451f99b0d289fd
-      form-data: 3.0.0
-      node-fetch: 2.6.0
-      prism-media: 1.2.1_@discordjs+opus@0.1.0
-      setimmediate: 1.0.5
-      tweetnacl: 1.0.3
-      utf-8-validate: 5.0.2
-      ws: 7.2.3_5290a7aab7631971258e1bd11475725e
-      zlib-sync: 0.1.6
-    dev: false
-    engines:
-      node: '>=12.0.0'
-    id: github.com/discordjs/discord.js/0e44ecd420ba94b490c2cba1f7a30d1fa5878183
-    name: discord.js
-    peerDependencies:
-      '@discordjs/opus': '*'
-      bufferutil: ^4.0.1
-      erlpack: discordapp/erlpack
-      libsodium-wrappers: ^0.7.6
-      sodium: ^3.0.2
-      utf-8-validate: ^5.0.2
-      zlib-sync: ^0.1.6
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      erlpack:
-        optional: true
-      libsodium-wrappers:
-        optional: true
-      sodium:
-        optional: true
-      utf-8-validate:
-        optional: true
-      zlib-sync:
-        optional: true
-    resolution:
-      tarball: 'https://codeload.github.com/discordjs/discord.js/tar.gz/0e44ecd420ba94b490c2cba1f7a30d1fa5878183'
-    version: 12.1.1
 specifiers:
   '@discordjs/opus': ^0.1.0
   '@types/node': ^12.12.32
@@ -1842,7 +1840,7 @@ specifiers:
   '@typescript-eslint/parser': ^2.26.0
   bufferutil: ^4.0.1
   chalk: ^3.0.0
-  discord.js: 'github:discordjs/discord.js'
+  discord.js: ^12.1.1
   dotenv: ^8.2.0
   erlpack: 'github:discordapp/erlpack'
   eslint: ^6.8.0
