@@ -11,18 +11,15 @@ export default class BaseCommand implements CommandComponent {
             cooldown: 3,
             disable: false,
             path: this.path,
-        }
+        };
         this.help = {
             name: "",
             description: "",
             usage: ""
-        }
+        };
+        Object.assign(this.conf, conf);
+        Object.assign(this.help, help);
     }
-    public run(message: Message): any {};
-}
-
-interface conf {
-    name: string;
-    description: string;
-    
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
+    public run(message: Message): any {}
 }
