@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+      "skipLibCheck": true,
+      "module": "commonjs",
+      "target": "esnext",
+      "strict": true,
+      "sourceMap": true,
+      "noImplicitAny": true,
+      "alwaysStrict": true,
+      "esModuleInterop": true,
+      "resolveJsonModule": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "typeRoots": [
+          "node_modules/@types",
+          "types"
+      ],
+      "outDir": "./dist"
+  },
+  "include": ["./src/**/*.ts", "./src/**/*.d.ts", "./src/**/*.js", "./src/**/*.json", "*.ts", "*.js"],
+  "exclude": ["node_modules/**", "tsconfig.json", "tslint.json", "README.md", ".env", "dist/**"]
+}

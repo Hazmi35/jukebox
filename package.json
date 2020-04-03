@@ -1,0 +1,51 @@
+{
+  "name": "rendang",
+  "version": "2.1.0",
+  "description": " A (maybe) useful bot for your Discord server!",
+  "main": "src/main.ts",
+  "scripts": {
+    "lint": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js)\"",
+    "lint:fix": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js)\" --fix",
+    "test": "yarn run lint",
+    "build": "yarn run test && rimraf dist && tsc",
+    "start": "node dist/main",
+    "start:dev": "ts-node src/main"
+  },
+  "engines": {
+    "node": ">=12.x"
+  },
+  "author": "Hazmi35 (contact@hzmi.xyz) (https://github.com/Hazmi35)",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Hazmi35/rendang/issues"
+  },
+  "homepage": "https://github.com/Hazmi35/rendang#readme",
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "discord.js": "github:discordjs/discord.js",
+    "dotenv": "^8.2.0",
+    "kurasuta": "^2.0.0",
+    "superagent": "^5.2.2",
+    "winston": "^3.2.1"
+  },
+  "optionalDependencies": {
+    "@discordjs/opus": "^0.1.0",
+    "bufferutil": "^4.0.1",
+    "erlpack": "github:discordapp/erlpack",
+    "utf-8-validate": "^5.0.2",
+    "zlib-sync": "^0.1.6"
+  },
+  "devDependencies": {
+    "@types/mongoose": "^5.7.8",
+    "@types/node": "^12.12.32",
+    "@types/superagent": "^4.1.7",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/eslint-plugin-tslint": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
+    "eslint": "^6.8.0",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.8.1",
+    "tslint": "^6.1.1",
+    "typescript": "^3.8.3"
+  }
+}
