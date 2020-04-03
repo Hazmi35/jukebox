@@ -1,14 +1,10 @@
-import { config } from "dotenv"; config();
-import Client from "./structures/Client";
+import { ShardingManager } from "discord.js";
+import { LogWrapper } from "./utils/LogWrapper";
+import { totalShards, name } from "./config.json";
 
-const client = new Client({ disableMentions: "everyone" })
-    .setToken(process.env.DISCORD_TOKEN!);
+const log = new LogWrapper(name + "-sharding").logger;
 
-client.on("ready", () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore-next-line (I don't know why ts-node when using pnpm error on this line but tsc does not)
-    client.log.info(`I'm ready to serve ${client.users.cache.size} users on ${client.guilds.cache.size} guilds!`);
-    client.user!.setPresence({ activity: { name: "Hello There!", type: "PLAYING" }, afk: false });
-});
-
-client.build();
+new ShardingManager("./bot", { totalShards: totalShards as number | "auto", mode: "worker", respawn: true })
+    .on("shardCreate", (shard) => {
+        log.info(`[shardCreate] Spawned shard: ${shard.id}`);
+    }).spawn(totalShards as number | "auto");

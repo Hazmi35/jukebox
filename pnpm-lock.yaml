@@ -1,5 +1,5 @@
 dependencies:
-  chalk: 3.0.0
+  chalk: 4.0.0
   discord.js: 12.1.1_8a7e6dbe9a26f4d3faf2fe462b6965bd
   dotenv: 8.2.0
   winston: 3.2.1
@@ -324,10 +324,20 @@ packages:
     dependencies:
       ansi-styles: 4.2.1
       supports-color: 7.1.0
+    dev: true
     engines:
       node: '>=8'
     resolution:
       integrity: sha512-4D3B6Wf41KOYRFdszmDqMCGq5VV/uMAB273JILmO+3jAlh8X4qDtdtgCR3fxtbLEMzSx22QdhnDcJvu2u1fVwg==
+  /chalk/4.0.0:
+    dependencies:
+      ansi-styles: 4.2.1
+      supports-color: 7.1.0
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-N9oWFcegS0sFr9oh1oz2d7Npos6vNoWW9HvtCg5N1KRFpUhaAhvTv5Y58g880fZaEYSNm3qDz8SU1UrGvp+n7A==
   /chardet/0.7.0:
     dev: true
     resolution:
@@ -1839,7 +1849,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin-tslint': ^2.26.0
   '@typescript-eslint/parser': ^2.26.0
   bufferutil: ^4.0.1
-  chalk: ^3.0.0
+  chalk: '4'
   discord.js: ^12.1.1
   dotenv: ^8.2.0
   erlpack: 'github:discordapp/erlpack'
