@@ -1,6 +1,12 @@
 import { config } from "dotenv"; config();
 import Client from "./structures/Client";
 
-new Client({ disableMentions: "everyone" })
-    .setToken(process.env.DISCORD_TOKEN!)
-    .build();
+const client = new Client({ disableMentions: "everyone" })
+    .setToken(process.env.DISCORD_TOKEN!);
+
+client.on("ready", () => {
+    client.log.info(`I'm ready to serve ${client.users.cache.size} on ${client.guilds.cache.size}`);
+    client.user!.setPresence({ activity: { name: "Hello There!", type: "PLAYING" }, afk: false });
+});
+
+client.build();
