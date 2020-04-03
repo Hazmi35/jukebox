@@ -4,7 +4,7 @@ LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
 ENV DISCORD_TOKEN= \
-    MONGODB_URI=
+    YT_API_KEY=
 WORKDIR /usr/Jukebox
 
 COPY . .
