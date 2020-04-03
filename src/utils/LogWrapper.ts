@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { Logger, transports, format, createLogger } from "winston";
 import { EventEmitter } from "events";
 import chalk from "chalk";
@@ -28,6 +29,7 @@ export class LogWrapper extends EventEmitter {
             ),
             defaultMeta: { service: serviceName },
             transports: [
+                // @ts-ignore-next-line
                 new transports.File({ filename: "logs/error.log", level: "error" }),
                 new transports.File({ filename: "logs/logging.log" })
             ]
@@ -39,8 +41,9 @@ export class LogWrapper extends EventEmitter {
             border2: chalk.blue("]")
         };
         if (console) this.logger.add(new transports.Console({
+            // @ts-ignore-next-line
             format: format.combine(
-                format.printf(function (info) {
+                format.printf(function (info: any) {
                     const { level, message, stack } = info;
                     const prefix = `${mconst.border1}${date}${mconst.border2}-${mconst.border1}${level}${mconst.border2}: `;
                     if (level === "warn" || level === "error" || level === "crit") return prefix + stack;

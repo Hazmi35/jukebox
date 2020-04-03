@@ -2,13 +2,9 @@ dependencies:
   chalk: 3.0.0
   discord.js: github.com/discordjs/discord.js/0e44ecd420ba94b490c2cba1f7a30d1fa5878183_8a7e6dbe9a26f4d3faf2fe462b6965bd
   dotenv: 8.2.0
-  kurasuta: 2.0.0_8a7e6dbe9a26f4d3faf2fe462b6965bd
-  superagent: 5.2.2
   winston: 3.2.1
 devDependencies:
-  '@types/mongoose': 5.7.8
   '@types/node': 12.12.34
-  '@types/superagent': 4.1.7
   '@typescript-eslint/eslint-plugin': 2.26.0_864948cbab3981ef265e3a522459d240
   '@typescript-eslint/eslint-plugin-tslint': 2.26.0_5ff90defd2c9d3fa4a2d5a858e7e717b
   '@typescript-eslint/parser': 2.26.0_eslint@6.8.0+typescript@3.8.3
@@ -55,19 +51,9 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-VWsrsgqSktxOEHx9SFcnOWJhYQOsyzaW3JVN73LDSzKrycEjtRIS+axlm4qeMGx60u6RH1SY15b3pl5G4+Y+gA==
-  /@types/bson/4.0.2:
-    dependencies:
-      '@types/node': 12.12.34
-    dev: true
-    resolution:
-      integrity: sha512-+uWmsejEHfmSjyyM/LkrP0orfE2m5Mx9Xel4tXNeqi1ldK5XMQcDsFkBmLDtuyKUbxj2jGDo0H240fbCRJZo7Q==
   /@types/color-name/1.1.1:
     resolution:
       integrity: sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
-  /@types/cookiejar/2.1.1:
-    dev: true
-    resolution:
-      integrity: sha512-aRnpPa7ysx3aNW60hTiCtLHlQaIFsXFCgQlpakNgDNVFzbtusSY8PwjAQgRWfSk0ekNoBjO51eQRB6upA9uuyw==
   /@types/eslint-visitor-keys/1.0.0:
     dev: true
     resolution:
@@ -76,31 +62,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-8+KAKzEvSUdeo+kmqnKrqgeE+LcA0tjYWFY7RPProVYwnqDjukzO+3b6dLD56rYX5TdWejnEOLJYOIeh4CXKuA==
-  /@types/mongodb/3.5.4:
-    dependencies:
-      '@types/bson': 4.0.2
-      '@types/node': 12.12.34
-    dev: true
-    resolution:
-      integrity: sha512-1Q781+rC+hYB34Ped9dRLOWsw1yTNwqphqkRyJR/yFuoWoZ3664s6RxilVSkqEm3lwFmpTYCXtGudxSpHHGDIQ==
-  /@types/mongoose/5.7.8:
-    dependencies:
-      '@types/mongodb': 3.5.4
-      '@types/node': 12.12.34
-    dev: true
-    resolution:
-      integrity: sha512-nLyVONnGou1DfNwyP70FUVG+teusG8Whlwbke5BZrZ03iG6Iyu5gowzfuKpN7pu8BW/SOcF+Gcpny08FJdGuWw==
   /@types/node/12.12.34:
     dev: true
     resolution:
       integrity: sha512-BneGN0J9ke24lBRn44hVHNeDlrXRYF+VRp0HbSUNnEZahXGAysHZIqnf/hER6aabdBgzM4YOV4jrR8gj4Zfi0g==
-  /@types/superagent/4.1.7:
-    dependencies:
-      '@types/cookiejar': 2.1.1
-      '@types/node': 12.12.34
-    dev: true
-    resolution:
-      integrity: sha512-JSwNPgRYjIC4pIeOqLwWwfGj6iP1n5NE6kNBEbGx2V8H78xCPwx7QpNp9plaI30+W3cFEzJO7BIIsXE+dbtaGg==
   /@typescript-eslint/eslint-plugin-tslint/2.26.0_5ff90defd2c9d3fa4a2d5a858e7e717b:
     dependencies:
       '@typescript-eslint/experimental-utils': 2.26.0_eslint@6.8.0+typescript@3.8.3
@@ -310,10 +275,6 @@ packages:
   /balanced-match/1.0.0:
     resolution:
       integrity: sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
-  /binarytf/2.0.0:
-    dev: false
-    resolution:
-      integrity: sha512-CS0MvijAFAHBBw4LgIHBP7wzdW3KWEB0KeMjblK0rHOyyhnkoMu3puW7uhJXlnS5WDn5M2XQFaQBtw00FwRfcA==
   /bindings/1.5.0:
     dependencies:
       file-uri-to-path: 1.0.0
@@ -454,10 +415,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
-  /component-emitter/1.3.0:
-    dev: false
-    resolution:
-      integrity: sha512-Rd3se6QB+sO1TwqZjscQrurpEPIfO0/yYnSin6Q/rD3mOutHvUrCAhJub3r90uNb+SESBuE0QYoB90YdfatsRg==
   /concat-map/0.0.1:
     resolution:
       integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
@@ -465,10 +422,6 @@ packages:
     dev: false
     resolution:
       integrity: sha1-PXz0Rk22RG6mRL9LOVB/mFEAjo4=
-  /cookiejar/2.1.2:
-    dev: false
-    resolution:
-      integrity: sha512-Mw+adcfzPxcPeI+0WlvRrr/3lGVO0bD75SxX6811cxSh1Wbxx7xZBGK1eVtDf6si8rg2lhnUjsVLMFMfbRIuwA==
   /core-util-is/1.0.2:
     dev: false
     resolution:
@@ -494,6 +447,7 @@ packages:
   /debug/4.1.1:
     dependencies:
       ms: 2.1.2
+    dev: true
     resolution:
       integrity: sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
   /deep-extend/0.6.0:
@@ -537,46 +491,6 @@ packages:
       node: '>=0.3.1'
     resolution:
       integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
-  /discord.js/12.1.1_8a7e6dbe9a26f4d3faf2fe462b6965bd:
-    dependencies:
-      '@discordjs/collection': 0.1.5
-      abort-controller: 3.0.0
-      bufferutil: 4.0.1
-      erlpack: github.com/discordapp/erlpack/5d0064f9e106841e1eead711a6451f99b0d289fd
-      form-data: 3.0.0
-      node-fetch: 2.6.0
-      prism-media: 1.2.1_@discordjs+opus@0.1.0
-      setimmediate: 1.0.5
-      tweetnacl: 1.0.3
-      utf-8-validate: 5.0.2
-      ws: 7.2.3_5290a7aab7631971258e1bd11475725e
-      zlib-sync: 0.1.6
-    dev: false
-    engines:
-      node: '>=12.0.0'
-    peerDependencies:
-      '@discordjs/opus': '*'
-      bufferutil: ^4.0.1
-      erlpack: discordapp/erlpack
-      libsodium-wrappers: ^0.7.6
-      sodium: ^3.0.2
-      utf-8-validate: ^5.0.2
-      zlib-sync: ^0.1.6
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      erlpack:
-        optional: true
-      libsodium-wrappers:
-        optional: true
-      sodium:
-        optional: true
-      utf-8-validate:
-        optional: true
-      zlib-sync:
-        optional: true
-    resolution:
-      integrity: sha512-Y6+QfAUZkb9cy27cfNqUigAgYVSKTw9jPF3mN4UDMih3Em3VQ0WjGBdX1UbE8CwFkLOu5XWQSNPdsoStTR8c2Q==
   /doctrine/3.0.0:
     dependencies:
       esutils: 2.0.3
@@ -822,10 +736,6 @@ packages:
       node: '>= 6'
     resolution:
       integrity: sha512-CKMFDglpbMi6PyN+brwB9Q/GOw0eAnsrEZDgcsH5Krhz5Od/haKHAX0NmQfha2zPPz0JpWzA7GJHGSnvCRLWsg==
-  /formidable/1.2.2:
-    dev: false
-    resolution:
-      integrity: sha512-V8gLm+41I/8kguQ4/o1D3RIHRmhYFG4pnNyonvua+40rqcEmT4+V71yaZ3B457xbbgCsCfjSPi65u/W6vK1U5Q==
   /fs-minipass/1.2.7:
     dependencies:
       minipass: 2.9.0
@@ -1042,20 +952,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-J9nVUucG1p/skKul6DU3PUZrhs0LPulNaeUOox0IyXDi8S4CztTHs1gQphhuZmzXG7VOQSf6NJfKuzteQLv9gQ==
-  /kurasuta/2.0.0_8a7e6dbe9a26f4d3faf2fe462b6965bd:
-    dependencies:
-      discord.js: 12.1.1_8a7e6dbe9a26f4d3faf2fe462b6965bd
-      node-fetch: 2.6.0
-      veza: 1.1.0
-    dev: false
-    peerDependencies:
-      '@discordjs/opus': '*'
-      bufferutil: '*'
-      erlpack: '*'
-      utf-8-validate: '*'
-      zlib-sync: '*'
-    resolution:
-      integrity: sha512-EohkqDKs+Nkm5vpJCzdU09N2ONPCTjdSxr2eFra3jTi6wtIKBHSLdUyhnP/S3LprN9d9Lo+1qpg5tRgrGwdMTw==
   /levn/0.3.0:
     dependencies:
       prelude-ls: 1.1.2
@@ -1082,12 +978,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==
-  /methods/1.1.2:
-    dev: false
-    engines:
-      node: '>= 0.6'
-    resolution:
-      integrity: sha1-VSmk1nZUE07cxSZmVoNbD4Ua/O4=
   /mime-db/1.43.0:
     dev: false
     engines:
@@ -1102,13 +992,6 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha512-01paPWYgLrkqAyrlDorC1uDwl2p3qZT7yl806vW7DvDoxwXi46jsjFbg+WdwotBIk6/MbEhO/dh5aZ5sNj/dWQ==
-  /mime/2.4.4:
-    dev: false
-    engines:
-      node: '>=4.0.0'
-    hasBin: true
-    resolution:
-      integrity: sha512-LRxmNwziLPT828z+4YkNzloCFC2YM4wrB99k+AV5ZbEyfGNWfG8SO1FUXLmLDBSo89NrJZ4DIWeLjy1CHGhMGA==
   /mimic-fn/2.1.0:
     dev: true
     engines:
@@ -1157,7 +1040,7 @@ packages:
     dev: true
     resolution:
       integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
-  /needle/2.3.3:
+  /needle/2.4.1:
     dependencies:
       debug: 3.2.6
       iconv-lite: 0.4.24
@@ -1167,7 +1050,7 @@ packages:
       node: '>= 4.4.x'
     hasBin: true
     resolution:
-      integrity: sha512-EkY0GeSq87rWp1hoq/sH/wnTWgFVhYlnIkbJ0YJFfRgEFlz2RraCjBpFQ+vrEgEdp0ThfyHADmkChEhcb7PKyw==
+      integrity: sha512-x/gi6ijr4B7fwl6WYL9FwlCvRQKGlUNvnceho8wxkwXqN8jvVmmmATTmZPRRG7b/yC1eode26C2HO9jl78Du9g==
   /nice-try/1.0.5:
     dev: true
     resolution:
@@ -1191,7 +1074,7 @@ packages:
     dependencies:
       detect-libc: 1.0.3
       mkdirp: 0.5.4
-      needle: 2.3.3
+      needle: 2.4.1
       nopt: 4.0.3
       npm-packlist: 1.4.8
       npmlog: 4.1.2
@@ -1363,12 +1246,6 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
-  /qs/6.9.3:
-    dev: false
-    engines:
-      node: '>=0.6'
-    resolution:
-      integrity: sha512-EbZYNarm6138UKKq46tdx08Yo/q9ZhFoAXAI1meAFd2GtbRDhbZY2WQSICskT0c5q99aFzLG1D4nvTk9tqfXIw==
   /rc/1.2.8:
     dependencies:
       deep-extend: 0.6.0
@@ -1491,6 +1368,7 @@ packages:
     resolution:
       integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==
   /semver/6.3.0:
+    dev: true
     hasBin: true
     resolution:
       integrity: sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
@@ -1634,24 +1512,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-VTyMAUfdm047mwKl+u79WIdrZxtFtn+nBxHeb844XBQ9uMNTuTHdx2hc5RiAJYqwTj3wc/xe5HLSdJSkJ+WfZw==
-  /superagent/5.2.2:
-    dependencies:
-      component-emitter: 1.3.0
-      cookiejar: 2.1.2
-      debug: 4.1.1
-      fast-safe-stringify: 2.0.7
-      form-data: 3.0.0
-      formidable: 1.2.2
-      methods: 1.1.2
-      mime: 2.4.4
-      qs: 6.9.3
-      readable-stream: 3.6.0
-      semver: 6.3.0
-    dev: false
-    engines:
-      node: '>= 7.0.0'
-    resolution:
-      integrity: sha512-pMWBUnIllK4ZTw7p/UaobiQPwAO5w/1NRRTDpV0FTVNmECztsxKspj3ZWEordVEaqpZtmOQJJna4yTLyC/q7PQ==
   /supports-color/5.5.0:
     dependencies:
       has-flag: 3.0.0
@@ -1832,12 +1692,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-usZBT3PW+LOjM25wbqIlZwPeJV+3OSz3M1k1Ws8snlW39dZyYL9lOGC5FgPVHfk0jKmjiDV8Z0mIbVQPiwFs7g==
-  /veza/1.1.0:
-    dependencies:
-      binarytf: 2.0.0
-    dev: false
-    resolution:
-      integrity: sha512-JxDVZZXwFJ+FxsX+kPdsjRK9XZdwayEYzPsPLxpZjzzgncWphjvMlzn8ioVAgeonZ/Aa7vEZOb4Hp13ergwybA==
   /which/1.3.1:
     dependencies:
       isexe: 2.0.0
@@ -1982,9 +1836,7 @@ packages:
     version: 12.1.1
 specifiers:
   '@discordjs/opus': ^0.1.0
-  '@types/mongoose': ^5.7.8
   '@types/node': ^12.12.32
-  '@types/superagent': ^4.1.7
   '@typescript-eslint/eslint-plugin': ^2.26.0
   '@typescript-eslint/eslint-plugin-tslint': ^2.26.0
   '@typescript-eslint/parser': ^2.26.0
@@ -1994,9 +1846,7 @@ specifiers:
   dotenv: ^8.2.0
   erlpack: 'github:discordapp/erlpack'
   eslint: ^6.8.0
-  kurasuta: ^2.0.0
   rimraf: ^3.0.2
-  superagent: ^5.2.2
   ts-node: ^8.8.1
   tslint: ^6.1.1
   typescript: ^3.8.3
