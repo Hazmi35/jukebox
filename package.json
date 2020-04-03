@@ -1,7 +1,7 @@
 {
-  "name": "rendang",
-  "version": "2.1.0",
-  "description": " A (maybe) useful bot for your Discord server!",
+  "name": "jukebox",
+  "version": "1.2.0",
+  "description": " Just a simple Discord music bot.",
   "main": "src/main.ts",
   "scripts": {
     "lint": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js)\"",
@@ -9,7 +9,7 @@
     "test": "pnpm run lint",
     "build": "pnpm run test && rimraf dist && tsc",
     "start": "node dist/main",
-    "start:dev": "ts-node src/main"
+    "start:dev": "echo [INFO] Sharding disabled when using ts-node && ts-node src/bot"
   },
   "engines": {
     "node": ">=12.x"
@@ -17,9 +17,9 @@
   "author": "Hazmi35 (contact@hzmi.xyz) (https://github.com/Hazmi35)",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/Hazmi35/rendang/issues"
+    "url": "https://github.com/Hazmi35/jukebox/issues"
   },
-  "homepage": "https://github.com/Hazmi35/rendang#readme",
+  "homepage": "https://github.com/Hazmi35/jukebox#readme",
   "dependencies": {
     "chalk": "^4.0.0",
     "discord.js": "^12.1.1",
