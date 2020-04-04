@@ -2,18 +2,21 @@
     "name": "Jukebox",
     "description": "Just a simple Discord music bot.",
     "keywords": [
-      "productivity",
-      "HTML5",
-      "scalpel"
+        "productivity",
+        "HTML5",
+        "scalpel"
     ],
     "repository": "https://github.com/Hazmi35/jukebox",
     "scripts": {
-      "postdeploy": "npm start"
+        "postdeploy": "npm start"
     },
     "image": "heroku/nodejs",
     "buildpacks": [
-      {
-        "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
-      }
+        {
+            "url": "https://github.com/heroku/heroku-buildpack-nodejs"
+        },
+        {
+            "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+        }
     ]
-  }
+}
