@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 
 export interface CommandComponent {
-    run(message: Message): any;
+    execute(message: Message, args: string[]): any;
     conf: {
         aliases?: string[];
         cooldown?: number;

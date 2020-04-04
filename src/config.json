@@ -1,6 +1,7 @@
 {
     "name": "Jukebox",
-    "inviteLink": "https://discordapp.com/oauth2/authorize?client_id=695664858405797888&scope=bot&permissions=3525696",
+    "inviteLink": "https://discordapp.com/oauth2/authorize?client_id=695664858405797888&scope=bot&permissions=53857345",
     "prefix": "jukebox ",
+    "devs": ["290159952784392202"],
     "totalShards": "auto"
 }

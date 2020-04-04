@@ -10,8 +10,7 @@ new ShardingManager(resolve(__dirname, "bot.js"), { totalShards: totalShards as 
     .on("shardCreate", (shard) => {
         log.info(`Shard #${shard.id}: Spawned.`);
         shard.on("disconnect", () => {
-            log.info(`Shard #${shard.id}: Disconnected`);
-            // log.warn({ message: `Shard #${shard.id}: Disconnected` }); // TODO: Fix this.
+            log.warn("SHARD_DISCONNECTED: ", { stack: `Shard #${shard.id}: Disconnected` }); // TODO: Fix this.
         }).on("reconnecting", () => {
             log.info(`Shard #${shard.id}: Reconnected.`);
         });

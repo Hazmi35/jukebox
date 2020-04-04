@@ -1,4 +1,4 @@
-import BotClient from "./Client";
+import BotClient from "./Jukebox";
 import { CommandComponent } from "../typings";
 import { Message } from "discord.js";
 
@@ -21,5 +21,5 @@ export default class BaseCommand implements CommandComponent {
         Object.assign(this.help, help);
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
-    public run(message: Message): any {}
+    public execute(message: Message, args: string[]): any {}
 }
