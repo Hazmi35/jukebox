@@ -10,7 +10,8 @@
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",
-    "buildpacks": [{
+    "buildpacks": [
+        {
             "url": "heroku/nodejs"
         },
         {
