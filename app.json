@@ -10,9 +10,6 @@
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",
-    "scripts": {
-        "postdeploy": "npm start"
-    },
     "image": "heroku/nodejs",
     "buildpacks": [{
             "url": "https://github.com/heroku/heroku-buildpack-nodejs"
