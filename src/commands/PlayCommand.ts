@@ -40,7 +40,6 @@ export default class PlayCommand extends BaseCommand {
                 const connection = await voiceChannel.join();
                 queueConstruct.connection = connection;
                 this.play(message, queueConstruct.songs[0]);
-                connection.voice.setSelfDeaf(true);
                 if (!permissions!.has("SPEAK")) {
                     voiceChannel.leave();
                     return message.channel.send("I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions");
@@ -66,6 +65,7 @@ export default class PlayCommand extends BaseCommand {
 
         if (!message.guild!.getQueue()) return message.member!.voice.channel!.leave();
 
+        message.guild!.getQueue()!.connection!.voice.setSelfDeaf(true);
         const dispatcher = message.guild!.getQueue()!.connection!.play(ytdl(song.url, ))
             .on("finish", () => {
                 this.client.log.info("Song ended!");
