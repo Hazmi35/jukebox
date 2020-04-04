@@ -10,6 +10,9 @@
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",
+    "scripts": {
+        "postdeploy": "cat worker: npm start > Procfile"
+    },
     "buildpacks": [
         {
             "url": "heroku/nodejs"
