@@ -64,6 +64,8 @@ export default class PlayCommand extends BaseCommand {
             this.client.queue.delete(message.guild!.id);
         }
 
+        if (!message.guild!.getQueue()) return message.member!.voice.channel!.leave();
+
         const dispatcher = message.guild!.getQueue()!.connection!.play(ytdl(song.url, ))
             .on("finish", () => {
                 this.client.log.info("Song ended!");
