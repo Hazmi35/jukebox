@@ -8,7 +8,7 @@
     ],
     "repository": "https://github.com/Hazmi35/jukebox",
     "scripts": {
-        "postdeploy": "npm start"
+        "postdeploy": "npm run build"
     },
     "image": "heroku/nodejs",
     "buildpacks": [
