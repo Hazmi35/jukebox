@@ -6,13 +6,20 @@
         "HTML5",
         "scalpel"
     ],
+    "env": {
+        "DISCORD_TOKEN": {
+            "description": "Your Discord bot's token"
+        },
+        "YT_API_KEY": {
+            "description": "Youtube API Key for querying the Youtube API for video data."
+        }
+    },
     "repository": "https://github.com/Hazmi35/jukebox",
     "scripts": {
         "postdeploy": "npm run build"
     },
     "image": "heroku/nodejs",
-    "buildpacks": [
-        {
+    "buildpacks": [{
             "url": "https://github.com/heroku/heroku-buildpack-nodejs"
         },
         {
