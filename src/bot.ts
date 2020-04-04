@@ -19,8 +19,9 @@ client.on("error", (error) => {
     client.log.error("CLIENT_ERROR: ", error);
 });
 
-client.on("message", (message: Message): Message => {
+client.on("message", (message: Message): any => {
     if (message.author.bot) return message;
+    if (message.channel.type === "dm") return message;
     if (!message.content.startsWith(client.config.prefix)) return message;
     client.commandsHandler.handle(message);
     return message;

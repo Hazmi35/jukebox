@@ -21,8 +21,8 @@ export default class CommandsHandler {
                 this.commands.set(command.help.name, command);
                 if (command.conf.disable) disabledCount++;
             });
-            this.client.log.info(`[Shard #${this.client.shard!.ids}] Found ${files.length} commands!`);
-            this.client.log.info(`[Shard #${this.client.shard!.ids}] ${disabledCount} out of ${files.length} commands is disabled.`);
+            this.client.log.info(`[Shard #${this.client.shard!.ids}] Found ${files.length / 2} commands!`);
+            this.client.log.info(`[Shard #${this.client.shard!.ids}] ${disabledCount} out of ${files.length / 2} commands is disabled.`);
         });
         return undefined;
     }
@@ -56,7 +56,7 @@ export default class CommandsHandler {
         } catch (e) {
             this.client.log.error("COMMAND_HANDLER_ERR: ", e);
         } finally {
-            this.client.log.info(`${message.author.tag} is using ${command.help.name} command on ${message.guild ? message.guild.name : "DM Channel"}`);
+            this.client.log.info(`[Shard #${this.client.shard!.ids}] ${message.author.tag} is using ${command.help.name} command on ${message.guild ? message.guild.name : "DM Channel"}`);
         }
     }
 }
