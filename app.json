@@ -11,7 +11,7 @@
     },
     "repository": "https://github.com/Hazmi35/jukebox",
     "scripts": {
-        "postdeploy": "cat worker: npm start > Procfile"
+        "postdeploy": "echo worker: npm start > Procfile"
     },
     "buildpacks": [
         {
