@@ -8,6 +8,8 @@
     </a>
 </p>
 
-
+<a href="https://heroku.com/deploy?template=https://github.com/Hazmi35/jukebox">
+  <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
+</a>
 
 Based on: [discord-music-bot](https://github.com/iCrawl/discord-music-bot)
