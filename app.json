@@ -1,11 +1,6 @@
 {
     "name": "Jukebox",
     "description": "Just a simple Discord music bot.",
-    "keywords": [
-        "productivity",
-        "HTML5",
-        "scalpel"
-    ],
     "env": {
         "DISCORD_TOKEN": {
             "description": "Your Discord bot's token"
@@ -16,7 +11,7 @@
     },
     "repository": "https://github.com/Hazmi35/jukebox",
     "scripts": {
-        "postdeploy": "npm run build"
+        "postdeploy": "npm start"
     },
     "image": "heroku/nodejs",
     "buildpacks": [{
