@@ -1,10 +1,9 @@
 /* eslint-disable no-underscore-dangle */
-import { Client, ClientOptions, Collection, GuildResolvable } from "discord.js";
+import { Client, ClientOptions } from "discord.js";
 import { resolve } from "path";
-import config from "../config.json";
+import config from "../config.js";
 import { LogWrapper } from "../utils/LogWrapper";
 import CommandsHandler from "../utils/Commands";
-import { IServerQueue } from "../typings";
 import * as request from "superagent";
 
 // Extending DiscordJS Structures
@@ -16,7 +15,6 @@ export default class Jukebox extends Client {
     readonly request = request;
     readonly log = new LogWrapper(config.name).logger;
     readonly commandsHandler = new CommandsHandler(this, resolve(__dirname, "..", "commands"));
-    readonly queue: Collection<GuildResolvable, IServerQueue> = new Collection(); // TODO:
     constructor(opt: ClientOptions) { super(opt); }
 
     public async build(): Promise<Jukebox> {

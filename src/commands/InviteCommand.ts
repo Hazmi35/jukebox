@@ -12,6 +12,6 @@ export default class PlayCommand extends BaseCommand {
         });
     }
     public execute(message: Message, args: string[]): void {
-        message.channel.send(this.client.config.inviteLink);
+        message.channel.send(this.client.generateInvite(53857345));
     }
 }

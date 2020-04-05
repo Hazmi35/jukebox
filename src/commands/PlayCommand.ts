@@ -2,7 +2,7 @@
 import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
 import ytdl from "ytdl-core";
-import { IMessage, IServerQueue, ISong } from "../typings";
+import { IMessage, IServerQueue, ISong, IGuild } from "../typings";
 
 
 export default class PlayCommand extends BaseCommand {
@@ -33,19 +33,19 @@ export default class PlayCommand extends BaseCommand {
                 volume: 100,
                 playing: true
             };
-            message.client.queue.set(message.guild!.id, queueConstruct);
+            message.guild!.setQueue(queueConstruct);
             queueConstruct.songs.push(song);
             try {
                 const connection = await voiceChannel.join();
                 queueConstruct.connection = connection;
-                this.play(message, queueConstruct.songs[0]);
+                this.play(message.guild!, queueConstruct.songs[0]);
                 if (!voiceChannel.speakable) {
                     voiceChannel.leave();
                     return message.channel.send("I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions");
                 }
             } catch (error) {
                 this.client.log.error("PLAY_COMMAND: ", error);
-                this.client.queue.delete(message.guild!.id);
+                message.guild!.setQueue(null);
                 message.channel.send(`Error: Could not join the voice channel. reason: \`${error}\``);
                 return undefined;
             }
@@ -56,24 +56,24 @@ export default class PlayCommand extends BaseCommand {
 
         return message;
     }
-    private play(message: IMessage, song: ISong): void {
+    private play(guild: IGuild, song: ISong): void {
         if (!song) {
-            message.guild!.getQueue()!.connection!.disconnect();
-            this.client.queue.delete(message.guild!.id);
+            guild.getQueue()!.connection!.disconnect();
+            guild.setQueue(null);
         }
 
-        if (!message.guild!.getQueue()) return message.member!.voice.channel!.leave();
+        if (guild.getQueue()) return guild.getQueue()!.voiceChannel.leave();
 
-        message.guild!.getQueue()!.connection!.voice.setSelfDeaf(true);
-        const dispatcher = message.guild!.getQueue()!.connection!.play(ytdl(song.url, ))
+        guild.getQueue()!.connection!.voice.setSelfDeaf(true);
+        const dispatcher = guild.getQueue()!.connection!.play(ytdl(song.url, ))
             .on("finish", () => {
                 this.client.log.info("Song ended!");
-                message.guild!.getQueue()!.songs.shift();
-                this.play(message, message.guild!.getQueue()!.songs[0]);
+                guild.getQueue()!.songs.shift();
+                this.play(guild, guild.getQueue()!.songs[0]);
             }).on("error", (err: Error) => {
                 this.client.log.error("PLAY_ERROR: ", err);
             });
 
-        dispatcher.setVolumeLogarithmic(message.guild!.getQueue()!.volume / 100);
+        dispatcher.setVolumeLogarithmic(guild.getQueue()!.volume / 100);
     }
 }

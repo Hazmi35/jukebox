@@ -27,14 +27,18 @@ For optional packages, you need to install build tools as stated [here](https://
 
 ## Usage
 
-Rename `.env.schema` to `.env` and fill out the values:
+1. Rename `.env.schema` to `.env` and fill out the values:
 
 ```dotenv
 DISCORD_TOKEN=
 YT_API_KEY=
 ```
 
-Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
+2. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
+
+3. Run `npm run build` or `yarn run build` if you're using yarn.
+
+4. 
 
 Note: If you're using "Deploy to Heroku" button, you don't need to do this.
 

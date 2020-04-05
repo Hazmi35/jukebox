@@ -2,7 +2,7 @@ import { config } from "dotenv"; config();
 import { resolve } from "path";
 import { ShardingManager } from "discord.js";
 import { LogWrapper } from "./utils/LogWrapper";
-import { totalShards, name } from "./config.json";
+import { totalShards, name } from "./config";
 
 const log = new LogWrapper(name + "-sharding").logger;
 

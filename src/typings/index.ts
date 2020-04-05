@@ -18,7 +18,8 @@ export interface CommandComponent {
 
 export interface IGuild extends Guild {
     client: Jukebox;
-    getQueue(): IServerQueue | undefined;
+    getQueue(): IServerQueue | null;
+    setQueue(newQueue: IServerQueue | null): IServerQueue | null;
 }
 
 export interface IMessage extends Message {

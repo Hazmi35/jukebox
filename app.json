@@ -7,6 +7,18 @@
         },
         "YT_API_KEY": {
             "description": "Youtube API Key for querying the Youtube API for video data."
+        },
+        "CONFIG_NAME": {
+            "description": "Your bot's name"
+        },
+        "CONFIG_PREFIX": {
+            "description": "Prefix for your bot"
+        },
+        "CONFIG_DEVS": {
+            "description": "An array of your Discord ID (DO NOT FILL SOMEONE ELSE ID THAT YOU DON'T TRUST)"
+        },
+        "CONFIG_TOTALSHARDS": {
+            "description": "Total shards to spawn, use \"auto\" or a number"
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",
