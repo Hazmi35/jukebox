@@ -23,7 +23,7 @@ npm install --production
 yarn install --production
 ```
 
-For optional packages, you need to install build tools as stated here: [Build Tools](https://github.com/nodejs/node-gyp#installation)
+For optional packages, you need to install build tools as stated [here](https://github.com/nodejs/node-gyp#installation)
 
 ## Usage
 
@@ -33,6 +33,8 @@ Rename `.env.schema` to `.env` and fill out the values:
 DISCORD_TOKEN=
 YT_API_KEY=
 ```
+
+Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
 
 Note: If you're using "Deploy to Heroku" button, you don't need to do this.
 
