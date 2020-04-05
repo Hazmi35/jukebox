@@ -27,6 +27,7 @@ npm prune --production
 yarn install --production
 ```
 5. Start it with `npm start` or `yarn start`! And you're done!
+
 Note: If you're using "Deploy to Heroku" button, you don't need to do this.
 
 ## Install
