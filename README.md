@@ -27,11 +27,16 @@ For optional packages, you need to install build tools as stated [here](https://
 
 ## Usage
 
-1. Rename `.env.schema` to `.env` and fill out the values:
+1. Rename `.env.schema` to `.env` and fill out the values (example on .env.example):
 
 ```dotenv
 DISCORD_TOKEN=
 YT_API_KEY=
+
+CONFIG_NAME=
+CONFIG_PREFIX=
+CONFIG_DEVS=
+CONFIG_TOTALSHARDS=
 ```
 
 2. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
