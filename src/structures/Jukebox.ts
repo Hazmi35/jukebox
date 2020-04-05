@@ -5,6 +5,7 @@ import config from "../config.json";
 import { LogWrapper } from "../utils/LogWrapper";
 import CommandsHandler from "../utils/Commands";
 import { IServerQueue } from "../typings";
+import * as request from "superagent";
 
 // Extending DiscordJS Structures
 import "./Guild";
@@ -12,6 +13,7 @@ import "./Guild";
 export default class Jukebox extends Client {
     private _token = "n/a";
     readonly config = config;
+    readonly request = request;
     readonly log = new LogWrapper(config.name).logger;
     readonly commandsHandler = new CommandsHandler(this, resolve(__dirname, "..", "commands"));
     readonly queue: Collection<GuildResolvable, IServerQueue> = new Collection(); // TODO:
