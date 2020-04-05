@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { Client, ClientOptions } from "discord.js";
 import { resolve } from "path";
-import config from "../config.js";
+import config from "../config";
 import { LogWrapper } from "../utils/LogWrapper";
 import CommandsHandler from "../utils/Commands";
 import * as request from "superagent";

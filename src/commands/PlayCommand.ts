@@ -39,16 +39,16 @@ export default class PlayCommand extends BaseCommand {
             try {
                 const connection = await voiceChannel.join();
                 queueConstruct.connection = connection;
-                this.play(message.guild!, queueConstruct.songs[0]);
-                if (!voiceChannel.speakable) {
-                    voiceChannel.leave();
-                    return message.channel.send("I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions");
-                }
             } catch (error) {
-                this.client.log.error("PLAY_COMMAND", error);
                 message.guild!.setQueue(null);
+                this.client.log.error("PLAY_COMMAND", error);
                 message.channel.send(`Error: Could not join the voice channel. reason: \`${error}\``);
                 return undefined;
+            }
+            this.play(message.guild!);
+            if (!voiceChannel.speakable) {
+                voiceChannel.leave();
+                return message.channel.send("I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions");
             }
         } else {
             message.guild!.getQueue()!.songs.push(song);
@@ -57,7 +57,8 @@ export default class PlayCommand extends BaseCommand {
 
         return message;
     }
-    private play(guild: IGuild, song: ISong): any {
+    private play(guild: IGuild): any {
+        const song = guild.getQueue()!.songs[0];
         if (!song) {
             guild.getQueue()!.connection!.disconnect();
             return guild.setQueue(null);
@@ -68,7 +69,7 @@ export default class PlayCommand extends BaseCommand {
             .on("finish", () => {
                 this.client.log.info("Song ended!");
                 guild.getQueue()!.songs.shift();
-                this.play(guild, guild.getQueue()!.songs[0]);
+                this.play(guild);
             }).on("error", (err: Error) => {
                 this.client.log.error("PLAY_ERROR", err);
             });
