@@ -16,7 +16,7 @@
   </component>
   <component name="GithubProjectSettings">
     <option name="CREATE_PULL_REQUEST_DEFAULT_BRANCH" value="master" />
-    <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_USER" value="Hazmi35" />
+    <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_USER" value="BillyAddlers" />
     <option name="CREATE_PULL_REQUEST_DEFAULT_REPO_NAME" value="jukebox" />
   </component>
   <component name="ProjectId" id="1a6mbY31N1zmK6AddvsVQgWoQjM" />
@@ -94,7 +94,7 @@
       <option name="presentableId" value="Default" />
       <updated>1586064495665</updated>
       <workItem from="1586064520218" duration="3576000" />
-      <workItem from="1586068740121" duration="1303000" />
+      <workItem from="1586068740121" duration="2195000" />
     </task>
     <servers />
   </component>
