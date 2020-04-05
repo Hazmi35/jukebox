@@ -37,8 +37,7 @@ YT_API_KEY=
 2. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
 
 3. Run `npm run build` or `yarn run build` if you're using yarn.
-4. 
-5. (OPTIONAL) Prune devDependencies (This is good to save spaces):
+4. (OPTIONAL) Prune devDependencies (This is good to save spaces):
 ```shell script
 npm prune --production
 #or with yarn
