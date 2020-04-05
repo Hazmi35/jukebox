@@ -32,6 +32,7 @@
     "@discordjs/opus": "^0.1.0",
     "bufferutil": "^4.0.1",
     "erlpack": "github:discordapp/erlpack",
+    "ffmpeg-static": "^4.0.1",
     "utf-8-validate": "^5.0.2",
     "zlib-sync": "^0.1.6"
   },

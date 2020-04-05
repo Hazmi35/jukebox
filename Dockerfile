@@ -13,24 +13,22 @@ RUN echo [INFO] Installing build deps... \
 && apk add --no-cache --virtual .build-deps build-base python g++ make \
 && echo [INFO] Build deps installed! \
 && echo [INFO] Installing 3rd party packages... \
-&& apk add --no-cache git curl ffmpeg \
-&& npm install pnpm --global \
+&& apk add --no-cache git curl ca-certificates ffmpeg libva-intel-driver \
 && echo [INFO] 3rd party packages installed! \
 && echo [INFO] Node version: $(node --version) \
 && echo [INFO] npm version: $(npm --version) \
-&& echo [INFO] pnpm version: $(pnpm --version) \
 && echo [INFO] Git version: $(git --version) \
 && echo [INFO] Installing npm packages... \
-&& pnpm install \
+&& npm install \
 && echo [INFO] All npm packages installed! \
 && echo [INFO] Everything looks okay. \
 && echo [INFO] Building TypeScript project... \
 && echo Using TypeScript version: $(node -p "require('typescript').version") \
-&& pnpm run build \
+&& npm run build \
 && echo [INFO] Done building TypeScript project! \
 && echo [INFO] Pruning devDependencies... \
-&& pnpm prune --production \
+&& npm prune --production \
 && apk del .build-deps \
-&& echo [INFO] Done! Starting bot with pnpm start
+&& echo [INFO] Done! Starting bot with npm start
 
-CMD ["pnpm", "start"]
+CMD ["npm", "start"]
