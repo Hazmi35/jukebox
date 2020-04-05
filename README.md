@@ -23,7 +23,7 @@ npm install --production
 yarn install --production
 ```
 
-For optional packages you need to install build tools as stated here: [Build Tools](https://github.com/nodejs/node-gyp#installation)
+For optional packages, you need to install build tools as stated here: [Build Tools](https://github.com/nodejs/node-gyp#installation)
 
 ## Usage
 
