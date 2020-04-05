@@ -8,15 +8,27 @@
 
 ## Install
 
+Without optional packages
 ```shell script
-npm install
-# or
-yarn
+npm install --production --no-optional
+# or with yarn
+yarn install --production --ignore-optional
 ```
+
+With optional packages (Recommended)
+
+```shell script
+npm install --production
+# or with yarn
+yarn install --production
+```
+
+For optional packages you need to install build tools as stated here: [Build Tools](https://github.com/nodejs/node-gyp#installation)
 
 ## Usage
 
 Rename `.env.schema` to `.env` and fill out the values:
+Note: If you're using "Deploy to Heroku" button, you don't need to do this.
 
 ```dotenv
 DISCORD_TOKEN=
