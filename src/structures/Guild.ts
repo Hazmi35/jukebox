@@ -5,7 +5,7 @@ import Jukebox from "./Jukebox";
 Structures.extend("Guild", DJSGuild => {
     return class Guild extends DJSGuild implements IGuild {
         public client!: IGuild["client"];
-        public queue!: IServerQueue | null;
+        public queue: IServerQueue | null = null;
         constructor(client: Jukebox, data: object) {
             super(client, data);
         }
@@ -15,6 +15,7 @@ Structures.extend("Guild", DJSGuild => {
         }
         public setQueue(newQueue: IServerQueue | null): IServerQueue | null {
             if (newQueue === null) this.queue = null;
+            else if (this.queue === null) this.queue = newQueue;
             else Object.assign(this.queue, newQueue);
             return this.queue;
         }

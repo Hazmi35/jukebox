@@ -18,6 +18,7 @@ export default class PlayCommand extends BaseCommand {
         if (!voiceChannel) return message.channel.send("I'm sorry but you need to be in a voice channel to play music");
         if (!voiceChannel.joinable) return message.channel.send("I'm sorry but I can't connect to your voice channel, make sure I have the proper permissions!");
 
+        if (!args[0]) return message.channel.send("Please give me the youtube link");
         const songInfo = await ytdl.getInfo(args[0]);
         const song: ISong = {
             title: songInfo.title,
@@ -33,8 +34,8 @@ export default class PlayCommand extends BaseCommand {
                 volume: 100,
                 playing: true
             };
-            message.guild!.setQueue(queueConstruct);
             queueConstruct.songs.push(song);
+            message.guild!.setQueue(queueConstruct);
             try {
                 const connection = await voiceChannel.join();
                 queueConstruct.connection = connection;
@@ -44,7 +45,7 @@ export default class PlayCommand extends BaseCommand {
                     return message.channel.send("I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions");
                 }
             } catch (error) {
-                this.client.log.error("PLAY_COMMAND: ", error);
+                this.client.log.error("PLAY_COMMAND", error);
                 message.guild!.setQueue(null);
                 message.channel.send(`Error: Could not join the voice channel. reason: \`${error}\``);
                 return undefined;
@@ -56,13 +57,11 @@ export default class PlayCommand extends BaseCommand {
 
         return message;
     }
-    private play(guild: IGuild, song: ISong): void {
+    private play(guild: IGuild, song: ISong): any {
         if (!song) {
             guild.getQueue()!.connection!.disconnect();
-            guild.setQueue(null);
+            return guild.setQueue(null);
         }
-
-        if (guild.getQueue()) return guild.getQueue()!.voiceChannel.leave();
 
         guild.getQueue()!.connection!.voice.setSelfDeaf(true);
         const dispatcher = guild.getQueue()!.connection!.play(ytdl(song.url, ))
@@ -71,7 +70,7 @@ export default class PlayCommand extends BaseCommand {
                 guild.getQueue()!.songs.shift();
                 this.play(guild, guild.getQueue()!.songs[0]);
             }).on("error", (err: Error) => {
-                this.client.log.error("PLAY_ERROR: ", err);
+                this.client.log.error("PLAY_ERROR", err);
             });
 
         dispatcher.setVolumeLogarithmic(guild.getQueue()!.volume / 100);
