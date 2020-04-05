@@ -28,12 +28,13 @@ For optional packages, you need to install build tools as stated here: [Build To
 ## Usage
 
 Rename `.env.schema` to `.env` and fill out the values:
-Note: If you're using "Deploy to Heroku" button, you don't need to do this.
 
 ```dotenv
 DISCORD_TOKEN=
 YT_API_KEY=
 ```
+
+Note: If you're using "Deploy to Heroku" button, you don't need to do this.
 
 ## Features
 - TypeScript! This bot is using TypeScript in a way that is easy to understand. Even a [dogmeat](https://fallout.fandom.com/wiki/Dogmeat_(Fallout_4)) can understand the code!
