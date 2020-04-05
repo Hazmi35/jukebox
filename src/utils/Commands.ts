@@ -10,10 +10,11 @@ export default class CommandsHandler {
     readonly cooldowns: Collection<string, Collection<Snowflake, number>> = new Collection();
     constructor(public client: BotClient, readonly path: string) {}
     public load(): void {
-        readdir(resolve(this.path), (err, files) => {
+        readdir(resolve(this.path), (err, filesRaw) => {
             if (err) this.client.log.error("CMD_LOADER_ERR: ", err);
             let disabledCount = 0;
-            files.filter(f => f.endsWith(".map") === false).forEach(file => {
+            const files = filesRaw.filter(f => !f.endsWith(".map"));
+            files.forEach(file => {
                 const command: CommandComponent = new (require(`${this.path}/${file}`).default)(this.client, `${this.path}/${file}`);
                 if (command.conf.aliases!.length > 0) command.conf.aliases!.forEach(alias => {
                     this.aliases.set(alias, command.help.name);
@@ -21,8 +22,8 @@ export default class CommandsHandler {
                 this.commands.set(command.help.name, command);
                 if (command.conf.disable) disabledCount++;
             });
-            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Found ${files.length / 2} commands!`);
-            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} ${disabledCount} out of ${files.length / 2} commands is disabled.`);
+            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Found ${files.length} commands!`);
+            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} ${disabledCount} out of ${files.length} commands is disabled.`);
         });
         return undefined;
     }
