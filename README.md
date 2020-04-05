@@ -22,4 +22,10 @@ DISCORD_TOKEN=
 YT_API_KEY=
 ```
 
-Based on: [discord-music-bot](https://github.com/iCrawl/discord-music-bot)
+## Features
+- TypeScript! This bot is using TypeScript in a way that is easy to understand. Even a [dogmeat](https://fallout.fandom.com/wiki/Dogmeat_(Fallout_4)) can understand the code!
+- Discord.JS! Who doesn't like Discord.JS? Robust module, robust documentation!
+- Using the concept of extending base command, similar to Commando.
+- A production-ready music bot, suitable for you that dislike hassling with the code.
+
+Based on [discord-music-bot](https://github.com/iCrawl/discord-music-bot)
