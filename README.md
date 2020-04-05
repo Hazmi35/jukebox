@@ -10,17 +10,17 @@
 
 Without optional packages
 ```shell script
-npm install --production --no-optional
+npm install --no-optional
 # or with yarn
-yarn install --production --ignore-optional
+yarn install --ignore-optional
 ```
 
 With optional packages (Recommended)
 
 ```shell script
-npm install --production
+npm install
 # or with yarn
-yarn install --production
+yarn install
 ```
 
 For optional packages, you need to install build tools as stated [here](https://github.com/nodejs/node-gyp#installation)
@@ -37,8 +37,15 @@ YT_API_KEY=
 2. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
 
 3. Run `npm run build` or `yarn run build` if you're using yarn.
-
 4. 
+5. (OPTIONAL) Prune devDependencies (This is good to save spaces):
+```shell script
+npm prune --production
+#or with yarn
+yarn install --production
+```
+
+5. Start it with `npm start` or `yarn start`! And you're done!
 
 Note: If you're using "Deploy to Heroku" button, you don't need to do this.
 
