@@ -8,7 +8,7 @@ const client = new Client({ disableMentions: "everyone" })
 client.on("ready", () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore-next-line (I don't know why when using pnpm ts-node error on this line but tsc does not)
-    client.log.info(`[Shard #${client.shard!.ids}] I'm ready to serve ${client.users.cache.size} users on ${client.guilds.cache.size} guilds!`);
+    client.log.info(`${client.shard ? `[Shard #${client.shard.ids}]` : ""} I'm ready to serve ${client.users.cache.size} users on ${client.guilds.cache.size} guilds!`);
     client.user!.setPresence({ activity: { name: "Hello There!", type: "PLAYING" }, afk: false });
 });
 

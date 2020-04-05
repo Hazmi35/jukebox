@@ -1,7 +1,8 @@
 dependencies:
   chalk: 4.0.0
-  discord.js: 12.1.1_3a4ba29a1dd5239f85d2da87b59b412b
+  discord.js: 12.1.1_66e537c01cc6feb107d3bc6f0802216a
   dotenv: 8.2.0
+  opusscript: 0.0.7
   superagent: 5.2.2
   winston: 3.2.1
   ytdl-core: 2.0.1
@@ -13,7 +14,7 @@ devDependencies:
   '@typescript-eslint/parser': 2.26.0_eslint@6.8.0+typescript@3.8.3
   eslint: 6.8.0
   rimraf: 3.0.2
-  ts-node: 8.8.1_typescript@3.8.3
+  ts-node: 8.8.2_typescript@3.8.3
   tslint: 6.1.1_typescript@3.8.3
   typescript: 3.8.3
 lockfileVersion: 5.1
@@ -21,7 +22,6 @@ optionalDependencies:
   '@discordjs/opus': 0.1.0
   bufferutil: 4.0.1
   erlpack: github.com/discordapp/erlpack/5d0064f9e106841e1eead711a6451f99b0d289fd
-  ffmpeg-static: 4.0.1
   utf-8-validate: 5.0.2
   zlib-sync: 0.1.6
 packages:
@@ -103,7 +103,7 @@ packages:
       '@typescript-eslint/parser': 2.26.0_eslint@6.8.0+typescript@3.8.3
       eslint: 6.8.0
       functional-red-black-tree: 1.0.1
-      regexpp: 3.0.0
+      regexpp: 3.1.0
       tsutils: 3.17.1_typescript@3.8.3
       typescript: 3.8.3
     dev: true
@@ -482,14 +482,6 @@ packages:
       ms: 2.1.2
     resolution:
       integrity: sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
-  /decompress-response/4.2.1:
-    dependencies:
-      mimic-response: 2.1.0
-    dev: false
-    engines:
-      node: '>=8'
-    resolution:
-      integrity: sha512-jOSne2qbyE+/r8G1VU+G/82LBs2Fs4LAsTiLSHOCOMZQl2OKZ6i8i4IyHemTe+/yIXOtTcRQMzPcgyhoFlqPkw==
   /deep-extend/0.6.0:
     dev: false
     engines:
@@ -531,7 +523,7 @@ packages:
       node: '>=0.3.1'
     resolution:
       integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
-  /discord.js/12.1.1_3a4ba29a1dd5239f85d2da87b59b412b:
+  /discord.js/12.1.1_66e537c01cc6feb107d3bc6f0802216a:
     dependencies:
       '@discordjs/collection': 0.1.5
       abort-controller: 3.0.0
@@ -539,7 +531,7 @@ packages:
       erlpack: github.com/discordapp/erlpack/5d0064f9e106841e1eead711a6451f99b0d289fd
       form-data: 3.0.0
       node-fetch: 2.6.0
-      prism-media: 1.2.1_710a543abb692f6ba167a30064805b53
+      prism-media: 1.2.1_73fcee024321f4bdf17c82bec7b28307
       setimmediate: 1.0.5
       tweetnacl: 1.0.3
       utf-8-validate: 5.0.2
@@ -552,8 +544,8 @@ packages:
       '@discordjs/opus': '*'
       bufferutil: ^4.0.1
       erlpack: discordapp/erlpack
-      ffmpeg-static: '*'
       libsodium-wrappers: ^0.7.6
+      opusscript: '*'
       sodium: ^3.0.2
       utf-8-validate: ^5.0.2
       zlib-sync: ^0.1.6
@@ -669,7 +661,7 @@ packages:
       levn: 0.3.0
       lodash: 4.17.15
       minimatch: 3.0.4
-      mkdirp: 0.5.4
+      mkdirp: 0.5.5
       natural-compare: 1.4.0
       optionator: 0.8.3
       progress: 2.0.3
@@ -773,16 +765,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-lUGBnIamTAwk4znq5BcqsDaxSmZ9nDVJaij6NvRt/Tg4R69gERA+otPKbS86ROw9nxVMw2/mp1fnaiWqbs6Sdg==
-  /ffmpeg-static/4.0.1:
-    dependencies:
-      progress: 2.0.3
-      simple-get: 3.1.0
-    dev: false
-    engines:
-      node: '>=10'
-    requiresBuild: true
-    resolution:
-      integrity: sha512-tUGBiessDvslK6jfVpfrhm6NvXPrIOclSVsqI8FGx4uDPN6xvdH8mGghcZDOjXky65FjaRPcTu3y/8Ne6VXRtQ==
   /figures/3.2.0:
     dependencies:
       escape-string-regexp: 1.0.5
@@ -1121,12 +1103,6 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==
-  /mimic-response/2.1.0:
-    dev: false
-    engines:
-      node: '>=8'
-    resolution:
-      integrity: sha512-wXqjST+SLt7R009ySCglWBCFpjUygmCIfD790/kVbiGmUgfYGuB14PiTd5DwVxSV4NcYHjzMkoj5LjQZwTQLEA==
   /miniget/1.7.0:
     dev: false
     engines:
@@ -1154,12 +1130,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-6ZYMOEnmVsdCeTJVE0W9ZD+pVnE8h9Hma/iOwwRDsdQoePpoX56/8B6z3P9VNwppJuBKNRuFDRNRqRWexT9G9Q==
-  /mkdirp/0.5.4:
+  /mkdirp/0.5.5:
     dependencies:
       minimist: 1.2.5
     hasBin: true
     resolution:
-      integrity: sha512-iG9AK/dJLtJ0XNgTuDbSyNS3zECqDlAhnQW4CsNxBG3LQJBbHmRX1egw39DmtOdCAqY+dKXV+sgPgilNWUKMVw==
+      integrity: sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==
   /ms/2.1.2:
     resolution:
       integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
@@ -1208,7 +1184,7 @@ packages:
   /node-pre-gyp/0.14.0:
     dependencies:
       detect-libc: 1.0.3
-      mkdirp: 0.5.4
+      mkdirp: 0.5.5
       needle: 2.4.1
       nopt: 4.0.3
       npm-packlist: 1.4.8
@@ -1298,6 +1274,10 @@ packages:
       node: '>= 0.8.0'
     resolution:
       integrity: sha512-+IW9pACdk3XWmmTXG8m3upGUJst5XRGzxMRjXzAuJ1XnIFNvfhjjIuYkDvysnPQ7qzqVzLt78BCruntqRhWQbA==
+  /opusscript/0.0.7:
+    dev: false
+    resolution:
+      integrity: sha512-DcBadTdYTUuH9zQtepsLjQn4Ll6rs3dmeFvN+SD0ThPnxRBRm/WC1zXWPg+wgAJimB784gdZvUMA57gDP7FdVg==
   /os-homedir/1.0.2:
     dev: false
     engines:
@@ -1345,10 +1325,10 @@ packages:
       node: '>= 0.8.0'
     resolution:
       integrity: sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
-  /prism-media/1.2.1_710a543abb692f6ba167a30064805b53:
+  /prism-media/1.2.1_73fcee024321f4bdf17c82bec7b28307:
     dependencies:
       '@discordjs/opus': 0.1.0
-      ffmpeg-static: 4.0.1
+      opusscript: 0.0.7
     dev: false
     peerDependencies:
       '@discordjs/opus': ^0.1.0
@@ -1371,6 +1351,7 @@ packages:
     resolution:
       integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==
   /progress/2.0.3:
+    dev: true
     engines:
       node: '>=0.4.0'
     resolution:
@@ -1425,12 +1406,12 @@ packages:
       node: '>=6.5.0'
     resolution:
       integrity: sha512-lv0M6+TkDVniA3aD1Eg0DVpfU/booSu7Eev3TDO/mZKHBfVjgCGTV4t4buppESEYDtkArYFOxTJWv6S5C+iaNw==
-  /regexpp/3.0.0:
+  /regexpp/3.1.0:
     dev: true
     engines:
       node: '>=8'
     resolution:
-      integrity: sha512-Z+hNr7RAVWxznLPuA7DIh8UNX1j9CDrUQxskw9IrBE1Dxue2lyXT+shqEIeLUjrokxIP8CMy1WkjgG3rTsd5/g==
+      integrity: sha512-ZOIzd8yVsQQA7j8GCSlPGXwg5PfmA1mrq0JP4nGhh54LaKN3xdai/vHUDu74pKwV8OxseMS65u2NImosQcSD0Q==
   /resolve-from/4.0.0:
     dev: true
     engines:
@@ -1537,18 +1518,6 @@ packages:
   /signal-exit/3.0.3:
     resolution:
       integrity: sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
-  /simple-concat/1.0.0:
-    dev: false
-    resolution:
-      integrity: sha1-c0TLuLbib7J9ZrL8hvn21Zl1IcY=
-  /simple-get/3.1.0:
-    dependencies:
-      decompress-response: 4.2.1
-      once: 1.4.0
-      simple-concat: 1.0.0
-    dev: false
-    resolution:
-      integrity: sha512-bCR6cP+aTdScaQCnQKbPKtJOKDp/hj9EDLJo3Nw4y1QksqaovlW/bnptB6/c1e+qmNIDHRK+oXFDdEqBT8WzUA==
   /simple-swizzle/0.2.2:
     dependencies:
       is-arrayish: 0.3.2
@@ -1714,7 +1683,7 @@ packages:
       fs-minipass: 1.2.7
       minipass: 2.9.0
       minizlib: 1.3.3
-      mkdirp: 0.5.4
+      mkdirp: 0.5.5
       safe-buffer: 5.2.0
       yallist: 3.1.1
     dev: false
@@ -1746,7 +1715,7 @@ packages:
     dev: false
     resolution:
       integrity: sha512-XrHUvV5HpdLmIj4uVMxHggLbFSZYIn7HEWsqePZcI50pco+MPqJ50wMGY794X7AOOhxOBAjbkqfAbEe/QMp2Lw==
-  /ts-node/8.8.1_typescript@3.8.3:
+  /ts-node/8.8.2_typescript@3.8.3:
     dependencies:
       arg: 4.1.3
       diff: 4.0.2
@@ -1761,7 +1730,7 @@ packages:
     peerDependencies:
       typescript: '>=2.7'
     resolution:
-      integrity: sha512-10DE9ONho06QORKAaCBpPiFCdW+tZJuY/84tyypGtl6r+/C7Asq0dhqbRZURuUlLQtZxxDvT8eoj8cGW0ha6Bg==
+      integrity: sha512-duVj6BpSpUpD/oM4MfhO98ozgkp3Gt9qIp3jGxwU2DFvl/3IRaEAvbLa8G60uS7C77457e/m5TMowjedeRxI1Q==
   /tslib/1.11.1:
     dev: true
     resolution:
@@ -1776,7 +1745,7 @@ packages:
       glob: 7.1.6
       js-yaml: 3.13.1
       minimatch: 3.0.4
-      mkdirp: 0.5.4
+      mkdirp: 0.5.5
       resolve: 1.15.1
       semver: 5.7.1
       tslib: 1.11.1
@@ -1911,7 +1880,7 @@ packages:
       integrity: sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
   /write/1.0.3:
     dependencies:
-      mkdirp: 0.5.4
+      mkdirp: 0.5.5
     dev: true
     engines:
       node: '>=4'
@@ -1970,7 +1939,6 @@ packages:
     name: erlpack
     requiresBuild: true
     resolution:
-      registry: 'https://registry.npmjs.org/'
       tarball: 'https://codeload.github.com/discordapp/erlpack/tar.gz/5d0064f9e106841e1eead711a6451f99b0d289fd'
     version: 0.1.3
 specifiers:
@@ -1986,7 +1954,7 @@ specifiers:
   dotenv: ^8.2.0
   erlpack: 'github:discordapp/erlpack'
   eslint: ^6.8.0
-  ffmpeg-static: ^4.0.1
+  opusscript: ^0.0.7
   rimraf: ^3.0.2
   superagent: ^5.2.2
   ts-node: ^8.8.1

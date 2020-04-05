@@ -16,8 +16,7 @@ export default class PlayCommand extends BaseCommand {
     public async execute(message: IMessage, args: string[]): Promise<any> {
         const voiceChannel = message.member!.voice.channel;
         if (!voiceChannel) return message.channel.send("I'm sorry but you need to be in a voice channel to play music");
-        const permissions = voiceChannel.permissionsFor(message.guild!.me!);
-        if (!permissions!.has("CONNECT")) return message.channel.send("I'm sorry but I can't connect to your voice channel, make sure I have the proper permissions!");
+        if (!voiceChannel.joinable) return message.channel.send("I'm sorry but I can't connect to your voice channel, make sure I have the proper permissions!");
 
         const songInfo = await ytdl.getInfo(args[0]);
         const song: ISong = {
@@ -40,7 +39,7 @@ export default class PlayCommand extends BaseCommand {
                 const connection = await voiceChannel.join();
                 queueConstruct.connection = connection;
                 this.play(message, queueConstruct.songs[0]);
-                if (!permissions!.has("SPEAK")) {
+                if (!voiceChannel.speakable) {
                     voiceChannel.leave();
                     return message.channel.send("I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions");
                 }

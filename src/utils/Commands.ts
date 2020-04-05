@@ -21,8 +21,8 @@ export default class CommandsHandler {
                 this.commands.set(command.help.name, command);
                 if (command.conf.disable) disabledCount++;
             });
-            this.client.log.info(`[Shard #${this.client.shard!.ids}] Found ${files.length / 2} commands!`);
-            this.client.log.info(`[Shard #${this.client.shard!.ids}] ${disabledCount} out of ${files.length / 2} commands is disabled.`);
+            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Found ${files.length / 2} commands!`);
+            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} ${disabledCount} out of ${files.length / 2} commands is disabled.`);
         });
         return undefined;
     }
