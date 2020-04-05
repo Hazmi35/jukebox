@@ -8,8 +8,8 @@ ENV DISCORD_TOKEN= \
 WORKDIR /usr/Jukebox
 
 COPY . .
-RUN echo [INFO] Installing build deps... \
-&& apk update \
+RUN echo [INFO] Starting to build Docker image... \
+&& echo [INFO] Installing build deps... \
 && apk add --no-cache --virtual .build-deps build-base python g++ make \
 && echo [INFO] Build deps installed! \
 && echo [INFO] Installing 3rd party packages... \
