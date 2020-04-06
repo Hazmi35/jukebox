@@ -1,5 +1,5 @@
 import { IServerQueue } from "../typings";
-import SongManager from "./SongManager";
+import SongManager from "../utils/SongManager";
 
 export default class ServerQueue implements IServerQueue {
     readonly songs: IServerQueue["songs"] = new SongManager();

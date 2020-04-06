@@ -38,7 +38,7 @@ export default class CommandsHandler {
         const cooldownAmount = (command.conf.cooldown || 3) * 1000;
         if (!timestamps.has(message.author.id)) {
             timestamps.set(message.author.id, now);
-            if (this.client.config.devs.includes(message.author.id)) timestamps.delete(message.author.id);
+            if (this.client.config.owners.includes(message.author.id)) timestamps.delete(message.author.id);
         } else {
             const expirationTime = timestamps.get(message.author.id)! + cooldownAmount;
             if (now < expirationTime) {

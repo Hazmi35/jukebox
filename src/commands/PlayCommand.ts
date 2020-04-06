@@ -4,7 +4,7 @@ import BotClient from "../structures/Jukebox";
 import ytdl from "ytdl-core";
 import { IMessage, ISong, IGuild, IServerQueue } from "../typings";
 import { Collection } from "discord.js";
-import SongManager from "../structures/SongManager";
+import SongManager from "../utils/SongManager";
 import ServerQueue from "../structures/ServerQueue";
 
 
@@ -23,7 +23,7 @@ export default class PlayCommand extends BaseCommand {
 
         if (!args[0]) return message.channel.send("Please give me the youtube link");
         const songInfo = await ytdl.getInfo(args[0]);
-        const song: ISong = {
+        const song: ISong = { // TODO: Youtube search and song selection
             title: songInfo.title,
             url: songInfo.video_url
         };
@@ -54,7 +54,6 @@ export default class PlayCommand extends BaseCommand {
     private play(guild: IGuild): any {
         const serverQueue = guild.queue!;
         const song = serverQueue.songs.first();
-        console.log(serverQueue);
         if (!song) {
             serverQueue.connection!.disconnect();
             return guild.queue = null;

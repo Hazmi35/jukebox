@@ -1,6 +1,6 @@
 {
   "name": "jukebox",
-  "version": "1.2.0",
+  "version": "1.9.3",
   "description": " Just a simple Discord music bot.",
   "main": "src/main.ts",
   "scripts": {
@@ -19,6 +19,7 @@
     "url": "git+https://github.com/Hazmi35/jukebox.git"
   },
   "author": "Hazmi35 (contact@hzmi.xyz) (https://github.com/Hazmi35)",
+  "private": true,
   "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/Hazmi35/jukebox/issues"

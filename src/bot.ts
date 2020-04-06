@@ -5,11 +5,13 @@ import { Message } from "discord.js";
 const client = new Client({ disableMentions: "everyone" })
     .setToken(process.env.DISCORD_TOKEN!);
 
+// TODO: Implement embeds in every command + fix grammars + cleanup code
+
 client.on("ready", () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore-next-line (I don't know why when using pnpm ts-node error on this line but tsc does not)
     client.log.info(`${client.shard ? `[Shard #${client.shard.ids}]` : ""} I'm ready to serve ${client.users.cache.size} users on ${client.guilds.cache.size} guilds!`);
-    client.user!.setPresence({ activity: { name: "Hello There!", type: "PLAYING" }, afk: false });
+    client.user!.setPresence({ activity: { name: "Hello There!", type: "PLAYING" }, afk: false }); // TODO: change the status.
 });
 
 client.on("warn", (warn) => {

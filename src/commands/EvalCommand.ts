@@ -21,6 +21,8 @@ export default class EvalCommand extends BaseCommand {
         const msg = message;
         const client = this.client;
 
+        if (!client.config.owners.includes(msg.author.id)) return;
+
         const embed = new MessageEmbed()
             .setColor("GREEN")
             .addField("Input", "```js\n" + args.join(" ") + "```");

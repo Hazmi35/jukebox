@@ -5,13 +5,13 @@ import { Message } from "discord.js";
 
 export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
-        super(client, path, {}, {
-            name: "invite",
-            description: "Send the bot's invite link",
-            usage: "{prefix}invite"
+        super(client, path, { aliases: ["commands"] }, {
+            name: "help",
+            description: "Send help menu",
+            usage: "{prefix}help"
         });
     }
     public async execute(message: Message, args: string[]): Promise<void> {
-        message.channel.send(await this.client.generateInvite(53857345));
+        // TODO: Finish this
     }
 }

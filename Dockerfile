@@ -4,7 +4,11 @@ LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
 ENV DISCORD_TOKEN= \
-    YT_API_KEY=
+    YT_API_KEY= \
+    CONFIG_NAME= \
+    CONFIG_PREFIX= \
+    CONFIG_OWNERS= \
+    CONFIG_TOTALSHARDS= \
 WORKDIR /usr/Jukebox
 
 COPY . .
