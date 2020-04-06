@@ -23,7 +23,8 @@ Structures.extend("Guild", DJSGuild => {
         }
         public setQueue(newQueue: IServerQueue | null): IServerQueue | null {
             if (newQueue === null) this.queue = null;
-            this.queue = new ServerQueue();
+            this.queue = new ServerQueue(newQueue!.textChannel, newQueue!.voiceChannel);
+            return this.queue;
         }
     };
 });
