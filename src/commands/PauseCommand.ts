@@ -15,12 +15,12 @@ export default class PingCommand extends BaseCommand {
 
     public execute(message: IMessage): any {
         if (!message.member!.voice.channel) return message.channel.send("You're not in a voice channel");
-        if (!message.guild!.queue) return message.channel.send("There is nothing playing.");
-        if (message.member!.voice.channel.id !== message.guild!.queue.voiceChannel.id) return message.channel.send("You need to be in the same voice channel as mine");
+        if (!message.guild!.getQueue()) return message.channel.send("There is nothing playing.");
+        if (message.member!.voice.channel.id !== message.guild!.getQueue()!.voiceChannel.id) return message.channel.send("You need to be in the same voice channel as mine");
 
-        if (message.guild!.queue.playing) {
-            message.guild!.queue.playing = false;
-            message.guild!.queue.connection!.dispatcher.pause();
+        if (message.guild!.getQueue()!.playing) {
+            message.guild!.getQueue()!.playing = false;
+            message.guild!.getQueue()!.connection!.dispatcher.pause();
             return message.channel.send("Pause the music for you!");
         } else {
             message.channel.send("Music is already paused!");

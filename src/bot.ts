@@ -27,4 +27,14 @@ client.on("message", (message: Message): any => {
     return message;
 });
 
+process.on("unhandledRejection", (e) => {
+    client.log.error("UNHANDLED_REJECTION: ", e);
+});
+
+process.on("uncaughtException", (e) => {
+    client.log.error("UNCAUGHT_EXCEPTION: ", e);
+    client.log.warn("NODE_WARN: ", { stack: "Uncaught Exception detected. Restarting..." });
+    process.exit(1);
+});
+
 client.build();

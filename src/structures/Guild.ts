@@ -1,30 +1,25 @@
-import { Structures, Collection } from "discord.js";
-import { IGuild, IServerQueue } from "../typings";
+import { Structures } from "discord.js";
+import { IGuild, IQueueManager, IQueueConstruct } from "../typings";
 import Jukebox from "./Jukebox";
+import MusicManager from "./QueueManager";
 
 Structures.extend("Guild", DJSGuild => {
-    class ServerQueue implements IServerQueue {
-        readonly connection: IServerQueue["connection"] = null;
-        readonly songs: IServerQueue["songs"] = new Collection();
-        public volume: IServerQueue["volume"] = 50;
-        public playing: IServerQueue["playing"] = false;
-        constructor(readonly textChannel: IServerQueue["textChannel"], readonly voiceChannel: IServerQueue["voiceChannel"]) {
-
-        }
-    }
     return class Guild extends DJSGuild implements IGuild {
         public client!: IGuild["client"];
-        private queue: IServerQueue | null = null;
+        private queue: IQueueManager | null = null;
         constructor(client: Jukebox, data: object) {
             super(client, data);
         }
-        public getQueue(): IServerQueue | null {
+        public getQueue(): IQueueManager | null {
             return this.queue;
         }
-        public setQueue(newQueue: IServerQueue | null): IServerQueue | null {
-            if (newQueue === null) this.queue = null;
-            this.queue = new ServerQueue(newQueue!.textChannel, newQueue!.voiceChannel);
-            return this.queue;
+        public constructQueue(
+            textChannel: IQueueConstruct["textChannel"],
+            voiceChannel: IQueueConstruct["voiceChannel"]): IQueueManager {
+            return this.queue = new MusicManager(textChannel, voiceChannel);
+        }
+        public destroyQueue(): null {
+            return this.queue = null;
         }
     };
 });

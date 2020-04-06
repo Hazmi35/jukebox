@@ -1,4 +1,4 @@
-import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection } from "discord.js";
+import { Message, Guild, TextChannel, VoiceChannel, DMChannel, VoiceConnection, Collection, NewsChannel } from "discord.js";
 import Jukebox from "../structures/Jukebox";
 
 export interface CommandComponent {
@@ -18,23 +18,43 @@ export interface CommandComponent {
 
 export interface IGuild extends Guild {
     client: Jukebox;
-    getQueue(): IServerQueue | null;
-    setQueue(newQueue: IServerQueue | null): IServerQueue | null;
+    getQueue(): IQueueManager | null;
+    constructQueue(textChannel: IQueueConstruct["textChannel"], voiceChannel: IQueueConstruct["voiceChannel"]): IQueueManager;
+    destroyQueue(): null;
 }
 
 export interface IMessage extends Message {
     client: Jukebox;
     guild: IGuild | null;
+    channel: ITextChannel | INewsChannel | IDMChannel;
 }
 
-export interface IServerQueue {
-    textChannel: TextChannel | DMChannel | NewsChannel;
-    voiceChannel: VoiceChannel;
-    connection: VoiceConnection | null;
-    songs: Collection<ISong["id"], ISong>;
-    volume: number;
-    playing: boolean;
+export interface ITextChannel extends TextChannel {
+    client: Jukebox;
+    guild: IGuild;
 }
+
+export interface INewsChannel extends NewsChannel {
+    client: Jukebox;
+    guild: IGuild;
+}
+
+export interface IDMChannel extends DMChannel {
+    client: Jukebox;
+    guild: null;
+}
+
+export interface IMusicManager {
+    connect(): Promise<IMusicManager>;
+    addSong(song: ISong): Collection<ISong["id"], ISong>;
+}
+
+export interface IQueueConstruct {
+    textChannel: ITextChannel | IDMChannel | INewsChannel | null;
+    voiceChannel: VoiceChannel | null;
+    connection: VoiceConnection | null;
+}
+
 export interface ISong {
     title: string;
     id: string;
