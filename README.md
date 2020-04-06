@@ -4,7 +4,7 @@
 
 ![](https://github.com/Hazmi35/jukebox/workflows/Node.js%20CI/badge.svg)
 ![](https://badgen.net/badge/icon/typescript?icon=typescript&label)
-<a href="https://heroku.com/deploy?template=https://github.com/Hazmi35/jukebox"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy"></a>
+<a href="https://heroku.com/deploy?template=https://github.com/Hazmi35/jukebox/tree/stable"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy"></a>
 
 ## Usage
 

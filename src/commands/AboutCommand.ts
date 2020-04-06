@@ -7,30 +7,30 @@ import { version } from "discord.js";
 
 export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
-        super(client, path, { aliases: ["botinfo"] }, {
+        super(client, path, { aliases: ["botinfo", "info"] }, {
             name: "about",
             description: "Send the bot's info",
             usage: "{prefix}about"
         });
     }
-    public execute(message: Message, args: string[]): void { // TODO: Beautify this
+    public async execute(message: Message, args: string[]): Promise<void> { // TODO: Beautify this
         const embed = new MessageEmbed()
             .setAuthor(`${this.client.user!.username} - Just a simple Discord music bot.`)
             .setDescription(`
 \`\`\`
 Bot name: ${this.client.user!.username}
-Users count: ${this.client.users.cache.size}
-Channels count: ${this.client.channels.cache.filter(c => c.type !== "category" && c.type !== "dm").size}
-Guilds count: ${this.client.guilds.cache.size}
+Users count: ${await this.client.getUsersCount()}
+Channels count: ${await this.client.getChannelsCount()}
+Guilds count: ${ await this.client.getGuildsCount()}
 Shards count: ${this.client.shard ? `${this.client.shard.count}` : "N/A"}
 Shard ID: ${this.client.shard ? `${this.client.shard.ids}` : "N/A"}
 Platform: ${process.platform}
 Arch: ${process.arch}
 OS Uptime: ${this.parseDur(osUptime() * 1000)}
 Process Uptime: ${this.parseDur(Math.floor(process.uptime() * 1000))}
-NodeJS version: v${process.version}
+NodeJS version: ${process.version}
 Bot Uptime: ${this.parseDur(this.client.uptime!)}
-DiscordJS version: ${version}
+DiscordJS version: v${version}
 Source code: https://github.com/Hazmi35/jukebox
 \`\`\`
         `);

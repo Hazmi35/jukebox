@@ -1,6 +1,6 @@
 {
   "name": "jukebox",
-  "version": "1.9.3",
+  "version": "1.9.4",
   "description": " Just a simple Discord music bot.",
   "main": "src/main.ts",
   "scripts": {

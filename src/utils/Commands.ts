@@ -57,7 +57,7 @@ export default class CommandsHandler {
         } catch (e) {
             this.client.log.error("COMMAND_HANDLER_ERR", e);
         } finally {
-            this.client.log.info(`[Shard #${this.client.shard!.ids}] ${message.author.tag} is using ${command.help.name} command on ${message.guild ? message.guild.name : "DM Channel"}`);
+            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} ${message.author.tag} is using ${command.help.name} command on ${message.guild ? message.guild.name : "DM Channel"}`);
         }
     }
 }
