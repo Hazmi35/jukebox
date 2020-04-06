@@ -10,7 +10,7 @@ export default class PlayCommand extends BaseCommand {
         super(client, path, {}, {
             name: "play",
             description: "Play some musics",
-            "usage": "{prefix}play <yt video or playlist link / yt video name>"
+            usage: "{prefix}play <yt video or playlist link / yt video name>"
         });
     }
     public async execute(message: IMessage, args: string[]): Promise<any> {
@@ -22,6 +22,7 @@ export default class PlayCommand extends BaseCommand {
         const songInfo = await ytdl.getInfo(args[0]);
         const song: ISong = {
             title: songInfo.title,
+            id: songInfo.video_id,
             url: songInfo.video_url
         };
 
@@ -41,7 +42,7 @@ export default class PlayCommand extends BaseCommand {
                 queueConstruct.connection = connection;
             } catch (error) {
                 message.guild!.setQueue(null);
-                this.client.log.error("PLAY_COMMAND", error);
+                this.client.log.error("PLAY_COMMAND: ", error);
                 message.channel.send(`Error: Could not join the voice channel. reason: \`${error}\``);
                 return undefined;
             }
@@ -58,22 +59,42 @@ export default class PlayCommand extends BaseCommand {
         return message;
     }
     private play(guild: IGuild): any {
-        const song = guild.getQueue()!.songs[0];
+        const serverQueue = guild.getQueue()!;
+
+        const song = serverQueue.songs[0];
         if (!song) {
-            guild.getQueue()!.connection!.disconnect();
+            serverQueue.connection!.disconnect();
             return guild.setQueue(null);
         }
 
-        guild.getQueue()!.connection!.voice.setSelfDeaf(true);
-        const dispatcher = guild.getQueue()!.connection!.play(ytdl(song.url, ))
+        serverQueue.connection!.voice.setSelfDeaf(true);
+        const dispatcher = serverQueue.connection!.play(ytdl(song.url, ))
+            .on("start", () => {
+                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: ${song.title} started`);
+                serverQueue.textChannel.send(`Start playing: **${song.title}**`);
+            })
+            .on("stop", () => {
+                serverQueue.songs = [];
+                guild.setQueue(serverQueue);
+                dispatcher.end();
+            })
+            .on("skip", () => {
+                dispatcher.end();
+            })
+            .on("setVolume", (volume: number) => {
+                serverQueue.volume = volume;
+                serverQueue.connection!.dispatcher.setVolumeLogarithmic(volume / 100);
+                guild.setQueue(serverQueue);
+            })
             .on("finish", () => {
-                this.client.log.info("Song ended!");
-                guild.getQueue()!.songs.shift();
+                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: ${song.title} ended`);
+                serverQueue.textChannel.send(`Stop playing: **${song.title}**`);
+                serverQueue.songs.shift();
                 this.play(guild);
             }).on("error", (err: Error) => {
-                this.client.log.error("PLAY_ERROR", err);
+                this.client.log.error("PLAY_ERROR: ", err);
             });
 
-        dispatcher.setVolumeLogarithmic(guild.getQueue()!.volume / 100);
+        dispatcher.setVolumeLogarithmic(serverQueue.volume / 100);
     }
 }
