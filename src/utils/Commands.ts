@@ -11,7 +11,7 @@ export default class CommandsHandler {
     constructor(public client: BotClient, readonly path: string) {}
     public load(): void {
         readdir(resolve(this.path), (err, filesRaw) => {
-            if (err) this.client.log.error("CMD_LOADER_ERR: ", err);
+            if (err) this.client.log.error("CMD_LOADER_ERR", err);
             let disabledCount = 0;
             const files = filesRaw.filter(f => !f.endsWith(".map"));
             files.forEach(file => {
@@ -55,7 +55,7 @@ export default class CommandsHandler {
         try {
             return command.execute(message, args);
         } catch (e) {
-            this.client.log.error("COMMAND_HANDLER_ERR: ", e);
+            this.client.log.error("COMMAND_HANDLER_ERR", e);
         } finally {
             this.client.log.info(`[Shard #${this.client.shard!.ids}] ${message.author.tag} is using ${command.help.name} command on ${message.guild ? message.guild.name : "DM Channel"}`);
         }

@@ -10,7 +10,7 @@ export default class PlayCommand extends BaseCommand {
         super(client, path, {}, {
             name: "play",
             description: "Play some musics",
-            usage: "{prefix}play <yt video or playlist link / yt video name>"
+            "usage": "{prefix}play <yt video or playlist link / yt video name>"
         });
     }
     public async execute(message: IMessage, args: string[]): Promise<any> {
@@ -22,7 +22,6 @@ export default class PlayCommand extends BaseCommand {
         const songInfo = await ytdl.getInfo(args[0]);
         const song: ISong = {
             title: songInfo.title,
-            id: songInfo.video_id,
             url: songInfo.video_url
         };
         if (!message.guild!.getQueue()) {
@@ -31,8 +30,13 @@ export default class PlayCommand extends BaseCommand {
             try {
                 await message.guild!.getQueue()!.connect();
             } catch (error) {
+<<<<<<< HEAD
                 message.guild!.destroyQueue();
                 this.client.log.error("PLAY_COMMAND: ", error);
+=======
+                message.guild!.setQueue(null);
+                this.client.log.error("PLAY_COMMAND", error);
+>>>>>>> parent of 1f5703d... New Features + Let's redesign the IServerQueue (not finished)
                 message.channel.send(`Error: Could not join the voice channel. reason: \`${error}\``);
                 return undefined;
             }
@@ -48,4 +52,26 @@ export default class PlayCommand extends BaseCommand {
 
         return message;
     }
+<<<<<<< HEAD
+=======
+    private play(guild: IGuild): any {
+        const song = guild.getQueue()!.songs[0];
+        if (!song) {
+            guild.getQueue()!.connection!.disconnect();
+            return guild.setQueue(null);
+        }
+
+        guild.getQueue()!.connection!.voice.setSelfDeaf(true);
+        const dispatcher = guild.getQueue()!.connection!.play(ytdl(song.url, ))
+            .on("finish", () => {
+                this.client.log.info("Song ended!");
+                guild.getQueue()!.songs.shift();
+                this.play(guild);
+            }).on("error", (err: Error) => {
+                this.client.log.error("PLAY_ERROR", err);
+            });
+
+        dispatcher.setVolumeLogarithmic(guild.getQueue()!.volume / 100);
+    }
+>>>>>>> parent of 1f5703d... New Features + Let's redesign the IServerQueue (not finished)
 }

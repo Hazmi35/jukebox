@@ -6,12 +6,21 @@ import { totalShards, name } from "./config";
 const log = new LogWrapper(name + "-sharding").logger;
 
 process.on("unhandledRejection", (e) => {
+<<<<<<< HEAD
     log.error("UNHANDLED_REJECTION: ", e);
 });
 
 process.on("uncaughtException", (e) => {
     log.error("UNCAUGHT_EXCEPTION: ", e);
     log.warn("NODE_WARN: ", { stack: "Uncaught Exception detected. Restarting..." });
+=======
+    systemLog.error("UNHANDLED_REJECTION", e);
+});
+
+process.on("uncaughtException", (e) => {
+    systemLog.error("UNCAUGHT_EXCEPTION", e);
+    systemLog.warn("NODE_WARN", { stack: "Uncaught Exception detected. Restarting..." });
+>>>>>>> parent of 1f5703d... New Features + Let's redesign the IServerQueue (not finished)
     process.exit(1);
 });
 
@@ -20,7 +29,7 @@ const shards = new ShardingManager(resolve(__dirname, "bot.js"), { totalShards: 
 shards.on("shardCreate", (shard) => {
     log.info(`[Shard #${shard.id}] Spawned.`);
     shard.on("disconnect", () => {
-        log.warn("SHARD_DISCONNECTED: ", { stack: `[Shard #${shard.id}] Disconnected` }); // TODO: Fix this.
+        log.warn("SHARD_DISCONNECTED", { stack: `[Shard #${shard.id}] Disconnected` }); // TODO: Fix this.
     }).on("reconnecting", () => {
         log.info(`[Shard #${shard.id}] Reconnected.`);
     });

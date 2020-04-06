@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { Message, Guild, TextChannel, VoiceChannel, DMChannel, VoiceConnection, Collection, NewsChannel } from "discord.js";
+=======
+import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection } from "discord.js";
+>>>>>>> parent of 1f5703d... New Features + Let's redesign the IServerQueue (not finished)
 import Jukebox from "../structures/Jukebox";
 
 export interface CommandComponent {
@@ -53,10 +57,15 @@ export interface IQueueConstruct {
     textChannel: ITextChannel | IDMChannel | INewsChannel | null;
     voiceChannel: VoiceChannel | null;
     connection: VoiceConnection | null;
+<<<<<<< HEAD
+=======
+    songs: ISong[];
+    volume: number;
+    playing: boolean;
+>>>>>>> parent of 1f5703d... New Features + Let's redesign the IServerQueue (not finished)
 }
 
 export interface ISong {
     title: string;
-    id: string;
     url: string;
 }
