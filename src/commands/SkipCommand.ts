@@ -8,7 +8,7 @@ export default class PlayCommand extends BaseCommand {
         super(client, path, {}, {
             name: "skip",
             description: "Skip the current song",
-            "usage": "{prefix}skip"
+            usage: "{prefix}skip"
         });
     }
     public execute(message: IMessage, args: string[]): any {

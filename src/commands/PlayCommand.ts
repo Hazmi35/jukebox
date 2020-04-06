@@ -13,7 +13,7 @@ export default class PlayCommand extends BaseCommand {
         super(client, path, {}, {
             name: "play",
             description: "Play some musics",
-            "usage": "{prefix}play <yt video or playlist link / yt video name>"
+            usage: "{prefix}play <yt video or playlist link / yt video name>"
         });
     }
     public async execute(message: IMessage, args: string[]): Promise<any> {

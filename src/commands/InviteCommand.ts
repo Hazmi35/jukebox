@@ -8,7 +8,7 @@ export default class PlayCommand extends BaseCommand {
         super(client, path, {}, {
             name: "invite",
             description: "Send the bot's invite link",
-            "usage": "{prefix}invite"
+            usage: "{prefix}invite"
         });
     }
     public execute(message: Message, args: string[]): void {

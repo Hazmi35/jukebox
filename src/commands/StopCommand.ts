@@ -9,7 +9,7 @@ export default class PlayCommand extends BaseCommand {
         super(client, path, {}, {
             name: "stop",
             description: "Stop the current queue",
-            "usage": "{prefix}stop"
+            usage: "{prefix}stop"
         });
     }
     public execute(message: IMessage, args: string[]): any {
