@@ -28,16 +28,8 @@ export default class PlayCommand extends BaseCommand {
             url: songInfo.video_url
         };
         if (!message.guild!.queue) {
-            const queueConstruct: IServerQueue = {
-                textChannel: message.channel,
-                voiceChannel,
-                connection: null,
-                songs: new SongManager(),
-                volume: 100,
-                playing: true
-            };
             message.guild!.queue = new ServerQueue(message.channel, voiceChannel);
-            queueConstruct.songs.addSong(song);
+            message.guild!.queue.songs.addSong(song);
             try {
                 const connection = await voiceChannel.join();
                 message.guild!.queue.connection = connection;
@@ -62,6 +54,7 @@ export default class PlayCommand extends BaseCommand {
     private play(guild: IGuild): any {
         const serverQueue = guild.queue!;
         const song = serverQueue.songs.first();
+        console.log(serverQueue);
         if (!song) {
             serverQueue.connection!.disconnect();
             return guild.queue = null;
