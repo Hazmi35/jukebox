@@ -2,7 +2,10 @@
 import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
 import ytdl from "ytdl-core";
-import { IMessage, ISong, IGuild } from "../typings";
+import { IMessage, ISong, IGuild, IServerQueue } from "../typings";
+import { Collection } from "discord.js";
+import SongManager from "../structures/SongManager";
+import ServerQueue from "../structures/ServerQueue";
 
 
 export default class PlayCommand extends BaseCommand {
@@ -24,19 +27,23 @@ export default class PlayCommand extends BaseCommand {
             title: songInfo.title,
             url: songInfo.video_url
         };
-        if (!message.guild!.getQueue()) {
-            message.guild!.constructQueue(message.channel, voiceChannel);
-            message.guild!.getQueue()!.addSong(song);
+        if (!message.guild!.queue) {
+            const queueConstruct: IServerQueue = {
+                textChannel: message.channel,
+                voiceChannel,
+                connection: null,
+                songs: new SongManager(),
+                volume: 100,
+                playing: true
+            };
+            message.guild!.queue = new ServerQueue(message.channel, voiceChannel);
+            queueConstruct.songs.addSong(song);
             try {
-                await message.guild!.getQueue()!.connect();
+                const connection = await voiceChannel.join();
+                message.guild!.queue.connection = connection;
             } catch (error) {
-<<<<<<< HEAD
-                message.guild!.destroyQueue();
+                message.guild!.queue = null;
                 this.client.log.error("PLAY_COMMAND: ", error);
-=======
-                message.guild!.setQueue(null);
-                this.client.log.error("PLAY_COMMAND", error);
->>>>>>> parent of 1f5703d... New Features + Let's redesign the IServerQueue (not finished)
                 message.channel.send(`Error: Could not join the voice channel. reason: \`${error}\``);
                 return undefined;
             }
@@ -46,32 +53,36 @@ export default class PlayCommand extends BaseCommand {
                 return message.channel.send("I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions");
             }
         } else {
-            message.guild!.getQueue()!.addSong(song);
+            message.guild!.queue.songs.addSong(song);
             return message.channel.send(`Song **${song.title}** has been added to the queue`);
         }
 
         return message;
     }
-<<<<<<< HEAD
-=======
     private play(guild: IGuild): any {
-        const song = guild.getQueue()!.songs[0];
+        const serverQueue = guild.queue!;
+        const song = serverQueue.songs.first();
         if (!song) {
-            guild.getQueue()!.connection!.disconnect();
-            return guild.setQueue(null);
+            serverQueue.connection!.disconnect();
+            return guild.queue = null;
         }
 
-        guild.getQueue()!.connection!.voice.setSelfDeaf(true);
-        const dispatcher = guild.getQueue()!.connection!.play(ytdl(song.url, ))
+        serverQueue.connection!.voice.setSelfDeaf(true);
+        const dispatcher = guild.queue!.connection!.play(ytdl(song.url))
+            .on("start", () => {
+                serverQueue.playing = true;
+                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: ${song.title} started`);
+                serverQueue.textChannel!.send(`Start playing: **${song.title}**`);
+            })
             .on("finish", () => {
-                this.client.log.info("Song ended!");
-                guild.getQueue()!.songs.shift();
+                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: ${song.title} ended`);
+                serverQueue.textChannel!.send(`Stop playing: **${song.title}**`);
+                serverQueue.songs.deleteFirst();
                 this.play(guild);
             }).on("error", (err: Error) => {
-                this.client.log.error("PLAY_ERROR", err);
+                this.client.log.error("PLAY_ERROR: ", err);
             });
 
-        dispatcher.setVolumeLogarithmic(guild.getQueue()!.volume / 100);
+        dispatcher.setVolumeLogarithmic(guild.queue!.volume / 100);
     }
->>>>>>> parent of 1f5703d... New Features + Let's redesign the IServerQueue (not finished)
 }

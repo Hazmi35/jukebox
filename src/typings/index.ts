@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { Message, Guild, TextChannel, VoiceChannel, DMChannel, VoiceConnection, Collection, NewsChannel } from "discord.js";
-=======
-import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection } from "discord.js";
->>>>>>> parent of 1f5703d... New Features + Let's redesign the IServerQueue (not finished)
+import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection } from "discord.js";
 import Jukebox from "../structures/Jukebox";
 
 export interface CommandComponent {
@@ -22,9 +18,7 @@ export interface CommandComponent {
 
 export interface IGuild extends Guild {
     client: Jukebox;
-    getQueue(): IQueueManager | null;
-    constructQueue(textChannel: IQueueConstruct["textChannel"], voiceChannel: IQueueConstruct["voiceChannel"]): IQueueManager;
-    destroyQueue(): null;
+    queue: IServerQueue | null;
 }
 
 export interface IMessage extends Message {
@@ -48,21 +42,18 @@ export interface IDMChannel extends DMChannel {
     guild: null;
 }
 
-export interface IMusicManager {
-    connect(): Promise<IMusicManager>;
-    addSong(song: ISong): Collection<ISong["id"], ISong>;
-}
-
-export interface IQueueConstruct {
+export interface IServerQueue {
     textChannel: ITextChannel | IDMChannel | INewsChannel | null;
     voiceChannel: VoiceChannel | null;
     connection: VoiceConnection | null;
-<<<<<<< HEAD
-=======
-    songs: ISong[];
+    songs: ISongs;
     volume: number;
     playing: boolean;
->>>>>>> parent of 1f5703d... New Features + Let's redesign the IServerQueue (not finished)
+}
+
+export interface ISongs extends Collection<string, ISong> {
+    addSong(song: ISong): this;
+    deleteFirst(): boolean;
 }
 
 export interface ISong {

@@ -7,9 +7,9 @@ import { IMessage } from "../typings";
 export default class PingCommand extends BaseCommand {
     constructor(client: BotClient, readonly path: string) {
         super(client, path, {}, {
-            name: "pause",
-            description: "Pause the current song.",
-            usage: "{prefix}pause"
+            name: "resume",
+            description: "Resume the music.",
+            usage: "{prefix}resume"
         });
     }
 
@@ -19,11 +19,11 @@ export default class PingCommand extends BaseCommand {
         if (message.member!.voice.channel.id !== message.guild!.queue.voiceChannel!.id) return message.channel.send("You need to be in the same voice channel as mine");
 
         if (message.guild!.queue.playing) {
-            message.guild!.queue.playing = false;
-            message.guild!.queue.connection!.dispatcher.pause();
-            return message.channel.send("Pause the music for you!");
+            message.channel.send("Music is not paused!");
         } else {
-            message.channel.send("Music is already paused!");
+            message.guild!.queue.playing = true;
+            message.guild!.queue.connection!.dispatcher.resume();
+            return message.channel.send("Resumed the music for you!");
         }
     }
 }

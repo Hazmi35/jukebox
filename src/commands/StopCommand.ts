@@ -2,6 +2,7 @@
 import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
 import { IMessage } from "../typings";
+import { Collection } from "discord.js";
 
 export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
@@ -13,9 +14,9 @@ export default class PlayCommand extends BaseCommand {
     }
     public execute(message: IMessage, args: string[]): any {
         if (!message.member!.voice.channel) return message.channel.send("You're not in a voice channel");
-        if (!message.guild!.getQueue()) return message.channel.send("There is nothing playing.");
-        if (message.member!.voice.channel.id !== message.guild!.me!.voice.channel!.id) return message.channel.send("You need to be in the same voice channel as mine");
-        message.guild!.getQueue()!.songs = [];
-        message.guild!.getQueue()!.connection!.dispatcher.end();
+        if (!message.guild!.queue!) return message.channel.send("There is nothing playing.");
+        if (message.member!.voice.channel.id !== message.guild!.queue!.voiceChannel!.id) return message.channel.send("You need to be in the same voice channel as mine");
+        message.guild!.queue!.songs.clear();
+        message.guild!.queue!.connection!.dispatcher.end();
     }
 }

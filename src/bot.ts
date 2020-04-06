@@ -13,10 +13,10 @@ client.on("ready", () => {
 });
 
 client.on("warn", (warn) => {
-    client.log.warn("CLIENT_WARN", warn);
+    client.log.warn("CLIENT_WARN: ", warn);
 });
 client.on("error", (error) => {
-    client.log.error("CLIENT_ERROR", error);
+    client.log.error("CLIENT_ERROR: ", error);
 });
 
 client.on("message", (message: Message): any => {
