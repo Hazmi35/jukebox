@@ -1,4 +1,4 @@
-import { Collection } from "discord.js";
+import { Collection, SnowflakeUtil } from "discord.js";
 import { ISongs as ISongManager, ISong } from "../typings";
 
 export default class SongManager extends Collection<any, any> implements ISongManager {
@@ -6,7 +6,7 @@ export default class SongManager extends Collection<any, any> implements ISongMa
         super(data);
     }
     public addSong(song: ISong): this {
-        return this.set(String(this.size + 1), song);
+        return this.set(SnowflakeUtil.generate(), song);
     }
     public deleteFirst(): boolean {
         return this.delete(this.firstKey());

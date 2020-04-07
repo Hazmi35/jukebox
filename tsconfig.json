@@ -13,7 +13,8 @@
       "emitDecoratorMetadata": true,
       "typeRoots": [
           "node_modules/@types",
-          "types"
+          "types",
+          "src/typings"
       ],
       "outDir": "./dist"
   },

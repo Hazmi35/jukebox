@@ -2,10 +2,9 @@
 import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
 import ytdl from "ytdl-core";
-import { IMessage, ISong, IGuild, IServerQueue } from "../typings";
-import { Collection } from "discord.js";
-import SongManager from "../utils/SongManager";
+import { IMessage, ISong, IGuild, IVoiceChannel } from "../typings";
 import ServerQueue from "../structures/ServerQueue";
+import { Util } from "discord.js";
 
 
 export default class PlayCommand extends BaseCommand {
@@ -17,22 +16,35 @@ export default class PlayCommand extends BaseCommand {
         });
     }
     public async execute(message: IMessage, args: string[]): Promise<any> {
-        const voiceChannel = message.member!.voice.channel;
+        const voiceChannel = message.member!.voice.channel as IVoiceChannel;
         if (!voiceChannel) return message.channel.send("I'm sorry but you need to be in a voice channel to play music");
         if (!voiceChannel.joinable) return message.channel.send("I'm sorry but I can't connect to your voice channel, make sure I have the proper permissions!");
 
         if (!args[0]) return message.channel.send("Please give me the youtube link");
-        const songInfo = await ytdl.getInfo(args[0]);
+        const searchString = args.join(" ");
+        const url = searchString.replace(/<(.+)>/g, "$1");
+
+        try {
+            var video = await this.client.youtube.getVideo(url);
+        } catch (e) {
+            try {
+                const videos = await this.client.youtube.searchVideos(searchString, 1);
+                var video = await this.client.youtube.getVideo(videos[0].url);
+            } catch (err) {
+                this.client.log.error("YT_SEARCH_ERR: ", err);
+                return message.channel.send("I could not obtain any search results!");
+            }
+        }
         const song: ISong = { // TODO: Youtube search and song selection
-            title: songInfo.title,
-            url: songInfo.video_url
+            id: video.id,
+            title: Util.escapeMarkdown(video.title),
+            url: `https://youtube.com/watch?v=${video.id}`
         };
         if (!message.guild!.queue) {
             message.guild!.queue = new ServerQueue(message.channel, voiceChannel);
             message.guild!.queue.songs.addSong(song);
             try {
-                const connection = await voiceChannel.join();
-                message.guild!.queue.connection = connection;
+                await message.guild!.queue.voiceChannel!.join();
             } catch (error) {
                 message.guild!.queue = null;
                 this.client.log.error("PLAY_COMMAND: ", error);
@@ -60,7 +72,7 @@ export default class PlayCommand extends BaseCommand {
         }
 
         serverQueue.connection!.voice.setSelfDeaf(true);
-        const dispatcher = guild.queue!.connection!.play(ytdl(song.url))
+        const dispatcher = guild.queue!.connection!.play(ytdl(song.url, { filter: "audioonly" }))
             .on("start", () => {
                 serverQueue.playing = true;
                 this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: ${song.title} started`);

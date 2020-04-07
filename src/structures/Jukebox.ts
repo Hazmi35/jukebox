@@ -5,6 +5,9 @@ import config from "../config";
 import { LogWrapper } from "../utils/LogWrapper";
 import CommandsHandler from "../utils/Commands";
 import * as request from "superagent";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore-next-line // FIX: simple-youtube-api typings or wait for v6 release
+import YouTube from "simple-youtube-api";
 
 // Extending DiscordJS Structures
 import "./Guild";
@@ -14,6 +17,7 @@ export default class Jukebox extends Client {
     readonly config = config;
     readonly request = request;
     readonly log = new LogWrapper(config.name).logger;
+    readonly youtube = new YouTube(process.env.YT_API_KEY!, { cache: false, fetchAll: true });
     readonly commandsHandler = new CommandsHandler(this, resolve(__dirname, "..", "commands"));
     constructor(opt: ClientOptions) { super(opt); }
 

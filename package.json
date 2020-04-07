@@ -30,6 +30,7 @@
     "discord.js": "^12.1.1",
     "dotenv": "^8.2.0",
     "opusscript": "^0.0.7",
+    "simple-youtube-api": "^5.2.1",
     "superagent": "^5.2.2",
     "winston": "^3.2.1",
     "ytdl-core": "^2.0.1"

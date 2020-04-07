@@ -22,7 +22,7 @@ shards.on("shardCreate", (shard) => {
     shardsSpawned++;
     log.info(`[ShardManager] Shard #${shard.id} Spawned.`);
     shard.on("disconnect", () => {
-        log.warn("SHARD_DISCONNECTED: ", { stack: `[ShardManager] Shard #${shard.id} Disconnected` }); // TODO: Fix this.
+        log.warn("SHARD_DISCONNECTED: ", { stack: `[ShardManager] Shard #${shard.id} Disconnected` });
     }).on("reconnecting", () => {
         log.info(`[ShardManager] Shard #${shard.id} Reconnected.`);
     });

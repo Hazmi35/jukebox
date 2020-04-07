@@ -44,11 +44,15 @@ export interface IDMChannel extends DMChannel {
 
 export interface IServerQueue {
     textChannel: ITextChannel | IDMChannel | INewsChannel | null;
-    voiceChannel: VoiceChannel | null;
+    voiceChannel: IVoiceChannel | null;
     connection: VoiceConnection | null;
     songs: ISongs;
     volume: number;
     playing: boolean;
+}
+
+export interface IVoiceChannel extends VoiceChannel {
+    _join(): Promise<VoiceConnection>;
 }
 
 export interface ISongs extends Collection<string, ISong> {
@@ -57,6 +61,7 @@ export interface ISongs extends Collection<string, ISong> {
 }
 
 export interface ISong {
+    id: string;
     title: string;
     url: string;
 }
