@@ -5,7 +5,7 @@ import BotClient from "../structures/Jukebox";
 import ytdl from "ytdl-core";
 import { IMessage, ISong, IGuild } from "../typings";
 import ServerQueue from "../structures/ServerQueue";
-import { Util, VoiceChannel } from "discord.js";
+import { Util, VoiceChannel, MessageEmbed } from "discord.js";
 
 export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
@@ -30,6 +30,7 @@ export default class PlayCommand extends BaseCommand {
             const videos = await playlist.getVideos();
             let skikppedVideos = 0;
             for (const video of Object.values(videos)) {
+                // eslint-disable-next-line no-extra-parens
                 if ((video as any).raw.status.privacyStatus === "private") {
                     skikppedVideos++;
                     continue;
@@ -46,9 +47,43 @@ export default class PlayCommand extends BaseCommand {
                 var video = await this.client.youtube.getVideo(url);
             } catch (e) {
                 try {
-                    const videos = await this.client.youtube.searchVideos(searchString, 1);
-                    // eslint-disable-next-line no-var
-                    var video = await this.client.youtube.getVideo(videos[0].url);
+                    const videos = await this.client.youtube.searchVideos(searchString, 12);
+                    let index = 0;
+                    const embed = new MessageEmbed()
+                        .setAuthor("Song Selection") // TODO: Find or create typings for simple-youtube-api or wait for v6 released
+                        .setDescription(`${videos.map((video: any) => `**${++index} -** ${video.title}`).join("\n")} \n *Type \`cancel\` or \`c\` to cancel song selection*`)
+                        .setThumbnail(message.client.user!.displayAvatarURL())
+                        .setColor("#00ff00")
+                        .setFooter("Please provide a value to select one of the search results ranging from 1-12");
+                    const msg = await message.channel.send(embed);
+                    try {
+                        // eslint-disable-next-line no-var
+                        var response = await message.channel.awaitMessages((msg2: IMessage) => {
+                            if (message.author.id !== msg2.author.id) return false;
+                            else {
+                                if (msg2.content === "cancel" || msg2.content === "c") return true;
+                                else return Number(msg2.content) > 0 && Number(msg2.content) < 13;
+                            }
+                        }, {
+                            max: 1,
+                            time: 20000,
+                            errors: ["time"]
+                        });
+                        msg.delete();
+                        response.first()!.delete({ timeout: 3000 }).catch(e => e);
+                    } catch (error) {
+                        msg.delete();
+                        message.channel.send(new MessageEmbed().setDescription("No or invalid value entered, song selection canceled.").setColor("#ff0000"));
+                        return;
+                    }
+                    if (response.first()!.content === "c" || response.first()!.content === "cancel") {
+                        message.channel.send(new MessageEmbed().setDescription("Song selection canceled").setColor("#ff0000"));
+                        return;
+                    } else {
+                        const videoIndex = parseInt(response.first()!.content);
+                        // eslint-disable-next-line no-var
+                        var video = await this.client.youtube.getVideoByID(videos[videoIndex - 1].id);
+                    }
                 } catch (err) {
                     this.client.log.error("YT_SEARCH_ERR: ", err);
                     return message.channel.send("I could not obtain any search results!");
@@ -103,13 +138,14 @@ export default class PlayCommand extends BaseCommand {
         const dispatcher = guild.queue!.connection!.play(ytdl(song.url, { filter: "audioonly" }))
             .on("start", () => {
                 serverQueue.playing = true;
-                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: ${song.title} started`);
+                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
                 serverQueue.textChannel!.send(`Start playing: **${song.title}**`);
             })
             .on("finish", () => {
-                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: ${song.title} ended`);
+                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
+                if (serverQueue.loopMode === 0) serverQueue.songs.deleteFirst();
+                else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
                 serverQueue.textChannel!.send(`Stop playing: **${song.title}**`);
-                serverQueue.songs.deleteFirst();
                 this.play(guild);
             }).on("error", (err: Error) => {
                 this.client.log.error("PLAY_ERROR: ", err);

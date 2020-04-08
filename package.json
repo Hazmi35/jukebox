@@ -39,6 +39,7 @@
     "@discordjs/opus": "github:hzmifork/opus",
     "bufferutil": "^4.0.1",
     "erlpack": "github:discordapp/erlpack",
+    "libsodium-wrappers": "^0.7.6",
     "utf-8-validate": "^5.0.2",
     "zlib-sync": "^0.1.6"
   },

@@ -49,6 +49,7 @@ export interface IServerQueue {
     songs: ISongs;
     volume: number;
     playing: boolean;
+    loopMode: 0 | 1 | 2;
 }
 export interface ISongs extends Collection<string, ISong> {
     addSong(song: ISong): this;

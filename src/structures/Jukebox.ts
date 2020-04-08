@@ -34,7 +34,7 @@ export default class Jukebox extends Client {
     public getToken(): string {
         return this._token;
     }
-    public async getGuildsCount(): Promise<number> { // TODO: Find a best way to do this
+    public async getGuildsCount(): Promise<number> {
         if (!this.shard) return this.guilds.cache.size;
         const size = await this.shard.broadcastEval("this.guilds.cache.size");
         return size.reduce((p, v) => p + v, 0);
