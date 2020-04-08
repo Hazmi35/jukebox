@@ -6,7 +6,9 @@ import { MessageEmbed } from "discord.js";
 
 export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
-        super(client, path, {}, {
+        super(client, path, {
+            aliases: ["repeat", "music-loop"]
+        }, {
             name: "loop",
             description: "Loop current song or queue",
             usage: "{prefix}loop"
