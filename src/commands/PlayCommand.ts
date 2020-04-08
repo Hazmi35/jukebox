@@ -1,11 +1,11 @@
+/* eslint-disable no-extra-parens */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
 import ytdl from "ytdl-core";
-import { IMessage, ISong, IGuild, IVoiceChannel } from "../typings";
+import { IMessage, ISong, IGuild } from "../typings";
 import ServerQueue from "../structures/ServerQueue";
-import { Util } from "discord.js";
-
+import { Util, VoiceChannel } from "discord.js";
 
 export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
@@ -15,8 +15,9 @@ export default class PlayCommand extends BaseCommand {
             usage: "{prefix}play <yt video or playlist link / yt video name>"
         });
     }
+
     public async execute(message: IMessage, args: string[]): Promise<any> {
-        const voiceChannel = message.member!.voice.channel as IVoiceChannel;
+        const voiceChannel = message.member!.voice.channel;
         if (!voiceChannel) return message.channel.send("I'm sorry but you need to be in a voice channel to play music");
         if (!voiceChannel.joinable) return message.channel.send("I'm sorry but I can't connect to your voice channel, make sure I have the proper permissions!");
 
@@ -24,18 +25,41 @@ export default class PlayCommand extends BaseCommand {
         const searchString = args.join(" ");
         const url = searchString.replace(/<(.+)>/g, "$1");
 
-        try {
-            var video = await this.client.youtube.getVideo(url);
-        } catch (e) {
-            try {
-                const videos = await this.client.youtube.searchVideos(searchString, 1);
-                var video = await this.client.youtube.getVideo(videos[0].url);
-            } catch (err) {
-                this.client.log.error("YT_SEARCH_ERR: ", err);
-                return message.channel.send("I could not obtain any search results!");
+        if (/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/.exec(url)) {
+            const playlist = await this.client.youtube.getPlaylist(url);
+            const videos = await playlist.getVideos();
+            let skikppedVideos = 0;
+            for (const video of Object.values(videos)) {
+                if ((video as any).raw.status.privacyStatus === "private") {
+                    skikppedVideos++;
+                    continue;
+                } else {
+                    const video2 = await this.client.youtube.getVideoByID((video as any).id); // TODO: Find or create typings for simple-youtube-api or wait for v6 released
+                    await this.handleVideo(video2, message, voiceChannel, true);
+                }
             }
+            if (skikppedVideos !== 0) message.channel.send(`${skikppedVideos >= 2 ? `${skikppedVideos} videos` : `${skikppedVideos} video`} are skipped because it's a private video`);
+            return message.channel.send(`All videos in playlist: **${playlist.title}**, has been added to the queue!`);
+        } else {
+            try {
+                // eslint-disable-next-line no-var
+                var video = await this.client.youtube.getVideo(url);
+            } catch (e) {
+                try {
+                    const videos = await this.client.youtube.searchVideos(searchString, 1);
+                    // eslint-disable-next-line no-var
+                    var video = await this.client.youtube.getVideo(videos[0].url);
+                } catch (err) {
+                    this.client.log.error("YT_SEARCH_ERR: ", err);
+                    return message.channel.send("I could not obtain any search results!");
+                }
+            }
+            return this.handleVideo(video, message, voiceChannel);
         }
-        const song: ISong = { // TODO: Youtube search and song selection
+    }
+
+    private async handleVideo(video: any, message: IMessage, voiceChannel: VoiceChannel, playlist = false): Promise<any> { // TODO: Find or create typings for simple-youtube-api or wait for v6 released
+        const song: ISong = {
             id: video.id,
             title: Util.escapeMarkdown(video.title),
             url: `https://youtube.com/watch?v=${video.id}`
@@ -44,7 +68,8 @@ export default class PlayCommand extends BaseCommand {
             message.guild!.queue = new ServerQueue(message.channel, voiceChannel);
             message.guild!.queue.songs.addSong(song);
             try {
-                await message.guild!.queue.voiceChannel!.join();
+                const connection = await message.guild!.queue.voiceChannel!.join();
+                message.guild!.queue.connection = connection;
             } catch (error) {
                 message.guild!.queue = null;
                 this.client.log.error("PLAY_COMMAND: ", error);
@@ -58,11 +83,14 @@ export default class PlayCommand extends BaseCommand {
             }
         } else {
             message.guild!.queue.songs.addSong(song);
+            if (playlist) return;
             return message.channel.send(`Song **${song.title}** has been added to the queue`);
         }
 
         return message;
+
     }
+
     private play(guild: IGuild): any {
         const serverQueue = guild.queue!;
         const song = serverQueue.songs.first();
