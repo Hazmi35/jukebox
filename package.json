@@ -36,7 +36,7 @@
     "ytdl-core": "^2.0.1"
   },
   "optionalDependencies": {
-    "@discordjs/opus": "^0.1.0",
+    "@discordjs/opus": "github:hzmifork/opus",
     "bufferutil": "^4.0.1",
     "erlpack": "github:discordapp/erlpack",
     "utf-8-validate": "^5.0.2",
