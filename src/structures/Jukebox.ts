@@ -4,7 +4,7 @@ import { resolve } from "path";
 import config from "../config";
 import { LogWrapper } from "../utils/LogWrapper";
 import CommandsHandler from "../utils/Commands";
-import * as request from "superagent";
+import request from "node-superfetch";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore-next-line // FIX: simple-youtube-api typings or wait for v6 release
 import YouTube from "simple-youtube-api";
