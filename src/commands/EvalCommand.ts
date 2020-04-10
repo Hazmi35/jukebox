@@ -64,7 +64,7 @@ export default class EvalCommand extends BaseCommand {
     }
 
     private async hastebin(text: string): Promise<string> {
-        const { body } = await this.client.request.post("https://bin.hzmi.xyz/documents")
+        const { body }: any = await this.client.request.post("https://bin.hzmi.xyz/documents")
             .send(text);
         return `https://bin.hzmi.xyz/${body.key}`;
     }
