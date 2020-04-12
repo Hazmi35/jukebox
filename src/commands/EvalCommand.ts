@@ -4,6 +4,7 @@ import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
 import { IMessage } from "../typings";
 import { MessageEmbed } from "discord.js";
+import { request } from "https";
 
 export default class EvalCommand extends BaseCommand {
     constructor(client: BotClient, readonly path: string) {
@@ -40,14 +41,14 @@ export default class EvalCommand extends BaseCommand {
             const output = this.clean(evaled);
             if (output.length > 1024) {
                 const hastebin = await this.hastebin(output);
-                embed.addField("Output", hastebin);
+                embed.addField("Output", hastebin + ".js");
             } else embed.addField("Output", "```js\n" + output + "```");
             message.channel.send(embed);
         } catch (e) {
             const error = this.clean(e);
             if (error.length > 1024) {
                 const hastebin = await this.hastebin(error);
-                embed.addField("Error", hastebin);
+                embed.addField("Error", hastebin + ".js");
             } else embed.addField("Error", "```js\n" + error + "```");
             message.channel.send(embed);
         }
@@ -59,13 +60,23 @@ export default class EvalCommand extends BaseCommand {
         if (typeof text === "string") {
             return text
                 .replace(new RegExp(process.env.DISCORD_TOKEN!, "g"), "[REDACTED]")
+                .replace(new RegExp(process.env.YT_API_KEY!, "g"), "[REDACTED]")
                 .replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
         } else return text;
     }
 
-    private async hastebin(text: string): Promise<string> {
-        const { body }: any = await this.client.request.post("https://bin.hzmi.xyz/documents")
-            .send(text);
-        return `https://bin.hzmi.xyz/${body.key}`;
+    private hastebin(text: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const req = request({ hostname: "bin.hzmi.xyz", path: "/documents", method: "POST", minVersion: "TLSv1.3" }, (res) => {
+                let raw = "";
+                res.on("data", chunk => raw += chunk);
+                res.on("end", () => {
+                    if (res.statusCode! >= 200 && res.statusCode! < 300) return resolve(`https://bin.hzmi.xyz/${JSON.parse(raw).key}`);
+                    else return reject(`[hastebin] Error while trying to send data to https://bin.hzmi.xyz/documents, ${res.statusCode} ${res.statusMessage}`);
+                });
+            }).on("error", reject);
+            req.write(typeof text === "object" ? JSON.stringify(text, null, 2) : text);
+            req.end();
+        });
     }
 }

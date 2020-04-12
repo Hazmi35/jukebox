@@ -4,7 +4,6 @@ import { resolve } from "path";
 import config from "../config";
 import { LogWrapper } from "../utils/LogWrapper";
 import CommandsHandler from "../utils/Commands";
-import request from "node-superfetch";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore-next-line // FIX: simple-youtube-api typings or wait for v6 release
 import YouTube from "simple-youtube-api";
@@ -15,7 +14,6 @@ import "./Guild";
 export default class Jukebox extends Client {
     private _token = "n/a";
     readonly config = config;
-    readonly request = request;
     readonly log = new LogWrapper(config.name).logger;
     readonly youtube = new YouTube(process.env.YT_API_KEY!, { cache: false, fetchAll: true });
     readonly commandsHandler = new CommandsHandler(this, resolve(__dirname, "..", "commands"));

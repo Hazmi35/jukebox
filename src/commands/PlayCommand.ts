@@ -99,6 +99,7 @@ export default class PlayCommand extends BaseCommand {
             title: Util.escapeMarkdown(video.title),
             url: `https://youtube.com/watch?v=${video.id}`
         };
+
         if (!message.guild!.queue) {
             message.guild!.queue = new ServerQueue(message.channel, voiceChannel);
             message.guild!.queue.songs.addSong(song);
@@ -150,7 +151,6 @@ export default class PlayCommand extends BaseCommand {
             }).on("error", (err: Error) => {
                 this.client.log.error("PLAY_ERROR: ", err);
             });
-
-        dispatcher.setVolumeLogarithmic(guild.queue!.volume / 100);
+        dispatcher.setVolume(guild.queue!.volume / guild.client.config.maxVolume);
     }
 }
