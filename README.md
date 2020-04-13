@@ -1,4 +1,4 @@
-![](jukebox.png)
+![](.github/workflows/images/jukebox.png)
 # Jukebox
 > Just a simple Discord music bot
 
