@@ -6,6 +6,9 @@ import ytdl from "ytdl-core";
 import { IMessage, ISong, IGuild } from "../typings";
 import ServerQueue from "../structures/ServerQueue";
 import { Util, VoiceChannel, MessageEmbed } from "discord.js";
+import { AllHtmlEntities } from "html-entities";
+
+const HtmlEntities = new AllHtmlEntities();
 
 export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
@@ -29,6 +32,7 @@ export default class PlayCommand extends BaseCommand {
             const playlist = await this.client.youtube.getPlaylist(url);
             const videos = await playlist.getVideos();
             let skikppedVideos = 0;
+            message.channel.send(`Adding all videos in playlist: **${playlist.title}**, Hang on...`);
             for (const video of Object.values(videos)) {
                 // eslint-disable-next-line no-extra-parens
                 if ((video as any).raw.status.privacyStatus === "private") {
@@ -51,7 +55,7 @@ export default class PlayCommand extends BaseCommand {
                     let index = 0;
                     const embed = new MessageEmbed()
                         .setAuthor("Song Selection") // TODO: Find or create typings for simple-youtube-api or wait for v6 released
-                        .setDescription(`${videos.map((video: any) => `**${++index} -** ${video.title}`).join("\n")} \n *Type \`cancel\` or \`c\` to cancel song selection*`)
+                        .setDescription(`${videos.map((video: any) => `**${++index} -** ${HtmlEntities.decode(video.title)}`).join("\n")} \n *Type \`cancel\` or \`c\` to cancel song selection*`)
                         .setThumbnail(message.client.user!.displayAvatarURL())
                         .setColor("#00ff00")
                         .setFooter("Please provide a value to select one of the search results ranging from 1-12");
