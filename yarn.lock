@@ -30,7 +30,8 @@
 
 "@discordjs/opus@github:hzmifork/opus":
   version "0.1.0"
-  resolved "https://codeload.github.com/hzmifork/opus/tar.gz/a4edfc73aa62a72291c5ca80a7aa6ba48dbb11a7"
+  uid dd17e74e06ecd54a3212db44892eb018e58b2a25
+  resolved "https://codeload.github.com/hzmifork/opus/tar.gz/dd17e74e06ecd54a3212db44892eb018e58b2a25"
   dependencies:
     node-addon-api "^2.0.0"
     node-pre-gyp "^0.14.0"
