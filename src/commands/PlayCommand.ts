@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
-import ytdl from "ytdl-core";
+import ytdl from "ytdl-core-discord";
 import { IMessage, ISong, IGuild } from "../typings";
 import ServerQueue from "../structures/ServerQueue";
 import { Util, VoiceChannel, MessageEmbed } from "discord.js";
@@ -131,7 +131,7 @@ export default class PlayCommand extends BaseCommand {
 
     }
 
-    private play(guild: IGuild): any {
+    private async play(guild: IGuild): Promise<any> {
         const serverQueue = guild.queue!;
         const song = serverQueue.songs.first();
         if (!song) {
@@ -140,7 +140,7 @@ export default class PlayCommand extends BaseCommand {
         }
 
         serverQueue.connection!.voice.setSelfDeaf(true);
-        const dispatcher = guild.queue!.connection!.play(ytdl(song.url, { filter: "audioonly" }))
+        const dispatcher = guild.queue!.connection!.play(await ytdl(song.url, { filter: "audioonly" }), { type: "opus" })
             .on("start", () => {
                 serverQueue.playing = true;
                 this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
