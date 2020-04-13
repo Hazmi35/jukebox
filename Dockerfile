@@ -34,6 +34,6 @@ RUN echo [INFO] Starting to build Docker image... \
 && echo [INFO] Pruning devDependencies... \
 && yarn install --production \
 && apk del .build-deps \
-&& echo [INFO] Done! Starting bot with yarn start
+&& echo [INFO] Done! Starting bot with node
 
-CMD ["yarn", "start"]
+CMD ["node", "dist/main.js"]
