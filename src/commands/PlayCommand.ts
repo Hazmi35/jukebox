@@ -140,6 +140,7 @@ export default class PlayCommand extends BaseCommand {
         }
 
         serverQueue.connection!.voice.setSelfDeaf(true);
+        // This fixes: https://github.com/discordjs/discord.js/issues/4027
         // eslint-disable-next-line no-bitwise
         const dispatcher = guild.queue!.connection!.play(await ytdl(song.url, { filter: "audioonly", highWaterMark: 1<<25 }), { type: "opus" })
             .on("start", () => {
