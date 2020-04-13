@@ -2,7 +2,7 @@
   "name": "jukebox",
   "version": "1.9.4",
   "description": " Just a simple Discord music bot.",
-  "main": "src/main.ts",
+  "main": "dist/main.js",
   "scripts": {
     "lint": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js)\"",
     "lint:fix": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js)\" --fix",
