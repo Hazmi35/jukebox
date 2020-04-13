@@ -5,7 +5,7 @@ import config from "../config";
 import { LogWrapper } from "../utils/LogWrapper";
 import CommandsHandler from "../utils/Commands";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore-next-line // FIX: simple-youtube-api typings or wait for v6 release
+// @ts-ignore-next-line // FIX: Find or create typings for simple-youtube-api or wait for v6 released
 import YouTube from "simple-youtube-api";
 
 // Extending DiscordJS Structures
