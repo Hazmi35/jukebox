@@ -14,7 +14,7 @@ export default class PlayCommand extends BaseCommand {
         });
     }
     public async execute(message: Message, args: string[]): Promise<void> { // TODO: Beautify this
-        const embed = new MessageEmbed()
+        message.channel.send(new MessageEmbed()
             .setAuthor(`${this.client.user!.username} - Just a simple Discord music bot.`)
             .setDescription(`
 \`\`\`
@@ -33,8 +33,7 @@ Bot Uptime: ${this.parseDur(this.client.uptime!)}
 DiscordJS version: v${version}
 Source code: https://github.com/Hazmi35/jukebox
 \`\`\`
-        `);
-        message.channel.send(embed);
+    `).setColor("#00FF00").setTimestamp());
     }
     private parseDur(ms: number): string {
         let seconds = ms / 1000;
