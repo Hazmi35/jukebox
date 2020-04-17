@@ -16,9 +16,6 @@ export default class PlayCommand extends BaseCommand {
     public async execute(message: Message, args: string[]): Promise<void> { // TODO: Beautify this
         const embed = new MessageEmbed()
             .setAuthor(`${this.client.user!.username} - Just a simple Discord music bot.`)
-            .addFields({
-                name: "Bot name", value: this.client.user!.username, inline: true
-            })
             .setDescription(`
 \`\`\`
 Bot name: ${this.client.user!.username}
