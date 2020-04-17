@@ -25,6 +25,7 @@ client.on("error", (error) => {
 client.on("message", (message): any => {
     if (message.author.bot) return message;
     if (message.channel.type === "dm") return message;
+    if (message.mentions.users.has(client.user!.id)) return message.channel.send(`Hi, I'm a simple music bot, see my commands with \`${client.config.prefix}help\``);
     if (!message.content.startsWith(client.config.prefix)) return message;
     client.commandsHandler.handle(message);
     return message;

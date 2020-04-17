@@ -8,8 +8,8 @@ export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
         super(client, path, { aliases: ["commands", "cmds"] }, {
             name: "help",
-            description: "Send help menu",
-            usage: "{prefix}help"
+            description: "Shows the help menu",
+            usage: "{prefix}help [command]"
         });
     }
     public execute(message: IMessage, args: string[]): void {
@@ -24,12 +24,14 @@ export default class PlayCommand extends BaseCommand {
                 .setFooter(`Use ${message.client.config.prefix}help <command> to get more info on specific command!`, "https://hzmi.xyz/assets/images/390511462361202688.png"));
         } else {
             message.channel.send(new MessageEmbed()
-                .setTitle(`Help for ${command.help.name}`)
+                .setTitle(`Help for ${command.help.name} command`)
                 .setThumbnail("https://hzmi.xyz/assets/images/question_mark.png")
                 .addFields({
                     name: "Name", value: `\`${command.help.name}\``, inline: true
                 }, {
                     name: "Description", value: command.help.description, inline: true
+                }, {
+                    name: "Aliases", value: `${command.conf.aliases!.length > 0 ? command.conf.aliases!.map(c => `\`${c}\``).join(", ") : "None."}`, inline: true
                 }, {
                     name: "Usage", value: `\`${command.help.usage!.replace(/{prefix}/g, message.client.config.prefix)}\``, inline: false
                 })

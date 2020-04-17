@@ -13,7 +13,7 @@ export default class EvalCommand extends BaseCommand {
             cooldown: 0
         }, {
             name: "eval",
-            description: "Only the developer can use this command.",
+            description: "Only the bot owner can use this command.",
             usage: "{prefix}eval <some js code>"
         });
     }

@@ -11,7 +11,7 @@ export default class PlayCommand extends BaseCommand {
         }, {
             name: "loop",
             description: "Loop current song or queue",
-            usage: "{prefix}loop"
+            usage: "{prefix}loop <all | one | disable>"
         });
     }
     public execute(message: IMessage, args: string[]): any {
@@ -29,7 +29,7 @@ export default class PlayCommand extends BaseCommand {
             message.guild!.queue.loopMode = 0;
             return message.channel.send("▶ Loop disabled.");
         } else {
-            message.channel.send("Invalid Value!"); // TODO: Make this informational
+            message.channel.send(`Invalid value, see \`${this.client.config.prefix}help loop\` for more info!`); // TODO: Make this informational
         }
     }
 }

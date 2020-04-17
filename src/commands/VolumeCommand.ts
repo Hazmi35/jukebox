@@ -8,7 +8,7 @@ export default class VolumeCommand extends BaseCommand {
         super(client, path, {}, {
             name: "volume",
             description: "Show or change the music volume",
-            usage: "{prefix}volume"
+            usage: "{prefix}volume [new volume]"
         });
     }
     public execute(message: IMessage, args: string[]): any {
