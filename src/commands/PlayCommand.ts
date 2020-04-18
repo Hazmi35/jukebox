@@ -1,11 +1,11 @@
-/* eslint-disable no-extra-parens */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+// TODO: Find or create typings for simple-youtube-api or wait for v6 released and then remove no-extra-parens
+/* eslint-disable @typescript-eslint/no-unused-vars, no-extra-parens */
 import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
-import ytdl from "ytdl-core-discord";
 import { IMessage, ISong, IGuild } from "../typings";
 import ServerQueue from "../structures/ServerQueue";
-import { Util, VoiceChannel, MessageEmbed } from "discord.js";
+import playSong from "../utils/PlaySong";
+import { Util, VoiceChannel, MessageEmbed, StreamDispatcher } from "discord.js";
 import { AllHtmlEntities } from "html-entities";
 
 const HtmlEntities = new AllHtmlEntities();
@@ -34,7 +34,6 @@ export default class PlayCommand extends BaseCommand {
             let skikppedVideos = 0;
             message.channel.send(`Adding all videos in playlist: **${playlist.title}**, Hang on...`);
             for (const video of Object.values(videos)) {
-                // eslint-disable-next-line no-extra-parens
                 if ((video as any).raw.status.privacyStatus === "private") {
                     skikppedVideos++;
                     continue;
@@ -140,14 +139,16 @@ export default class PlayCommand extends BaseCommand {
         }
 
         serverQueue.connection!.voice.setSelfDeaf(true);
-        // This fixes: https://github.com/discordjs/discord.js/issues/4027, highWatermark option is will be increased or decreased in the future
-        // eslint-disable-next-line no-bitwise
-        const dispatcher = guild.queue!.connection!.play(await ytdl(song.url, { quality: "highestaudio", highWaterMark: 1<<25 }), { type: "opus" })
-            .on("start", () => {
-                serverQueue.playing = true;
-                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
-                serverQueue.textChannel!.send(`Start playing: **${song.title}**`);
-            })
+        let dispatcher: StreamDispatcher;
+        const SongData = await playSong(song.url);
+        if (SongData.canDemux) dispatcher = serverQueue.connection!.play(SongData.data, { type: "webm/opus" });
+        else dispatcher = serverQueue.connection!.play(SongData.data, { type: "unknown" });
+
+        dispatcher.on("start", () => {
+            serverQueue.playing = true;
+            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
+            serverQueue.textChannel!.send(`Start playing: **${song.title}**`);
+        })
             .on("finish", () => {
                 this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
                 if (serverQueue.loopMode === 0) serverQueue.songs.deleteFirst();
