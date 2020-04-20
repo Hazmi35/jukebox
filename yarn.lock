@@ -64,12 +64,12 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.0.tgz#30d2d09f623fe32cde9cb582c7a6eda2788ce4a8"
   integrity sha512-WE4IOAC6r/yBZss1oQGM5zs2D7RuKR6Q+w+X2SouPofnWn+LbCqClRyhO3ZE7Ix8nmFgo/oVuuE01cJT2XB13A==
 
-"@typescript-eslint/eslint-plugin-tslint@^2.28.0":
-  version "2.28.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin-tslint/-/eslint-plugin-tslint-2.28.0.tgz#af2e644027f9dac483b7e4986be522c116ab9164"
-  integrity sha512-a6cU6aJZa10sK6DybAtOdCV/tU1rWTTurBgYtyJb2DsG3BJwF6vYob9qOKw9n3MjV/F757LGqXz3RNmrvrimww==
+"@typescript-eslint/eslint-plugin-tslint@^2.29.0":
+  version "2.29.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin-tslint/-/eslint-plugin-tslint-2.29.0.tgz#1586c6f88043164b64a017e9952518c1b985299d"
+  integrity sha512-r8mZE1dfDLj7B65TLvAk9SvGCdoyD/ZbuqTDhKf2+MkdMC6R99+uznz2JJ8WG+T7E2i8i5OWDFQQEcWoNDKQvQ==
   dependencies:
-    "@typescript-eslint/experimental-utils" "2.28.0"
+    "@typescript-eslint/experimental-utils" "2.29.0"
     lodash "^4.17.15"
 
 "@typescript-eslint/eslint-plugin@^2.28.0":
