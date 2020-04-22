@@ -4,15 +4,15 @@ import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
 import { IMessage, ISong, IGuild } from "../typings";
 import ServerQueue from "../structures/ServerQueue";
-import playSong from "../utils/PlaySong";
-import { Util, VoiceChannel, MessageEmbed, StreamDispatcher } from "discord.js";
+import ytdl from "../utils/YoutubeDownload";
+import { Util, VoiceChannel, MessageEmbed } from "discord.js";
 import { AllHtmlEntities } from "html-entities";
 
 const HtmlEntities = new AllHtmlEntities();
 
 export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
-        super(client, path, {}, {
+        super(client, path, { aliases: ["play-music", "add"] }, {
             name: "play",
             description: "Play some musics",
             usage: "{prefix}play <yt video or playlist link / yt video name>"
@@ -23,8 +23,11 @@ export default class PlayCommand extends BaseCommand {
         const voiceChannel = message.member!.voice.channel;
         if (!voiceChannel) return message.channel.send("I'm sorry but you need to be in a voice channel to play music");
         if (!voiceChannel.joinable) return message.channel.send("I'm sorry but I can't connect to your voice channel, make sure I have the proper permissions!");
-
-        if (!args[0]) return message.channel.send("Please give me the youtube link");
+        if (!voiceChannel.speakable) {
+            voiceChannel.leave();
+            return message.channel.send("I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions");
+        }
+        if (!args[0]) return message.channel.send("Please give me youtube video name or youtube / playlist link");
         const searchString = args.join(" ");
         const url = searchString.replace(/<(.+)>/g, "$1");
 
@@ -52,13 +55,12 @@ export default class PlayCommand extends BaseCommand {
                 try {
                     const videos = await this.client.youtube.searchVideos(searchString, 12);
                     let index = 0;
-                    const embed = new MessageEmbed()
+                    const msg = await message.channel.send(new MessageEmbed()
                         .setAuthor("Song Selection") // TODO: Find or create typings for simple-youtube-api or wait for v6 released
                         .setDescription(`${videos.map((video: any) => `**${++index} -** ${HtmlEntities.decode(video.title)}`).join("\n")} \n *Type \`cancel\` or \`c\` to cancel song selection*`)
                         .setThumbnail(message.client.user!.displayAvatarURL())
                         .setColor("#00ff00")
-                        .setFooter("Please provide a value to select one of the search results ranging from 1-12");
-                    const msg = await message.channel.send(embed);
+                        .setFooter("Please provide a value to select one of the search results ranging from 1-12"));
                     try {
                         // eslint-disable-next-line no-var
                         var response = await message.channel.awaitMessages((msg2: IMessage) => {
@@ -73,15 +75,13 @@ export default class PlayCommand extends BaseCommand {
                             errors: ["time"]
                         });
                         msg.delete();
-                        response.first()!.delete({ timeout: 3000 }).catch(e => e);
+                        response.first()!.delete({ timeout: 3000 });
                     } catch (error) {
                         msg.delete();
-                        message.channel.send(new MessageEmbed().setDescription("No or invalid value entered, song selection canceled.").setColor("#ff0000"));
-                        return;
+                        return message.channel.send(new MessageEmbed().setDescription("No or invalid value entered, song selection canceled.").setColor("#ff0000"));
                     }
                     if (response.first()!.content === "c" || response.first()!.content === "cancel") {
-                        message.channel.send(new MessageEmbed().setDescription("Song selection canceled").setColor("#ff0000"));
-                        return;
+                        return message.channel.send(new MessageEmbed().setDescription("Song selection canceled").setColor("#ff0000"));
                     } else {
                         const videoIndex = parseInt(response.first()!.content);
                         // eslint-disable-next-line no-var
@@ -115,11 +115,10 @@ export default class PlayCommand extends BaseCommand {
                 message.channel.send(`Error: Could not join the voice channel. reason: \`${error}\``);
                 return undefined;
             }
-            this.play(message.guild!);
-            if (!voiceChannel.speakable) {
-                voiceChannel.leave();
-                return message.channel.send("I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions");
-            }
+            this.play(message.guild!).catch(err => {
+                message.channel.send(`Error while trying to play music: \`${err}\``);
+                return this.client.log.error(err);
+            });
         } else {
             message.guild!.queue.songs.addSong(song);
             if (playlist) return;
@@ -139,25 +138,30 @@ export default class PlayCommand extends BaseCommand {
         }
 
         serverQueue.connection!.voice.setSelfDeaf(true);
-        let dispatcher: StreamDispatcher;
-        const SongData = await playSong(song.url);
-        if (SongData.canDemux) dispatcher = serverQueue.connection!.play(SongData.data, { type: "webm/opus" });
-        else dispatcher = serverQueue.connection!.play(SongData.data, { type: "unknown" });
+        const SongData = await ytdl(song.url);
+        const dispatcher = serverQueue.connection!.play(SongData.data, {
+            type: SongData.canDemux ? "webm/opus" : "unknown",
+            volume: serverQueue.volume / guild.client.config.maxVolume,
+            bitrate: "auto",
+            highWaterMark: 1
+        });
 
         dispatcher.on("start", () => {
             serverQueue.playing = true;
             this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
             serverQueue.textChannel!.send(`Start playing: **${song.title}**`);
-        })
-            .on("finish", () => {
-                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
-                if (serverQueue.loopMode === 0) serverQueue.songs.deleteFirst();
-                else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
-                serverQueue.textChannel!.send(`Stop playing: **${song.title}**`);
-                this.play(guild);
-            }).on("error", (err: Error) => {
-                this.client.log.error("PLAY_ERROR: ", err);
+        }).on("finish", () => {
+            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
+            if (serverQueue.loopMode === 0) serverQueue.songs.deleteFirst();
+            else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
+            serverQueue.textChannel!.send(`Stop playing: **${song.title}**`);
+            this.play(guild).catch(e => {
+                serverQueue.textChannel!.send(`Error while trying to play music: \`${e}\``);
+                return this.client.log.error(e);
             });
-        dispatcher.setVolume(guild.queue!.volume / guild.client.config.maxVolume);
+        }).on("error", (err: Error) => {
+            this.client.log.error("PLAY_ERROR: ", err);
+        });
+        dispatcher.setVolume(serverQueue.volume / guild.client.config.maxVolume);
     }
 }

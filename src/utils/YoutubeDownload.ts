@@ -7,14 +7,9 @@ export default function playSong(YoutubeLink: string, options: ytdl.downloadOpti
     return new Promise((resolve, reject) => {
         ytdl.getInfo(YoutubeLink, (err, info) => {
             if (err) return reject(err);
-            const opus = info.formats.find(filter);
-            const canDemux = opus && Number(info.length_seconds) != 0;
-            if (canDemux) {
-                options = { ...options, filter };
-                return resolve({ data: ytdl.downloadFromInfo(info, options), canDemux: true});
-            } else {
-                return resolve({ data: ytdl(YoutubeLink, options), canDemux: false });
-            }
+            const canDemux: boolean = info.formats.find(filter)! && Number(info.length_seconds) != 0;
+            options = canDemux ? { ...options, filter } : { ...options };
+            return resolve({ data: ytdl.downloadFromInfo(info, options), canDemux });
         });
     });
 }
