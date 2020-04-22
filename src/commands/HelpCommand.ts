@@ -27,14 +27,10 @@ export default class PlayCommand extends BaseCommand {
                 .setTitle(`Help for ${command.help.name} command`)
                 .setThumbnail("https://hzmi.xyz/assets/images/question_mark.png")
                 .addFields({
-                    name: "Name", value: `\`${command.help.name}\``, inline: true
-                }, {
-                    name: "Description", value: command.help.description, inline: true
-                }, {
-                    name: "Aliases", value: `${command.conf.aliases!.length > 0 ? command.conf.aliases!.map(c => `\`${c}\``).join(", ") : "None."}`, inline: true
-                }, {
-                    name: "Usage", value: `\`${command.help.usage!.replace(/{prefix}/g, message.client.config.prefix)}\``, inline: false
-                })
+                    name: "Name", value: `\`${command.help.name}\``, inline: true },
+                { name: "Description", value: command.help.description, inline: true },
+                { name: "Aliases", value: `${command.conf.aliases!.length > 0 ? command.conf.aliases!.map(c => `\`${c}\``).join(", ") : "None."}`, inline: true },
+                {  name: "Usage", value: `\`${command.help.usage!.replace(/{prefix}/g, message.client.config.prefix)}\``, inline: false })
                 .setColor("#00FF00")
                 .setTimestamp());
         }

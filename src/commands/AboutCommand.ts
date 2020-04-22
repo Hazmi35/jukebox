@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
-import { Message, MessageEmbed } from "discord.js";
+import { Message, MessageEmbed, Guild } from "discord.js";
 import { uptime as osUptime } from "os";
 import { version } from "discord.js";
+import { IGuild } from "../typings";
 
 export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
@@ -24,6 +25,7 @@ Channels count: ${await this.client.getChannelsCount()}
 Guilds count: ${ await this.client.getGuildsCount()}
 Shards count: ${this.client.shard ? `${this.client.shard.count}` : "N/A"}
 Shard ID: ${this.client.shard ? `${this.client.shard.ids}` : "N/A"}
+Playing Music on: ${this.client.guilds.cache.filter((g: any) => g.queue !== null && g.queue.playing === true).size} guilds
 Platform: ${process.platform}
 Arch: ${process.arch}
 OS Uptime: ${this.parseDur(osUptime() * 1000)}

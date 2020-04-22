@@ -14,7 +14,7 @@ export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
         super(client, path, { aliases: ["play-music", "add"] }, {
             name: "play",
-            description: "Play some musics",
+            description: "Play some music",
             usage: "{prefix}play <yt video or playlist link / yt video name>"
         });
     }
