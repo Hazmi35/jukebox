@@ -142,8 +142,7 @@ export default class PlayCommand extends BaseCommand {
         const dispatcher = serverQueue.connection!.play(SongData.data, {
             type: SongData.canDemux ? "webm/opus" : "unknown",
             volume: serverQueue.volume / guild.client.config.maxVolume,
-            bitrate: "auto",
-            highWaterMark: 1
+            bitrate: "auto"
         });
 
         dispatcher.on("start", () => {
