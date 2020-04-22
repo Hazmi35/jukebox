@@ -141,7 +141,6 @@ export default class PlayCommand extends BaseCommand {
         const SongData = await ytdl(song.url);
         const dispatcher = serverQueue.connection!.play(SongData.data, {
             type: SongData.canDemux ? "webm/opus" : "unknown",
-            volume: serverQueue.volume / guild.client.config.maxVolume,
             bitrate: "auto"
         });
 
@@ -157,10 +156,9 @@ export default class PlayCommand extends BaseCommand {
             this.play(guild).catch(e => {
                 serverQueue.textChannel!.send(`Error while trying to play music: \`${e}\``);
                 return this.client.log.error(e);
-            });
+            }).setVolume(serverQueue.volume / guild.client.config.maxVolume);
         }).on("error", (err: Error) => {
             this.client.log.error("PLAY_ERROR: ", err);
         });
-        dispatcher.setVolume(serverQueue.volume / guild.client.config.maxVolume);
     }
 }
