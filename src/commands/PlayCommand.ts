@@ -32,7 +32,8 @@ export default class PlayCommand extends BaseCommand {
         const url = searchString.replace(/<(.+)>/g, "$1");
 
         if (message.guild!.queue != null && voiceChannel.id !== message.guild!.queue.voiceChannel!.id) return message.channel.send(new MessageEmbed()
-            .setDescription(`Music is on this server is already playing on: **${message.guild!.queue.voiceChannel!.name}** voice channel`).setColor("#ffff00"));
+            .setDescription(`Music is on this server is already playing on: **${message.guild!.queue.voiceChannel!.name}** voice channel`)
+            .setColor("#ffff00"));
 
         if (/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/.exec(url)) {
             const playlist = await this.client.youtube.getPlaylist(url);
