@@ -21,25 +21,28 @@ export default class PlayCommand extends BaseCommand {
 
     public async execute(message: IMessage, args: string[]): Promise<any> {
         const voiceChannel = message.member!.voice.channel;
-        if (!voiceChannel) return message.channel.send("I'm sorry but you need to be in a voice channel to play music");
-        if (!voiceChannel.joinable) return message.channel.send("I'm sorry but I can't connect to your voice channel, make sure I have the proper permissions!");
+        if (!voiceChannel) return message.channel.send(new MessageEmbed().setDescription("I'm sorry but you need to be in a voice channel to play music").setColor("#FFFF00"));
+        if (!voiceChannel.joinable) return message.channel.send(
+            new MessageEmbed().setDescription("I'm sorry but I can't connect to your voice channel, make sure I have the proper permissions!").setColor("#FF0000"));
         if (!voiceChannel.speakable) {
             voiceChannel.leave();
-            return message.channel.send("I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions");
+            return message.channel.send(new MessageEmbed().setDescription("I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions")
+                .setColor("#FF0000"));
         }
-        if (!args[0]) return message.channel.send("Please give me youtube video name or youtube / playlist link");
+        if (!args[0]) return message.channel.send(
+            new MessageEmbed().setDescription(`Invalid args, type \`${this.client.config.prefix}help play\` for more info`).setColor("#00FF00"));
         const searchString = args.join(" ");
         const url = searchString.replace(/<(.+)>/g, "$1");
 
         if (message.guild!.queue != null && voiceChannel.id !== message.guild!.queue.voiceChannel!.id) return message.channel.send(new MessageEmbed()
             .setDescription(`Music is on this server is already playing on: **${message.guild!.queue.voiceChannel!.name}** voice channel`)
-            .setColor("#ffff00"));
+            .setColor("#FFFF00"));
 
         if (/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/.exec(url)) {
             const playlist = await this.client.youtube.getPlaylist(url);
             const videos = await playlist.getVideos();
             let skikppedVideos = 0;
-            message.channel.send(`Adding all videos in playlist: **${playlist.title}**, Hang on...`);
+            message.channel.send(new MessageEmbed().setDescription(`Adding all videos in playlist: **${playlist.title}**, Hang on...`).setColor("#00FF00"));
             for (const video of Object.values(videos)) {
                 if ((video as any).raw.status.privacyStatus === "private") {
                     skikppedVideos++;
@@ -49,8 +52,11 @@ export default class PlayCommand extends BaseCommand {
                     await this.handleVideo(video2, message, voiceChannel, true);
                 }
             }
-            if (skikppedVideos !== 0) message.channel.send(`${skikppedVideos >= 2 ? `${skikppedVideos} videos` : `${skikppedVideos} video`} are skipped because it's a private video`);
-            return message.channel.send(`All videos in playlist: **${playlist.title}**, has been added to the queue!`);
+            if (skikppedVideos !== 0) message.channel.send(
+                new MessageEmbed()
+                    .setDescription(`${skikppedVideos >= 2 ? `${skikppedVideos} videos` : `${skikppedVideos} video`} are skipped because it's a private video`)
+                    .setColor("#FFFF00"));
+            return message.channel.send(new MessageEmbed().setDescription(`All videos in playlist: **${playlist.title}**, has been added to the queue!`).setColor("#00FF00"));
         } else {
             try {
                 // eslint-disable-next-line no-var
@@ -61,9 +67,10 @@ export default class PlayCommand extends BaseCommand {
                     let index = 0;
                     const msg = await message.channel.send(new MessageEmbed()
                         .setAuthor("Song Selection") // TODO: Find or create typings for simple-youtube-api or wait for v6 released
-                        .setDescription(`${videos.map((video: any) => `**${++index} -** ${HtmlEntities.decode(video.title)}`).join("\n")} \n *Type \`cancel\` or \`c\` to cancel song selection*`)
+                        .setDescription(`${videos.map((video: any) => `**${++index} -** ${HtmlEntities.decode(video.title)}`).join("\n")}\n` +
+                        "*Type `cancel` or `c` to cancel song selection*")
                         .setThumbnail(message.client.user!.displayAvatarURL())
-                        .setColor("#00ff00")
+                        .setColor("#00FF00")
                         .setFooter("Please provide a value to select one of the search results ranging from 1-12"));
                     try {
                         // eslint-disable-next-line no-var
@@ -82,10 +89,10 @@ export default class PlayCommand extends BaseCommand {
                         response.first()!.delete({ timeout: 3000 });
                     } catch (error) {
                         msg.delete();
-                        return message.channel.send(new MessageEmbed().setDescription("No or invalid value entered, song selection canceled.").setColor("#ff0000"));
+                        return message.channel.send(new MessageEmbed().setDescription("No or invalid value entered, song selection canceled.").setColor("#FF0000"));
                     }
                     if (response.first()!.content === "c" || response.first()!.content === "cancel") {
-                        return message.channel.send(new MessageEmbed().setDescription("Song selection canceled").setColor("#ff0000"));
+                        return message.channel.send(new MessageEmbed().setDescription("Song selection canceled").setColor("#00FF00"));
                     } else {
                         const videoIndex = parseInt(response.first()!.content);
                         // eslint-disable-next-line no-var
@@ -93,7 +100,7 @@ export default class PlayCommand extends BaseCommand {
                     }
                 } catch (err) {
                     this.client.log.error("YT_SEARCH_ERR: ", err);
-                    return message.channel.send("I could not obtain any search results!");
+                    return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
                 }
             }
             return this.handleVideo(video, message, voiceChannel);
@@ -106,7 +113,6 @@ export default class PlayCommand extends BaseCommand {
             title: Util.escapeMarkdown(video.title),
             url: `https://youtube.com/watch?v=${video.id}`
         };
-
         if (!message.guild!.queue) {
             message.guild!.queue = new ServerQueue(message.channel, voiceChannel);
             message.guild!.queue.songs.addSong(song);
@@ -116,27 +122,27 @@ export default class PlayCommand extends BaseCommand {
             } catch (error) {
                 message.guild!.queue = null;
                 this.client.log.error("PLAY_COMMAND: ", error);
-                message.channel.send(`Error: Could not join the voice channel. reason: \`${error}\``);
+                message.channel.send(new MessageEmbed().setDescription(`Error: Could not join the voice channel. reason: \`${error}\``).setColor("#FF0000"));
                 return undefined;
             }
             this.play(message.guild!).catch(err => {
-                message.channel.send(`Error while trying to play music: \`${err}\``);
+                message.channel.send(new MessageEmbed().setDescription(`Error while trying to play music: \`${err}\``).setColor("#FF0000"));
                 return this.client.log.error(err);
             });
         } else {
             message.guild!.queue.songs.addSong(song);
             if (playlist) return;
-            return message.channel.send(`Song **${song.title}** has been added to the queue`);
+            return message.channel.send(new MessageEmbed().setDescription(`✅ Song **${song.title}** has been added to the queue`).setColor("#00FF00"));
         }
-
         return message;
-
     }
 
     private async play(guild: IGuild): Promise<any> {
         const serverQueue = guild.queue!;
         const song = serverQueue.songs.first();
         if (!song) {
+            serverQueue.textChannel!.send(
+                new MessageEmbed().setDescription(`⏹ Queue is finished! Use "${guild.client.config.prefix}play" to play more songs`).setColor("#00FF00"));
             serverQueue.connection!.disconnect();
             return guild.queue = null;
         }
@@ -145,20 +151,22 @@ export default class PlayCommand extends BaseCommand {
         const SongData = await ytdl(song.url);
         const dispatcher = serverQueue.connection!.play(SongData.data, {
             type: SongData.canDemux ? "webm/opus" : "unknown",
-            bitrate: "auto"
+            bitrate: "auto",
+            highWaterMark: 1
         });
 
         dispatcher.on("start", () => {
             serverQueue.playing = true;
             this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
-            serverQueue.textChannel!.send(`Start playing: **${song.title}**`);
+            serverQueue.textChannel!.send(new MessageEmbed().setDescription(`▶ Start playing: **${song.title}**`).setColor("#00FF00"));
         }).on("finish", () => {
             this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
             if (serverQueue.loopMode === 0) serverQueue.songs.deleteFirst();
             else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
-            serverQueue.textChannel!.send(`Stop playing: **${song.title}**`);
+            serverQueue.textChannel!.send(new MessageEmbed().setDescription(`⏹ Stop playing: **${song.title}**`).setColor("#00FF00"));
             this.play(guild).catch(e => {
-                serverQueue.textChannel!.send(`Error while trying to play music: \`${e}\``);
+                serverQueue.textChannel!.send(new MessageEmbed().setDescription(`Error while trying to play music: \`${e}\``).setColor("#FF0000"));
+                serverQueue.connection!.dispatcher.end();
                 return this.client.log.error(e);
             });
         }).on("error", (err: Error) => {

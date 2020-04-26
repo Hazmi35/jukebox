@@ -4,7 +4,7 @@ import Client from "./structures/Jukebox";
 const client = new Client({ disableMentions: "everyone" })
     .setToken(process.env.DISCORD_TOKEN!);
 
-// TODO: Implement embeds in every command + fix grammars + cleanup code
+// TODO: fix grammars + cleanup code
 
 client.on("ready", () => {
     client.log.info(`${client.shard ? `[Shard #${client.shard.ids}]` : ""} I'm ready to serve `

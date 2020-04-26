@@ -14,8 +14,7 @@
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint",
-        "@typescript-eslint/tslint"
+        "@typescript-eslint"
     ],
     "rules": {
         "@typescript-eslint/array-type": "off",
@@ -47,6 +46,7 @@
         "@typescript-eslint/prefer-function-type": "warn",
         "@typescript-eslint/explicit-function-return-type": "warn",
         "@typescript-eslint/no-var-requires": "off",
+        "prefer-template": "warn",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/quotes": [
             "warn",

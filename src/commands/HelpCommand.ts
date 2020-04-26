@@ -2,7 +2,7 @@
 import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
 import { IMessage } from "../typings";
-import { MessageEmbed, Message } from "discord.js";
+import { MessageEmbed } from "discord.js";
 
 export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {

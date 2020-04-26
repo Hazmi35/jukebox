@@ -3,7 +3,7 @@ import { resolve } from "path";
 import { ShardingManager } from "discord.js";
 import { LogWrapper } from "./utils/LogWrapper";
 import { totalShards, name } from "./config";
-const log = new LogWrapper(name + "-sharding").logger;
+const log = new LogWrapper(`${name}-sharding`).logger;
 
 const shardCount: number | "auto" = totalShards === "auto" ? totalShards : Number(totalShards);
 let shardsSpawned = 0;

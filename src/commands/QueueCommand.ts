@@ -2,6 +2,7 @@
 import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
 import { IMessage } from "../typings";
+import { MessageEmbed } from "discord.js";
 
 export default class VolumeCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
@@ -12,10 +13,7 @@ export default class VolumeCommand extends BaseCommand {
         });
     }
     public execute(message: IMessage, args: string[]): any {
-        if (!message.guild!.queue) return message.channel.send("There is nothing playing.");
-        else return message.channel.send(`
-        **Song queue:**
-        ${message.guild!.queue.songs.map(s => `- **${s.title}**\n`)}
-        `);
+        if (!message.guild!.queue) return message.channel.send(new MessageEmbed().setDescription("There is nothing playing.").setColor("#FFFF00"));
+        else message.channel.send(new MessageEmbed().setTitle("**Song queue**").setDescription(message.guild!.queue.songs.map(s => `- **${s.title}**`).join("\n")));
     }
 }

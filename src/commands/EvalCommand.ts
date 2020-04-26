@@ -25,8 +25,8 @@ export default class EvalCommand extends BaseCommand {
         if (!client.config.owners.includes(msg.author.id)) return;
 
         const embed = new MessageEmbed()
-            .setColor("GREEN")
-            .addField("Input", "```js\n" + args.join(" ") + "```");
+            .setColor("#00FF00")
+            .addField("Input", `\`\`\`js\n${args.join(" ")}\`\`\``);
 
         try {
             const code = args.slice(0).join(" ");
@@ -41,15 +41,15 @@ export default class EvalCommand extends BaseCommand {
             const output = this.clean(evaled);
             if (output.length > 1024) {
                 const hastebin = await this.hastebin(output);
-                embed.addField("Output", hastebin + ".js");
-            } else embed.addField("Output", "```js\n" + output + "```");
+                embed.addField("Output", `${hastebin}.js`);
+            } else embed.addField("Output", `\`\`\`js\n${output}\`\`\``);
             message.channel.send(embed);
         } catch (e) {
             const error = this.clean(e);
             if (error.length > 1024) {
                 const hastebin = await this.hastebin(error);
-                embed.addField("Error", hastebin + ".js");
-            } else embed.addField("Error", "```js\n" + error + "```");
+                embed.addField("Error", `${hastebin}.js`);
+            } else embed.setColor("#FF0000").addField("Error", `\`\`\`js\n${error}\`\`\``);
             message.channel.send(embed);
         }
 
@@ -61,7 +61,7 @@ export default class EvalCommand extends BaseCommand {
             return text
                 .replace(new RegExp(process.env.DISCORD_TOKEN!, "g"), "[REDACTED]")
                 .replace(new RegExp(process.env.YT_API_KEY!, "g"), "[REDACTED]")
-                .replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
+                .replace(/`/g, `\`${  String.fromCharCode(8203)}`).replace(/@/g, `@${  String.fromCharCode(8203)}`);
         } else return text;
     }
 

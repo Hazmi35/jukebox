@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
 import BotClient from "../structures/Jukebox";
-import { Message } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 
 export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
@@ -12,6 +12,6 @@ export default class PlayCommand extends BaseCommand {
         });
     }
     public async execute(message: Message, args: string[]): Promise<void> {
-        message.channel.send(await this.client.generateInvite(53857345));
+        message.channel.send(new MessageEmbed().addField("Discord bot invite link", `[Click here](${await this.client.generateInvite(53857345)})`).setColor("#00FF00"));
     }
 }

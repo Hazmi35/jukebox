@@ -14,16 +14,17 @@ export default class PingCommand extends BaseCommand {
     }
 
     public execute(message: IMessage): any {
-        if (!message.member!.voice.channel) return message.channel.send("You're not in a voice channel");
-        if (!message.guild!.queue) return message.channel.send("There is nothing playing.");
-        if (message.member!.voice.channel.id !== message.guild!.queue.voiceChannel!.id) return message.channel.send("You need to be in the same voice channel as mine");
+        if (!message.member!.voice.channel) return message.channel.send(new MessageEmbed().setDescription("You're not in a voice channel").setColor("#FFFF00"));
+        if (!message.guild!.queue) return message.channel.send(new MessageEmbed().setDescription("There is nothing playing.").setColor("#FFFF00"));
+        if (message.member!.voice.channel.id !== message.guild!.queue.voiceChannel!.id) return message.channel.send(
+            new MessageEmbed().setDescription("You need to be in the same voice channel as mine").setColor("#FF0000"));
 
         if (message.guild!.queue.playing) {
             message.guild!.queue.playing = false;
             message.guild!.queue.connection!.dispatcher.pause();
-            return message.channel.send("Pause the music for you!");
+            return message.channel.send(new MessageEmbed().setDescription("⏸ Paused the music for you!").setColor("#00FF00"));
         } else {
-            message.channel.send("Music is already paused!");
+            message.channel.send(new MessageEmbed().setDescription("Music is already paused!").setColor("#FFFF00"));
         }
     }
 }
