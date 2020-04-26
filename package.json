@@ -12,7 +12,7 @@
     "start:dev": "echo [INFO] Sharding disabled when using ts-node && ts-node src/bot"
   },
   "engines": {
-    "node": "12.x"
+    "node": ">=12.x"
   },
   "repository": {
     "type": "git",
