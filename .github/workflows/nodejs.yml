@@ -15,7 +15,8 @@ jobs:
       matrix:
         node-version: [12.x, 13.x, 14.x]
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
@@ -23,7 +24,7 @@ jobs:
     - name: Get yarn cache directory path
       id: yarn-cache-dir-path
       run: echo "::set-output name=dir::$(yarn cache dir)"
-    - name: Cache dependencies
+    - name: Use dependencies from cache if exists
       uses: actions/cache@v1
       id: yarn-cache
       with:
@@ -33,5 +34,5 @@ jobs:
           ${{ runner.os }}-yarn-
     - name: Install dependencies
       run: yarn install --ignore-optional --frozen-lockfile
-    - name: Start test
+    - name: Test code
       run: yarn test
