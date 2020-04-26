@@ -9,14 +9,16 @@
 ## Usage
 
 1. Rename `.env.schema` to `.env` and fill out the values (example on .env.example):
-```dotenv
+```sh
 DISCORD_TOKEN=
 YT_API_KEY=
 
 CONFIG_NAME=
 CONFIG_PREFIX=
-CONFIG_DEVS=
+CONFIG_OWNERS=
 CONFIG_TOTALSHARDS=
+CONFIG_MAX_VOLUME=
+CONFIG_DEFAULT_VOLUME=
 ```
 2. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
 3. Run `npm run build` or `yarn run build` if you're using yarn.
