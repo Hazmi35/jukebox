@@ -1,4 +1,4 @@
-import { config } from "dotenv"; config();
+import "dotenv/config";
 import { resolve } from "path";
 import { ShardingManager } from "discord.js";
 import { LogWrapper } from "./utils/LogWrapper";
