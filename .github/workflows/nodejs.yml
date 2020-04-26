@@ -33,6 +33,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-yarn-
     - name: Install dependencies
-      run: yarn install --ignore-optional --frozen-lockfile
+      run: yarn install --frozen-lockfile
     - name: Test code
       run: yarn test
