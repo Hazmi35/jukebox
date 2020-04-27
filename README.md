@@ -2,8 +2,9 @@
 # Jukebox
 > Just a simple Discord music bot
 
-![](https://github.com/Hazmi35/jukebox/workflows/Node.js%20CI/badge.svg)
-![](https://badgen.net/badge/icon/typescript?icon=typescript&label)
+<a href='https://discordapp.com/oauth2/authorize?client_id=698573904129818624&permissions=53857345&scope=bot'><img src="https://img.shields.io/static/v1?label=Invite%20Me&message=Jukebox%239319&plastic&color=7289DA&logo=discord"></a>
+<a href='https://github.com/Hazmi35/jukebox/actions?query=workflow%3A%22Node.js+CI%22'><img src='https://github.com/Hazmi35/jukebox/workflows/Node.js%20CI/badge.svg' alt='Node.JS CI Status' /></a>
+<img src="https://badgen.net/badge/icon/typescript?icon=typescript&label">
 <a href="https://heroku.com/deploy?template=https://github.com/Hazmi35/jukebox/tree/stable"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy"></a>
 
 ## Usage
