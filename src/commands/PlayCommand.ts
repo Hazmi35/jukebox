@@ -122,11 +122,11 @@ export default class PlayCommand extends BaseCommand {
             } catch (error) {
                 message.guild!.queue = null;
                 this.client.log.error("PLAY_COMMAND: ", error);
-                message.channel.send(new MessageEmbed().setDescription(`Error: Could not join the voice channel. reason: \`${error}\``).setColor("#FF0000"));
+                message.channel.send(new MessageEmbed().setDescription(`Error: Could not join the voice channel. reason:\n\`${error}\``).setColor("#FF0000"));
                 return undefined;
             }
             this.play(message.guild!).catch(err => {
-                message.channel.send(new MessageEmbed().setDescription(`Error while trying to play music: \`${err}\``).setColor("#FF0000"));
+                message.channel.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${err}\``).setColor("#FF0000"));
                 return this.client.log.error(err);
             });
         } else {
@@ -165,7 +165,7 @@ export default class PlayCommand extends BaseCommand {
             else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
             serverQueue.textChannel!.send(new MessageEmbed().setDescription(`⏹ Stop playing: **${song.title}**`).setColor("#00FF00"));
             this.play(guild).catch(e => {
-                serverQueue.textChannel!.send(new MessageEmbed().setDescription(`Error while trying to play music: \`${e}\``).setColor("#FF0000"));
+                serverQueue.textChannel!.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${e}\``).setColor("#FF0000"));
                 serverQueue.connection!.dispatcher.end();
                 return this.client.log.error(e);
             });
