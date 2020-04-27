@@ -56,4 +56,6 @@ For optional packages, you need to install build tools as stated [here](https://
 - Using the concept of extending base command, similar to Commando.
 - A production-ready music bot, suitable for you that dislike hassling with the code.
 
+Discord bot invite link: [Invite Jukebox](https://github.com/Hazmi35/jukebox)
+
 Based on [discord-music-bot](https://github.com/iCrawl/discord-music-bot)
