@@ -22,13 +22,13 @@ export default class PlayCommand extends BaseCommand {
             new MessageEmbed().setDescription("You need to be in the same voice channel as mine").setColor("#FF0000"));
         if (mode === "all" || mode === "queue" || mode === "*" || mode === "2") {
             message.guild!.queue.loopMode = 2;
-            return message.channel.send(new MessageEmbed().setDescription("🔁 Looping all music in the queue.").setColor("#00FF00"));
+            return message.channel.send(new MessageEmbed().setDescription("🔁 Repeating all music in the queue.").setColor("#00FF00"));
         } else if (mode === "current" || mode === "one" || mode === "musiconly" || mode === "1") {
             message.guild!.queue.loopMode = 1;
-            return message.channel.send(new MessageEmbed().setDescription("🔂 Looping only this music.").setColor("#00FF00"));
+            return message.channel.send(new MessageEmbed().setDescription("🔂 Repeating only this music.").setColor("#00FF00"));
         } else if (mode === "disable" || mode === "off" || mode === "0") {
             message.guild!.queue.loopMode = 0;
-            return message.channel.send(new MessageEmbed().setDescription("▶ Loop disabled.").setColor("#00FF00"));
+            return message.channel.send(new MessageEmbed().setDescription("▶ Repeating disabled.").setColor("#00FF00"));
         } else {
             message.channel.send(`Invalid value, see \`${this.client.config.prefix}help loop\` for more info!`);
         }
