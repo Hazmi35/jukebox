@@ -23,4 +23,4 @@ jobs:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}  
       run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} worker  
     - name: Restart worker dyno  
-      run: heroku dyno:restart worker 
+      run: heroku dyno:restart -a ${{ secrets.HEROKU_APP_NAME }} worker  
