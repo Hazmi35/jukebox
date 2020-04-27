@@ -1,5 +1,5 @@
 import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection } from "discord.js";
-import Jukebox from "../structures/Jukebox";
+import Jukebox from "../src/structures/Jukebox";
 
 export interface CommandComponent {
     execute(message: Message, args: string[]): any;

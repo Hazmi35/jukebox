@@ -11,15 +11,10 @@
       "resolveJsonModule": true,
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
-      "baseUrl": ".",
       "typeRoots": [
           "node_modules/@types",
-          "src/typings",
-          "src/@types"
+          "typings"
       ],
-      "paths": {
-        "typings/*": ["src/typings/*"]
-      },
       "outDir": "./dist"
   },
   "include": ["src/**/*"],
