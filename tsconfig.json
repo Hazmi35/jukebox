@@ -13,10 +13,10 @@
       "emitDecoratorMetadata": true,
       "typeRoots": [
           "node_modules/@types",
-          "types"
+          "typings"
       ],
       "outDir": "./dist"
   },
-  "include": ["./src/**/*.ts", "./src/**/*.d.ts", "./src/**/*.js", "./src/**/*.json", "*.ts", "*.js"],
-  "exclude": ["node_modules/**", "tsconfig.json", "tslint.json", "README.md", ".env", "dist/**"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules/**"]
 }

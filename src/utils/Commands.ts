@@ -1,19 +1,20 @@
 import { readdir } from "fs";
 import { resolve } from "path";
-import BotClient from "../structures/Jukebox";
-import { CommandComponent } from "../typings";
+import Jukebox from "../structures/Jukebox";
+import { CommandComponent } from "../../typings";
 import { Message, Collection, Snowflake } from "discord.js";
 
 export default class CommandsHandler {
     readonly commands: Collection<string, CommandComponent> = new Collection();
     readonly aliases: Collection<string, string> = new Collection();
     readonly cooldowns: Collection<string, Collection<Snowflake, number>> = new Collection();
-    constructor(public client: BotClient, readonly path: string) {}
+    constructor(public client: Jukebox, readonly path: string) {}
     public load(): void {
-        readdir(resolve(this.path), (err, files) => {
-            if (err) this.client.log.error("CMD_LOADER_ERR: ", err);
+        readdir(resolve(this.path), (err, filesRaw) => {
+            if (err) this.client.log.error("CMD_LOADER_ERR", err);
             let disabledCount = 0;
-            files.filter(f => f.endsWith(".map") === false).forEach(file => {
+            const files = filesRaw.filter(f => !f.endsWith(".map"));
+            files.forEach(file => {
                 const command: CommandComponent = new (require(`${this.path}/${file}`).default)(this.client, `${this.path}/${file}`);
                 if (command.conf.aliases!.length > 0) command.conf.aliases!.forEach(alias => {
                     this.aliases.set(alias, command.help.name);
@@ -21,8 +22,8 @@ export default class CommandsHandler {
                 this.commands.set(command.help.name, command);
                 if (command.conf.disable) disabledCount++;
             });
-            this.client.log.info(`[Shard #${this.client.shard!.ids}] Found ${files.length / 2} commands!`);
-            this.client.log.info(`[Shard #${this.client.shard!.ids}] ${disabledCount} out of ${files.length / 2} commands is disabled.`);
+            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Found ${files.length} commands!`);
+            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} ${disabledCount} out of ${files.length} commands is disabled.`);
         });
         return undefined;
     }
@@ -37,7 +38,7 @@ export default class CommandsHandler {
         const cooldownAmount = (command.conf.cooldown || 3) * 1000;
         if (!timestamps.has(message.author.id)) {
             timestamps.set(message.author.id, now);
-            if (this.client.config.devs.includes(message.author.id)) timestamps.delete(message.author.id);
+            if (this.client.config.owners.includes(message.author.id)) timestamps.delete(message.author.id);
         } else {
             const expirationTime = timestamps.get(message.author.id)! + cooldownAmount;
             if (now < expirationTime) {
@@ -54,9 +55,9 @@ export default class CommandsHandler {
         try {
             return command.execute(message, args);
         } catch (e) {
-            this.client.log.error("COMMAND_HANDLER_ERR: ", e);
+            this.client.log.error("COMMAND_HANDLER_ERR", e);
         } finally {
-            this.client.log.info(`[Shard #${this.client.shard!.ids}] ${message.author.tag} is using ${command.help.name} command on ${message.guild ? message.guild.name : "DM Channel"}`);
+            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} ${message.author.tag} is using ${command.help.name} command on ${message.guild ? message.guild.name : "DM Channel"}`);
         }
     }
 }

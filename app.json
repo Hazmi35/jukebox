@@ -1,12 +1,31 @@
 {
     "name": "Jukebox",
     "description": "Just a simple Discord music bot.",
+    "logo": "https://raw.githubusercontent.com/Hazmi35/jukebox/stable/.github/images/jukebox.png",
     "env": {
         "DISCORD_TOKEN": {
             "description": "Your Discord bot's token"
         },
         "YT_API_KEY": {
             "description": "Youtube API Key for querying the Youtube API for video data."
+        },
+        "CONFIG_NAME": {
+            "description": "Your bot's name"
+        },
+        "CONFIG_PREFIX": {
+            "description": "Prefix for your bot"
+        },
+        "CONFIG_OWNERS": {
+            "description": "An array of Discord user ID (DO NOT FILL SOMEONE ELSE ID THAT YOU DON'T TRUST)"
+        },
+        "CONFIG_TOTALSHARDS": {
+            "description": "Total shards to spawn, use \"auto\" or a number"
+        },
+        "CONFIG_MAX_VOLUME": {
+            "description": "Max volume allowed for music"
+        },
+        "CONFIG_DEFAULT_VOLUME": {
+            "description": "Default volume for music"
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",

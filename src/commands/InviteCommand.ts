@@ -1,17 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
-import BotClient from "../structures/Jukebox";
-import { Message } from "discord.js";
+import Jukebox from "../structures/Jukebox";
+import { Message, MessageEmbed } from "discord.js";
 
 export default class PlayCommand extends BaseCommand {
-    constructor(public client: BotClient, readonly path: string) {
+    constructor(public client: Jukebox, readonly path: string) {
         super(client, path, {}, {
             name: "invite",
             description: "Send the bot's invite link",
-            "usage": "{prefix}invite"
+            usage: "{prefix}invite"
         });
     }
-    public execute(message: Message, args: string[]): void {
-        message.channel.send(this.client.config.inviteLink);
+    public async execute(message: Message): Promise<void> {
+        message.channel.send(new MessageEmbed().addField("Discord bot invite link", `[Click here](${await this.client.generateInvite(53857345)})`).setColor("#00FF00"));
     }
 }

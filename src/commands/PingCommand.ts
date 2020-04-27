@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
-import BotClient from "../structures/Jukebox";
+import Jukebox from "../structures/Jukebox";
 import { MessageEmbed, Message } from "discord.js";
 
 export default class PingCommand extends BaseCommand {
-    constructor(client: BotClient, readonly path: string) {
+    constructor(client: Jukebox, readonly path: string) {
         super(client, path, {
             aliases: ["pong", "peng", "p", "pingpong"],
         }, {
