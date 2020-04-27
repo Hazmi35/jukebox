@@ -1,8 +1,8 @@
 // TODO: Find or create typings for simple-youtube-api or wait for v6 released and then remove no-extra-parens
 /* eslint-disable @typescript-eslint/no-unused-vars, no-extra-parens */
 import BaseCommand from "../structures/BaseCommand";
-import BotClient from "../structures/Jukebox";
-import { IMessage, ISong, IGuild } from "../typings";
+import Jukebox from "../structures/Jukebox";
+import { IMessage, ISong, IGuild } from "../../typings";
 import ServerQueue from "../structures/ServerQueue";
 import ytdl from "../utils/YoutubeDownload";
 import { Util, VoiceChannel, MessageEmbed } from "discord.js";
@@ -11,7 +11,7 @@ import { AllHtmlEntities } from "html-entities";
 const HtmlEntities = new AllHtmlEntities();
 
 export default class PlayCommand extends BaseCommand {
-    constructor(public client: BotClient, readonly path: string) {
+    constructor(public client: Jukebox, readonly path: string) {
         super(client, path, { aliases: ["play-music", "add"] }, {
             name: "play",
             description: "Play some music",

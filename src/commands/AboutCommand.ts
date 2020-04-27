@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
-import BotClient from "../structures/Jukebox";
+import Jukebox from "../structures/Jukebox";
 import { Message, MessageEmbed } from "discord.js";
 import { uptime as osUptime } from "os";
 import { version } from "discord.js";
 
 export default class PlayCommand extends BaseCommand {
-    constructor(public client: BotClient, readonly path: string) {
+    constructor(public client: Jukebox, readonly path: string) {
         super(client, path, { aliases: ["botinfo", "info", "stats"] }, {
             name: "about",
             description: "Send the bot's info",

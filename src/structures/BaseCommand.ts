@@ -1,11 +1,11 @@
-import BotClient from "./Jukebox";
-import { CommandComponent } from "../typings";
+import Jukebox from "./Jukebox";
+import { CommandComponent } from "../../typings";
 import { Message } from "discord.js";
 
 export default class BaseCommand implements CommandComponent {
     public conf: CommandComponent["conf"];
     public help: CommandComponent["help"];
-    constructor(public client: BotClient, readonly path: string, conf: CommandComponent["conf"], help: CommandComponent["help"]) {
+    constructor(public client: Jukebox, readonly path: string, conf: CommandComponent["conf"], help: CommandComponent["help"]) {
         this.conf = {
             aliases: [],
             cooldown: 3,

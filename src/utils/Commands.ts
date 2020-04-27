@@ -1,14 +1,14 @@
 import { readdir } from "fs";
 import { resolve } from "path";
-import BotClient from "../structures/Jukebox";
-import { CommandComponent } from "../typings";
+import Jukebox from "../structures/Jukebox";
+import { CommandComponent } from "../../typings";
 import { Message, Collection, Snowflake } from "discord.js";
 
 export default class CommandsHandler {
     readonly commands: Collection<string, CommandComponent> = new Collection();
     readonly aliases: Collection<string, string> = new Collection();
     readonly cooldowns: Collection<string, Collection<Snowflake, number>> = new Collection();
-    constructor(public client: BotClient, readonly path: string) {}
+    constructor(public client: Jukebox, readonly path: string) {}
     public load(): void {
         readdir(resolve(this.path), (err, filesRaw) => {
             if (err) this.client.log.error("CMD_LOADER_ERR", err);

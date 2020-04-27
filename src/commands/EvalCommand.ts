@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-eval */
 import BaseCommand from "../structures/BaseCommand";
-import BotClient from "../structures/Jukebox";
-import { IMessage } from "../typings";
+import Jukebox from "../structures/Jukebox";
+import { IMessage } from "../../typings";
 import { MessageEmbed } from "discord.js";
 import { request } from "https";
 
 export default class EvalCommand extends BaseCommand {
-    constructor(client: BotClient, readonly path: string) {
+    constructor(client: Jukebox, readonly path: string) {
         super(client, path, {
             aliases: ["ev", "js-exec", "e", "evaluate"],
             cooldown: 0

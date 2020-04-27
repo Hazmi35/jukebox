@@ -1,5 +1,5 @@
 import { Structures } from "discord.js";
-import { IGuild, IServerQueue } from "../typings";
+import { IGuild, IServerQueue } from "../../typings";
 import Jukebox from "./Jukebox";
 
 Structures.extend("Guild", DJSGuild => {

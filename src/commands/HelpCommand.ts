@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
-import BotClient from "../structures/Jukebox";
-import { IMessage } from "../typings";
+import Jukebox from "../structures/Jukebox";
+import { IMessage } from "../../typings";
 import { MessageEmbed } from "discord.js";
 
 export default class PlayCommand extends BaseCommand {
-    constructor(public client: BotClient, readonly path: string) {
+    constructor(public client: Jukebox, readonly path: string) {
         super(client, path, { aliases: ["commands", "cmds"] }, {
             name: "help",
             description: "Shows the help menu",

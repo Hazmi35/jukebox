@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
-import BotClient from "../structures/Jukebox";
+import Jukebox from "../structures/Jukebox";
 import { MessageEmbed } from "discord.js";
-import { IMessage } from "../typings";
+import { IMessage } from "../../typings";
 
 export default class PingCommand extends BaseCommand {
-    constructor(client: BotClient, readonly path: string) {
+    constructor(client: Jukebox, readonly path: string) {
         super(client, path, {}, {
             name: "resume",
             description: "Resume the music.",
