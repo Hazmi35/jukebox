@@ -30,7 +30,7 @@ export default class PlayCommand extends BaseCommand {
             message.guild!.queue.loopMode = 0;
             return message.channel.send(new MessageEmbed().setDescription("▶ Repeating disabled.").setColor("#00FF00"));
         } else {
-            message.channel.send(`Invalid value, see \`${this.client.config.prefix}help loop\` for more info!`);
+            message.channel.send(`Invalid value, see \`${this.client.config.prefix}help ${this.help.name}\` for more info!`);
         }
     }
 }

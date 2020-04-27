@@ -24,7 +24,7 @@ export default class PingCommand extends BaseCommand {
             message.guild!.queue.connection!.dispatcher.pause();
             return message.channel.send(new MessageEmbed().setDescription("⏸ Paused the music for you!").setColor("#00FF00"));
         } else {
-            message.channel.send(new MessageEmbed().setDescription("Music is already paused!").setColor("#FFFF00"));
+            message.channel.send(new MessageEmbed().setDescription("❗ Music is already paused!").setColor("#FFFF00"));
         }
     }
 }

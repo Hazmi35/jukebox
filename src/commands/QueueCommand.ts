@@ -14,6 +14,9 @@ export default class VolumeCommand extends BaseCommand {
     }
     public execute(message: IMessage, args: string[]): any {
         if (!message.guild!.queue) return message.channel.send(new MessageEmbed().setDescription("There is nothing playing.").setColor("#FFFF00"));
-        else message.channel.send(new MessageEmbed().setTitle("**Song queue**").setDescription(message.guild!.queue.songs.map(s => `- **${s.title}**`).join("\n")));
+        else message.channel.send(new MessageEmbed()
+            .setTitle("**Song queue**")
+            .setColor("#00FF00")
+            .setDescription(message.guild!.queue.songs.map(s => `- **${s.title}**`).join("\n")));
     }
 }
