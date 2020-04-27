@@ -35,7 +35,7 @@ NodeJS version      :: ${process.version}
 DiscordJS version   :: v${version}
 Bot Version         :: v${require("../../package.json").version}
 
-Source code         :: https://github.com/Hazmi35/jukebox
+Source code         :: https://sh.hzmi.xyz/jukebox
 \`\`\`
     `).setColor("#00FF00").setTimestamp());
     }
