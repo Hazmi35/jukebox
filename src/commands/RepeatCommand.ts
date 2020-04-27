@@ -7,11 +7,11 @@ import { MessageEmbed } from "discord.js";
 export default class PlayCommand extends BaseCommand {
     constructor(public client: BotClient, readonly path: string) {
         super(client, path, {
-            aliases: ["repeat", "music-loop"]
+            aliases: ["loop", "music-loop", "music-repeat"]
         }, {
-            name: "loop",
-            description: "Loop current song or queue",
-            usage: "{prefix}loop <all | one | disable>"
+            name: "repeat",
+            description: "Repeat current song or queue",
+            usage: "{prefix}repeat <all | one | disable>"
         });
     }
     public execute(message: IMessage, args: string[]): any {
