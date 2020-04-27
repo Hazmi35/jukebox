@@ -1,7 +1,7 @@
 import { config } from "dotenv"; config();
 import Client from "./structures/Jukebox";
 
-const client = new Client({ disableMentions: "everyone" })
+const client = new Client({ disableMentions: "everyone", messageCacheMaxSize: Infinity, messageCacheLifetime: 540, messageSweepInterval: 180 })
     .setToken(process.env.DISCORD_TOKEN!);
 
 // TODO: fix grammars + cleanup code
