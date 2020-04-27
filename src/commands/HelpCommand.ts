@@ -13,7 +13,7 @@ export default class PlayCommand extends BaseCommand {
         });
     }
     public execute(message: IMessage, args: string[]): void {
-        const command = message.client.commandsHandler.commands.get(args[0]);
+        const command = message.client.commandsHandler.commands.get(args[0]) || message.client.commandsHandler.commands.get(message.client.commandsHandler.aliases.get(args[0])!);
         if (!command) {
             message.channel.send(new MessageEmbed()
                 .setTitle("Help Menu")
