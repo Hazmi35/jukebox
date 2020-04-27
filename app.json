@@ -1,6 +1,7 @@
 {
     "name": "Jukebox",
     "description": "Just a simple Discord music bot.",
+    "logo": "https://raw.githubusercontent.com/Hazmi35/jukebox/stable/.github/images/jukebox.png",
     "env": {
         "DISCORD_TOKEN": {
             "description": "Your Discord bot's token"

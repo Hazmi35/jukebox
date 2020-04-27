@@ -76,7 +76,7 @@
         "no-cond-assign": "error",
         "no-console": "warn",
         "no-debugger": "warn",
-        "no-empty": "off",
+        "no-empty": "warn",
         "no-eval": "warn",
         "no-fallthrough": "off",
         "no-invalid-this": "off",
