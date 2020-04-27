@@ -15,28 +15,23 @@ export interface CommandComponent {
         usage?: string;
     };
 }
-
 export interface IGuild extends Guild {
     client: Jukebox;
     queue: IServerQueue | null;
 }
-
 export interface IMessage extends Message {
     client: Jukebox;
     guild: IGuild | null;
     channel: ITextChannel | INewsChannel | IDMChannel;
 }
-
 export interface ITextChannel extends TextChannel {
     client: Jukebox;
     guild: IGuild;
 }
-
 export interface INewsChannel extends NewsChannel {
     client: Jukebox;
     guild: IGuild;
 }
-
 export interface IDMChannel extends DMChannel {
     client: Jukebox;
     guild: null;
@@ -55,7 +50,6 @@ export interface ISongs extends Collection<string, ISong> {
     addSong(song: ISong): this;
     deleteFirst(): boolean;
 }
-
 export interface ISong {
     id: string;
     title: string;

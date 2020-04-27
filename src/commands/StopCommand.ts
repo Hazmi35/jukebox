@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
 import Jukebox from "../structures/Jukebox";
 import { IMessage } from "../../typings";
@@ -12,7 +11,7 @@ export default class PlayCommand extends BaseCommand {
             usage: "{prefix}stop"
         });
     }
-    public execute(message: IMessage, args: string[]): any {
+    public execute(message: IMessage): any {
         if (!message.member!.voice.channel) return message.channel.send(new MessageEmbed().setDescription("You're not in a voice channel").setColor("#FFFF00"));
         if (!message.guild!.queue) return message.channel.send(new MessageEmbed().setDescription("There is nothing playing.").setColor("#FFFF00"));
         if (message.member!.voice.channel.id !== message.guild!.queue.voiceChannel!.id) return message.channel.send(

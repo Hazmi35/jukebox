@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-eval */
 import BaseCommand from "../structures/BaseCommand";
 import Jukebox from "../structures/Jukebox";

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
 import Jukebox from "../structures/Jukebox";
 import { Message, MessageEmbed } from "discord.js";
@@ -13,7 +12,7 @@ export default class PlayCommand extends BaseCommand {
             usage: "{prefix}about"
         });
     }
-    public async execute(message: Message, args: string[]): Promise<void> {
+    public async execute(message: Message): Promise<void> {
         message.channel.send(new MessageEmbed()
             .setAuthor(`${this.client.user!.username} - Just a simple Discord music bot.`)
             .setDescription(`

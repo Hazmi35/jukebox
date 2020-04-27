@@ -1,5 +1,5 @@
 // TODO: Find or create typings for simple-youtube-api or wait for v6 released and then remove no-extra-parens
-/* eslint-disable @typescript-eslint/no-unused-vars, no-extra-parens */
+/* eslint-disable no-extra-parens */
 import BaseCommand from "../structures/BaseCommand";
 import Jukebox from "../structures/Jukebox";
 import { IMessage, ISong, IGuild } from "../../typings";

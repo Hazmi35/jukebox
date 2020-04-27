@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
 import Jukebox from "../structures/Jukebox";
 import { IMessage } from "../../typings";
@@ -12,7 +11,7 @@ export default class VolumeCommand extends BaseCommand {
             usage: "{prefix}queue"
         });
     }
-    public execute(message: IMessage, args: string[]): any {
+    public execute(message: IMessage): any {
         if (!message.guild!.queue) return message.channel.send(new MessageEmbed().setDescription("There is nothing playing.").setColor("#FFFF00"));
         else message.channel.send(new MessageEmbed()
             .setTitle("**Song queue**")

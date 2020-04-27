@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseCommand from "../structures/BaseCommand";
 import Jukebox from "../structures/Jukebox";
 import { MessageEmbed } from "discord.js";

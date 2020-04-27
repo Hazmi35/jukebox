@@ -1,9 +1,8 @@
-/* eslint-disable no-bitwise */
 import ytdl from "ytdl-core";
 import { Readable } from "stream";
 
-// This fixes: https://github.com/discordjs/discord.js/issues/4027, highWatermark option is will be increased or decreased in the future
-export default function playSong(YoutubeLink: string, options: ytdl.downloadOptions = { filter: "audio", quality: "highestaudio", highWaterMark: 1<<25 }): Promise<ISongData> { // Inspired by ytdl-core-discord (https://github.com/amishshah/ytdl-core-discord)
+// This fixes: https://github.com/discordjs/discord.js/issues/4027, highWatermark option is will be increased or decreased in the future // 1048576 * 1 = 1MB
+export default function playSong(YoutubeLink: string, options: ytdl.downloadOptions = { filter: "audio", quality: "highestaudio", highWaterMark: 1048576 * 32 }): Promise<ISongData> { // Inspired by ytdl-core-discord (https://github.com/amishshah/ytdl-core-discord)
     return new Promise((resolve, reject) => {
         ytdl.getInfo(YoutubeLink, (err, info) => {
             if (err) return reject(err);

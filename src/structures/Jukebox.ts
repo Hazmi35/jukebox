@@ -8,7 +8,7 @@ import CommandsHandler from "../utils/Commands";
 // @ts-ignore-next-line // FIX: Find or create typings for simple-youtube-api or wait for v6 released
 import YouTube from "simple-youtube-api";
 
-// Extending DiscordJS Structures
+// Extends DiscordJS Structures
 import "./Guild";
 
 export default class Jukebox extends Client {
@@ -29,15 +29,16 @@ export default class Jukebox extends Client {
         this._token = token;
         return this;
     }
+
     public getToken(): string {
         return this._token;
     }
+
     public async getGuildsCount(): Promise<number> {
         if (!this.shard) return this.guilds.cache.size;
         const size = await this.shard.broadcastEval("this.guilds.cache.size");
         return size.reduce((p, v) => p + v, 0);
     }
-
     public async getChannelsCount(filter = true): Promise<number> {
         if (filter) {
             if (!this.shard) return this.channels.cache.filter(c => c.type !== "category" && c.type !== "dm").size;
@@ -49,7 +50,6 @@ export default class Jukebox extends Client {
             return size.reduce((p, v) => p + v, 0);
         }
     }
-
     public async getUsersCount(filter = true): Promise<number> {
         if (filter) {
             if (!this.shard) return this.users.cache.filter(u => !u.equals(this.user!)).size;

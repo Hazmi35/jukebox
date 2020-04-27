@@ -1,16 +1,14 @@
 import { config } from "dotenv"; config();
+import { Presence } from "discord.js";
 import Client from "./structures/Jukebox";
 
 const client = new Client({ disableMentions: "everyone" })
     .setToken(process.env.DISCORD_TOKEN!);
 
-// TODO: fix grammars + cleanup code
-
 client.on("ready", () => {
     client.log.info(`${client.shard ? `[Shard #${client.shard.ids}]` : ""} I'm ready to serve `
     + `${client.users.cache.filter(u => !u.equals(client.user!)).size} users on ${client.guilds.cache.size} guilds!`);
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const updatePresence = async () => client.user!.setPresence({ activity: { name: `music with ${await client.getUsersCount()} users!`, type: "LISTENING" } });
+    const updatePresence = async (): Promise<Presence> => client.user!.setPresence({ activity: { name: `music with ${await client.getUsersCount()} users!`, type: "LISTENING" } });
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     setInterval(updatePresence, 30 * 1000); updatePresence();
 });
@@ -18,6 +16,7 @@ client.on("ready", () => {
 client.on("warn", (warn) => {
     client.log.warn("CLIENT_WARN: ", warn);
 });
+
 client.on("error", (error) => {
     client.log.error("CLIENT_ERROR: ", error);
 });
