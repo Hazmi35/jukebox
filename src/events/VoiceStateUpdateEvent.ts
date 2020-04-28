@@ -58,7 +58,7 @@ export default class ReadyEvent implements ClientEvent {
                         try {
                             newState.guild.queue.connection!.dispatcher.resume();
                         } catch (e) {
-                            this.client.log.error("VOICESTATEUPDATE_ERR:", e);
+                            this.client.log.error("VOICE_STATE_UPDATE_EVENT_ERR:", e);
                         }
                     }
                 }
