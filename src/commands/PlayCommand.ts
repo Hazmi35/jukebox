@@ -131,6 +131,11 @@ export default class PlayCommand extends BaseCommand {
                 return this.client.log.error(err);
             });
         } else {
+            if (!this.client.config.allowDuplicate && message.guild!.queue.songs.find(s => s.id === song.id)) return message.channel.send(new MessageEmbed()
+                .setTitle("Already queued.")
+                .setColor("#FFFF00")
+                .setDescription(`Song: ${song.title} is already queued, and this bot configuration disallow duplicated song in queue, `
+                + `please use \`${this.client.config.prefix}repeat\` instead`));
             message.guild!.queue.songs.addSong(song);
             if (playlist) return;
             return message.channel.send(new MessageEmbed().setDescription(`✅ Song **${song.title}** has been added to the queue`).setColor("#00FF00"));

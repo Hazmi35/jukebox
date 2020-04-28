@@ -20,6 +20,7 @@ CONFIG_OWNERS=
 CONFIG_TOTALSHARDS=
 CONFIG_MAX_VOLUME=
 CONFIG_DEFAULT_VOLUME=
+CONFIG_ALLOW_DUPLICATE=
 ```
 2. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
 3. Run `npm run build` or `yarn run build` if you're using yarn.

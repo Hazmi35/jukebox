@@ -26,6 +26,9 @@
         },
         "CONFIG_DEFAULT_VOLUME": {
             "description": "Default volume for music"
+        },
+        "CONFIG_ALLOW_DUPLICATE": {
+            "description": "Whether to to all allow users to add duplicate of songs (YES OR NO)"
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",
