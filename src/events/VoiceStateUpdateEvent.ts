@@ -37,10 +37,9 @@ export default class ReadyEvent implements ClientEvent {
                         return newState.guild.queue!.timeouts.set(2, setTimeout(() => {
                             newState.guild.queue!.textChannel!.send(new MessageEmbed().setTitle("⏹ Queue deleted.").setColor("#FF0000")
                                 .setDescription("3 minutes passed and no one is in the voice channel"));
-                            newState.guild.queue!.playing = true;
-                            newState.guild.queue!.connection!.dispatcher.resume();
                             newState.guild.queue!.songs.clear();
-                            return newState.guild.queue!.connection!.dispatcher.end();
+                            newState.guild.queue!.connection!.disconnect();
+                            return newState.guild.queue = null;
                         }, 180000));
                     }, 30000));
                     return undefined;
