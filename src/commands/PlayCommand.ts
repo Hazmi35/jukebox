@@ -170,6 +170,10 @@ export default class PlayCommand extends BaseCommand {
                 serverQueue.connection!.dispatcher.end();
                 return this.client.log.error(e);
             });
+        }).on("deleteQueue", () => {
+            serverQueue.songs.clear();
+            serverQueue.connection!.dispatcher.destroy();
+            guild.queue = null;
         }).on("error", (err: Error) => {
             this.client.log.error("PLAY_ERROR: ", err);
         }).setVolume(serverQueue.volume / guild.client.config.maxVolume);

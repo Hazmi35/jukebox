@@ -39,8 +39,7 @@ export default class ReadyEvent implements ClientEvent {
                                 .setDescription("3 minutes passed and no one is in the voice channel"));
                             newState.guild.queue!.playing = true;
                             newState.guild.queue!.connection!.dispatcher.resume();
-                            newState.guild.queue!.songs.clear();
-                            return newState.guild.queue!.connection!.dispatcher.end();
+                            return newState.guild.queue!.connection!.dispatcher.emit("deleteQueue");
                         }, 3000)); // 180000
                     }, 30000));
                     return undefined;
@@ -53,7 +52,6 @@ export default class ReadyEvent implements ClientEvent {
                     if (vc.size === 1) { clearTimeout(newState.guild.queue.timeouts.get(1)!); newState.guild.queue.timeouts.delete(1); }
                     if (vc.size === 1) { clearTimeout(newState.guild.queue.timeouts.get(2)!); newState.guild.queue.timeouts.delete(2); }
                     if (newState.guild.queue.playing === false && vc.size < 2) {
-                        console.log("abcd");
                         newState.guild.queue.textChannel!.send(new MessageEmbed().setTitle("▶ Queue resumed").setColor("#00FF00")
                             .setDescription(`Someones joins te voice channel. Enjoy the music 🎶\nNow Playing: **${newState.guild.queue.songs.first()!.title}**`));
                         newState.guild.queue.playing = true;
