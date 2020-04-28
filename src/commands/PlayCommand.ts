@@ -172,7 +172,7 @@ export default class PlayCommand extends BaseCommand {
             });
         }).on("deleteQueue", () => {
             serverQueue.songs.clear();
-            serverQueue.connection!.dispatcher.destroy();
+            serverQueue.connection!.disconnect();
             guild.queue = null;
         }).on("error", (err: Error) => {
             this.client.log.error("PLAY_ERROR: ", err);
