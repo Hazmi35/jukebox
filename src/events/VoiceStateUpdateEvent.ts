@@ -39,8 +39,9 @@ export default class ReadyEvent implements ClientEvent {
                                 .setDescription("3 minutes passed and no one is in the voice channel"));
                             newState.guild.queue!.playing = true;
                             newState.guild.queue!.connection!.dispatcher.resume();
-                            return newState.guild.queue!.connection!.dispatcher.emit("deleteQueue");
-                        }, 3000)); // 180000
+                            newState.guild.queue!.songs.clear();
+                            return newState.guild.queue!.connection!.dispatcher.end();
+                        }, 180000));
                     }, 30000));
                     return undefined;
                 }
