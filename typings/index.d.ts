@@ -1,4 +1,4 @@
-import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection } from "discord.js";
+import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection, ClientEvents } from "discord.js";
 import Jukebox from "../src/structures/Jukebox";
 
 export interface CommandComponent {
@@ -54,4 +54,8 @@ export interface ISong {
     id: string;
     title: string;
     url: string;
+}
+export interface ClientEvent {
+    name: keyof ClientEvents;
+    execute(...args: ClientEvents[EventProp["name"]]): any;
 }
