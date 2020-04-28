@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
-      "skipLibCheck": true,
+      "target": "ES2020",
       "module": "commonjs",
-      "target": "esnext",
+      "allowJs": true,
       "strict": true,
-      "sourceMap": true,
+      "skipLibCheck": true,
       "noImplicitAny": true,
       "alwaysStrict": true,
+      "allowSyntheticDefaultImports": true,
       "esModuleInterop": true,
       "resolveJsonModule": true,
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
       "typeRoots": [
           "node_modules/@types",
           "typings"
