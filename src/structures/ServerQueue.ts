@@ -8,6 +8,7 @@ export default class ServerQueue implements IServerQueue {
     public volume: IServerQueue["volume"] = 0;
     public playing: IServerQueue["playing"] = false;
     public loopMode: IServerQueue["loopMode"] = 0;
+    readonly timeouts: Map<number, NodeJS.Timeout> = new Map();
     constructor(public textChannel: IServerQueue["textChannel"] = null,
         public voiceChannel: IServerQueue["voiceChannel"] = null) { this.volume = textChannel!.client.config.defaultVolume; }
 }

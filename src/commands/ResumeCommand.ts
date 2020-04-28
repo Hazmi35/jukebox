@@ -23,7 +23,7 @@ export default class PingCommand extends BaseCommand {
         } else {
             message.guild!.queue.playing = true;
             message.guild!.queue.connection!.dispatcher.resume();
-            return message.channel.send(new MessageEmbed().setDescription("⏸ Resumed the music for you!").setColor("#00FF00"));
+            return message.channel.send(new MessageEmbed().setDescription("▶ Resumed the music for you!").setColor("#00FF00"));
         }
     }
 }

@@ -1,9 +1,10 @@
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-underscore-dangle, @typescript-eslint/unbound-method */
 import { Client, ClientOptions } from "discord.js";
 import { resolve } from "path";
 import config from "../config";
 import { LogWrapper } from "../utils/LogWrapper";
 import CommandsHandler from "../utils/Commands";
+import ClientEventsLoader from "../utils/ClientEventsLoader";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore-next-line // FIX: Find or create typings for simple-youtube-api or wait for v6 released
 import YouTube from "simple-youtube-api";
@@ -17,10 +18,12 @@ export default class Jukebox extends Client {
     readonly log = new LogWrapper(config.name).logger;
     readonly youtube = new YouTube(process.env.YT_API_KEY!, { cache: false, fetchAll: true });
     readonly commandsHandler = new CommandsHandler(this, resolve(__dirname, "..", "commands"));
+    readonly eventsLaoder = new ClientEventsLoader(this, resolve(__dirname, "..", "events"));
     constructor(opt: ClientOptions) { super(opt); }
 
     public async build(): Promise<Jukebox> {
-        this.commandsHandler.load();
+        this.on("ready", () => this.commandsHandler.load());
+        this.eventsLaoder.load();
         await this.login(this.getToken());
         return this;
     }

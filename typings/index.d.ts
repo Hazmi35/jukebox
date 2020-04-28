@@ -1,4 +1,4 @@
-import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection } from "discord.js";
+import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection, ClientEvents, VoiceState } from "discord.js";
 import Jukebox from "../src/structures/Jukebox";
 
 export interface CommandComponent {
@@ -45,6 +45,7 @@ export interface IServerQueue {
     volume: number;
     playing: boolean;
     loopMode: 0 | 1 | 2;
+    timeouts: Map<number, NodeJS.Timeout>;
 }
 export interface ISongs extends Collection<string, ISong> {
     addSong(song: ISong): this;
@@ -54,4 +55,11 @@ export interface ISong {
     id: string;
     title: string;
     url: string;
+}
+export interface ClientEvent {
+    name: keyof ClientEvents;
+    execute(...args: ClientEvents[EventProp["name"]]): any;
+}
+export interface IVoiceState extends VoiceState {
+    guild: IGuild;
 }

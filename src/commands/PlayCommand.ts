@@ -120,6 +120,7 @@ export default class PlayCommand extends BaseCommand {
                 const connection = await message.guild!.queue.voiceChannel!.join();
                 message.guild!.queue.connection = connection;
             } catch (error) {
+                message.guild!.queue.songs.clear();
                 message.guild!.queue = null;
                 this.client.log.error("PLAY_COMMAND: ", error);
                 message.channel.send(new MessageEmbed().setDescription(`Error: Could not join the voice channel. reason:\n\`${error}\``).setColor("#FF0000"));
@@ -130,6 +131,11 @@ export default class PlayCommand extends BaseCommand {
                 return this.client.log.error(err);
             });
         } else {
+            if (!this.client.config.allowDuplicate && message.guild!.queue.songs.find(s => s.id === song.id)) return message.channel.send(new MessageEmbed()
+                .setTitle("Already queued.")
+                .setColor("#FFFF00")
+                .setDescription(`Song: ${song.title} is already queued, and this bot configuration disallow duplicated song in queue, `
+                + `please use \`${this.client.config.prefix}repeat\` instead`));
             message.guild!.queue.songs.addSong(song);
             if (playlist) return;
             return message.channel.send(new MessageEmbed().setDescription(`✅ Song **${song.title}** has been added to the queue`).setColor("#00FF00"));
@@ -152,7 +158,7 @@ export default class PlayCommand extends BaseCommand {
         const dispatcher = serverQueue.connection!.play(SongData.data, {
             type: SongData.canDemux ? "webm/opus" : "unknown",
             bitrate: "auto",
-            highWaterMark: 1
+            highWaterMark: 3
         });
 
         dispatcher.on("start", () => {
