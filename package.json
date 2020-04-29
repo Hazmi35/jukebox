@@ -1,30 +1,27 @@
 {
   "name": "jukebox",
   "version": "2.4.0",
+  "private": true,
   "description": " Just a simple Discord music bot.",
-  "main": "dist/main.js",
-  "scripts": {
-    "lint": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js)\"",
-    "lint:fix": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js)\" --fix",
-    "test": "npm run lint && tsc && rimraf dist",
-    "build": "npm run test && rimraf dist && tsc",
-    "start": "node dist/main",
-    "start:dev": "echo [INFO] Sharding disabled when using ts-node && ts-node src/bot"
-  },
-  "engines": {
-    "node": ">=12.x"
+  "homepage": "https://github.com/Hazmi35/jukebox#readme",
+  "bugs": {
+    "url": "https://github.com/Hazmi35/jukebox/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Hazmi35/jukebox.git"
   },
-  "author": "Hazmi35 (contact@hzmi.xyz) (https://github.com/Hazmi35)",
-  "private": true,
   "license": "AGPL-3.0",
-  "bugs": {
-    "url": "https://github.com/Hazmi35/jukebox/issues"
+  "author": "Hazmi35 (contact@hzmi.xyz) (https://github.com/Hazmi35)",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "npm run test && rimraf dist && tsc",
+    "lint": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js)\"",
+    "lint:fix": "eslint --ignore-path .gitignore \"src/**/*.+(ts|js)\" --fix",
+    "start": "node dist/main",
+    "start:dev": "echo [INFO] Sharding disabled when using ts-node && ts-node src/bot",
+    "test": "npm run lint && tsc && rimraf dist"
   },
-  "homepage": "https://github.com/Hazmi35/jukebox#readme",
   "dependencies": {
     "chalk": "^4.0.0",
     "discord.js": "^12.2.0",
@@ -35,13 +32,6 @@
     "winston": "^3.2.1",
     "ytdl-core": "^2.1.1"
   },
-  "optionalDependencies": {
-    "@discordjs/opus": "^0.2.1",
-    "bufferutil": "^4.0.1",
-    "libsodium-wrappers": "^0.7.6",
-    "utf-8-validate": "^5.0.2",
-    "zlib-sync": "^0.1.6"
-  },
   "devDependencies": {
     "@types/node": "^13.13.4",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
@@ -50,5 +40,15 @@
     "rimraf": "^3.0.2",
     "ts-node": "^8.9.1",
     "typescript": "^3.8.3"
+  },
+  "optionalDependencies": {
+    "@discordjs/opus": "^0.2.1",
+    "bufferutil": "^4.0.1",
+    "libsodium-wrappers": "^0.7.6",
+    "utf-8-validate": "^5.0.2",
+    "zlib-sync": "^0.1.6"
+  },
+  "engines": {
+    "node": ">=12.x"
   }
 }
