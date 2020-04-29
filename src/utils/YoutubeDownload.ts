@@ -16,6 +16,7 @@ export default function playSong(YoutubeLink: string, options: IdownloadOptions 
                 const data = downloadFromInfo(info, options);
                 const stream = new PassThrough();
                 data.on("data", (chunk) => stream.write(chunk)); data.pipe(createWriteStream(path));
+                data.on("end", () => stream.end());
                 return resolve({ canDemux, info, stream });
             }
             return resolve({ canDemux, info, stream: downloadFromInfo(info, options) });
