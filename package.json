@@ -42,7 +42,7 @@
     "typescript": "^3.8.3"
   },
   "optionalDependencies": {
-    "@discordjs/opus": "^0.2.1",
+    "@discordjs/opus": "^0.3.1",
     "bufferutil": "^4.0.1",
     "libsodium-wrappers": "^0.7.6",
     "utf-8-validate": "^5.0.2",
