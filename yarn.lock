@@ -53,10 +53,10 @@
     semver "^7.3.0"
     tar "^6.0.2"
 
-"@discordjs/opus@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@discordjs/opus/-/opus-0.3.1.tgz#81c62bf723a7448894e3f5432d697228f6769a71"
-  integrity sha512-ZP2t9XZyPhS4BkyN0SqCfGJNFkLvudFzc27KQDlCSja9a5daRzdV3x2AGs/Oy0vQv15h9u6w40j2H8xRpVyjXw==
+"@discordjs/opus@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@discordjs/opus/-/opus-0.3.2.tgz#7dde2d4541ccfaa451e029f9d8da980286f9f56a"
+  integrity sha512-T/ubykd4Xi19vDfw7/Oe+iTQBJ28yMI2PQAzK+Zue0PB9OpEYaeIXU7k5255061RwL+rHX9w7P/P2of+x2Vu2A==
   dependencies:
     "@discordjs/node-pre-gyp" "^0.1.0"
     node-addon-api "^2.0.0"
