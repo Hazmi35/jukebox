@@ -36,7 +36,7 @@ export default class ReadyEvent implements ClientEvent {
                             + "if there's no people the in voice channel in the next 3 minutes, queue will be deleted."));
                         return newState.guild.queue!.timeouts.set(2, setTimeout(() => {
                             newState.guild.queue!.textChannel!.send(new MessageEmbed().setTitle("⏹ Queue deleted.").setColor("#FF0000")
-                                .setDescription("3 minutes passed and no one is in the voice channel"));
+                                .setDescription("3 minutes have passed and there is no one who joins the voice channel, queue was deleted."));
                             newState.guild.queue!.songs.clear();
                             newState.guild.queue!.connection!.disconnect();
                             return newState.guild.queue = null;

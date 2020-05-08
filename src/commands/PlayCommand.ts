@@ -155,13 +155,12 @@ export default class PlayCommand extends BaseCommand {
 
         serverQueue.connection!.voice.setSelfDeaf(true);
         const SongData = await ytdl(song.url);
-        const dispatcher = serverQueue.connection!.play(SongData.data, {
+
+        serverQueue.connection!.play(SongData.data, {
             type: SongData.canDemux ? "webm/opus" : "unknown",
             bitrate: "auto",
-            highWaterMark: 3
-        });
-
-        dispatcher.on("start", () => {
+            highWaterMark: 1
+        }).on("start", () => {
             serverQueue.playing = true;
             this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
             serverQueue.textChannel!.send(new MessageEmbed().setDescription(`▶ Start playing: **${song.title}**`).setColor("#00FF00"));
