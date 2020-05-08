@@ -16,7 +16,7 @@
             "description": "Prefix for your bot"
         },
         "CONFIG_OWNERS": {
-            "description": "A Discord ID(s), use comma if you want to add more than 1 owner (DO NOT FILL SOMEONE ELSE ID THAT YOU DON'T TRUST)"
+            "description": "A Discord ID(s), use comma if you want to add more than 1 owner (DO NOT ADD SOMEONE ELSE ID THAT YOU DON'T TRUST)"
         },
         "CONFIG_TOTALSHARDS": {
             "description": "Total shards to spawn, use \"auto\" or a number"
