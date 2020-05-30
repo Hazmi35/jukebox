@@ -30,7 +30,7 @@
     "opusscript": "^0.0.7",
     "simple-youtube-api": "^5.2.1",
     "winston": "^3.2.1",
-    "ytdl-core": "^2.1.2"
+    "ytdl-core": "^2.1.5"
   },
   "devDependencies": {
     "@types/node": "^14.0.6",
