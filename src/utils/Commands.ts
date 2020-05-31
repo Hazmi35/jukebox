@@ -29,7 +29,7 @@ export default class CommandsHandler {
         return undefined;
     }
     public handle(message: Message): any {
-        const args = message.content.substring(this.client.config.prefix.length).trim().split(/ /g);
+        const args = message.content.substring(this.client.config.prefix.length).trim().split(/ +/g);
         const cmd = args.shift()!.toLowerCase();
         const command = this.commands.get(cmd) || this.commands.get(this.aliases.get(cmd)!);
         if (!command || command.conf.disable) return undefined;
