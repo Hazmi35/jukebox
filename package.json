@@ -39,7 +39,7 @@
     "eslint": "^7.1.0",
     "rimraf": "^3.0.2",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.5"
   },
   "optionalDependencies": {
     "@discordjs/opus": "^0.3.2",
