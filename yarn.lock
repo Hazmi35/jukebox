@@ -985,10 +985,15 @@ mimic-fn@^2.1.0:
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-2.1.0.tgz#7ed2c2ccccaf84d3ffcb7a69b57711fc2083401b"
   integrity sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==
 
-miniget@^1.6.1, miniget@^1.7.0:
+miniget@^1.6.1:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/miniget/-/miniget-1.7.0.tgz#a29eb79ebff479e9efafd271616981c603987875"
   integrity sha512-yrgaDSMRzrfYTkudB4Y6xK8pCb7oAH2bvfv6iPY2m6CedZfs9yK4b/ofh0Vzv08hCYXH/HHkoS8an6fkWtOAQA==
+
+miniget@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/miniget/-/miniget-2.0.0.tgz#5792519173a56e9e79e144e7cfcb5d2c1312f361"
+  integrity sha512-JAHY/3Dv673TFDmYcpF3yo755ViTy0fU2L0j9y+5bobs6+fbnX4k8UkmCqC8mwwgYUNDOEgHrN1P/oO+rQNxjw==
 
 minimatch@^3.0.4:
   version "3.0.4"
@@ -1686,14 +1691,14 @@ yn@3.1.1:
   resolved "https://registry.yarnpkg.com/yn/-/yn-3.1.1.tgz#1e87401a09d767c1d5eab26a6e4c185182d2eb50"
   integrity sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
 
-ytdl-core@^2.1.2:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/ytdl-core/-/ytdl-core-2.1.4.tgz#084ea292cc3d2262f3d2f859ae6f32a0bd813397"
-  integrity sha512-jjxOAfOsUE4tXLrjZeLnvhvMeuE31TpvhP/SHmERNH+s5aDK5oseons8iplRrfxrkh+Gj4QKGzXf06gLMdBvIA==
+ytdl-core@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/ytdl-core/-/ytdl-core-3.1.0.tgz#129cfa8612972e02ad542e58f4c22764ae1e31d4"
+  integrity sha512-3dDIugHLusJ5vXnII4bYrSWLwKPVxPL+nvVl2YS7Jgi0ui6I9RBODKXSu6Xttysvc0HN60QOcDeDFTKmUs92Bg==
   dependencies:
     html-entities "^1.3.1"
     m3u8stream "^0.7.1"
-    miniget "^1.7.0"
+    miniget "^2.0.0"
     sax "^1.1.3"
 
 zlib-sync@^0.1.6:
