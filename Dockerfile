@@ -3,20 +3,12 @@ FROM node:12-alpine
 LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
-ENV DISCORD_TOKEN= \
-    YT_API_KEY= \
-    CONFIG_NAME= \
-    CONFIG_PREFIX= \
-    CONFIG_OWNERS= \ 
-    CONFIG_TOTALSHARDS= \
-    CONFIG_MAX_VOLUME= \
-    CONFIG_DEFAULT_VOLUME=
 WORKDIR /usr/Jukebox
 
 COPY . .
 RUN echo [INFO] Starting to build Docker image... \
 && echo [INFO] Installing build deps... \
-&& apk add --no-cache --virtual .build-deps build-base python g++ make git curl \
+&& apk add --no-cache --virtual .build-deps python g++ make git curl \
 && echo [INFO] Build deps installed! \
 && echo [INFO] Installing 3rd party packages... \
 && apk add --no-cache --virtual .third-party ffmpeg \

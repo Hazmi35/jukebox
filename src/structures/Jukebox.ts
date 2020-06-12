@@ -1,12 +1,12 @@
-/* eslint-disable no-underscore-dangle, @typescript-eslint/unbound-method */
+/* eslint-disable no-underscore-dangle, @typescript-eslint/unbound-method, @typescript-eslint/restrict-plus-operands */
 import { Client, ClientOptions } from "discord.js";
 import { resolve } from "path";
 import config from "../config";
 import { LogWrapper } from "../utils/LogWrapper";
 import CommandsHandler from "../utils/Commands";
 import ClientEventsLoader from "../utils/ClientEventsLoader";
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore-next-line // FIX: Find or create typings for simple-youtube-api or wait for v6 released
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error // FIX: Find or create typings for simple-youtube-api or wait for v6 released
 import YouTube from "simple-youtube-api";
 
 // Extends DiscordJS Structures
