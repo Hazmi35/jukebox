@@ -46,7 +46,7 @@
     "bufferutil": "^4.0.1",
     "libsodium-wrappers": "^0.7.6",
     "utf-8-validate": "^5.0.2",
-    "zlib-sync": "^0.1.6"
+    "zlib-sync": "^0.1.7"
   },
   "engines": {
     "node": ">=12.x"
