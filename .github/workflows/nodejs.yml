@@ -3,7 +3,7 @@ name: Node.js CI
 on:
   push:
     branches:
-      - "**"
+      - master
   pull_request:
     branches:
       - "**"
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 13.x, 14.x]
+        node-version: [12.x, 14.x]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2

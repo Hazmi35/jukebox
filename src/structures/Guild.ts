@@ -6,6 +6,6 @@ Structures.extend("Guild", DJSGuild => {
     return class Guild extends DJSGuild implements IGuild {
         public client!: IGuild["client"];
         public queue: IServerQueue | null = null;
-        constructor(client: Jukebox, data: object) { super(client, data); }
+        constructor(client: Jukebox, data: Guild) { super(client, data); }
     };
 });
