@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Logger, transports, format, createLogger } from "winston";
 import { EventEmitter } from "events";
 import chalk from "chalk";
@@ -46,7 +46,7 @@ export class LogWrapper extends EventEmitter {
                 format.printf(function (info: any) {
                     const { level, message, stack } = info;
                     const prefix = `${mconst.border1}${date}${mconst.border2}-${mconst.border1}${level}${mconst.border2}: `;
-                    if (level === "warn" || level === "error" || level === "crit") return prefix + stack;
+                    if (level === "warn" || level === "error" || level === "crit") return `${prefix}${stack}`;
                     return prefix + JSON.stringify(message, null, 4);
                 }),
                 format.align(),
