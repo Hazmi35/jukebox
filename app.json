@@ -31,7 +31,7 @@
             "description": "Whether to to all allow users to add duplicate of songs (YES OR NO)"
         },
         "CONFIG_CACHE_YOUTUBE_DOWNLOADS": {
-            "description": "(EXPERIMENTAL) Whether to download and cache musics from youtube"
+            "description": "(EXPERIMENTAL) Whether to download and cache musics from youtube (YES OR NO)"
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",
