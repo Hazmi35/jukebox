@@ -22,6 +22,8 @@ export default class Jukebox extends Client {
     constructor(opt: ClientOptions) { super(opt); }
 
     public async build(): Promise<Jukebox> {
+        // NOTE: Will be removed when caching is not a experimental feature anymore
+        if (this.config.cacheYoutubeDownloads) this.log.warn("cacheYoutubeDownloads is still a experimental feature");
         this.on("ready", () => this.commandsHandler.load());
         this.eventsLaoder.load();
         await this.login(this.getToken());
