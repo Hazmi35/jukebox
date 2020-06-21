@@ -155,7 +155,7 @@ export default class PlayCommand extends BaseCommand {
         serverQueue.connection!.voice.setSelfDeaf(true);
         const SongData = await ytdl(song.url, { cache: this.client.config.cacheYoutubeDownloads });
 
-        if (SongData.cache) this.client.log.info(`Using cache for ${song.title} for ${guild.name}`);
+        if (SongData.cache) this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Using cache for ${song.title} for ${guild.name}`);
 
         serverQueue.connection!.play(SongData.stream, {
             type: SongData.canDemux ? "webm/opus" : "unknown",
