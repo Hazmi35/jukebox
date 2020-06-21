@@ -7,7 +7,6 @@ import ServerQueue from "../structures/ServerQueue";
 import ytdl from "../utils/YoutubeDownload";
 import { Util, VoiceChannel, MessageEmbed } from "discord.js";
 import { AllHtmlEntities } from "html-entities";
-
 const HtmlEntities = new AllHtmlEntities();
 
 export default class PlayCommand extends BaseCommand {
@@ -154,9 +153,9 @@ export default class PlayCommand extends BaseCommand {
         }
 
         serverQueue.connection!.voice.setSelfDeaf(true);
-        const SongData = await ytdl(song.url);
+        const SongData = await ytdl(song.url, { cache: this.client.config.cacheYoutubeDownloads });
 
-        serverQueue.connection!.play(SongData.data, {
+        serverQueue.connection!.play(SongData.stream, {
             type: SongData.canDemux ? "webm/opus" : "unknown",
             bitrate: "auto",
             highWaterMark: 1
