@@ -3,3 +3,6 @@
 
 # voiceStateUpdateEvent
 src/events/VoiceStateUpdateEvent.ts @KurokuTetsuya
+
+# LogWrapper
+src/utils/LogWrapper.ts @BillyAddlers
