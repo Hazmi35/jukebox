@@ -12,15 +12,14 @@ export default function playSong(YoutubeLink: string, options: IdownloadOptions 
             options = canDemux ? { ...options, filter } : { ...options };
             if (options.cache && info.formats.find(f => !f.live)) {
                 const path = resolvePath(process.cwd(), "cache", `${info.video_id}.webm`);
-                if (existsSync(resolvePath(path))) return resolve({ canDemux, info, stream: createReadStream(path) });
+                if (existsSync(resolvePath(path))) return resolve({ canDemux, info, stream: createReadStream(path), cache: true });
                 const data = downloadFromInfo(info, options);
                 const stream = new PassThrough();
                 const cache = createWriteStream(path);
                 data.on("data", (chunk) => { stream.write(chunk); cache.write(chunk); } );
-                data.on("end", () => { stream.end(); cache.end(); });
-                return resolve({ canDemux, info, stream });
+                return resolve({ canDemux, info, stream, cache: false });
             }
-            return resolve({ canDemux, info, stream: downloadFromInfo(info, options) });
+            return resolve({ canDemux, info, stream: downloadFromInfo(info, options), cache: false });
         });
     });
 }
@@ -33,6 +32,7 @@ interface ISongData {
     canDemux: boolean;
     info: videoInfo;
     stream: Readable;
+    cache: boolean;
 }
 
 interface IdownloadOptions extends downloadOptions { cache?: boolean }
