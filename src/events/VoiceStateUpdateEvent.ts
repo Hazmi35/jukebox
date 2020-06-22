@@ -14,7 +14,7 @@ export default class ReadyEvent implements ClientEvent {
 
             // Handle when bot gets kicked from the voice channel
             if (oldState.id === this.client.user!.id && oldID === newState.guild.queue.voiceChannel!.id && newID === undefined) {
-                newState.guild.queue.textChannel!.send(new MessageEmbed().setDescription("I'm disconnected from the voice channel, queue will be deleted").setColor("#FFFF00"));
+                newState.guild.queue.textChannel!.send(new MessageEmbed().setDescription("I'm disconnected from the voice channel, the queue will be deleted").setColor("#FFFF00"));
                 return newState.guild.queue = null;
             }
 
@@ -34,11 +34,11 @@ export default class ReadyEvent implements ClientEvent {
                     const timeout = this.client.config.deleteQueueTimeout;
                     const duration = parseDur(timeout);
                     newState.guild.queue.textChannel!.send(new MessageEmbed().setTitle("⏸ Queue paused.").setColor("#FFFF00")
-                        .setDescription("Currently, no one is the in voice channel, to save resources, queue was pasued. "
-                            + `if there's no people the in voice channel in the next ${duration}, queue will be deleted.`));
+                        .setDescription("Currently, no one is the in the voice channel, to save resources, the queue was pasued. "
+                            + `if there's no people the in voice channel in the next ${duration}, the queue will be deleted.`));
                     return newState.guild.queue.timeout = setTimeout(() => {
                         newState.guild.queue!.textChannel!.send(new MessageEmbed().setTitle("⏹ Queue deleted.").setColor("#FF0000")
-                            .setDescription(`${duration} have passed and there is no one who joins the voice channel, queue was deleted.`));
+                            .setDescription(`${duration} have passed and there is no one who joins the voice channel, the queue was deleted.`));
                         newState.guild.queue!.songs.clear();
                         newState.guild.queue!.connection!.disconnect();
                         return newState.guild.queue = null;
