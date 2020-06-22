@@ -12,3 +12,15 @@ updates:
   - Hazmi35
   labels:
   - dependencies
+- package-ecosystem: github-actions
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "06:00"
+    timezone: Asia/Jakarta
+  open-pull-requests-limit: 99
+  target-branch: master
+  reviewers:
+  - Hazmi35
+  labels:
+  - gh-actions
