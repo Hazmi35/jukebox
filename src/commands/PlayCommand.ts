@@ -67,7 +67,7 @@ export default class PlayCommand extends BaseCommand {
                     let index = 0;
                     const msg = await message.channel.send(new MessageEmbed()
                         .setAuthor("Song Selection") // TODO: Find or create typings for simple-youtube-api or wait for v6 released
-                        .setDescription(`${videos.map((video: any) => `**${++index} -** ${HtmlEntities.decode(video.title)}`).join("\n")}\n` +
+                        .setDescription(`${videos.map((video: any) => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
                         "*Type `cancel` or `c` to cancel song selection*")
                         .setThumbnail(message.client.user!.displayAvatarURL())
                         .setColor("#00FF00")
@@ -110,7 +110,7 @@ export default class PlayCommand extends BaseCommand {
     private async handleVideo(video: any, message: IMessage, voiceChannel: VoiceChannel, playlist = false): Promise<any> { // TODO: Find or create typings for simple-youtube-api or wait for v6 released
         const song: ISong = {
             id: video.id,
-            title: Util.escapeMarkdown(video.title),
+            title: this.cleanTitle(video.title),
             url: `https://youtube.com/watch?v=${video.id}`
         };
         if (!message.guild!.queue) {
@@ -179,5 +179,8 @@ export default class PlayCommand extends BaseCommand {
         }).on("error", (err: Error) => {
             this.client.log.error("PLAY_ERROR: ", err);
         }).setVolume(serverQueue.volume / guild.client.config.maxVolume);
+    }
+    private cleanTitle(title: string): string {
+        return Util.escapeMarkdown(HtmlEntities.decode(title));
     }
 }
