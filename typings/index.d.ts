@@ -45,7 +45,7 @@ export interface IServerQueue {
     volume: number;
     playing: boolean;
     loopMode: 0 | 1 | 2;
-    timeouts: Map<number, NodeJS.Timeout>;
+    timeout: NodeJS.Timeout | null;
 }
 export interface ISongs extends Collection<string, ISong> {
     addSong(song: ISong): this;
