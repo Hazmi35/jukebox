@@ -24,3 +24,4 @@ updates:
   - Hazmi35
   labels:
   - gh-actions
+  - dependencies
