@@ -63,6 +63,7 @@ export default class PlayCommand extends BaseCommand {
             } catch (e) {
                 try {
                     const videos = await this.client.youtube.searchVideos(searchString, 12);
+                    if (videos.length === 0) return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
                     let index = 0;
                     const msg = await message.channel.send(new MessageEmbed()
                         .setAuthor("Song Selection") // TODO: Find or create typings for simple-youtube-api or wait for v6 released
