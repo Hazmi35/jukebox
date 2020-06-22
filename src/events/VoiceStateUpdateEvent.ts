@@ -1,6 +1,7 @@
 import { ClientEvent, IVoiceState } from "../../typings";
 import Jukebox from "../structures/Jukebox";
 import { MessageEmbed } from "discord.js";
+import { parseDur } from "../utils/parseDur";
 
 export default class ReadyEvent implements ClientEvent {
     readonly name = "voiceStateUpdate";
@@ -30,16 +31,18 @@ export default class ReadyEvent implements ClientEvent {
                     newState.guild.queue.timeout = null;
                     newState.guild.queue.playing = false;
                     newState.guild.queue.connection!.dispatcher.pause();
+                    const timeout = this.client.config.deleteQueueTimeout;
+                    const duration = parseDur(timeout);
                     newState.guild.queue.textChannel!.send(new MessageEmbed().setTitle("⏸ Queue paused.").setColor("#FFFF00")
                         .setDescription("Currently, no one is the in voice channel, to save resources, queue was pasued. "
-                            + `if there's no people the in voice channel in the next ${this.parseDur(this.client.config.deleteQueueTimeout)}, queue will be deleted.`));
+                            + `if there's no people the in voice channel in the next ${duration}, queue will be deleted.`));
                     return newState.guild.queue.timeout = setTimeout(() => {
                         newState.guild.queue!.textChannel!.send(new MessageEmbed().setTitle("⏹ Queue deleted.").setColor("#FF0000")
-                            .setDescription(`${this.parseDur(this.client.config.deleteQueueTimeout)} have passed and there is no one who joins the voice channel, queue was deleted.`));
+                            .setDescription(`${duration} have passed and there is no one who joins the voice channel, queue was deleted.`));
                         newState.guild.queue!.songs.clear();
                         newState.guild.queue!.connection!.disconnect();
                         return newState.guild.queue = null;
-                    }, this.client.config.deleteQueueTimeout);
+                    }, timeout);
                 }
             }
 
@@ -60,24 +63,5 @@ export default class ReadyEvent implements ClientEvent {
                 }
             }
         }
-    }
-    private parseDur(ms: number): string {
-        let seconds = ms / 1000;
-        const days = parseInt((seconds / 86400).toString());
-        seconds = seconds % 86400;
-        const hours = parseInt((seconds / 3600).toString());
-        seconds = seconds % 3600;
-        const minutes = parseInt((seconds / 60).toString());
-        seconds = parseInt((seconds % 60).toString());
-
-
-        if (days) {
-            return `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`;
-        } else if (hours) {
-            return `${hours} hours ${minutes} minutes ${seconds} seconds`;
-        } else if (minutes) {
-            return `${minutes} minutes ${seconds} seconds`;
-        }
-        return `${seconds} seconds`;
     }
 }
