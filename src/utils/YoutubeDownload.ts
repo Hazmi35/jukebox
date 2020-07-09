@@ -6,8 +6,7 @@ import { createReadStream, createWriteStream, existsSync } from "fs";
 // Inspired by ytdl-core-discord (https://github.com/amishshah/ytdl-core-discord)  // 1048576 * 1 = 1MB
 export default function playSong(YoutubeLink: string, options: IdownloadOptions = { filter: "audio", quality: "highestaudio", highWaterMark: 1048576 * 32 }): Promise<ISongData> {
     return new Promise((resolve, reject) => {
-        getInfo(YoutubeLink, (err, info) => {
-            if (err) return reject(err);
+        getInfo(YoutubeLink).then((info) => {
             const canDemux: boolean = info.formats.find(filter)! && Number(info.length_seconds) != 0;
             options = canDemux ? { ...options, filter } : { ...options };
             if (options.cache && info.formats.find(f => !f.live)) {
@@ -21,7 +20,7 @@ export default function playSong(YoutubeLink: string, options: IdownloadOptions 
                 return resolve({ canDemux, info, stream, cache: false });
             }
             return resolve({ canDemux, info, stream: downloadFromInfo(info, options), cache: false });
-        });
+        }).catch(reject);
     });
 }
 
