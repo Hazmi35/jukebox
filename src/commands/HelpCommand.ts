@@ -20,7 +20,7 @@ export default class PlayCommand extends BaseCommand {
                 .setThumbnail(message.client.user!.displayAvatarURL())
                 .setDescription(message.client.commandsHandler.commands.map(c => `\`${c.help.name}\``).join(" "))
                 .setTimestamp()
-                .setFooter(`Use ${message.client.config.prefix}help <command> to get more info on specific command!`, "https://hzmi.xyz/assets/images/390511462361202688.png"));
+                .setFooter(`Use ${message.client.config.prefix}help <command> to get more info on a specific command!`, "https://hzmi.xyz/assets/images/390511462361202688.png"));
         } else {
             message.channel.send(new MessageEmbed()
                 .setTitle(`Help for ${command.help.name} command`)
