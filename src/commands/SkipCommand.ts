@@ -17,7 +17,7 @@ export default class PlayCommand extends BaseCommand {
         if (message.member!.voice.channel.id !== message.guild!.queue.voiceChannel!.id) return message.channel.send(
             new MessageEmbed().setDescription("❗ You need to be in the same voice channel as mine").setColor("#FF0000"));
 
-        message.channel.send(new MessageEmbed().setDescription(`⏭ Skipped ${message.guild!.queue.songs.first()!.title}`).setColor("#00FF00"));
+        message.channel.send(new MessageEmbed().setDescription(`⏭ Skipped [**${message.guild!.queue.songs.first()!.title}**](${message.guild!.queue.songs.first()!.url}})`).setColor("#00FF00"));
         message.guild!.queue.connection!.dispatcher.end();
     }
 }

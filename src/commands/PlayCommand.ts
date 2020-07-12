@@ -41,7 +41,7 @@ export default class PlayCommand extends BaseCommand {
             const playlist = await this.client.youtube.getPlaylist(url);
             const videos = await playlist.getVideos();
             let skikppedVideos = 0;
-            message.channel.send(new MessageEmbed().setDescription(`Adding all videos in playlist: **${playlist.title}**, Hang on...`).setColor("#00FF00"));
+            message.channel.send(new MessageEmbed().setDescription(`Adding all videos in playlist: **[${playlist.title}](${playlist.url})**, Hang on...`).setColor("#00FF00"));
             for (const video of Object.values(videos)) {
                 if ((video as any).raw.status.privacyStatus === "private") {
                     skikppedVideos++;
@@ -55,7 +55,7 @@ export default class PlayCommand extends BaseCommand {
                 new MessageEmbed()
                     .setDescription(`${skikppedVideos >= 2 ? `${skikppedVideos} videos` : `${skikppedVideos} video`} are skipped because it's a private video`)
                     .setColor("#FFFF00"));
-            return message.channel.send(new MessageEmbed().setDescription(`All videos in playlist: **${playlist.title}**, has been added to the queue!`).setColor("#00FF00"));
+            return message.channel.send(new MessageEmbed().setDescription(`All videos in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`).setColor("#00FF00"));
         } else {
             try {
                 // eslint-disable-next-line no-var
@@ -67,7 +67,7 @@ export default class PlayCommand extends BaseCommand {
                     let index = 0;
                     const msg = await message.channel.send(new MessageEmbed()
                         .setAuthor("Song Selection") // TODO: Find or create typings for simple-youtube-api or wait for v6 released
-                        .setDescription(`${videos.map((video: any) => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
+                        .setDescription(`${videos.map((video: any) => `**${++index} -** ${this.cleanTitle(video.title)}${video.url}`).join("\n")}\n` +
                         "*Type `cancel` or `c` to cancel song selection*")
                         .setThumbnail(message.client.user!.displayAvatarURL())
                         .setColor("#00FF00")
@@ -134,11 +134,11 @@ export default class PlayCommand extends BaseCommand {
             if (!this.client.config.allowDuplicate && message.guild!.queue.songs.find(s => s.id === song.id)) return message.channel.send(new MessageEmbed()
                 .setTitle("Already queued.")
                 .setColor("#FFFF00")
-                .setDescription(`Song: ${song.title} is already queued, and this bot configuration disallow duplicated song in queue, `
+                .setDescription(`Song: **[${song.title}](${song.id})** is already queued, and this bot configuration disallow duplicated song in queue, `
                 + `please use \`${this.client.config.prefix}repeat\` instead`));
             message.guild!.queue.songs.addSong(song);
             if (playlist) return;
-            return message.channel.send(new MessageEmbed().setDescription(`✅ Song **${song.title}** has been added to the queue`).setColor("#00FF00"));
+            return message.channel.send(new MessageEmbed().setDescription(`✅ Song **[${song.title}](${song.id})** has been added to the queue`).setColor("#00FF00"));
         }
         return message;
     }
@@ -154,7 +154,7 @@ export default class PlayCommand extends BaseCommand {
         }
 
         serverQueue.connection!.voice.setSelfDeaf(true);
-        const SongData = await ytdl(song.url, { cache: this.client.config.cacheYoutubeDownloads });
+        const SongData = await ytdl(song.url, { cache: this.client.config.cacheYoutubeDownloads, cacheMaxLength: this.client.config.cacheMaxLengthAllowed });
 
         if (SongData.cache) this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Using cache for song "${song.title}" on ${guild.name}`);
 
@@ -165,12 +165,12 @@ export default class PlayCommand extends BaseCommand {
         }).on("start", () => {
             serverQueue.playing = true;
             this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
-            serverQueue.textChannel!.send(new MessageEmbed().setDescription(`▶ Start playing: **${song.title}**`).setColor("#00FF00"));
+            serverQueue.textChannel!.send(new MessageEmbed().setDescription(`▶ Start playing: **[${song.title}](${song.url})**`).setColor("#00FF00"));
         }).on("finish", () => {
             this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
             if (serverQueue.loopMode === 0) serverQueue.songs.deleteFirst();
             else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
-            serverQueue.textChannel!.send(new MessageEmbed().setDescription(`⏹ Stop playing: **${song.title}**`).setColor("#00FF00"));
+            serverQueue.textChannel!.send(new MessageEmbed().setDescription(`⏹ Stop playing: **[${song.title}](${song.url})**`).setColor("#00FF00"));
             this.play(guild).catch(e => {
                 serverQueue.textChannel!.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${e}\``).setColor("#FF0000"));
                 serverQueue.connection!.dispatcher.end();

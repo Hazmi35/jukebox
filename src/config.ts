@@ -7,5 +7,6 @@ export const maxVolume = Number(process.env.CONFIG_MAX_VOLUME) || 100;
 export const allowDuplicate: boolean = process.env.CONFIG_ALLOW_DUPLICATE! === "yes" || false;
 export const deleteQueueTimeout: number = Number(process.env.CONFIG_DELETE_QUEUE_TIMEOUT) * 1000 || 180 * 1000;
 export const cacheYoutubeDownloads: boolean = process.env.CONFIG_CACHE_YOUTUBE_DOWNLOADS! === "yes" || false;
+export const cacheMaxLengthAllowed = Number(process.env.CONFIG_CACHE_MAX_LENGTH) || 5400;
 
-export default { name, prefix, owners, totalShards, defaultVolume, maxVolume, allowDuplicate, deleteQueueTimeout, cacheYoutubeDownloads };
+export default { name, prefix, owners, totalShards, defaultVolume, maxVolume, allowDuplicate, deleteQueueTimeout, cacheYoutubeDownloads, cacheMaxLengthAllowed };

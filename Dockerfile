@@ -6,28 +6,11 @@ LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 WORKDIR /usr/Jukebox
 
 COPY . .
-RUN echo [INFO] Starting to build Docker image... \
-&& echo [INFO] Installing build deps... \
-&& apk add --no-cache --virtual .build-deps python g++ make git curl \
-&& echo [INFO] Build deps installed! \
-&& echo [INFO] Installing 3rd party packages... \
+RUN apk add --no-cache --virtual .build-deps python3 build-base git curl \ 
 && apk add --no-cache --virtual .third-party ffmpeg \
-&& echo [INFO] 3rd party packages installed! \
-&& echo [INFO] Node version: $(node --version) \
-&& echo [INFO] npm version: $(npm --version) \
-&& echo [INFO] Yarn version: $(yarn --version) \
-&& echo [INFO] Git version: $(git --version) \
-&& echo [INFO] Installing npm packages... \
 && yarn install \
-&& echo [INFO] All npm packages installed! \
-&& echo [INFO] Everything looks okay. \
-&& echo [INFO] Building TypeScript project... \
-&& echo Using TypeScript version: $(node -p "require('typescript').version") \
-&& npm run build \
-&& echo [INFO] Done building TypeScript project! \
-&& echo [INFO] Pruning devDependencies... \
+&& yarn run build \
 && yarn install --production \
-&& apk del .build-deps \
-&& echo [INFO] Done! Starting bot with node
+&& apk del .build-deps
 
 CMD ["node", "dist/main.js"]

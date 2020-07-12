@@ -16,7 +16,7 @@ export default class VolumeCommand extends BaseCommand {
         else {
             const embed = new MessageEmbed().setTitle("**Song Queue**").setColor("#00FF00").setThumbnail(message.client.user!.avatarURL()!);
             let num = 1;
-            const songs = message.guild!.queue.songs.map(s => `**${num++}.** **${s.title}**`);
+            const songs = message.guild!.queue.songs.map(s => `**${num++}.** [**${s.title}**](${s.url})`);
             if (message.guild!.queue.songs.size > 12) {
                 const indexes: string[] = this.chunk(songs, 12);
                 let index = 0;

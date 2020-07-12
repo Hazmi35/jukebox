@@ -1,9 +1,7 @@
 import "dotenv/config";
 import Client from "./structures/Jukebox";
 
-const client = new Client({ disableMentions: "everyone", messageCacheMaxSize: Infinity, messageCacheLifetime: 540, messageSweepInterval: 180 })
-    .setToken(process.env.DISCORD_TOKEN!);
-
+const client = new Client({ disableMentions: "everyone", messageCacheMaxSize: Infinity, messageCacheLifetime: 540, messageSweepInterval: 180 });
 
 process.on("unhandledRejection", (e) => {
     client.log.error("UNHANDLED_REJECTION: ", e);
@@ -15,4 +13,4 @@ process.on("uncaughtException", (e) => {
     process.exit(1);
 });
 
-client.build();
+client.build(process.env.DISCORD_TOKEN!);
