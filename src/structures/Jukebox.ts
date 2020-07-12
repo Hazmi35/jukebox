@@ -13,7 +13,6 @@ import YouTube from "simple-youtube-api";
 import "./Guild";
 
 export default class Jukebox extends Client {
-    private _token = "n/a";
     readonly config = config;
     readonly log = new LogWrapper(config.name).logger;
     readonly youtube = new YouTube(process.env.YT_API_KEY!, { cache: false, fetchAll: true });
@@ -21,22 +20,13 @@ export default class Jukebox extends Client {
     readonly eventsLaoder = new ClientEventsLoader(this, resolve(__dirname, "..", "events"));
     constructor(opt: ClientOptions) { super(opt); }
 
-    public async build(): Promise<Jukebox> {
+    public async build(token: string): Promise<Jukebox> {
         // NOTE: Will be removed when caching is not a experimental feature anymore
         if (this.config.cacheYoutubeDownloads) this.log.warn(this.constructor.name, { stack: "cacheYoutubeDownloads is still a experimental feature"});
         this.on("ready", () => this.commandsHandler.load());
         this.eventsLaoder.load();
-        await this.login(this.getToken());
+        await this.login(token);
         return this;
-    }
-
-    public setToken(token: string): Jukebox {
-        this._token = token;
-        return this;
-    }
-
-    public getToken(): string {
-        return this._token;
     }
 
     public async getGuildsCount(): Promise<number> {
