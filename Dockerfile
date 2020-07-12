@@ -9,7 +9,7 @@ COPY . .
 RUN apk add --no-cache --virtual .build-deps python3 build-base git curl \ 
 && apk add --no-cache --virtual .third-party ffmpeg \
 && yarn install \
-&& yarn build \
+&& yarn run build \
 && yarn install --production \
 && apk del .build-deps
 
