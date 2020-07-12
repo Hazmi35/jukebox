@@ -67,7 +67,7 @@ export default class PlayCommand extends BaseCommand {
                     let index = 0;
                     const msg = await message.channel.send(new MessageEmbed()
                         .setAuthor("Song Selection") // TODO: Find or create typings for simple-youtube-api or wait for v6 released
-                        .setDescription(`${videos.map((video: any) => `**${++index} -** ${this.cleanTitle(video.title)}${video.url}`).join("\n")}\n` +
+                        .setDescription(`${videos.map((video: any) => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
                         "*Type `cancel` or `c` to cancel song selection*")
                         .setThumbnail(message.client.user!.displayAvatarURL())
                         .setColor("#00FF00")
