@@ -22,7 +22,7 @@ export default class PingCommand extends BaseCommand {
                 .setAuthor("🏓 PONG!", message.client.user!.displayAvatarURL())
                 .setColor(this.searchHex(wsLatency))
                 .addFields({
-                    name: "📶 Message Latency",
+                    name: "📶 API Latency",
                     value: `**\`${latency}\`** ms`,
                     inline: true
                 }, {
