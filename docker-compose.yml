@@ -9,4 +9,5 @@ services:
     restart: unless-stopped
     volumes: 
       - "./cache:/usr/Jukebox/cache"
+      - "./logs:/usr/Jukebox/logs"
 version: "2.4"
