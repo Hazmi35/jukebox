@@ -34,8 +34,8 @@ export default class ReadyEvent implements ClientEvent {
                     const timeout = this.client.config.deleteQueueTimeout;
                     const duration = parseDur(timeout);
                     newState.guild.queue.textChannel!.send(new MessageEmbed().setTitle("⏸ Queue paused.").setColor("#FFFF00")
-                        .setDescription("Currently, no one is the in the voice channel, to save resources, the queue was pasued. "
-                            + `if there's no people the in voice channel in the next ${duration}, the queue will be deleted.`));
+                        .setDescription("Currently, no one is the in the voice channel, to save resources, the queue was paused. "
+                            + `If there's no people the in voice channel in the next ${duration}, the queue will be deleted.`));
                     return newState.guild.queue.timeout = setTimeout(() => {
                         newState.guild.queue!.textChannel!.send(new MessageEmbed().setTitle("⏹ Queue deleted.").setColor("#FF0000")
                             .setDescription(`${duration} have passed and there is no one who joins the voice channel, the queue was deleted.`));
