@@ -11,6 +11,7 @@ export default class ReadyEvent implements ClientEvent {
         if (newState.guild.queue) {
             const oldID = oldState.channel ? oldState.channel.id : undefined;
             const newID = newState.channel ?  newState.channel.id : undefined;
+            const musicVcID = newState.guild.queue.voiceChannel!.id;
 
             // Handle when bot gets kicked from the voice channel
             if (oldState.id === this.client.user!.id && oldID === newState.guild.queue.voiceChannel!.id && newID === undefined) {
@@ -19,13 +20,13 @@ export default class ReadyEvent implements ClientEvent {
             }
 
             // Handle when the bot is moved to another voice channel
-            if (oldState.id === this.client.user!.id && oldID === newState.guild.queue.voiceChannel!.id && newID !== newState.guild.queue.voiceChannel!.id) {
+            if (oldState.id === this.client.user!.id && oldID === musicVcID && newID !== musicVcID) {
                 return newState.guild.queue.voiceChannel = newState.channel;
             }
 
             // Handle when user leaves voice channel
             const vc = newState.guild.queue.voiceChannel!.members.filter(m => !m.user.bot);
-            if (oldID === newState.guild.queue.voiceChannel!.id && newID === undefined && !newState.member!.user.bot) {
+            if (oldID === musicVcID && newID !== musicVcID && !newState.member!.user.bot) {
                 if (!vc.size) {
                     clearTimeout(newState.guild.queue.timeout!);
                     newState.guild.queue.timeout = null;
@@ -37,17 +38,17 @@ export default class ReadyEvent implements ClientEvent {
                         .setDescription("Currently, no one is the in the voice channel, to save resources, the queue was paused. "
                             + `If there's no people the in voice channel in the next ${duration}, the queue will be deleted.`));
                     return newState.guild.queue.timeout = setTimeout(() => {
+                        newState.guild.queue!.songs.clear();
+                        newState.guild.queue!.connection!.dispatcher.end();
+                        newState.guild.queue = null;
                         newState.guild.queue!.textChannel!.send(new MessageEmbed().setTitle("⏹ Queue deleted.").setColor("#FF0000")
                             .setDescription(`${duration} have passed and there is no one who joins the voice channel, the queue was deleted.`));
-                        newState.guild.queue!.songs.clear();
-                        newState.guild.queue!.connection!.disconnect();
-                        return newState.guild.queue = null;
                     }, timeout);
                 }
             }
 
             // Handle when user joins voice channel
-            if (newID === newState.guild.queue.voiceChannel!.id && !newState.member!.user.bot) {
+            if (newID === musicVcID && !newState.member!.user.bot) {
                 if (vc.size > 0) {
                     if (vc.size === 1) { clearTimeout(newState.guild.queue.timeout!); newState.guild.queue.timeout = null; }
                     if (newState.guild.queue.playing === false && vc.size < 2) {
