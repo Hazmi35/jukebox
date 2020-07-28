@@ -7,8 +7,8 @@ export function msToTime(ms: number): string {
     const minutes = parseInt((seconds / 60).toString());
     seconds = parseInt((seconds % 60).toString());
 
-    const result = [seconds, minutes, hours, days].filter(val => val > 0);
-    const times = ["seconds", "minutes", "hours", "days"];
+    const result = [`${days} days`, `${hours} hours`, `${minutes} minutes`, `${seconds} seconds`]
+        .filter((val: any) => val.split(" ")[0] > 0);
 
-    return result.map((v, i) => `${v} ${times[i]}`).reverse().join(", ");
+    return result.join(", ");
 }
