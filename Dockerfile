@@ -6,8 +6,7 @@ LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 WORKDIR /usr/Jukebox
 
 COPY . .
-RUN apk add --no-cache --virtual .build-deps python3 build-base git curl \ 
-&& apk add --no-cache --virtual .third-party ffmpeg \
+RUN apk add --no-cache --virtual .build-deps build-base curl git python3 \
 && yarn install \
 && yarn run build \
 && yarn install --production \
