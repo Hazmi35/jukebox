@@ -138,7 +138,7 @@ export default class PlayCommand extends BaseCommand {
                 + `please use \`${this.client.config.prefix}repeat\` instead`));
             message.guild!.queue.songs.addSong(song);
             if (playlist) return;
-            return message.channel.send(new MessageEmbed().setDescription(`✅ Song **[${song.title}](${song.id})** has been added to the queue`).setColor("#00FF00"));
+            return message.channel.send(new MessageEmbed().setDescription(`✅ Song **[${song.title}](${song.url})** has been added to the queue`).setColor("#00FF00"));
         }
         return message;
     }
