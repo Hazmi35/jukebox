@@ -8,6 +8,6 @@ services:
       - .env
     restart: unless-stopped
     volumes: 
-      - "./cache:/usr/Jukebox/cache"
-      - "./logs:/usr/Jukebox/logs"
+      - "./cache:/app/cache"
+      - "./logs:/app/logs"
 version: "2.4"

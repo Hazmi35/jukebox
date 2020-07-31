@@ -3,7 +3,7 @@ FROM node:12-alpine
 LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
-WORKDIR /usr/Jukebox
+WORKDIR /app
 
 COPY . .
 RUN apk add --no-cache --virtual .build-deps build-base curl git python3 \
