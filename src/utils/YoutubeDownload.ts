@@ -9,7 +9,7 @@ export default function playSong(YoutubeLink: string, options: IdownloadOptions 
         getInfo(YoutubeLink).then((info) => {
             const canDemux: boolean = info.formats.find(filter)! && Number(info.videoDetails.lengthSeconds) != 0;
             options = canDemux ? { ...options, filter } : { ...options };
-            if (options.cache && info.formats.find(f => !f.live) && !(Number(info.videoDetails.lengthSeconds) >= options.cacheMaxLength!)) {
+            if (options.cache && info.formats.find(f => !f.isLive) && !(Number(info.videoDetails.lengthSeconds) >= options.cacheMaxLength!)) {
                 const path = resolvePath(process.cwd(), "cache");
                 const filePath = resolvePath(path, `${info.videoDetails.videoId}.webm`);
                 const finishMarkerPath = `${filePath}.jukeboxCacheFinish.marker`;
