@@ -56,4 +56,8 @@ export default class Jukebox extends Client {
             return size.reduce((p, v) => p + v, 0);
         }
     }
+    public async getTotalPlaying(): Promise<number> {
+        if (!this.shard) return this.guilds.cache.filter((g: any) => g.queue !== null && g.queue.playing === true).size;
+        return await this.shard.broadcastEval("this.guilds.cache.filter(g => g.queue !== null && g.queue.playing === true).size").then(data => data.reduce((a, b) => a + b));
+    }
 }

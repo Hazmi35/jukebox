@@ -23,7 +23,7 @@ Channels count      :: ${await this.client.getChannelsCount()}
 Guilds count        :: ${await this.client.getGuildsCount()}
 Shards count        :: ${this.client.shard ? `${this.client.shard.count}` : "N/A"}
 Shard ID            :: ${this.client.shard ? `${this.client.shard.ids}` : "N/A"}
-Playing Music on    :: ${this.client.guilds.cache.filter((g: any) => g.queue !== null && g.queue.playing === true).size} guilds
+Playing Music on    :: ${await this.client.getTotalPlaying()} guilds
 
 Platform            :: ${process.platform}
 Arch                :: ${process.arch}
