@@ -4,13 +4,13 @@ import { MessageEmbed, TextChannel } from "discord.js";
 import { msToTime } from "../utils/msToTime";
 
 export default class VoiceStateUpdateEvent implements ClientEvent {
-    readonly name = "voiceStateUpdate";
-    constructor(private client: Jukebox) {}
+    public readonly name = "voiceStateUpdate";
+    public constructor(private readonly client: Jukebox) {}
 
     public execute(oldState: IVoiceState, newState: IVoiceState): any {
         if (newState.guild.queue) {
             const oldID = oldState.channel ? oldState.channel.id : undefined;
-            const newID = newState.channel ?  newState.channel.id : undefined;
+            const newID = newState.channel ? newState.channel.id : undefined;
             const musicVcID = newState.guild.queue.voiceChannel!.id;
 
             // Handle when bot gets kicked from the voice channel
@@ -18,7 +18,7 @@ export default class VoiceStateUpdateEvent implements ClientEvent {
                 try {
                     newState.guild.queue.textChannel!.send(new MessageEmbed().setDescription("I'm disconnected from the voice channel, the queue will be deleted").setColor("#FFFF00"));
                     return newState.guild.queue = null;
-                } catch(e) {
+                } catch (e) {
                     this.client.log.error("VOICE_STATE_UPDATE_EVENT_ERR:", e);
                 }
             }
@@ -40,8 +40,8 @@ export default class VoiceStateUpdateEvent implements ClientEvent {
                         const timeout = this.client.config.deleteQueueTimeout;
                         const duration = msToTime(timeout);
                         newState.guild.queue!.textChannel!.send(new MessageEmbed().setTitle("⏸ Queue paused.").setColor("#FFFF00")
-                            .setDescription("Currently, no one is the in the voice channel, to save resources, the queue was paused. "
-                            + `If there's no people the in voice channel in the next ${duration}, the queue will be deleted.`));
+                            .setDescription("Currently, no one is the in the voice channel, to save resources, the queue was paused. " +
+                            `If there's no people the in voice channel in the next ${duration}, the queue will be deleted.`));
                         return newState.guild.queue!.timeout = setTimeout(() => {
                             newState.guild.queue!.connection!.dispatcher.once("speaking", () => {
                                 newState.guild.queue!.songs.clear();
@@ -55,14 +55,14 @@ export default class VoiceStateUpdateEvent implements ClientEvent {
                             newState.guild.queue!.connection!.dispatcher.resume(); // I don't know why but I think I should resume and then end the dispatcher or it won't work
                         }, timeout);
                     }
-                } catch(e) { this.client.log.error("VOICE_STATE_UPDATE_EVENT_ERR:", e); }
+                } catch (e) { this.client.log.error("VOICE_STATE_UPDATE_EVENT_ERR:", e); }
             }
 
             // Handle when user joins voice channel
             if (newID === musicVcID && !newState.member!.user.bot) {
                 if (vc.size > 0) {
                     if (vc.size === 1) { clearTimeout(newState.guild.queue!.timeout!); newState.guild.queue!.timeout = null; }
-                    if (newState.guild.queue!.playing === false && vc.size < 2) {
+                    if (!newState.guild.queue!.playing && vc.size < 2) {
                         try {
                             const song = newState.guild.queue!.songs.first()!;
                             newState.guild.queue!.textChannel!.send(new MessageEmbed().setTitle("▶ Queue resumed").setColor("#00FF00")

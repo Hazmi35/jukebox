@@ -1,18 +1,19 @@
 import BaseCommand from "../structures/BaseCommand";
 import Jukebox from "../structures/Jukebox";
-import { Message, MessageEmbed } from "discord.js";
+import { Message, MessageEmbed, version } from "discord.js";
 import { uptime as osUptime } from "os";
-import { version } from "discord.js";
 import { msToTime } from "../utils/msToTime";
+import path from "path";
 
 export default class PlayCommand extends BaseCommand {
-    constructor(public client: Jukebox, readonly path: string) {
+    public constructor(public client: Jukebox, public readonly path: string) {
         super(client, path, { aliases: ["botinfo", "info", "stats"] }, {
             name: "about",
             description: "Send the bot's info",
             usage: "{prefix}about"
         });
     }
+
     public async execute(message: Message): Promise<void> {
         message.channel.send(new MessageEmbed()
             .setAuthor(`${this.client.user!.username} - Just a simple Discord music bot.`)
@@ -22,7 +23,7 @@ Users count         :: ${await this.client.getUsersCount()}
 Channels count      :: ${await this.client.getChannelsCount()}
 Guilds count        :: ${await this.client.getGuildsCount()}
 Shards count        :: ${this.client.shard ? `${this.client.shard.count}` : "N/A"}
-Shard ID            :: ${this.client.shard ? `${this.client.shard.ids}` : "N/A"}
+Shard ID            :: ${this.client.shard ? `${this.client.shard.ids[0]}` : "N/A"}
 Playing Music on    :: ${await this.client.getTotalPlaying()} guilds
 
 Platform            :: ${process.platform}
@@ -34,18 +35,22 @@ Bot Uptime          :: ${msToTime(this.client.uptime!)}
 
 NodeJS version      :: ${process.version}
 DiscordJS version   :: v${version}
-Bot Version         :: v${require("../../package.json").version}
+Bot Version         :: v${(await import(path.join(process.cwd(), "package.json"))).version}
 
 Source code         :: https://sh.hzmi.xyz/jukebox
 \`\`\`
-    `).setColor("#00FF00").setTimestamp());
+    `)
+            .setColor("#00FF00")
+            .setTimestamp());
     }
+
     private bytesToSize(bytes: number): string { // Function From Rendang's util (https://github.com/Hazmi35/rendang)
-        if (isNaN(bytes) && bytes != 0) throw new Error(`[bytesToSize] (bytes) Error: bytes is not a Number/Integer, received: ${typeof bytes}`);
-        const sizes = ["B", "KiB", "MiB", "GiB", "TiB", "PiB"];
+        if (isNaN(bytes) && bytes !== 0) throw new Error(`[bytesToSize] (bytes) Error: bytes is not a Number/Integer, received: ${typeof bytes}`);
+        const sizes: string[] = ["B", "KiB", "MiB", "GiB", "TiB", "PiB"];
         if (bytes < 2 && bytes > 0) return `${bytes} Byte`;
-        const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)).toString());
-        if (i == 0) return `${bytes} ${sizes[i]}`;
+        const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)).toString(), 10);
+        if (i === 0) return `${bytes} ${sizes[i]}`;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (sizes[i] === undefined) return `${bytes} ${sizes[sizes.length - 1]}`;
         return `${Number(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
     }

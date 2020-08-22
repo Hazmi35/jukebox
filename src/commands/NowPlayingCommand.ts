@@ -4,9 +4,9 @@ import { MessageEmbed } from "discord.js";
 import { IMessage } from "../../typings";
 
 export default class NowPlayingCommand extends BaseCommand {
-    constructor(client: Jukebox, readonly path: string) {
+    public constructor(client: Jukebox, public readonly path: string) {
         super(client, path, {
-            aliases: ["np", "now-playing"],
+            aliases: ["np", "now-playing"]
         }, {
             name: "nowplaying",
             description: "Send an info about the current playing song",

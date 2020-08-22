@@ -4,9 +4,10 @@ import Jukebox from "../structures/Jukebox";
 import { IMessage } from "../../typings";
 import { MessageEmbed } from "discord.js";
 import { request } from "https";
+import { inspect } from "util";
 
 export default class EvalCommand extends BaseCommand {
-    constructor(client: Jukebox, readonly path: string) {
+    public constructor(client: Jukebox, public readonly path: string) {
         super(client, path, {
             aliases: ["ev", "js-exec", "e", "evaluate"],
             cooldown: 0
@@ -32,23 +33,24 @@ export default class EvalCommand extends BaseCommand {
             if (!code) return message.channel.send("No js code was provided");
             let evaled = await eval(code);
 
-            if (typeof evaled !== "string")
-                evaled = require("util").inspect(evaled, {
+            if (typeof evaled !== "string") {
+                evaled = inspect(evaled, {
                     depth: 0
                 });
+            }
 
             const output = this.clean(evaled);
             if (output.length > 1024) {
                 const hastebin = await this.hastebin(output);
                 embed.addField("Output", `${hastebin}.js`);
-            } else embed.addField("Output", `\`\`\`js\n${output}\`\`\``);
+            } else { embed.addField("Output", `\`\`\`js\n${output}\`\`\``); }
             message.channel.send(embed);
         } catch (e) {
             const error = this.clean(e);
             if (error.length > 1024) {
                 const hastebin = await this.hastebin(error);
                 embed.addField("Error", `${hastebin}.js`);
-            } else embed.setColor("#FF0000").addField("Error", `\`\`\`js\n${error}\`\`\``);
+            } else { embed.setColor("#FF0000").addField("Error", `\`\`\`js\n${error}\`\`\``); }
             message.channel.send(embed);
         }
 
@@ -60,18 +62,19 @@ export default class EvalCommand extends BaseCommand {
             return text
                 .replace(new RegExp(process.env.DISCORD_TOKEN!, "g"), "[REDACTED]")
                 .replace(new RegExp(process.env.YT_API_KEY!, "g"), "[REDACTED]")
-                .replace(/`/g, `\`${  String.fromCharCode(8203)}`).replace(/@/g, `@${  String.fromCharCode(8203)}`);
-        } else return text;
+                .replace(/`/g, `\`${String.fromCharCode(8203)}`)
+                .replace(/@/g, `@${String.fromCharCode(8203)}`);
+        } return text;
     }
 
     private hastebin(text: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            const req = request({ hostname: "bin.hzmi.xyz", path: "/documents", method: "POST", minVersion: "TLSv1.3" }, (res) => {
+            const req = request({ hostname: "bin.hzmi.xyz", path: "/documents", method: "POST", minVersion: "TLSv1.3" }, res => {
                 let raw = "";
                 res.on("data", chunk => raw += chunk);
                 res.on("end", () => {
-                    if (res.statusCode! >= 200 && res.statusCode! < 300) return resolve(`https://bin.hzmi.xyz/${JSON.parse(raw).key}`);
-                    else return reject(`[hastebin] Error while trying to send data to https://bin.hzmi.xyz/documents, ${res.statusCode} ${res.statusMessage}`);
+                    if (res.statusCode! >= 200 && res.statusCode! < 300) return resolve(`https://bin.hzmi.xyz/${JSON.parse(raw).key as string}`);
+                    return reject(new Error(`[hastebin] Error while trying to send data to https://bin.hzmi.xyz/documents, ${res.statusCode as number} ${res.statusMessage as string}`));
                 });
             }).on("error", reject);
             req.write(typeof text === "object" ? JSON.stringify(text, null, 2) : text);
