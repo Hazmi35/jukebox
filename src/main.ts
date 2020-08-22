@@ -8,17 +8,17 @@ const log = new LogWrapper(`${name}-sharding`).logger;
 const shardCount: number | "auto" = totalShards === "auto" ? totalShards : Number(totalShards);
 let shardsSpawned = 0;
 
-process.on("unhandledRejection", (e) => {
+process.on("unhandledRejection", e => {
     log.error("UNHANDLED_REJECTION: ", e);
 });
-process.on("uncaughtException", (e) => {
+process.on("uncaughtException", e => {
     log.error("UNCAUGHT_EXCEPTION: ", e);
     log.warn("NODE_WARN: ", { stack: "Uncaught Exception detected. Restarting..." });
 });
 
 const shards = new ShardingManager(resolve(__dirname, "bot.js"), { totalShards: shardCount, mode: "worker", respawn: true, token: process.env.DISCORD_TOKEN });
 
-shards.on("shardCreate", (shard) => {
+shards.on("shardCreate", shard => {
     shardsSpawned++;
     log.info(`[ShardManager] Shard #${shard.id} Spawned.`);
     shard.on("disconnect", () => {
@@ -27,4 +27,4 @@ shards.on("shardCreate", (shard) => {
         log.info(`[ShardManager] Shard #${shard.id} Reconnected.`);
     });
     if (shardsSpawned === shards.totalShards) log.info("[ShardManager] All shards spawned successfully.");
-}).spawn(shardCount);
+}).spawn(shardCount).catch(e => log.error("SHARD_SPAWN_ERR: ", e));
