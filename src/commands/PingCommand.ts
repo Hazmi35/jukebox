@@ -3,9 +3,9 @@ import Jukebox from "../structures/Jukebox";
 import { MessageEmbed, Message } from "discord.js";
 
 export default class PingCommand extends BaseCommand {
-    constructor(client: Jukebox, readonly path: string) {
+    public constructor(client: Jukebox, public readonly path: string) {
         super(client, path, {
-            aliases: ["pong", "peng", "p", "pingpong"],
+            aliases: ["pong", "peng", "p", "pingpong"]
         }, {
             name: "ping",
             description: "Shows the current ping of the bot.",
@@ -59,8 +59,7 @@ export default class PingCommand extends BaseCommand {
             if (min[i] <= ms && ms <= max[i]) {
                 ret = hex[i];
                 break;
-            }
-            else {
+            } else {
                 ret = defaultColor;
             }
         }

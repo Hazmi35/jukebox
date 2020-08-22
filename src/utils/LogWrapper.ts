@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable */
 import { Logger, transports, format, createLogger } from "winston";
 import { EventEmitter } from "events";
 import chalk from "chalk";
@@ -57,5 +57,9 @@ export class LogWrapper extends EventEmitter {
 
     protected getLogger(): Logger {
         return this.logger;
+    }
+
+    public promiseError(reason: any): any {
+        return this.logger.error("PROMISE_ERROR:", reason);
     }
 }
