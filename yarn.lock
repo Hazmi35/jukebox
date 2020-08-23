@@ -80,10 +80,10 @@
     "@discordjs/node-pre-gyp" "^0.1.0"
     node-addon-api "^2.0.0"
 
-"@hazmi35/eslint-config@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@hazmi35/eslint-config/-/eslint-config-1.0.0.tgz#72add32cc74cf4faecffed5e2906b36c69191ff3"
-  integrity sha512-EhTBoFEP7H23RGJ4+D3hkitQLwRpCfVV4fGH0uhW4yXGrBWXuYFhr+esnWa3plN5NdzGlOSsstkzqBbgXI4vVA==
+"@hazmi35/eslint-config@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@hazmi35/eslint-config/-/eslint-config-1.1.2.tgz#d61f7e6fc8e69aa6174a2dc425007a95b510fb0d"
+  integrity sha512-F9OqqjAY67Wd5qZd8EMiKWykmcoOTD1/qtqte1Tjh7PN4uhzEhyNThY2qOsHWzeId7PuJOAmNriu5dJMti7urA==
 
 "@types/color-name@^1.1.1":
   version "1.1.1"
