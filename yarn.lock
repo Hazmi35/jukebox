@@ -80,10 +80,10 @@
     "@discordjs/node-pre-gyp" "^0.1.0"
     node-addon-api "^2.0.0"
 
-"@hazmi35/eslint-config@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@hazmi35/eslint-config/-/eslint-config-1.2.0.tgz#5a004cb7967ef44adbe3ff9113dfee0f6263cf70"
-  integrity sha512-kVX3MFz3LwDmdu1+fDbCPkNP/sy9EdSlIeZQgvW2lkPXqBpJZ7doVkn+K6AsoCIKXUdDSBaXatpBJrcWT36JhA==
+"@hazmi35/eslint-config@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@hazmi35/eslint-config/-/eslint-config-1.5.1.tgz#1362dc3fdb14780c04b322634a7990fbc2e3cfe2"
+  integrity sha512-QGGc9V83CtDdmdSJxKayDiyT1psbzY0v6MEnFSiTG2S/EjsrOAdfEpk48dLVraHEdte4unrwdT2gCwzLYgRhEg==
 
 "@nodelib/fs.scandir@2.1.3":
   version "2.1.3"
