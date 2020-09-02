@@ -107,7 +107,7 @@ export default class PlayCommand extends BaseCommand {
                 }
                 const videoIndex = parseInt(response.first()!.content, 10);
                 // eslint-disable-next-line no-var
-                var video = await this.client.youtube.getVideoByID(videos[videoIndex - 1].id);
+                video = await this.client.youtube.getVideoByID(videos[videoIndex - 1].id);
             } catch (err) {
                 this.client.log.error("YT_SEARCH_ERR: ", err);
                 return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
