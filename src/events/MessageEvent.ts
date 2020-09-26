@@ -14,7 +14,7 @@ export default class MessageEvent implements ClientEvent {
                 new MessageEmbed().setDescription(`Hi, I'm a simple music bot, see my commands with \`${this.client.config.prefix}help\``).setColor("#00FF00")
             );
         }
-        if (!message.content.startsWith(this.client.config.prefix)) return message;
+        if (!message.content.toLowerCase().startsWith(this.client.config.prefix)) return message;
         return this.client.commandsHandler.handle(message);
     }
 }
