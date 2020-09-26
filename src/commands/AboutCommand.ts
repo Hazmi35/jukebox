@@ -1,9 +1,10 @@
 import BaseCommand from "../structures/BaseCommand";
-import Jukebox from "../structures/Jukebox";
-import { Message, MessageEmbed, version } from "discord.js";
+import { MessageEmbed, version } from "discord.js";
 import { uptime as osUptime } from "os";
 import path from "path";
 import { formatMs } from "../utils/formatMs";
+import type Jukebox from "../structures/Jukebox";
+import type { IMessage } from "../../typings";
 
 export default class AboutCommand extends BaseCommand {
     public constructor(public client: Jukebox, public readonly path: string) {
@@ -14,7 +15,7 @@ export default class AboutCommand extends BaseCommand {
         });
     }
 
-    public async execute(message: Message): Promise<void> {
+    public async execute(message: IMessage): Promise<void> {
         message.channel.send(new MessageEmbed()
             .setAuthor(`${this.client.user!.username} - Just a simple Discord music bot.`)
             .setDescription(`
