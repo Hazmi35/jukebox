@@ -1,15 +1,45 @@
+FROM node:12-alpine as build-stage
+
+LABEL name "Jukebox (build stage)"
+LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
+
+WORKDIR /tmp/build
+
+# Copy package.json and yarn.lock
+COPY package.json .
+COPY yarn.lock .
+
+# Install node-gyp dependencies
+RUN apk add --no-cache --virtual .build-deps build-base curl git python3
+
+# Install dependencies
+RUN yarn install
+
+# Copy Project files
+COPY . .
+
+# Build TypeScript Project
+RUN yarn run build
+
+# Prune devDependencies
+RUN yarn install --production
+
+# Get ready for production
 FROM node:12-alpine
+
+WORKDIR /app
 
 LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
-WORKDIR /app
+# Copy needed files
+COPY --from=build-stage /tmp/build/package.json .
+COPY --from=build-stage /tmp/build/yarn.lock .
+COPY --from=build-stage /tmp/build/node_modules ./node_modules
+COPY --from=build-stage /tmp/build/dist .
 
-COPY . .
-RUN apk add --no-cache --virtual .build-deps build-base curl git python3 \
-&& yarn install \
-&& yarn run build \
-&& yarn install --production \
-&& apk del .build-deps
+# Mark cache folder as docker volume
+VOLUME ["/app/cache", "/app/logs"]
 
-CMD ["node", "dist/main.js"]
+# Start the app with node
+CMD ["node", "main.js"]
