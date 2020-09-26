@@ -37,6 +37,7 @@ $ yarn install --production
 5. Start it with `npm start` or `yarn start`! And you're done!
 
 Note: If you're using "Deploy to Heroku" button, you don't need to do this.
+Note: only configure .env file when you're using the [Docker image](https://github.com/nodejs/node-gyp#Docker)
 
 ## Install
 
