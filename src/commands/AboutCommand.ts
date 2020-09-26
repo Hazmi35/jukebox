@@ -2,7 +2,7 @@ import BaseCommand from "../structures/BaseCommand";
 import { MessageEmbed, version } from "discord.js";
 import { uptime as osUptime } from "os";
 import path from "path";
-import { formatMs } from "../utils/formatMs";
+import { formatMS } from "../utils/formatMS";
 import type Jukebox from "../structures/Jukebox";
 import type { IMessage } from "../../typings";
 
@@ -29,10 +29,10 @@ Playing Music on    :: ${await this.client.getTotalPlaying()} guilds
 
 Platform            :: ${process.platform}
 Arch                :: ${process.arch}
-OS Uptime           :: ${formatMs(osUptime() * 1000)}
+OS Uptime           :: ${formatMS(osUptime() * 1000)}
 Memory              :: ${this.bytesToSize(Math.round(process.memoryUsage().rss))}
-Process Uptime      :: ${formatMs(process.uptime() * 1000)}
-Bot Uptime          :: ${formatMs(this.client.uptime!)}
+Process Uptime      :: ${formatMS(process.uptime() * 1000)}
+Bot Uptime          :: ${formatMS(this.client.uptime!)}
 
 NodeJS version      :: ${process.version}
 DiscordJS version   :: v${version}

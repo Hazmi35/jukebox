@@ -1,5 +1,5 @@
 import { MessageEmbed, TextChannel } from "discord.js";
-import { formatMs } from "../utils/formatMs";
+import { formatMS } from "../utils/formatMS";
 import type { ClientEvent, IVoiceState } from "../../typings";
 import type Jukebox from "../structures/Jukebox";
 export default class VoiceStateUpdateEvent implements ClientEvent {
@@ -37,7 +37,7 @@ export default class VoiceStateUpdateEvent implements ClientEvent {
                         newState.guild.queue!.playing = false;
                         newState.guild.queue!.connection!.dispatcher.pause();
                         const timeout = this.client.config.deleteQueueTimeout;
-                        const duration = formatMs(timeout);
+                        const duration = formatMS(timeout);
                         newState.guild.queue!.textChannel!.send(new MessageEmbed().setTitle("⏸ Queue paused.").setColor("#FFFF00")
                             .setDescription("Currently, no one is the in the voice channel, to save resources, the queue was paused. " +
                             `If there's no people the in voice channel in the next ${duration}, the queue will be deleted.`));
