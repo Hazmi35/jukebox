@@ -1,5 +1,5 @@
-import { ClientEvent } from "../../typings";
-import Jukebox from "../structures/Jukebox";
+import type { ClientEvent } from "../../typings";
+import type Jukebox from "../structures/Jukebox";
 
 export default class ErrorEvent implements ClientEvent {
     public readonly name = "error";

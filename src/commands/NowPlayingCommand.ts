@@ -1,7 +1,7 @@
 import BaseCommand from "../structures/BaseCommand";
-import Jukebox from "../structures/Jukebox";
 import { MessageEmbed } from "discord.js";
-import { IMessage } from "../../typings";
+import type { IMessage } from "../../typings";
+import type Jukebox from "../structures/Jukebox";
 
 export default class NowPlayingCommand extends BaseCommand {
     public constructor(client: Jukebox, public readonly path: string) {

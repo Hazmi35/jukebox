@@ -1,10 +1,10 @@
 /* eslint-disable no-eval */
 import BaseCommand from "../structures/BaseCommand";
-import Jukebox from "../structures/Jukebox";
-import { IMessage } from "../../typings";
 import { MessageEmbed } from "discord.js";
 import { request } from "https";
 import { inspect } from "util";
+import type Jukebox from "../structures/Jukebox";
+import type { IMessage } from "../../typings";
 
 export default class EvalCommand extends BaseCommand {
     public constructor(client: Jukebox, public readonly path: string) {

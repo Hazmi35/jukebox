@@ -1,6 +1,6 @@
 import { readdirSync } from "fs";
-import Jukebox from "../structures/Jukebox";
-import { ClientEvent } from "../../typings";
+import type Jukebox from "../structures/Jukebox";
+import type { ClientEvent } from "../../typings";
 
 export default class ClientEventsLoader {
     public constructor(public client: Jukebox, public readonly path: string) {}

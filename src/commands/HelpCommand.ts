@@ -1,9 +1,9 @@
 import BaseCommand from "../structures/BaseCommand";
-import Jukebox from "../structures/Jukebox";
-import { IMessage } from "../../typings";
 import { MessageEmbed } from "discord.js";
+import type Jukebox from "../structures/Jukebox";
+import type { IMessage } from "../../typings";
 
-export default class PlayCommand extends BaseCommand {
+export default class HelpCommand extends BaseCommand {
     public constructor(public client: Jukebox, public readonly path: string) {
         super(client, path, { aliases: ["commands", "cmds"] }, {
             name: "help",

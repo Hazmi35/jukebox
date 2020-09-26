@@ -1,9 +1,9 @@
 import BaseCommand from "../structures/BaseCommand";
-import Jukebox from "../structures/Jukebox";
 import { MessageEmbed } from "discord.js";
-import { IMessage } from "../../typings";
+import type { IMessage } from "../../typings";
+import type Jukebox from "../structures/Jukebox";
 
-export default class PingCommand extends BaseCommand {
+export default class ResumeCommand extends BaseCommand {
     public constructor(client: Jukebox, public readonly path: string) {
         super(client, path, {}, {
             name: "resume",

@@ -1,6 +1,7 @@
 import BaseCommand from "../structures/BaseCommand";
-import Jukebox from "../structures/Jukebox";
-import { MessageEmbed, Message } from "discord.js";
+import { MessageEmbed } from "discord.js";
+import type { IMessage } from "../../typings";
+import type Jukebox from "../structures/Jukebox";
 
 export default class PingCommand extends BaseCommand {
     public constructor(client: Jukebox, public readonly path: string) {
@@ -13,9 +14,9 @@ export default class PingCommand extends BaseCommand {
         });
     }
 
-    public execute(message: Message): Message {
+    public execute(message: IMessage): IMessage {
         const before = Date.now();
-        message.channel.send("🏓 Pong!").then((msg: Message) => {
+        message.channel.send("🏓 Pong!").then((msg: IMessage | any) => {
             const latency = Date.now() - before;
             const wsLatency = this.client.ws.ping.toFixed(0);
             const embed = new MessageEmbed()

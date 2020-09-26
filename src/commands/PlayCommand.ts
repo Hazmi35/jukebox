@@ -2,12 +2,12 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 // TODO: Find or create typings for simple-youtube-api or wait for v6 released and then remove no-extra-parens
 import BaseCommand from "../structures/BaseCommand";
-import Jukebox from "../structures/Jukebox";
-import { IMessage, ISong, IGuild } from "../../typings";
 import ServerQueue from "../structures/ServerQueue";
 import ytdl from "../utils/YoutubeDownload";
 import { Util, VoiceChannel, MessageEmbed } from "discord.js";
 import { AllHtmlEntities } from "html-entities";
+import type Jukebox from "../structures/Jukebox";
+import type { IMessage, ISong, IGuild } from "../../typings";
 const htmlEntities = new AllHtmlEntities();
 
 export default class PlayCommand extends BaseCommand {

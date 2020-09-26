@@ -1,8 +1,8 @@
 import { readdir } from "fs";
 import { resolve } from "path";
-import Jukebox from "../structures/Jukebox";
-import { CommandComponent } from "../../typings";
 import { Message, Collection, Snowflake } from "discord.js";
+import type Jukebox from "../structures/Jukebox";
+import type { CommandComponent } from "../../typings";
 
 export default class CommandsHandler {
     public readonly commands: Collection<string, CommandComponent> = new Collection();

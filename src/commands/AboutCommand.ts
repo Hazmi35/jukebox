@@ -5,7 +5,7 @@ import { uptime as osUptime } from "os";
 import path from "path";
 import { formatMs } from "../utils/formatMs";
 
-export default class PlayCommand extends BaseCommand {
+export default class AboutCommand extends BaseCommand {
     public constructor(public client: Jukebox, public readonly path: string) {
         super(client, path, { aliases: ["botinfo", "info", "stats"] }, {
             name: "about",

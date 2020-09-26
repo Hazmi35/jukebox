@@ -1,6 +1,6 @@
-import Jukebox from "./Jukebox";
-import { CommandComponent } from "../../typings";
-import { Message } from "discord.js";
+import type Jukebox from "./Jukebox";
+import type { CommandComponent } from "../../typings";
+import type { Message } from "discord.js";
 
 export default class BaseCommand implements CommandComponent {
     public conf: CommandComponent["conf"];
