@@ -34,10 +34,10 @@
             "description": "Timeout in seconds before queue is deleted when no one is in the voice channel (default: 180 <3 minutes>)"
         },
         "CONFIG_CACHE_YOUTUBE_DOWNLOADS": {
-            "description": "(EXPERIMENTAL) Whether to download and cache musics from youtube (yes or no) (default: no)"
+            "description": "Whether to download and cache musics from youtube (yes or no) (default: no)"
         },
         "CONFIG_CACHE_MAX_LENGTH": {
-            "description": "(EXPERIMENTAL) Max song length in seconds that are allowed to cached (default: 5400 <1 hour 30 minutes>)"
+            "description": "Max song length in seconds that are allowed to cached (default: 5400 <1 hour 30 minutes>)"
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",
