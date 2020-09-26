@@ -9,5 +9,6 @@ export const allowDuplicate: boolean = process.env.CONFIG_ALLOW_DUPLICATE! === "
 export const deleteQueueTimeout: number = Number(process.env.CONFIG_DELETE_QUEUE_TIMEOUT) * 1000 || 180 * 1000;
 export const cacheYoutubeDownloads: boolean = process.env.CONFIG_CACHE_YOUTUBE_DOWNLOADS! === "yes" || false;
 export const cacheMaxLengthAllowed = Number(process.env.CONFIG_CACHE_MAX_LENGTH) || 5400;
+export const disableInviteCmd = process.env.CONFIG_DISABLE_INVITE_CMD === "yes" || false;
 
-export default { allowDuplicate, cacheMaxLengthAllowed, cacheYoutubeDownloads, defaultVolume, deleteQueueTimeout, maxVolume, name, owners, prefix, totalShards };
+export default { allowDuplicate, cacheMaxLengthAllowed, cacheYoutubeDownloads, defaultVolume, deleteQueueTimeout, disableInviteCmd, maxVolume, name, owners, prefix, totalShards };

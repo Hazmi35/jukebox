@@ -5,7 +5,9 @@ import type Jukebox from "../structures/Jukebox";
 
 export default class InviteCommand extends BaseCommand {
     public constructor(public client: Jukebox, public readonly path: string) {
-        super(client, path, {}, {
+        super(client, path, {
+            disable: client.config.disableInviteCmd
+        }, {
             name: "invite",
             description: "Send the bot's invite link",
             usage: "{prefix}invite"

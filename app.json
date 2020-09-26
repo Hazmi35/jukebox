@@ -38,6 +38,9 @@
         },
         "CONFIG_CACHE_MAX_LENGTH": {
             "description": "Max song length in seconds that are allowed to cached (default: 5400 <1 hour 30 minutes>)"
+        },
+        "CONFIG_DISABLE_INVITE_CMD": {
+            "description": "Whether to disable invite command or not (default: no)"
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",
