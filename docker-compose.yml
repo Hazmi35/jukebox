@@ -1,13 +1,10 @@
 services: 
   bot: 
-    build: 
-      context: ./
-      dockerfile: Dockerfile
-    container_name: jukebox-bot
+    image: hazmi35/jukebox:latest
     env_file: 
       - .env
     restart: unless-stopped
-    volumes: 
+    volumes:
       - "./cache:/app/cache"
       - "./logs:/app/logs"
 version: "2.4"
