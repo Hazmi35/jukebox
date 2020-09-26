@@ -2,8 +2,8 @@ import BaseCommand from "../structures/BaseCommand";
 import Jukebox from "../structures/Jukebox";
 import { Message, MessageEmbed, version } from "discord.js";
 import { uptime as osUptime } from "os";
-import { msToTime } from "../utils/msToTime";
 import path from "path";
+import { formatMs } from "../utils/formatMs";
 
 export default class PlayCommand extends BaseCommand {
     public constructor(public client: Jukebox, public readonly path: string) {
@@ -28,10 +28,10 @@ Playing Music on    :: ${await this.client.getTotalPlaying()} guilds
 
 Platform            :: ${process.platform}
 Arch                :: ${process.arch}
-OS Uptime           :: ${msToTime(osUptime() * 1000)}
+OS Uptime           :: ${formatMs(osUptime() * 1000)}
 Memory              :: ${this.bytesToSize(Math.round(process.memoryUsage().rss))}
-Process Uptime      :: ${msToTime(Math.floor(process.uptime() * 1000))}
-Bot Uptime          :: ${msToTime(this.client.uptime!)}
+Process Uptime      :: ${formatMs(process.uptime() * 1000)}
+Bot Uptime          :: ${formatMs(this.client.uptime!)}
 
 NodeJS version      :: ${process.version}
 DiscordJS version   :: v${version}
