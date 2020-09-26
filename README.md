@@ -9,23 +9,7 @@
 
 ## Usage
 
-1. Rename `.env.schema` to `.env` and fill out the values (example on .env.example):
-```sh
-DISCORD_TOKEN=
-YT_API_KEY=
-
-CONFIG_NAME=
-CONFIG_PREFIX=
-CONFIG_OWNERS=
-CONFIG_TOTALSHARDS=
-CONFIG_MAX_VOLUME=
-CONFIG_DEFAULT_VOLUME=
-CONFIG_ALLOW_DUPLICATE=
-CONFIG_DELETE_QUEUE_TIMEOUT=
-CONFIG_CACHE_YOUTUBE_DOWNLOADS=
-CONFIG_CACHE_MAX_LENGTH=
-CONFIG_DISABLE_INVITE_CMD=
-```
+1. Rename `.env.schema` to `.env` and fill out the values (example on .env.example)
 2. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
 3. Run `npm run build` or `yarn run build` if you're using yarn.
 4. (Optional) Prune devDependencies (This is good to save disk spaces):
