@@ -38,7 +38,7 @@ $ yarn install --production
 
 Note: If you're using "Deploy to Heroku" button, you don't need to do this.
 
-Note: only configure .env file when you're using the [Docker image](https://github.com/nodejs/node-gyp#Docker)
+Note: only configure .env file when you're using the [Docker image](https://github.com/Hazmi35/jukebox#Docker)
 
 ## Install
 
