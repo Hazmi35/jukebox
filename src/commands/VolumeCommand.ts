@@ -21,18 +21,19 @@ export default class VolumeCommand extends BaseCommand {
                 new MessageEmbed().setDescription("You need to be in the same voice channel as mine").setColor("#FF0000")
             );
         }
-        if (volume < 0) volume = 0;
 
         if (isNaN(volume)) return message.channel.send(new MessageEmbed().setDescription(`📶 The current volume is ${message.guild!.queue.volume}`).setColor("#00FF00"));
-        if (volume === 0) return message.channel.send(new MessageEmbed().setDescription("🔇 Muting song...").setColor("#00FF00"));
+
+        if (volume < 0) volume = 0;
+        if (volume === 0) return message.channel.send(new MessageEmbed().setDescription("❗ Please pause the music instead of setting the volume to 0").setColor("#FFFF00"));
         if (Number(args[0]) > this.client.config.maxVolume) {
             return message.channel.send(
                 new MessageEmbed().setDescription(`❗ Can't set the volume above ${this.client.config.maxVolume}`).setColor("#FFFF00")
             );
         }
 
-        message.channel.send(new MessageEmbed().setDescription(`📶 Volume set to ${args[0]}`).setColor("#00FF00")).catch(console.error);
         message.guild!.queue.volume = Number(args[0]);
         message.guild!.queue.connection!.dispatcher.setVolume(Number(args[0]) / this.client.config.maxVolume);
+        message.channel.send(new MessageEmbed().setDescription(`📶 Volume set to ${args[0]}`).setColor("#00FF00")).catch(console.error);
     }
 }
