@@ -21,8 +21,11 @@ export default class StopCommand extends BaseCommand {
             );
         }
 
-        message.channel.send(new MessageEmbed().setDescription("⏹ Stopping the queue...").setColor("#00FF00"));
+        message.guild!.queue.playing = true;
+        message.guild!.queue.connection!.dispatcher.resume();
         message.guild!.queue.songs.clear();
         message.guild!.queue.connection!.dispatcher.end();
+
+        message.channel.send(new MessageEmbed().setDescription("⏹ Stopping the queue...").setColor("#00FF00"));
     }
 }

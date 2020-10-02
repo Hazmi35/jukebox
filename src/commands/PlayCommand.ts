@@ -170,25 +170,22 @@ export default class PlayCommand extends BaseCommand {
 
         if (songData.cache) this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Using cache for song "${song.title}" on ${guild.name}`);
 
-        serverQueue.connection!.play(songData.stream, {
-            type: songData.canDemux ? "webm/opus" : "unknown",
-            bitrate: "auto",
-            highWaterMark: 1
-        }).on("start", () => {
-            serverQueue.playing = true;
-            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
-            serverQueue.textChannel!.send(new MessageEmbed().setDescription(`▶ Start playing: **[${song.title}](${song.url})**`).setColor("#00FF00"));
-        }).on("finish", () => {
-            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
-            // eslint-disable-next-line max-statements-per-line
-            if (serverQueue.loopMode === 0) { serverQueue.songs.deleteFirst(); } else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
-            serverQueue.textChannel!.send(new MessageEmbed().setDescription(`⏹ Stop playing: **[${song.title}](${song.url})**`).setColor("#00FF00"));
-            this.play(guild).catch(e => {
-                serverQueue.textChannel!.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${e}\``).setColor("#FF0000"));
-                serverQueue.connection!.dispatcher.end();
-                return this.client.log.error(e);
-            });
-        })
+        serverQueue.connection!.play(songData.stream, { type: songData.canDemux ? "webm/opus" : "unknown", bitrate: "auto", highWaterMark: 1 })
+            .on("start", () => {
+                serverQueue.playing = true;
+                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
+                serverQueue.textChannel!.send(new MessageEmbed().setDescription(`▶ Start playing: **[${song.title}](${song.url})**`).setColor("#00FF00"));
+            }).on("finish", () => {
+                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
+                // eslint-disable-next-line max-statements-per-line
+                if (serverQueue.loopMode === 0) { serverQueue.songs.deleteFirst(); } else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
+                serverQueue.textChannel!.send(new MessageEmbed().setDescription(`⏹ Stop playing: **[${song.title}](${song.url})**`).setColor("#00FF00"));
+                this.play(guild).catch(e => {
+                    serverQueue.textChannel!.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${e}\``).setColor("#FF0000"));
+                    serverQueue.connection!.dispatcher.end();
+                    return this.client.log.error(e);
+                });
+            })
             .on("error", (err: Error) => {
                 this.client.log.error("PLAY_ERROR: ", err);
             })

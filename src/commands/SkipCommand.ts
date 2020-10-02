@@ -21,7 +21,10 @@ export default class SkipCommand extends BaseCommand {
             );
         }
 
-        message.channel.send(new MessageEmbed().setDescription(`⏭ Skipped [**${message.guild!.queue.songs.first()!.title}**](${message.guild!.queue.songs.first()!.url}})`).setColor("#00FF00"));
+        message.guild!.queue.playing = true;
+        message.guild!.queue.connection!.dispatcher.resume();
         message.guild!.queue.connection!.dispatcher.end();
+
+        message.channel.send(new MessageEmbed().setDescription(`⏭ Skipped [**${message.guild!.queue.songs.first()!.title}**](${message.guild!.queue.songs.first()!.url}})`).setColor("#00FF00"));
     }
 }
