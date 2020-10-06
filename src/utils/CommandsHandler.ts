@@ -1,6 +1,7 @@
 import { readdir } from "fs";
 import { resolve } from "path";
-import { Message, Collection, Snowflake } from "discord.js";
+import type { Message, Snowflake } from "discord.js";
+import { Collection } from "discord.js";
 import type Jukebox from "../structures/Jukebox";
 import type { CommandComponent } from "../../typings";
 
