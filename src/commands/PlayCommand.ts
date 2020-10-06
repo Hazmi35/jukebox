@@ -4,7 +4,8 @@
 import BaseCommand from "../structures/BaseCommand";
 import ServerQueue from "../structures/ServerQueue";
 import ytdl from "../utils/YoutubeDownload";
-import { Util, VoiceChannel, MessageEmbed } from "discord.js";
+import type { VoiceChannel } from "discord.js";
+import { Util, MessageEmbed } from "discord.js";
 import { AllHtmlEntities } from "html-entities";
 import type Jukebox from "../structures/Jukebox";
 import type { IMessage, ISong, IGuild } from "../../typings";

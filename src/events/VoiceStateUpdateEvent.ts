@@ -1,4 +1,5 @@
-import { MessageEmbed, TextChannel } from "discord.js";
+import type { TextChannel } from "discord.js";
+import { MessageEmbed } from "discord.js";
 import { formatMS } from "../utils/formatMS";
 import type { ClientEvent, IVoiceState } from "../../typings";
 import type Jukebox from "../structures/Jukebox";

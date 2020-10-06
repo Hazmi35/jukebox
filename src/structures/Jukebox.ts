@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle, @typescript-eslint/unbound-method, @typescript-eslint/restrict-plus-operands */
-import { Client, ClientOptions } from "discord.js";
+import type { ClientOptions } from "discord.js";
+import { Client } from "discord.js";
 import { resolve } from "path";
 import config from "../config";
 import { createLogger } from "../utils/Logger";
