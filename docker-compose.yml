@@ -1,6 +1,6 @@
 services: 
   bot: 
-    image: hazmi35/jukebox:latest
+    build: .
     env_file: 
       - .env
     restart: unless-stopped
