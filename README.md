@@ -9,20 +9,23 @@
 
 ## Usage
 
-1. Rename `.env.schema` to `.env` and fill out the values (example on .env.example)
-2. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
-3. Run `npm run build` or `yarn run build` if you're using yarn.
-4. (Optional) Prune devDependencies (This is good to save disk spaces):
+**[⚠] Requires [Node.JS](https://nodejs.org) version v12 or above.**
+
+1. Install [Node.JS](https://nodejs.org) and [Yarn (Optional)](https://yarnpkg.com)
+2. Rename `.env.schema` to `.env` and fill out the values (example on .env.example)
+3. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
+4. Run `npm run build` or `yarn run build` if you're using yarn.
+5. (Optional) Prune devDependencies (This is good to save disk spaces):
 ```shell script
 $ npm prune --production
 #or with yarn
 $ yarn install --production
 ```
-5. Start it with `npm start` or `yarn start`! And you're done!
+6. Start it with `npm start` or `yarn start`! And you're done!
 
 Note: If you're using "Deploy to Heroku" button, you don't need to do this.
 
-Note: only configure .env file when you're using the [Docker image](https://github.com/Hazmi35/jukebox#Docker)
+Note: You only need to configure .env file when you're using the [Docker image](https://github.com/Hazmi35/jukebox#Docker)
 
 ## Install
 
