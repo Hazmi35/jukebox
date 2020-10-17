@@ -16,7 +16,7 @@ process.on("uncaughtException", e => {
     log.warn("NODE_WARN: ", { stack: "Uncaught Exception detected. Restarting..." });
 });
 
-const shards = new ShardingManager(resolve(__dirname, "bot.js"), { totalShards: shardCount, mode: "worker", respawn: true, token: process.env.DISCORD_TOKEN });
+const shards = new ShardingManager(resolve(__dirname, "bot.js"), { totalShards: shardCount, mode: "process", respawn: true, token: process.env.DISCORD_TOKEN });
 
 shards.on("shardCreate", shard => {
     shardsSpawned++;
