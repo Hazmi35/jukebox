@@ -2,7 +2,6 @@ import type { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel,
 import type Jukebox from "../src/structures/Jukebox";
 
 export interface CommandComponent {
-    execute(message: Message, args: string[]): any;
     conf: {
         aliases?: string[];
         cooldown?: number;
@@ -14,6 +13,7 @@ export interface CommandComponent {
         description?: string;
         usage?: string;
     };
+    execute(message: Message, args: string[]): any;
 }
 export interface IGuild extends Guild {
     client: Jukebox;
