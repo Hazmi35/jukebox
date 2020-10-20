@@ -166,7 +166,7 @@ export default class PlayCommand extends BaseCommand {
             return guild.queue = null;
         }
 
-        serverQueue.connection!.voice.setSelfDeaf(true);
+        serverQueue.connection!.voice!.setSelfDeaf(true);
         const songData = await ytdl(song.url, { cache: this.client.config.cacheYoutubeDownloads, cacheMaxLength: this.client.config.cacheMaxLengthAllowed });
 
         if (songData.cache) this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Using cache for song "${song.title}" on ${guild.name}`);
