@@ -60,4 +60,9 @@ export default class Jukebox extends Client {
         if (!this.shard) return this.guilds.cache.filter((g: any) => g.queue !== null && g.queue.playing === true).size;
         return this.shard.broadcastEval("this.guilds.cache.filter(g => g.queue !== null && g.queue.playing === true).size").then(data => data.reduce((a, b) => a + b));
     }
+
+    public async getTotalMemory(type: keyof NodeJS.MemoryUsage): Promise<number> {
+        if (!this.shard) return process.memoryUsage()[type];
+        return this.shard.broadcastEval(`process.memoryUsage()["${type}"]`).then(data => data.reduce((a, b) => a + b));
+    }
 }

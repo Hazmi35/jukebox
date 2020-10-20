@@ -30,7 +30,7 @@ Playing Music on    :: ${await this.client.getTotalPlaying()} guilds
 Platform            :: ${process.platform}
 Arch                :: ${process.arch}
 OS Uptime           :: ${formatMS(osUptime() * 1000)}
-Memory              :: ${this.bytesToSize(Math.round(process.memoryUsage().rss))}
+Memory              :: ${this.bytesToSize(await this.client.getTotalMemory("rss"))}
 Process Uptime      :: ${formatMS(process.uptime() * 1000)}
 Bot Uptime          :: ${formatMS(this.client.uptime!)}
 
