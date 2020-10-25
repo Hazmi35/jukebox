@@ -4,12 +4,11 @@
 import BaseCommand from "../structures/BaseCommand";
 import ServerQueue from "../structures/ServerQueue";
 import ytdl from "../utils/YoutubeDownload";
-import type { VoiceChannel } from "discord.js";
 import { Util, MessageEmbed } from "discord.js";
-import { AllHtmlEntities } from "html-entities";
+import { decodeHTML } from "entities";
+import type { VoiceChannel } from "discord.js";
 import type Jukebox from "../structures/Jukebox";
 import type { IMessage, ISong, IGuild } from "../../typings";
-const htmlEntities = new AllHtmlEntities();
 
 export default class PlayCommand extends BaseCommand {
     public constructor(public client: Jukebox, public readonly path: string) {
@@ -176,7 +175,8 @@ export default class PlayCommand extends BaseCommand {
                 serverQueue.playing = true;
                 this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
                 serverQueue.textChannel!.send(new MessageEmbed().setDescription(`▶ Start playing: **[${song.title}](${song.url})**`).setColor("#00FF00"));
-            }).on("finish", () => {
+            })
+            .on("finish", () => {
                 this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
                 // eslint-disable-next-line max-statements-per-line
                 if (serverQueue.loopMode === 0) { serverQueue.songs.deleteFirst(); } else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
@@ -194,6 +194,6 @@ export default class PlayCommand extends BaseCommand {
     }
 
     private cleanTitle(title: string): string {
-        return Util.escapeMarkdown(htmlEntities.decode(title));
+        return Util.escapeMarkdown(decodeHTML(title));
     }
 }
