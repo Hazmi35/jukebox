@@ -9,7 +9,7 @@ process.on("unhandledRejection", e => {
 
 process.on("uncaughtException", e => {
     client.log.error("UNCAUGHT_EXCEPTION: ", e);
-    client.log.warn("NODE_WARN: ", { stack: "Uncaught Exception detected. Restarting..." });
+    client.log.warn("Uncaught Exception detected. Restarting...");
     process.exit(1);
 });
 

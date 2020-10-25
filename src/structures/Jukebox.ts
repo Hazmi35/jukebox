@@ -5,7 +5,7 @@ import { resolve } from "path";
 import config from "../config";
 import { createLogger } from "../utils/Logger";
 import CommandsHandler from "../utils/CommandsHandler";
-import ClientEventsLoader from "../utils/ClientEventsLoader";
+import ListenerLoader from "../utils/ListenerLoader";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error // FIX: Find or create typings for simple-youtube-api or wait for v6 released
 import YouTube from "simple-youtube-api";
@@ -18,7 +18,7 @@ export default class Jukebox extends Client {
     public readonly log = createLogger(config.name, true);
     public readonly youtube = new YouTube(process.env.YT_API_KEY!, { cache: false, fetchAll: true });
     public readonly commandsHandler = new CommandsHandler(this, resolve(__dirname, "..", "commands"));
-    public readonly eventsLoader = new ClientEventsLoader(this, resolve(__dirname, "..", "events"));
+    public readonly eventsLoader = new ListenerLoader(this, resolve(__dirname, "..", "events"));
     public constructor(opt: ClientOptions) { super(opt); }
 
     public async build(token: string): Promise<Jukebox> {

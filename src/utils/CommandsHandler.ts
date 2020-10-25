@@ -1,4 +1,4 @@
-import { readdir } from "fs";
+import { promises as fs } from "fs";
 import { resolve } from "path";
 import type { Message, Snowflake } from "discord.js";
 import { Collection } from "discord.js";
@@ -11,25 +11,24 @@ export default class CommandsHandler {
     public readonly cooldowns: Collection<string, Collection<Snowflake, number>> = new Collection();
     public constructor(public client: Jukebox, public readonly path: string) {}
     public load(): void {
-        readdir(resolve(this.path), (err, filesRaw) => {
-            if (err) this.client.log.error("CMD_LOADER_ERR", err);
-            let disabledCount = 0;
-            const files = filesRaw.filter(f => !f.endsWith(".map"));
-            files.forEach(file => {
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                const command: CommandComponent = new (require(`${this.path}/${file}`).default)(this.client, `${this.path}/${file}`);
-                if (command.conf.aliases!.length > 0) {
-                    command.conf.aliases!.forEach(alias => {
-                        this.aliases.set(alias, command.help.name);
-                    });
+        fs.readdir(resolve(this.path))
+            .then(async files => {
+                let disabledCount = 0;
+                for (const file of files) {
+                    const path = resolve(this.path, file);
+                    const command: CommandComponent = new (await import(path).then(m => m.default))(this.client, path);
+                    if (command.conf.aliases!.length > 0) {
+                        command.conf.aliases!.forEach(alias => {
+                            this.aliases.set(alias, command.help.name);
+                        });
+                    }
+                    this.commands.set(command.help.name, command);
+                    if (command.conf.disable === true) disabledCount++;
                 }
-                this.commands.set(command.help.name, command);
-                if (command.conf.disable === true) disabledCount++;
-            });
-            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Found & Loaded ${files.length} of commands!`);
-            if (disabledCount === 0) return;
-            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${disabledCount} out of ${files.length} commands is disabled.`);
-        });
+                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} A total of ${files.length} commands has been loaded!`);
+                if (disabledCount !== 0) this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${disabledCount} out of ${files.length} commands is disabled.`);
+            })
+            .catch(err => this.client.log.error("CMD_LOADER_ERR:", err));
         return undefined;
     }
 
@@ -61,7 +60,7 @@ export default class CommandsHandler {
         try {
             return command.execute(message, args);
         } catch (e) {
-            this.client.log.error("COMMAND_HANDLER_ERR", e);
+            this.client.log.error("CMD_HANDLER_ERR:", e);
         } finally {
             this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${message.author.tag} is using ${command.help.name} command on ${message.guild ? message.guild.name : "DM Channel"}`);
         }

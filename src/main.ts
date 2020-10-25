@@ -13,7 +13,8 @@ process.on("unhandledRejection", e => {
 });
 process.on("uncaughtException", e => {
     log.error("UNCAUGHT_EXCEPTION: ", e);
-    log.warn("NODE_WARN: ", { stack: "Uncaught Exception detected. Restarting..." });
+    log.warn("Uncaught Exception detected. Restarting...");
+    process.exit(1);
 });
 
 const shards = new ShardingManager(resolve(__dirname, "bot.js"), { totalShards: shardCount, mode: "process", respawn: true, token: process.env.DISCORD_TOKEN });
