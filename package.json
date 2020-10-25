@@ -43,6 +43,7 @@
     "ffmpeg-static": "^4.2.7",
     "opusscript": "^0.0.7",
     "simple-youtube-api": "^5.2.1",
+    "tslib": "^2.0.3",
     "ytdl-core": "^3.4.2"
   },
   "devDependencies": {

@@ -1,22 +1,19 @@
 {
-  "compilerOptions": {
-      "target": "ES2019",
-      "module": "commonjs",
-      "allowJs": true,
-      "strict": true,
-      "skipLibCheck": true,
-      "noImplicitAny": true,
-      "alwaysStrict": true,
-      "allowSyntheticDefaultImports": true,
-      "esModuleInterop": true,
-      "resolveJsonModule": true,
-      "importsNotUsedAsValues": "error",
-      "typeRoots": [
-          "node_modules/@types",
-          "typings"
-      ],
-      "outDir": "./dist"
-  },
-  "include": ["src/**/*", "typings/*"],
-  "exclude": ["node_modules/**"]
+	"compilerOptions": {
+		"target": "ES2019",
+		"module": "commonjs",
+		"strict": true,
+		"baseUrl": ".",
+		"outDir": "dist",
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"skipLibCheck": true,
+		"noEmitHelpers": true,
+		"importHelpers": true,
+		"incremental": true,
+		"resolveJsonModule": true,
+		"typeRoots": ["node_modules/@types", "typings/index.d.ts"]
+	},
+	"exclude": [],
+	"include": ["src/**/*"]
 }
