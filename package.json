@@ -44,6 +44,7 @@
     "opusscript": "^0.0.7",
     "simple-youtube-api": "^5.2.1",
     "tslib": "^2.0.3",
+    "winston": "^3.3.3",
     "ytdl-core": "^3.4.2"
   },
   "devDependencies": {
