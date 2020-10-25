@@ -2,7 +2,4 @@
 * @Hazmi35
 
 # voiceStateUpdateEvent
-src/events/VoiceStateUpdateEvent.ts @KurokuTetsuya
-
-# LogWrapper
-src/utils/LogWrapper.ts @BillyAddlers
+src/events/VoiceStateUpdateEvent.ts @Hazmi35 @KurokuTetsuya
