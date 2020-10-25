@@ -40,7 +40,6 @@
     "discord.js": "^12.4.1",
     "dotenv": "^8.2.0",
     "entities": "^2.1.0",
-    "rimraf": "^3.0.2",
     "ffmpeg-static": "^4.2.7",
     "opusscript": "^0.0.7",
     "simple-youtube-api": "^5.2.1",
