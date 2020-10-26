@@ -18,12 +18,12 @@ export default class Jukebox extends Client {
     public readonly log = createLogger(config.name, true);
     public readonly youtube = new YouTube(process.env.YT_API_KEY!, { cache: false, fetchAll: true });
     public readonly commandsHandler = new CommandsHandler(this, resolve(__dirname, "..", "commands"));
-    public readonly eventsLoader = new ListenerLoader(this, resolve(__dirname, "..", "events"));
+    public readonly ListenerLoader = new ListenerLoader(this, resolve(__dirname, "..", "listeners"));
     public constructor(opt: ClientOptions) { super(opt); }
 
     public async build(token: string): Promise<Jukebox> {
         this.on("ready", () => this.commandsHandler.load());
-        this.eventsLoader.load();
+        this.ListenerLoader.load();
         await this.login(token);
         return this;
     }

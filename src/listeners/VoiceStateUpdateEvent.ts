@@ -1,9 +1,10 @@
 import type { TextChannel } from "discord.js";
 import { MessageEmbed } from "discord.js";
 import { formatMS } from "../utils/formatMS";
-import type { ClientEvent, IVoiceState } from "../../typings";
+import type { ClientEventListener, IVoiceState } from "../../typings";
 import type Jukebox from "../structures/Jukebox";
-export default class VoiceStateUpdateEvent implements ClientEvent {
+
+export default class VoiceStateUpdateEvent implements ClientEventListener {
     public readonly name = "voiceStateUpdate";
     public constructor(private readonly client: Jukebox) {}
 

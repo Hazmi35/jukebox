@@ -1,7 +1,7 @@
-import type { ClientEvent } from "../../typings";
+import type { ClientEventListener } from "../../typings";
 import type Jukebox from "../structures/Jukebox";
 
-export default class ErrorEvent implements ClientEvent {
+export default class ErrorEvent implements ClientEventListener {
     public readonly name = "error";
     public constructor(private readonly client: Jukebox) {}
 

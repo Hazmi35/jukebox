@@ -56,7 +56,7 @@ export interface ISong {
     title: string;
     url: string;
 }
-export interface ClientEvent {
+export interface ClientEventListener {
     name: keyof ClientEvents;
     execute(...args: ClientEvents[EventProp["name"]]): any;
 }

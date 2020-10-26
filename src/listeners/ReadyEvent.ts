@@ -1,8 +1,8 @@
-import type { ClientEvent } from "../../typings";
+import type { ClientEventListener } from "../../typings";
 import type Jukebox from "../structures/Jukebox";
 import type { Presence } from "discord.js";
 
-export default class ReadyEvent implements ClientEvent {
+export default class ReadyEvent implements ClientEventListener {
     public readonly name = "ready";
     public constructor(private readonly client: Jukebox) {}
 
