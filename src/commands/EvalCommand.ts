@@ -22,7 +22,10 @@ export default class EvalCommand extends BaseCommand {
         const msg = message;
         const client = this.client;
 
-        if (!client.config.owners.includes(msg.author.id)) return;
+        if (!client.config.owners.includes(msg.author.id)) {
+            return message.channel.send(new MessageEmbed()
+                .setDescription("❗ Only the bot owner can use this command").setColor("#FF0000"));
+        }
 
         const embed = new MessageEmbed()
             .setColor("#00FF00")
