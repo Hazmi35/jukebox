@@ -14,7 +14,7 @@ export default class HelpCommand extends BaseCommand {
 
     public execute(message: IMessage, args: string[]): void {
         const command = message.client.commandsHandler.commands.get(args[0]) ?? message.client.commandsHandler.commands.get(message.client.commandsHandler.aliases.get(args[0])!);
-        if (command?.conf.disable) {
+        if (command && !command.conf.disable) {
             message.channel.send(new MessageEmbed()
                 .setTitle(`Help for ${command.help.name} command`)
                 .setThumbnail("https://hzmi.xyz/assets/images/question_mark.png")
