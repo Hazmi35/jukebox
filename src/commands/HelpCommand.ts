@@ -14,7 +14,7 @@ export default class HelpCommand extends BaseCommand {
 
     public execute(message: IMessage, args: string[]): void {
         const command = message.client.commandsHandler.commands.get(args[0]) ?? message.client.commandsHandler.commands.get(message.client.commandsHandler.aliases.get(args[0])!);
-        if (command) {
+        if (command?.conf.disable) {
             message.channel.send(new MessageEmbed()
                 .setTitle(`Help for ${command.help.name} command`)
                 .setThumbnail("https://hzmi.xyz/assets/images/question_mark.png")
@@ -29,7 +29,7 @@ export default class HelpCommand extends BaseCommand {
                 .setTitle("Help Menu")
                 .setColor("#00FF00")
                 .setThumbnail(message.client.user!.displayAvatarURL())
-                .setDescription(message.client.commandsHandler.commands.map(c => `\`${c.help.name}\``).join(" "))
+                .setDescription(message.client.commandsHandler.commands.filter(cmd => !cmd.conf.disable && cmd.help.name !== "eval").map(c => `\`${c.help.name}\``).join(" "))
                 .setTimestamp()
                 .setFooter(`Use ${message.client.config.prefix}help <command> to get more info on a specific command!`, "https://hzmi.xyz/assets/images/390511462361202688.png"));
         }
