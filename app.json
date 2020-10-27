@@ -44,12 +44,5 @@
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",
-    "buildpacks": [
-        {
-            "url": "heroku/nodejs"
-        },
-        {
-            "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
-        }
-    ]
+    "buildpacks": [{ "url": "heroku/nodejs" }]
 }
