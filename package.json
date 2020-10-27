@@ -24,7 +24,6 @@
   },
   "eslintConfig": {
     "extends": "@hazmi35/eslint-config/typescript",
-    "ignorePatterns": "dist/*",
     "rules": {
       "@typescript-eslint/no-floating-promises": "off",
       "@typescript-eslint/restrict-template-expressions": [
@@ -33,7 +32,8 @@
           "allowAny": true
         }
       ]
-    }
+    },
+    "ignorePatterns": "dist/*"
   },
   "dependencies": {
     "date-fns": "^2.16.1",
