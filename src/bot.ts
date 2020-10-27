@@ -1,7 +1,16 @@
 import "dotenv/config";
 import Client from "./structures/Jukebox";
 
-const client = new Client({ disableMentions: "everyone", messageCacheMaxSize: Infinity, messageCacheLifetime: 540, messageSweepInterval: 180 });
+const client = new Client({
+    disableMentions: "everyone",
+    messageCacheLifetime: 60,
+    messageCacheMaxSize: Infinity,
+    messageEditHistoryMaxSize: Infinity,
+    messageSweepInterval: 180,
+    ws: {
+        intents: ["GUILDS", "GUILD_PRESENCES", "GUILD_MEMBERS", "GUILD_VOICE_STATES", "GUILD_MESSAGES"]
+    }
+});
 
 process.on("unhandledRejection", e => {
     client.log.error("UNHANDLED_REJECTION: ", e);
