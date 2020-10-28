@@ -42,8 +42,8 @@ export default class VoiceStateUpdateEvent implements ClientEventListener {
                         const timeout = this.client.config.deleteQueueTimeout;
                         const duration = formatMS(timeout);
                         newState.guild.queue?.textChannel?.send(new MessageEmbed().setTitle("⏸ Queue paused.").setColor("#FFFF00")
-                            .setDescription("Currently, no one is the in the voice channel, to save resources, the queue was paused. " +
-                            `If there's no people the in voice channel in the next ${duration}, the queue will be deleted.`))
+                            .setDescription("Currently, no one is in the voice channel, to save resources, the queue was paused. " +
+                            `If there's no people in the voice channel in the next ${duration}, the queue will be deleted.`))
                             .catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
                         return newState.guild.queue!.timeout = setTimeout(() => {
                             newState.guild.queue?.connection?.dispatcher.once("speaking", () => {
