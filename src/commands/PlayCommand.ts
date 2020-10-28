@@ -12,7 +12,7 @@ import type { IMessage, ISong, IGuild } from "../../typings";
 
 export default class PlayCommand extends BaseCommand {
     public constructor(public client: Jukebox, public readonly path: string) {
-        super(client, path, { aliases: ["play-music", "add"] }, {
+        super(client, path, { aliases: ["play-music", "add", "p"] }, {
             name: "play",
             description: "Play some music",
             usage: "{prefix}play <yt video or playlist link / yt video name>"

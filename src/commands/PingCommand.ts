@@ -6,7 +6,7 @@ import type Jukebox from "../structures/Jukebox";
 export default class PingCommand extends BaseCommand {
     public constructor(client: Jukebox, public readonly path: string) {
         super(client, path, {
-            aliases: ["pong", "peng", "p", "pingpong"]
+            aliases: ["pong", "peng", "pingpong"]
         }, {
             name: "ping",
             description: "Shows the current ping of the bot.",
