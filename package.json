@@ -1,6 +1,6 @@
 {
   "name": "jukebox",
-  "version": "3.8.0",
+  "version": "4.0.0",
   "private": true,
   "description": " Just a simple Discord music bot.",
   "homepage": "https://github.com/Hazmi35/jukebox#readme",
@@ -24,15 +24,6 @@
   },
   "eslintConfig": {
     "extends": "@hazmi35/eslint-config/typescript",
-    "rules": {
-      "@typescript-eslint/no-floating-promises": "off",
-      "@typescript-eslint/restrict-template-expressions": [
-        "warn",
-        {
-          "allowAny": true
-        }
-      ]
-    },
     "ignorePatterns": "dist/*"
   },
   "dependencies": {
