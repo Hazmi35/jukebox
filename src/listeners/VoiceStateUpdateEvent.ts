@@ -54,8 +54,8 @@ export default class VoiceStateUpdateEvent implements ClientEventListener {
                 const timeout = this.client.config.deleteQueueTimeout;
                 const duration = formatMS(timeout);
                 newState.guild.queue?.textChannel?.send(new MessageEmbed().setTitle("⏸ Queue paused.").setColor("#FFFF00")
-                    .setDescription("Currently, no one is in the voice channel, to save resources, the queue was paused. " +
-                    `If there's no people in the voice channel in the next ${duration}, the queue will be deleted.`))
+                    .setDescription("Currently, no one is in my voice channel, to save resources, the queue was paused. " +
+                    `If there's no one who joins my voice channel in the next ${duration}, the queue will be deleted.`))
                     .catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
                 return newState.guild.queue!.timeout = setTimeout(() => {
                     newState.guild.queue?.connection?.dispatcher.once("speaking", () => {
@@ -63,7 +63,7 @@ export default class VoiceStateUpdateEvent implements ClientEventListener {
                         const textChannel = this.client.channels.resolve(newState.guild.queue?.textChannel?.id as Snowflake) as TextChannel;
                         newState.guild.queue?.connection?.dispatcher.end(() => {
                             textChannel.send(new MessageEmbed().setTitle("⏹ Queue deleted.").setColor("#FF0000")
-                                .setDescription(`${duration} have passed and there is no one who joins the voice channel, the queue was deleted.`))
+                                .setDescription(`${duration} have passed and there is no one who joins my voice channel, the queue was deleted.`))
                                 .catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
                         });
                     });
