@@ -1,7 +1,7 @@
+import { resolve } from "path";
 import type Jukebox from "./Jukebox";
 import type { CommandComponent } from "../../typings";
 import type { Message } from "discord.js";
-
 export default class BaseCommand implements CommandComponent {
     public conf: CommandComponent["conf"];
     public help: CommandComponent["help"];
@@ -10,7 +10,7 @@ export default class BaseCommand implements CommandComponent {
             aliases: [],
             cooldown: 3,
             disable: false,
-            path: this.path
+            path: resolve(this.path)
         };
         this.help = {
             name: "",
