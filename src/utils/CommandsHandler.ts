@@ -25,10 +25,10 @@ export default class CommandsHandler {
                     this.commands.set(command.help.name, command);
                     if (command.conf.disable === true) disabledCount++;
                 }
-                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} A total of ${files.length} commands has been loaded!`);
-                if (disabledCount !== 0) this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${disabledCount} out of ${files.length} commands is disabled.`);
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} A total of ${files.length} commands has been loaded!`);
+                if (disabledCount !== 0) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${disabledCount} out of ${files.length} commands is disabled.`);
             })
-            .catch(err => this.client.log.error("CMD_LOADER_ERR:", err));
+            .catch(err => this.client.logger.error("CMD_LOADER_ERR:", err));
         return undefined;
     }
 
@@ -46,8 +46,8 @@ export default class CommandsHandler {
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
                 message.channel.send(`**${message.author.username}**, please wait **${timeLeft.toFixed(1)}** cooldown time.`).then((msg: Message) => {
-                    msg.delete({ timeout: 3500 });
-                });
+                    msg.delete({ timeout: 3500 }).catch(e => this.client.logger.error("CMD_HANDLER_ERR:", e));
+                }).catch(e => this.client.logger.error("CMD_HANDLER_ERR:", e));
                 return undefined;
             }
 
@@ -60,9 +60,9 @@ export default class CommandsHandler {
         try {
             return command.execute(message, args);
         } catch (e) {
-            this.client.log.error("CMD_HANDLER_ERR:", e);
+            this.client.logger.error("CMD_HANDLER_ERR:", e);
         } finally {
-            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${message.author.tag} is using ${command.help.name} command on ${message.guild ? message.guild.name : "DM Channel"}`);
+            this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${message.author.tag} is using ${command.help.name} command on ${message.guild ? message.guild.name : "DM Channel"}`);
         }
     }
 }

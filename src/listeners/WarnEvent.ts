@@ -6,6 +6,6 @@ export default class WarnEvent implements ClientEventListener {
     public constructor(private readonly client: Jukebox) {}
 
     public execute(warn: string): void {
-        this.client.log.warn("CLIENT_WARN: ", warn);
+        this.client.logger.warn("CLIENT_WARN: ", warn);
     }
 }

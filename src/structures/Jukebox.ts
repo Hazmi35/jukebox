@@ -15,15 +15,15 @@ import "./Guild";
 
 export default class Jukebox extends Client {
     public readonly config = config;
-    public readonly log = createLogger(config.name, true);
+    public readonly logger = createLogger(config.name, true);
     public readonly youtube = new YouTube(process.env.YT_API_KEY!, { cache: false, fetchAll: true });
-    public readonly commandsHandler = new CommandsHandler(this, resolve(__dirname, "..", "commands"));
+    public readonly CommandsHandler = new CommandsHandler(this, resolve(__dirname, "..", "commands"));
     public readonly ListenerLoader = new ListenerLoader(this, resolve(__dirname, "..", "listeners"));
     public constructor(opt: ClientOptions) { super(opt); }
 
     public async build(token: string): Promise<Jukebox> {
-        this.on("ready", () => this.commandsHandler.load());
-        this.ListenerLoader.load();
+        this.on("ready", () => this.CommandsHandler.load());
+        this.ListenerLoader.load().catch(e => this.logger.error("LISTENER_LOADER_ERR:", e));
         await this.login(token);
         return this;
     }

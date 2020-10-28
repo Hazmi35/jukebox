@@ -15,6 +15,6 @@ export default class MessageEvent implements ClientEventListener {
             );
         }
         if (!message.content.toLowerCase().startsWith(this.client.config.prefix)) return message;
-        return this.client.commandsHandler.handle(message);
+        return this.client.CommandsHandler.handle(message);
     }
 }

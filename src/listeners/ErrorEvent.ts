@@ -6,6 +6,6 @@ export default class ErrorEvent implements ClientEventListener {
     public constructor(private readonly client: Jukebox) {}
 
     public execute(error: string): void {
-        this.client.log.error("CLIENT_ERROR: ", error);
+        this.client.logger.error("CLIENT_ERROR: ", error);
     }
 }

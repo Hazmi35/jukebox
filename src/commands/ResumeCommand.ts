@@ -22,11 +22,11 @@ export default class ResumeCommand extends BaseCommand {
         }
 
         if (message.guild.queue.playing) {
-            message.channel.send(new MessageEmbed().setDescription("Music is not paused!").setColor("#FFFF00"));
+            message.channel.send(new MessageEmbed().setDescription("Music is not paused!").setColor("#FFFF00")).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
         } else {
             message.guild.queue.playing = true;
             message.guild.queue.connection?.dispatcher.resume();
-            return message.channel.send(new MessageEmbed().setDescription("▶ Resumed the music for you!").setColor("#00FF00"));
+            message.channel.send(new MessageEmbed().setDescription("▶ Resumed the music for you!").setColor("#00FF00")).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
         }
     }
 }

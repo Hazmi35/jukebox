@@ -36,7 +36,7 @@ export default class PingCommand extends BaseCommand {
 
             msg.edit(embed);
             msg.edit("");
-        });
+        }).catch(e => this.client.logger.error("PING_CMD_ERR:", e));
         return message;
     }
 

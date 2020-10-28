@@ -13,7 +13,7 @@ export default class HelpCommand extends BaseCommand {
     }
 
     public execute(message: IMessage, args: string[]): void {
-        const command = message.client.commandsHandler.commands.get(args[0]) ?? message.client.commandsHandler.commands.get(message.client.commandsHandler.aliases.get(args[0])!);
+        const command = message.client.CommandsHandler.commands.get(args[0]) ?? message.client.CommandsHandler.commands.get(message.client.CommandsHandler.aliases.get(args[0])!);
         if (command && !command.conf.disable) {
             message.channel.send(new MessageEmbed()
                 .setTitle(`Help for ${command.help.name} command`)
@@ -23,15 +23,16 @@ export default class HelpCommand extends BaseCommand {
                     { name: "Aliases", value: `${command.conf.aliases!.length > 0 ? command.conf.aliases!.map(c => `\`${c}\``).join(", ") : "None."}`, inline: true },
                     { name: "Usage", value: `\`${command.help.usage!.replace(/{prefix}/g, message.client.config.prefix)}\``, inline: false })
                 .setColor("#00FF00")
-                .setTimestamp());
+                .setTimestamp()).catch(e => this.client.logger.error("HELP_CMD_ERR:", e));
         } else {
             message.channel.send(new MessageEmbed()
                 .setTitle("Help Menu")
                 .setColor("#00FF00")
                 .setThumbnail(message.client.user!.displayAvatarURL())
-                .setDescription(message.client.commandsHandler.commands.filter(cmd => !cmd.conf.disable && cmd.help.name !== "eval").map(c => `\`${c.help.name}\``).join(" "))
+                .setDescription(message.client.CommandsHandler.commands.filter(cmd => !cmd.conf.disable && cmd.help.name !== "eval").map(c => `\`${c.help.name}\``).join(" "))
                 .setTimestamp()
-                .setFooter(`Use ${message.client.config.prefix}help <command> to get more info on a specific command!`, "https://hzmi.xyz/assets/images/390511462361202688.png"));
+                .setFooter(`Use ${message.client.config.prefix}help <command> to get more info on a specific command!`, "https://hzmi.xyz/assets/images/390511462361202688.png"))
+                .catch(e => this.client.logger.error("HELP_CMD_ERR:", e));
         }
     }
 }

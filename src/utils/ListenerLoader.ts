@@ -11,9 +11,9 @@ export default class ListenerLoader {
         for (const file of files) {
             const event: ClientEventListener = new (await import(resolve(this.path, file)).then(m => m.default))(this.client);
             this.client.on(event.name, (...args) => event.execute(...args));
-            this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Listener for event ${event.name} has been loaded!`);
+            this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Listener for event ${event.name} has been loaded!`);
         }
-        this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} A total of ${files.length} of listeners has been loaded!`);
+        this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} A total of ${files.length} of listeners has been loaded!`);
         return this.client;
     }
 }

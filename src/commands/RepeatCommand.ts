@@ -33,6 +33,6 @@ export default class RepeatCommand extends BaseCommand {
             message.guild.queue.loopMode = 0;
             return message.channel.send(new MessageEmbed().setDescription("▶ Repeating disabled.").setColor("#00FF00"));
         }
-        message.channel.send(`Invalid value, see \`${this.client.config.prefix}help ${this.help.name}\` for more info!`);
+        message.channel.send(`Invalid value, see \`${this.client.config.prefix}help ${this.help.name}\` for more info!`).catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
     }
 }

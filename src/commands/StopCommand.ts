@@ -26,6 +26,7 @@ export default class StopCommand extends BaseCommand {
         message.guild.queue.songs.clear();
         message.guild.queue.connection?.dispatcher.end();
 
-        message.channel.send(new MessageEmbed().setDescription("⏹ Stopping the queue...").setColor("#00FF00"));
+        message.channel.send(new MessageEmbed().setDescription("⏹ Stopping the queue...").setColor("#00FF00"))
+            .catch(e => this.client.logger.error("STOP_CMD_ERR:", e));
     }
 }

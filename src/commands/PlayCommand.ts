@@ -50,7 +50,8 @@ export default class PlayCommand extends BaseCommand {
             const playlist = await this.client.youtube.getPlaylist(url);
             const videos = await playlist.getVideos();
             let skikppedVideos = 0;
-            message.channel.send(new MessageEmbed().setDescription(`Adding all videos in playlist: **[${playlist.title}](${playlist.url})**, Hang on...`).setColor("#00FF00"));
+            message.channel.send(new MessageEmbed().setDescription(`Adding all videos in playlist: **[${playlist.title}](${playlist.url})**, Hang on...`).setColor("#00FF00"))
+                .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             for (const video of Object.values(videos)) {
                 if ((video as any).raw.status.privacyStatus === "private") {
                     skikppedVideos++;
@@ -65,7 +66,7 @@ export default class PlayCommand extends BaseCommand {
                     new MessageEmbed()
                         .setDescription(`${skikppedVideos >= 2 ? `${skikppedVideos} videos` : `${skikppedVideos} video`} are skipped because it's a private video`)
                         .setColor("#FFFF00")
-                );
+                ).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
             return message.channel.send(new MessageEmbed().setDescription(`All videos in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`).setColor("#00FF00"));
         }
@@ -96,10 +97,10 @@ export default class PlayCommand extends BaseCommand {
                         time: 20000,
                         errors: ["time"]
                     });
-                    msg.delete();
-                    response.first()?.delete({ timeout: 3000 });
+                    msg.delete().catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                    response.first()?.delete({ timeout: 3000 }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 } catch (error) {
-                    msg.delete();
+                    msg.delete().catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                     return message.channel.send(new MessageEmbed().setDescription("No or invalid value entered, song selection canceled.").setColor("#FF0000"));
                 }
                 if (response.first()?.content === "c" || response.first()?.content === "cancel") {
@@ -109,7 +110,7 @@ export default class PlayCommand extends BaseCommand {
                 // eslint-disable-next-line no-var
                 video = await this.client.youtube.getVideoByID(videos[videoIndex - 1].id);
             } catch (err) {
-                this.client.log.error("YT_SEARCH_ERR: ", err);
+                this.client.logger.error("YT_SEARCH_ERR: ", err);
                 return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
             }
         }
@@ -132,7 +133,8 @@ export default class PlayCommand extends BaseCommand {
             }
             message.guild.queue.songs.addSong(song);
             if (playlist) return;
-            message.channel.send(new MessageEmbed().setDescription(`✅ Song **[${song.title}](${song.url})** has been added to the queue`).setColor("#00FF00"));
+            message.channel.send(new MessageEmbed().setDescription(`✅ Song **[${song.title}](${song.url})** has been added to the queue`).setColor("#00FF00"))
+                .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
         } else {
             message.guild!.queue = new ServerQueue(message.channel, voiceChannel);
             message.guild?.queue.songs.addSong(song);
@@ -142,13 +144,15 @@ export default class PlayCommand extends BaseCommand {
             } catch (error) {
                 message.guild?.queue.songs.clear();
                 message.guild!.queue = null;
-                this.client.log.error("PLAY_COMMAND: ", error);
-                message.channel.send(new MessageEmbed().setDescription(`Error: Could not join the voice channel. reason:\n\`${error}\``).setColor("#FF0000"));
+                this.client.logger.error("PLAY_COMMAND: ", error);
+                message.channel.send(new MessageEmbed().setDescription(`Error: Could not join the voice channel. reason:\n\`${error}\``).setColor("#FF0000"))
+                    .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return undefined;
             }
             this.play(message.guild!).catch(err => {
-                message.channel.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${err}\``).setColor("#FF0000"));
-                return this.client.log.error(err);
+                message.channel.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${err}\``).setColor("#FF0000"))
+                    .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                return this.client.logger.error(err);
             });
         }
         return message;
@@ -160,35 +164,38 @@ export default class PlayCommand extends BaseCommand {
         if (!song) {
             serverQueue.textChannel?.send(
                 new MessageEmbed().setDescription(`⏹ Queue is finished! Use "${guild.client.config.prefix}play" to play more songs`).setColor("#00FF00")
-            );
+            ).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             serverQueue.connection?.disconnect();
             return guild.queue = null;
         }
 
-        serverQueue.connection?.voice?.setSelfDeaf(true);
+        serverQueue.connection?.voice?.setSelfDeaf(true).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
         const songData = await ytdl(song.url, { cache: this.client.config.cacheYoutubeDownloads, cacheMaxLength: this.client.config.cacheMaxLengthAllowed });
 
-        if (songData.cache) this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Using cache for song "${song.title}" on ${guild.name}`);
+        if (songData.cache) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Using cache for song "${song.title}" on ${guild.name}`);
 
         serverQueue.connection?.play(songData.stream, { type: songData.canDemux ? "webm/opus" : "unknown", bitrate: "auto", highWaterMark: 1 })
             .on("start", () => {
                 serverQueue.playing = true;
-                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
-                serverQueue.textChannel?.send(new MessageEmbed().setDescription(`▶ Start playing: **[${song.title}](${song.url})**`).setColor("#00FF00"));
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
+                serverQueue.textChannel?.send(new MessageEmbed().setDescription(`▶ Start playing: **[${song.title}](${song.url})**`).setColor("#00FF00"))
+                    .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             })
             .on("finish", () => {
-                this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
                 // eslint-disable-next-line max-statements-per-line
                 if (serverQueue.loopMode === 0) { serverQueue.songs.deleteFirst(); } else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
-                serverQueue.textChannel?.send(new MessageEmbed().setDescription(`⏹ Stop playing: **[${song.title}](${song.url})**`).setColor("#00FF00"));
+                serverQueue.textChannel?.send(new MessageEmbed().setDescription(`⏹ Stop playing: **[${song.title}](${song.url})**`).setColor("#00FF00"))
+                    .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 this.play(guild).catch(e => {
-                    serverQueue.textChannel?.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${e}\``).setColor("#FF0000"));
+                    serverQueue.textChannel?.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${e}\``).setColor("#FF0000"))
+                        .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                     serverQueue.connection?.dispatcher.end();
-                    return this.client.log.error(e);
+                    return this.client.logger.error(e);
                 });
             })
             .on("error", (err: Error) => {
-                this.client.log.error("PLAY_ERROR: ", err);
+                this.client.logger.error("PLAY_ERROR: ", err);
             })
             .setVolume(serverQueue.volume / guild.client.config.maxVolume);
     }

@@ -42,7 +42,7 @@ Source code         :: https://sh.hzmi.xyz/jukebox
 \`\`\`
     `)
             .setColor("#00FF00")
-            .setTimestamp());
+            .setTimestamp()).catch(e => this.client.logger.error("ABOUT_CMD_ERR:", e));
     }
 
     private bytesToSize(bytes: number): string { // Function From Rendang's util (https://github.com/Hazmi35/rendang)

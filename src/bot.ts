@@ -13,14 +13,14 @@ const client = new Client({
 });
 
 process.on("unhandledRejection", e => {
-    client.log.error("UNHANDLED_REJECTION: ", e);
+    client.logger.error("UNHANDLED_REJECTION: ", e);
 });
 
 process.on("uncaughtException", e => {
-    client.log.error("UNCAUGHT_EXCEPTION: ", e);
-    client.log.warn("Uncaught Exception detected. Restarting...");
+    client.logger.error("UNCAUGHT_EXCEPTION: ", e);
+    client.logger.warn("Uncaught Exception detected. Restarting...");
     process.exit(1);
 });
 
 client.build(process.env.DISCORD_TOKEN!)
-    .catch(e => client.log.error("CLIENT_BUILD_ERR: ", e));
+    .catch(e => client.logger.error("CLIENT_BUILD_ERR: ", e));

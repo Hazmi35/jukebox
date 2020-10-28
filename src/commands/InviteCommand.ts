@@ -18,6 +18,6 @@ export default class InviteCommand extends BaseCommand {
         message.channel.send(
             new MessageEmbed().addField("Discord bot invite link", `[Click here](${await this.client.generateInvite({ permissions: 53857345 })})`)
                 .setColor("#00FF00")
-        );
+        ).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
     }
 }

@@ -26,23 +26,23 @@ export default class QueueCommand extends BaseCommand {
             embed.setDescription(indexes[index]).setFooter(`Page ${index + 1} of ${indexes.length}`, "https://hzmi.xyz/assets/images/390511462361202688.png");
             message.channel.send(embed).then(msg => {
                 msg.react("◀️").then(() => {
-                    msg.react("▶️");
+                    msg.react("▶️").catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
                     msg.createReactionCollector((reaction, user) => reaction.emoji.name === "◀️" && user.id === message.author.id, { time: 80 * 1000 }).on("collect", () => {
                         if (index === 0) return undefined;
                         index--;
                         embed.setDescription(indexes[index]).setFooter(`Page ${index + 1} of ${indexes.length}`, "https://hzmi.xyz/assets/images/390511462361202688.png");
-                        msg.edit(embed);
+                        msg.edit(embed).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
                     });
                     msg.createReactionCollector((reaction, user) => reaction.emoji.name === "▶️" && user.id === message.author.id, { time: 80 * 1000 }).on("collect", () => {
                         if (index + 1 === indexes.length) return undefined;
                         index++;
                         embed.setDescription(indexes[index]).setFooter(`Page ${index + 1} of ${indexes.length}`, "https://hzmi.xyz/assets/images/390511462361202688.png");
-                        msg.edit(embed);
+                        msg.edit(embed).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
                     });
-                });
-            });
+                }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
+            }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
         } else {
-            message.channel.send(embed.setDescription(songs.join("\n")));
+            message.channel.send(embed.setDescription(songs.join("\n"))).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
         }
     }
 
