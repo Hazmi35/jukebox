@@ -1,4 +1,4 @@
-import type { TextChannel } from "discord.js";
+import type { Snowflake, TextChannel } from "discord.js";
 import { MessageEmbed } from "discord.js";
 import { formatMS } from "../utils/formatMS";
 import type { ClientEventListener, IVoiceState } from "../../typings";
@@ -31,11 +31,11 @@ export default class VoiceStateUpdateEvent implements ClientEventListener {
             }
 
             // Handle when user leaves voice channel
-            const vc = newState.guild.queue!.voiceChannel!.members.filter(m => !m.user.bot);
+            const vc = newState.guild.queue?.voiceChannel?.members.filter(m => !m.user.bot);
             if (oldID === musicVcID && newID !== musicVcID && !newState.member?.user.bot) {
                 try {
-                    if (vc.size === 0) {
-                        clearTimeout(newState.guild.queue!.timeout!);
+                    if (vc?.size === 0) {
+                        clearTimeout(newState.guild.queue?.timeout as NodeJS.Timeout);
                         newState.guild.queue!.timeout = null;
                         newState.guild.queue!.playing = false;
                         newState.guild.queue?.connection?.dispatcher.pause();
@@ -48,7 +48,7 @@ export default class VoiceStateUpdateEvent implements ClientEventListener {
                         return newState.guild.queue!.timeout = setTimeout(() => {
                             newState.guild.queue?.connection?.dispatcher.once("speaking", () => {
                                 newState.guild.queue?.songs.clear();
-                                const textChannel = this.client.channels.resolve(newState.guild.queue!.textChannel!.id) as TextChannel;
+                                const textChannel = this.client.channels.resolve(newState.guild.queue?.textChannel?.id as Snowflake) as TextChannel;
                                 newState.guild.queue?.connection?.dispatcher.end(() => {
                                     textChannel.send(new MessageEmbed().setTitle("⏹ Queue deleted.").setColor("#FF0000")
                                         .setDescription(`${duration} have passed and there is no one who joins the voice channel, the queue was deleted.`))
@@ -64,9 +64,9 @@ export default class VoiceStateUpdateEvent implements ClientEventListener {
 
             // Handle when user joins voice channel
             if (newID === musicVcID && !newState.member?.user.bot) {
-                if (vc.size > 0) {
-                    if (vc.size === 1) { clearTimeout(newState.guild.queue!.timeout!); newState.guild.queue!.timeout = null; }
-                    if (!newState.guild.queue?.playing && vc.size < 2) {
+                if (Number(vc?.size) > 0) {
+                    if (Number(vc?.size) === 1) { clearTimeout(newState.guild.queue?.timeout as NodeJS.Timeout); newState.guild.queue!.timeout = null; }
+                    if (!newState.guild.queue?.playing && Number(vc?.size) < 2) {
                         try {
                             const song = newState.guild.queue?.songs.first();
                             newState.guild.queue?.textChannel?.send(new MessageEmbed().setTitle("▶ Queue resumed").setColor("#00FF00")

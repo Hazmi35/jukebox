@@ -18,7 +18,7 @@ export default class NowPlayingCommand extends BaseCommand {
         if (!message.guild?.queue) return message.channel.send(new MessageEmbed().setDescription("There is nothing playing.").setColor("#FFFF00"));
         return message.channel.send(
             new MessageEmbed().setDescription(`${message.guild.queue.playing ? "▶ Now playing:" : "⏸ Now playing (paused):"} ` +
-                `**[${message.guild.queue.songs.first()!.title}](${message.guild.queue.songs.first()!.url})**`)
+                `**[${message.guild.queue.songs.first()?.title as string}](${message.guild.queue.songs.first()?.url as string})**`)
                 .setColor("#00FF00")
         );
     }

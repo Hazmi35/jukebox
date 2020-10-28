@@ -17,7 +17,7 @@ export default class CommandsHandler {
                 for (const file of files) {
                     const path = resolve(this.path, file);
                     const command: CommandComponent = new (await import(path).then(m => m.default))(this.client, path);
-                    if (command.conf.aliases!.length > 0) {
+                    if (Number(command.conf.aliases?.length) > 0) {
                         command.conf.aliases?.forEach(alias => {
                             this.aliases.set(alias, command.help.name);
                         });
@@ -34,8 +34,8 @@ export default class CommandsHandler {
 
     public handle(message: Message): any {
         const args = message.content.substring(this.client.config.prefix.length).trim().split(/ +/g);
-        const cmd = args.shift()!.toLowerCase();
-        const command = this.commands.get(cmd) ?? this.commands.get(this.aliases.get(cmd)!);
+        const cmd = args.shift()?.toLowerCase();
+        const command = this.commands.get(cmd!) ?? this.commands.get(this.aliases.get(cmd!)!);
         if (!command || command.conf.disable) return undefined;
         if (!this.cooldowns.has(command.help.name)) this.cooldowns.set(command.help.name, new Collection());
         const now = Date.now();

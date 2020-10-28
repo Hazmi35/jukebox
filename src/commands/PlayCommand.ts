@@ -82,7 +82,7 @@ export default class PlayCommand extends BaseCommand {
                     .setAuthor("Song Selection") // TODO: Find or create typings for simple-youtube-api or wait for v6 released
                     .setDescription(`${videos.map((video: any) => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
                         "*Type `cancel` or `c` to cancel song selection*")
-                    .setThumbnail(message.client.user!.displayAvatarURL())
+                    .setThumbnail(message.client.user?.displayAvatarURL() as string)
                     .setColor("#00FF00")
                     .setFooter("Please provide a value to select one of the search results ranging from 1-12"));
                 try {
@@ -106,7 +106,7 @@ export default class PlayCommand extends BaseCommand {
                 if (response.first()?.content === "c" || response.first()?.content === "cancel") {
                     return message.channel.send(new MessageEmbed().setDescription("Song selection canceled").setColor("#00FF00"));
                 }
-                const videoIndex = parseInt(response.first()!.content, 10);
+                const videoIndex = parseInt(response.first()?.content as string, 10);
                 // eslint-disable-next-line no-var
                 video = await this.client.youtube.getVideoByID(videos[videoIndex - 1].id);
             } catch (err) {
@@ -139,8 +139,8 @@ export default class PlayCommand extends BaseCommand {
             message.guild!.queue = new ServerQueue(message.channel, voiceChannel);
             message.guild?.queue.songs.addSong(song);
             try {
-                const connection = await message.guild!.queue.voiceChannel!.join();
-                message.guild!.queue.connection = connection;
+                const connection = await message.guild?.queue.voiceChannel?.join();
+                message.guild!.queue.connection = connection!;
             } catch (error) {
                 message.guild?.queue.songs.clear();
                 message.guild!.queue = null;

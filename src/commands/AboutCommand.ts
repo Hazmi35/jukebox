@@ -17,7 +17,7 @@ export default class AboutCommand extends BaseCommand {
 
     public async execute(message: IMessage): Promise<void> {
         message.channel.send(new MessageEmbed()
-            .setAuthor(`${this.client.user!.username} - Just a simple Discord music bot.`)
+            .setAuthor(`${this.client.user?.username as string} - Just a simple Discord music bot.`)
             .setDescription(`
 \`\`\`asciidoc
 Users count         :: ${await this.client.getUsersCount()}

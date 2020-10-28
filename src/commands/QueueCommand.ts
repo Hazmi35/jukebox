@@ -16,7 +16,7 @@ export default class QueueCommand extends BaseCommand {
         if (!message.guild?.queue) return message.channel.send(new MessageEmbed().setDescription("There is nothing playing.").setColor("#FFFF00"));
 
         const embed = new MessageEmbed().setTitle("**Song Queue**").setColor("#00FF00")
-            .setThumbnail(message.client.user!.avatarURL()!);
+            .setThumbnail(message.client.user?.avatarURL() as string);
 
         let num = 1;
         const songs = message.guild.queue.songs.map(s => `**${num++}.** **[${s.title}](${s.url})**`);
