@@ -18,7 +18,7 @@ export default class CommandsHandler {
                     const path = resolve(this.path, file);
                     const command: CommandComponent = new (await import(path).then(m => m.default))(this.client, path);
                     if (command.conf.aliases!.length > 0) {
-                        command.conf.aliases!.forEach(alias => {
+                        command.conf.aliases?.forEach(alias => {
                             this.aliases.set(alias, command.help.name);
                         });
                     }

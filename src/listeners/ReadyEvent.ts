@@ -9,7 +9,7 @@ export default class ReadyEvent implements ClientEventListener {
     public execute(): void {
         this.client.log.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} I'm ready to serve ` +
         `${this.client.users.cache.filter(u => !u.equals(this.client.user!)).size} users on ${this.client.guilds.cache.size} guilds!`);
-        const updatePresence = async (): Promise<Presence> => this.client.user!.setPresence({
+        const updatePresence = async (): Promise<Presence | undefined> => this.client.user?.setPresence({
             activity: { name: `music with ${await this.client.getUsersCount()} users!`, type: "LISTENING" }
         });
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
