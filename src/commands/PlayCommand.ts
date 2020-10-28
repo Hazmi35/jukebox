@@ -144,7 +144,7 @@ export default class PlayCommand extends BaseCommand {
             } catch (error) {
                 message.guild?.queue.songs.clear();
                 message.guild!.queue = null;
-                this.client.logger.error("PLAY_COMMAND: ", error);
+                this.client.logger.error("PLAY_CMD_ERR:", error);
                 message.channel.send(new MessageEmbed().setDescription(`Error: Could not join the voice channel. reason:\n\`${error}\``).setColor("#FF0000"))
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return undefined;
@@ -152,7 +152,7 @@ export default class PlayCommand extends BaseCommand {
             this.play(message.guild!).catch(err => {
                 message.channel.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${err}\``).setColor("#FF0000"))
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
-                return this.client.logger.error(err);
+                return this.client.logger.error("PLAY_CMD_ERR:", err);
             });
         }
         return message;
@@ -164,12 +164,12 @@ export default class PlayCommand extends BaseCommand {
         if (!song) {
             serverQueue.textChannel?.send(
                 new MessageEmbed().setDescription(`⏹ Queue is finished! Use "${guild.client.config.prefix}play" to play more songs`).setColor("#00FF00")
-            ).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+            ).catch(e => this.client.logger.error("PLAY_ERR:", e));
             serverQueue.connection?.disconnect();
             return guild.queue = null;
         }
 
-        serverQueue.connection?.voice?.setSelfDeaf(true).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+        serverQueue.connection?.voice?.setSelfDeaf(true).catch(e => this.client.logger.error("PLAY_ERR:", e));
         const songData = await ytdl(song.url, { cache: this.client.config.cacheYoutubeDownloads, cacheMaxLength: this.client.config.cacheMaxLengthAllowed });
 
         if (songData.cache) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Using cache for song "${song.title}" on ${guild.name}`);
@@ -179,23 +179,23 @@ export default class PlayCommand extends BaseCommand {
                 serverQueue.playing = true;
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
                 serverQueue.textChannel?.send(new MessageEmbed().setDescription(`▶ Start playing: **[${song.title}](${song.url})**`).setColor("#00FF00"))
-                    .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                    .catch(e => this.client.logger.error("PLAY_ERR:", e));
             })
             .on("finish", () => {
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
                 // eslint-disable-next-line max-statements-per-line
                 if (serverQueue.loopMode === 0) { serverQueue.songs.deleteFirst(); } else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
                 serverQueue.textChannel?.send(new MessageEmbed().setDescription(`⏹ Stop playing: **[${song.title}](${song.url})**`).setColor("#00FF00"))
-                    .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                    .catch(e => this.client.logger.error("PLAY_ERR:", e));
                 this.play(guild).catch(e => {
                     serverQueue.textChannel?.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${e}\``).setColor("#FF0000"))
-                        .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                        .catch(e => this.client.logger.error("PLAY_ERR:", e));
                     serverQueue.connection?.dispatcher.end();
-                    return this.client.logger.error(e);
+                    return this.client.logger.error("PLAY_ERR:", e);
                 });
             })
             .on("error", (err: Error) => {
-                this.client.logger.error("PLAY_ERROR: ", err);
+                this.client.logger.error("PLAY_ERR:", err);
             })
             .setVolume(serverQueue.volume / guild.client.config.maxVolume);
     }
