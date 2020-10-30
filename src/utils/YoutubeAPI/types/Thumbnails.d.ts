@@ -1,5 +1,5 @@
 
-export interface Thumbnails {
+export interface IThumbnails {
     default: {
         url: string;
         width: 120;

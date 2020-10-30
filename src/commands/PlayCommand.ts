@@ -48,22 +48,21 @@ export default class PlayCommand extends BaseCommand {
         if (/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/.exec(url)) {
             const playlist = await this.client.youtube.getPlaylist(url);
             const videos = await playlist.getVideos();
-            let skikppedVideos = 0;
+            let skippedVideos = 0;
             message.channel.send(new MessageEmbed().setDescription(`Adding all videos in playlist: **[${playlist.title}](${playlist.url})**, Hang on...`).setColor("#00FF00"))
                 .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             for (const video of Object.values(videos)) {
-                if ((video as any).raw.status.privacyStatus === "private") {
-                    skikppedVideos++;
+                if (video.status.privacyStatus === "private") {
+                    skippedVideos++;
                     continue;
                 } else {
-                    const video2 = await this.client.youtube.getVideo(`https://youtube.com/watch?v=${video.id}`);
-                    await this.handleVideo(video2, message, voiceChannel, true);
+                    await this.handleVideo(video, message, voiceChannel, true);
                 }
             }
-            if (skikppedVideos !== 0) {
+            if (skippedVideos !== 0) {
                 message.channel.send(
                     new MessageEmbed()
-                        .setDescription(`${skikppedVideos >= 2 ? `${skikppedVideos} videos` : `${skikppedVideos} video`} are skipped because it's a private video`)
+                        .setDescription(`${skippedVideos >= 2 ? `${skippedVideos} videos` : `${skippedVideos} video`} are skipped because it's a private video`)
                         .setColor("#FFFF00")
                 ).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
@@ -107,7 +106,7 @@ export default class PlayCommand extends BaseCommand {
                 }
                 const videoIndex = parseInt(response.first()?.content as string, 10);
                 // eslint-disable-next-line no-var
-                video = await this.client.youtube.getVideo(`https://youtube.com/watch?v=${videos[videoIndex - 1].id}`);
+                video = await this.client.youtube.getVideoByID(videos[videoIndex - 1].id);
             } catch (err) {
                 this.client.logger.error("YT_SEARCH_ERR: ", err);
                 return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
@@ -120,7 +119,7 @@ export default class PlayCommand extends BaseCommand {
         const song: ISong = {
             id: video.id,
             title: this.cleanTitle(video.title),
-            url: `https://youtube.com/watch?v=${video.id}`
+            url: video.url
         };
         if (message.guild?.queue) {
             if (!this.client.config.allowDuplicate && message.guild.queue.songs.find(s => s.id === song.id)) {

@@ -1,19 +1,30 @@
+import { formatISODuration } from "date-fns";
 import type { YoutubeAPI } from "..";
-import type { Thumbnails } from "../types/Thumbnails";
+import type { IVideo } from "../types/Video";
 
-export class Video {
-    public id: string;
-    public url: string;
-    public publishedAt!: string;
-    public channelId!: string;
-    public title!: string;
-    public description!: string;
-    public thumbnails!: Thumbnails;
-    public channelTitle!: string;
-    public tags!: ReadonlyArray<string>;
-    public constructor(public yt: YoutubeAPI, raw: any) {
+export class Video implements IVideo {
+    public id: IVideo["id"];
+    public url: IVideo["url"];
+    public title: IVideo["title"];
+    public description: IVideo["description"];
+    public channel: IVideo["channel"];
+    public thumbnails: IVideo["thumbnails"];
+    public duration: IVideo["duration"];
+    public status: IVideo["status"];
+    public publishedAt: IVideo["publishedAt"];
+    public constructor(public yt: YoutubeAPI, public raw: IVideo["raw"]) {
         this.id = raw.id;
-        this.url = `https://youtube.com/playlist?list=${this.id}`;
-        Object.assign(this, raw.snippet);
+        this.url = `https://youtube.com/watch?v=${raw.id}`;
+        this.title = raw.snippet.title;
+        this.description = raw.snippet.description;
+        this.channel = {
+            id: raw.snippet.channelID,
+            name: raw.snippet.channelTitle,
+            url: `https://www.youtube.com/channel/${raw.snippet.channelID}`
+        };
+        this.thumbnails = raw.snippet.thumbnails;
+        this.duration = formatISODuration(raw.contentDetails.duration as Duration);
+        this.status = raw.status;
+        this.publishedAt = new Date(raw.snippet.publishedAt);
     }
 }
