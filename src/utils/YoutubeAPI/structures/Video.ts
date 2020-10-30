@@ -1,6 +1,5 @@
-import { formatISODuration } from "date-fns";
 import type { YoutubeAPI } from "..";
-import type { IVideo } from "../types/Video";
+import type { IVideo } from "../types";
 
 export class Video implements IVideo {
     public id: IVideo["id"];
@@ -18,12 +17,12 @@ export class Video implements IVideo {
         this.title = raw.snippet.title;
         this.description = raw.snippet.description;
         this.channel = {
-            id: raw.snippet.channelID,
+            id: raw.snippet.channelId,
             name: raw.snippet.channelTitle,
-            url: `https://www.youtube.com/channel/${raw.snippet.channelID}`
+            url: `https://www.youtube.com/channel/${raw.snippet.channelId}`
         };
         this.thumbnails = raw.snippet.thumbnails;
-        this.duration = formatISODuration(raw.contentDetails.duration as Duration);
+        this.duration = raw.contentDetails.duration.toString();
         this.status = raw.status;
         this.publishedAt = new Date(raw.snippet.publishedAt);
     }

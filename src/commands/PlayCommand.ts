@@ -46,17 +46,18 @@ export default class PlayCommand extends BaseCommand {
         }
 
         if (/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/.exec(url)) {
-            const playlist = await this.client.youtube.getPlaylist(url);
+            const playlist = await this.client.youtube.getPlaylistByURL(url);
             const videos = await playlist.getVideos();
             let skippedVideos = 0;
             message.channel.send(new MessageEmbed().setDescription(`Adding all videos in playlist: **[${playlist.title}](${playlist.url})**, Hang on...`).setColor("#00FF00"))
                 .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             for (const video of Object.values(videos)) {
-                if (video.status.privacyStatus === "private") {
+                if (video.privacyStatus === "private") {
                     skippedVideos++;
                     continue;
                 } else {
-                    await this.handleVideo(video, message, voiceChannel, true);
+                    const video2 = await this.client.youtube.getVideo(video.id);
+                    await this.handleVideo(video2, message, voiceChannel, true);
                 }
             }
             if (skippedVideos !== 0) {
@@ -70,10 +71,10 @@ export default class PlayCommand extends BaseCommand {
         }
         try {
             // eslint-disable-next-line no-var, block-scoped-var
-            var video = await this.client.youtube.getVideo(url);
+            var video = await this.client.youtube.getVideoByURL(url);
         } catch (e) {
             try {
-                const videos = await this.client.youtube.searchVideos(searchString, 12);
+                const videos = await this.client.youtube.searchVideos(searchString, 20);
                 if (videos.length === 0) return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
                 let index = 0;
                 const msg = await message.channel.send(new MessageEmbed()
@@ -96,7 +97,7 @@ export default class PlayCommand extends BaseCommand {
                         errors: ["time"]
                     });
                     msg.delete().catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
-                    response.first()?.delete({ timeout: 3000 }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                    response.first()?.delete({ timeout: 3000 }).catch(e => e); // do nothing
                 } catch (error) {
                     msg.delete().catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                     return message.channel.send(new MessageEmbed().setDescription("No or invalid value entered, song selection canceled.").setColor("#FF0000"));
@@ -106,7 +107,7 @@ export default class PlayCommand extends BaseCommand {
                 }
                 const videoIndex = parseInt(response.first()?.content as string, 10);
                 // eslint-disable-next-line no-var
-                video = await this.client.youtube.getVideoByID(videos[videoIndex - 1].id);
+                video = await this.client.youtube.getVideo(videos[videoIndex - 1].id);
             } catch (err) {
                 this.client.logger.error("YT_SEARCH_ERR: ", err);
                 return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
