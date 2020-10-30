@@ -74,7 +74,7 @@ export default class PlayCommand extends BaseCommand {
             var video = await this.client.youtube.getVideoByURL(url);
         } catch (e) {
             try {
-                const videos = await this.client.youtube.searchVideos(searchString, 20);
+                const videos = await this.client.youtube.searchVideos(searchString, 12);
                 if (videos.length === 0) return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
                 let index = 0;
                 const msg = await message.channel.send(new MessageEmbed()
