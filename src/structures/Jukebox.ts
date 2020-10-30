@@ -2,7 +2,7 @@
 import type { ClientOptions } from "discord.js";
 import { Client } from "discord.js";
 import { resolve } from "path";
-import config from "../config";
+import * as config from "../config";
 import { createLogger } from "../utils/Logger";
 import CommandsHandler from "../utils/CommandsHandler";
 import ListenerLoader from "../utils/ListenerLoader";
@@ -15,7 +15,7 @@ import "./Guild";
 
 export default class Jukebox extends Client {
     public readonly config = config;
-    public readonly logger = createLogger(config.name, true);
+    public readonly logger = createLogger(config.name, config.debug);
     public readonly youtube = new YouTube(process.env.YT_API_KEY!, { cache: false, fetchAll: true });
     public readonly CommandsHandler = new CommandsHandler(this, resolve(__dirname, "..", "commands"));
     public readonly ListenerLoader = new ListenerLoader(this, resolve(__dirname, "..", "listeners"));
