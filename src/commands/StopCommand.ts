@@ -21,8 +21,6 @@ export default class StopCommand extends BaseCommand {
             );
         }
 
-        message.guild.queue.songs.clear();
-        message.guild.queue.connection?.dispatcher.end();
         message.guild.queue.voiceChannel.leave();
         message.guild.queue = null;
 
