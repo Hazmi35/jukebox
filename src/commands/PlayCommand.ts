@@ -1,6 +1,4 @@
-/* eslint-disable block-scoped-var */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-// TODO: Find or create typings for simple-youtube-api or wait for v6 released and then remove no-extra-parens
+/* eslint-disable block-scoped-var, @typescript-eslint/restrict-template-expressions */
 import BaseCommand from "../structures/BaseCommand";
 import ServerQueue from "../structures/ServerQueue";
 import ytdl from "../utils/YoutubeDownload";
@@ -9,6 +7,7 @@ import { decodeHTML } from "entities";
 import type { VoiceChannel } from "discord.js";
 import type Jukebox from "../structures/Jukebox";
 import type { IMessage, ISong, IGuild } from "../../typings";
+import type { Video } from "../utils/YoutubeAPI/structures/Video";
 
 export default class PlayCommand extends BaseCommand {
     public constructor(public client: Jukebox, public readonly path: string) {
@@ -57,7 +56,7 @@ export default class PlayCommand extends BaseCommand {
                     skikppedVideos++;
                     continue;
                 } else {
-                    const video2 = await this.client.youtube.getVideoByID((video as any).id); // TODO: Find or create typings for simple-youtube-api or wait for v6 released
+                    const video2 = await this.client.youtube.getVideo(`https://youtube.com/watch?v=${video.id}`);
                     await this.handleVideo(video2, message, voiceChannel, true);
                 }
             }
@@ -79,8 +78,8 @@ export default class PlayCommand extends BaseCommand {
                 if (videos.length === 0) return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
                 let index = 0;
                 const msg = await message.channel.send(new MessageEmbed()
-                    .setAuthor("Song Selection") // TODO: Find or create typings for simple-youtube-api or wait for v6 released
-                    .setDescription(`${videos.map((video: any) => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
+                    .setAuthor("Song Selection")
+                    .setDescription(`${videos.map(video => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
                         "*Type `cancel` or `c` to cancel song selection*")
                     .setThumbnail(message.client.user?.displayAvatarURL() as string)
                     .setColor("#00FF00")
@@ -108,7 +107,7 @@ export default class PlayCommand extends BaseCommand {
                 }
                 const videoIndex = parseInt(response.first()?.content as string, 10);
                 // eslint-disable-next-line no-var
-                video = await this.client.youtube.getVideoByID(videos[videoIndex - 1].id);
+                video = await this.client.youtube.getVideo(`https://youtube.com/watch?v=${videos[videoIndex - 1].id}`);
             } catch (err) {
                 this.client.logger.error("YT_SEARCH_ERR: ", err);
                 return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
@@ -117,7 +116,7 @@ export default class PlayCommand extends BaseCommand {
         return this.handleVideo(video, message, voiceChannel);
     }
 
-    private async handleVideo(video: any, message: IMessage, voiceChannel: VoiceChannel, playlist = false): Promise<any> { // TODO: Find or create typings for simple-youtube-api or wait for v6 released
+    private async handleVideo(video: Video, message: IMessage, voiceChannel: VoiceChannel, playlist = false): Promise<any> {
         const song: ISong = {
             id: video.id,
             title: this.cleanTitle(video.title),
