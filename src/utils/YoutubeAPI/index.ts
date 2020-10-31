@@ -34,7 +34,15 @@ export class YoutubeAPI {
     }
 
     public async searchVideos(q: string, maxResults = 5): Promise<Video[]> {
-        const { items }: any = await this.request.get("search", { searchParams: { maxResults, part: "snippet", q, safeSearch: "none", type: "video" } }).json();
-        return items.map((i: any) => new Video(this, i, "searchResults"));
+        let pageToken: string | null = "";
+        const videos = [];
+        while (videos.length !== maxResults) {
+            let searchParams = { maxResults, part: "snippet", q, safeSearch: "none", type: "video" };
+            if (pageToken !== null) searchParams = Object.assign(searchParams, { pageToken });
+            const raw: any = await this.request.get("search", { searchParams: { maxResults, part: "snippet", q, safeSearch: "none", type: "video" } }).json();
+            pageToken = raw.nextPageToken;
+            for (const item of raw.items) { videos.push(item); }
+        }
+        return videos.map((i: any) => new Video(this, i, "searchResults"));
     }
 }
