@@ -63,10 +63,11 @@ export default class PlayCommand extends BaseCommand {
             if (skippedVideos !== 0) {
                 message.channel.send(
                     new MessageEmbed()
-                        .setDescription(`${skippedVideos >= 2 ? `${skippedVideos} videos` : `${skippedVideos} video`} are skipped because it's a private video`)
+                        .setDescription(`${skippedVideos} ${skippedVideos >= 2 ? `videos` : `video`} are skipped because it's a private video`)
                         .setColor("#FFFF00")
                 ).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
+            if (skippedVideos === playlist.itemCount) return message.channel.send(new MessageEmbed().setDescription(`Failed to load playlist **[${playlist.title}](${playlist.url})** because all of the items are private videos`).setColor("#FFFF00"));
             return message.channel.send(new MessageEmbed().setDescription(`All videos in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`).setColor("#00FF00"));
         }
         try {
