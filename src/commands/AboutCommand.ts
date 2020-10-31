@@ -20,7 +20,7 @@ export default class AboutCommand extends BaseCommand {
             .setAuthor(`${this.client.user?.username as string} - Just a simple Discord music bot.`)
             .setDescription(`
 \`\`\`asciidoc
-Users count         :: ${await this.client.getUsersCount()}
+Cached users count  :: ${await this.client.getUsersCount()}
 Channels count      :: ${await this.client.getChannelsCount()}
 Guilds count        :: ${await this.client.getGuildsCount()}
 Shards count        :: ${this.client.shard ? `${this.client.shard.count}` : "N/A"}
