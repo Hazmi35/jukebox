@@ -1,6 +1,6 @@
 import type { YoutubeAPI } from "..";
-import type { IPlaylist, IPlaylistItems } from "../types";
-import { PlaylistItems } from "./PlaylistItems";
+import type { IPlaylist, IVideo } from "../types";
+import { Video } from "./Video";
 
 export class Playlist implements IPlaylist {
     public id: IPlaylist["id"];
@@ -28,16 +28,16 @@ export class Playlist implements IPlaylist {
         this.createdAt = new Date(raw.snippet.publishedAt);
     }
 
-    public async getVideos(): Promise<IPlaylistItems[]> {
-        const videos: IPlaylistItems[] = [];
+    public async getVideos(): Promise<IVideo[]> {
+        const videos: IVideo[] = [];
         let pageToken: string | null = "";
         while (videos.length !== this.itemCount) {
             let searchParams = { playlistId: this.id, maxResults: 50 };
             if (pageToken !== null) searchParams = Object.assign(searchParams, { pageToken });
             const raw: any = await this.yt.request.get("playlistItems", { searchParams }).json();
             pageToken = raw.nextPageToken;
-            for (const item of raw.items) { videos.push(new PlaylistItems(this, item)); }
+            for (const item of raw.items) { videos.push(item); }
         }
-        return videos;
+        return videos.map((i: any) => new Video(this.yt, i, "playlistItem"));
     }
 }

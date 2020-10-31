@@ -1,3 +1,4 @@
+import duration from "iso8601-duration";
 import type { YoutubeAPI } from "..";
 import type { IVideo } from "../types";
 
@@ -11,8 +12,10 @@ export class Video implements IVideo {
     public duration: IVideo["duration"];
     public status: IVideo["status"];
     public publishedAt: IVideo["publishedAt"];
-    public constructor(public yt: YoutubeAPI, public raw: IVideo["raw"]) {
-        this.id = raw.id;
+    public constructor(public yt: YoutubeAPI, public raw: IVideo["raw"], type: "video" | "playlistItem" | "searchResults" = "video") {
+        this.id = type === "video"
+            ? raw.id
+            : type === "playlistItem" ? (raw as any).snippet.resourceId.videoId : (raw as any).id.videoId;
         this.url = `https://youtube.com/watch?v=${raw.id}`;
         this.title = raw.snippet.title;
         this.description = raw.snippet.description;
@@ -22,7 +25,7 @@ export class Video implements IVideo {
             url: `https://www.youtube.com/channel/${raw.snippet.channelId}`
         };
         this.thumbnails = raw.snippet.thumbnails;
-        this.duration = raw.contentDetails.duration.toString();
+        this.duration = raw.contentDetails?.duration ? duration.parse(raw.contentDetails.duration) : null;
         this.status = raw.status;
         this.publishedAt = new Date(raw.snippet.publishedAt);
     }

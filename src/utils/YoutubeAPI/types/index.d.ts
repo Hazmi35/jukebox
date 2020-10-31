@@ -1,3 +1,5 @@
+import type { Duration } from "iso8601-duration";
+
 export type privacyStatus = "public" | "private" | "unlisted";
 export type uploadStatus = "deleted" | "failed" | "processed" | "rejected" | "uploaded";
 export type failureReason = "codec" | "conversion" | "emptyFile" | "invalidFile" | "tooSmall" | "uploadAborted";
@@ -44,8 +46,8 @@ export interface IVideo {
             thumbnails: IThumbnails;
             channelTitle: string;
         };
-        contentDetails: {
-            duration: Date;
+        contentDetails?: {
+            duration?: string;
         };
         status: {
             uploadStatus: uploadStatus;
@@ -64,7 +66,7 @@ export interface IVideo {
         url: string;
     };
     thumbnails: IThumbnails;
-    duration: string; // TODO: Try to parse ISO 8601 Duration (https://en.wikipedia.org/wiki/ISO_8601#Durations) with date-fns
+    duration: Duration | null; // TODO: Parse this with date-fns (https://github.com/date-fns/date-fns/discussions/2064)
     status: {
         uploadStatus: uploadStatus;
         failureReason: failureReason;
@@ -105,37 +107,4 @@ export interface IPlaylist {
     itemCount: number;
     privacyStatus: privacyStatus;
     createdAt: Date;
-}
-
-export interface IPlaylistItems {
-    raw: {
-        kind: string;
-        etag: string;
-        id: string;
-        snippet: {
-            publishedAt: Date;
-            position: string;
-            channelId: string;
-            title: string;
-            description: string;
-            thumbnails: IThumbnails;
-            channelTitle: string;
-        };
-        contentDetails: { videoId: string; videoPublishedAt: string };
-        status: { privacyStatus: privacyStatus };
-    };
-    addedAt: Date;
-    id: string;
-    url: string;
-    title: string;
-    description: string;
-    channel: {
-        id: string;
-        name: string;
-        url: string;
-    };
-    thumbnails: IThumbnails;
-    privacyStatus: privacyStatus;
-    publishedAt: Date;
-    position: string;
 }

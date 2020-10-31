@@ -52,7 +52,7 @@ export default class PlayCommand extends BaseCommand {
             message.channel.send(new MessageEmbed().setDescription(`Adding all videos in playlist: **[${playlist.title}](${playlist.url})**, Hang on...`).setColor("#00FF00"))
                 .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             for (const video of Object.values(videos)) {
-                if (video.privacyStatus === "private") {
+                if (video.status.privacyStatus === "private") {
                     skippedVideos++;
                     continue;
                 } else {
