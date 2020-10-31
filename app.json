@@ -49,7 +49,7 @@
             "description": "What type of status does the bot use (playing, listening, or watching) (default: listening)"
         },
         "CONFIG_STATUS_ACTIVITY": {
-            "description": "What status does the bot display (default: this one) (available variables: guildsCount, usersCount, playingCount, and botPrefix)\nNOTE ON {usersCount} VARIABLE: This only displays cached usersCount, to get full usersCount, please enable CONFIG_FETCH_ALL_USERS"
+            "description": "What status does the bot display (default: this one) (available variables: guildsCount, usersCount, playingCount, and botPrefix)<br>NOTE ON {usersCount} VARIABLE: This only displays cached usersCount, to get full usersCount, please enable CONFIG_FETCH_ALL_USERS"
         },
         "CONFIG_FETCH_ALL_USERS": {
             "description": "Whether to fetch all users on startup (warning: increased memory usage especially for bots with large users) (default: no)"
