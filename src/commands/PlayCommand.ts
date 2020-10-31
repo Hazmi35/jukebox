@@ -42,7 +42,7 @@ export default class PlayCommand extends BaseCommand {
 
         if (message.guild?.queue !== null && voiceChannel.id !== message.guild?.queue.voiceChannel?.id) {
             return message.channel.send(new MessageEmbed()
-                .setDescription(`Music is on this server is already playing on: **${message.guild?.queue.voiceChannel?.name}** voice channel`)
+                .setDescription(`Music on this server is already playing to: **${message.guild?.queue.voiceChannel?.name}** voice channel`)
                 .setColor("#FFFF00"));
         }
 
