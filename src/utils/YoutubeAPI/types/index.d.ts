@@ -66,7 +66,7 @@ export interface IVideo {
         url: string;
     };
     thumbnails: IThumbnails;
-    duration: Duration | null; // TODO: Parse this with date-fns (https://github.com/date-fns/date-fns/discussions/2064)
+    duration: Duration | null; // NOTE: Parse this with date-fns (https://github.com/date-fns/date-fns/discussions/2064)
     status: {
         uploadStatus: uploadStatus;
         failureReason: failureReason;
