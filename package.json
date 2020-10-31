@@ -2,7 +2,7 @@
   "name": "jukebox",
   "version": "4.2.0",
   "private": true,
-  "description": " Just a simple Discord music bot.",
+  "description": "Just a simple Discord music bot.",
   "homepage": "https://github.com/Hazmi35/jukebox#readme",
   "bugs": {
     "url": "https://github.com/Hazmi35/jukebox/issues"
