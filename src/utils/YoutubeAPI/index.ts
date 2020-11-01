@@ -41,9 +41,13 @@ export class YoutubeAPI {
         while (videos.length !== maxResults) {
             let searchParams = { maxResults, part: "snippet", q, safeSearch: "none", type: "video" };
             if (pageToken !== null) searchParams = Object.assign(searchParams, { pageToken });
-            const raw: bodyAny = await this.request.get("search", { searchParams: { maxResults, part: "snippet", q, safeSearch: "none", type: "video" } });
-            pageToken = raw.body.nextPageToken;
-            for (const item of raw.body.items) { videos.push(item); }
+            try {
+                const raw: bodyAny = await this.request.get("search", { searchParams: { maxResults, part: "snippet", q, safeSearch: "none", type: "video" } });
+                pageToken = raw.body.nextPageToken;
+                for (const item of raw.body.items) { videos.push(item); }
+            } catch (error) {
+                throw new Error(error);
+            }
         }
         return videos.map((i: any) => new Video(this, i, "searchResults"));
     }

@@ -34,9 +34,13 @@ export class Playlist implements IPlaylist {
         while (videos.length !== this.itemCount) {
             let searchParams = { playlistId: this.id, maxResults: 50 };
             if (pageToken !== null) searchParams = Object.assign(searchParams, { pageToken });
-            const raw: bodyAny = await this.yt.request.get("playlistItems", { searchParams });
-            pageToken = raw.body.nextPageToken;
-            for (const item of raw.body.items) { videos.push(item); }
+            try {
+                const raw: bodyAny = await this.yt.request.get("playlistItems", { searchParams });
+                pageToken = raw.body.nextPageToken;
+                for (const item of raw.body.items) { videos.push(item); }
+            } catch (error) {
+                throw new Error(error);
+            }
         }
         return videos.map((i: any) => new Video(this.yt, i, "playlistItem"));
     }
