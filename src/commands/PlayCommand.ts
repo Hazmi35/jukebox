@@ -110,7 +110,7 @@ export default class PlayCommand extends BaseCommand {
                 // eslint-disable-next-line no-var
                 video = await this.client.youtube.getVideo(videos[videoIndex - 1].id);
             } catch (err) {
-                this.client.logger.error("YT_SEARCH_ERR: ", err);
+                this.client.logger.error("YT_SEARCH_ERR:", err);
                 return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
             }
         }

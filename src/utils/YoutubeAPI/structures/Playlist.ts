@@ -1,4 +1,4 @@
-import type { YoutubeAPI } from "..";
+import type { YoutubeAPI, bodyAny } from "..";
 import type { IPlaylist, IVideo } from "../types";
 import { Video } from "./Video";
 
@@ -34,9 +34,9 @@ export class Playlist implements IPlaylist {
         while (videos.length !== this.itemCount) {
             let searchParams = { playlistId: this.id, maxResults: 50 };
             if (pageToken !== null) searchParams = Object.assign(searchParams, { pageToken });
-            const raw: any = await this.yt.request.get("playlistItems", { searchParams }).json();
-            pageToken = raw.nextPageToken;
-            for (const item of raw.items) { videos.push(item); }
+            const raw: bodyAny = await this.yt.request.get("playlistItems", { searchParams });
+            pageToken = raw.body.nextPageToken;
+            for (const item of raw.body.items) { videos.push(item); }
         }
         return videos.map((i: any) => new Video(this.yt, i, "playlistItem"));
     }

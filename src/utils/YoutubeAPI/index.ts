@@ -3,19 +3,21 @@ import URL from "url";
 import querystring from "querystring";
 import { Playlist } from "./structures/Playlist";
 import { Video } from "./structures/Video";
+import type { Response } from "got";
 
 export class YoutubeAPI {
     public readonly request = got;
     public constructor(key: string) {
         this.request = got.extend({
             prefixUrl: "https://www.googleapis.com/youtube/v3/",
-            searchParams: { key, part: "snippet,id,status,contentDetails" }
+            searchParams: { key, part: "snippet,id,status,contentDetails" },
+            responseType: "json"
         });
     }
 
     public async getVideo(id: string): Promise<Video> {
-        const raw: any = await this.request.get("videos", { searchParams: { id, maxResults: 1 } }).json();
-        return new Video(this, raw.items[0]);
+        const raw: bodyAny = await this.request.get("videos", { searchParams: { id, maxResults: 1 } });
+        return new Video(this, await raw.body.items[0]);
     }
 
     public getVideoByURL(url: string): Promise<Video> {
@@ -24,8 +26,8 @@ export class YoutubeAPI {
     }
 
     public async getPlaylist(id: string): Promise<Playlist> {
-        const raw: any = await this.request.get("playlists", { searchParams: { id, maxResults: 1 } }).json();
-        return new Playlist(this, raw.items[0]);
+        const raw: bodyAny = await this.request.get("playlists", { searchParams: { id, maxResults: 1 } });
+        return new Playlist(this, raw.body.items[0]);
     }
 
     public getPlaylistByURL(url: string): Promise<Playlist> {
@@ -39,10 +41,14 @@ export class YoutubeAPI {
         while (videos.length !== maxResults) {
             let searchParams = { maxResults, part: "snippet", q, safeSearch: "none", type: "video" };
             if (pageToken !== null) searchParams = Object.assign(searchParams, { pageToken });
-            const raw: any = await this.request.get("search", { searchParams: { maxResults, part: "snippet", q, safeSearch: "none", type: "video" } }).json();
-            pageToken = raw.nextPageToken;
-            for (const item of raw.items) { videos.push(item); }
+            const raw: bodyAny = await this.request.get("search", { searchParams: { maxResults, part: "snippet", q, safeSearch: "none", type: "video" } });
+            pageToken = raw.body.nextPageToken;
+            for (const item of raw.body.items) { videos.push(item); }
         }
         return videos.map((i: any) => new Video(this, i, "searchResults"));
     }
+}
+
+export interface bodyAny extends Response<string> {
+    body: any;
 }
