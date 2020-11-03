@@ -43,7 +43,7 @@ $ npm install
 # or with yarn
 $ yarn install
 ```
-For optional packages, you need to install build tools as stated [here](https://github.com/nodejs/node-gyp#installation)
+For optional packages, you need to install build tools as stated [here](https://github.com/nodejs/node-gyp#installation) and you also need to install [Git](https://git-scm.com/)
 
 ## Docker
 Want to use Dockerized version of jukebox? sure! we provide them on the [Docker Hub](https://hub.docker.com/r/hazmi35/jukebox)
