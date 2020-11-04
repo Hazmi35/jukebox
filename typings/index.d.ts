@@ -1,5 +1,5 @@
-import type { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection, ClientEvents, VoiceState } from "discord.js";
-import type Jukebox from "../src/structures/Jukebox";
+import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection, ClientEvents, VoiceState } from "discord.js";
+import Jukebox from "../src/structures/Jukebox";
 
 export interface CommandComponent {
     conf: {

@@ -1,5 +1,5 @@
-import type { ClientEventListener } from "../../typings";
-import type Jukebox from "../structures/Jukebox";
+import { ClientEventListener } from "../../typings";
+import Jukebox from "../structures/Jukebox";
 
 export default class WarnEvent implements ClientEventListener {
     public readonly name = "warn";
