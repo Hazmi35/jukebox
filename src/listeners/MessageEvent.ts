@@ -1,6 +1,6 @@
 import { MessageEmbed } from "discord.js";
-import type Jukebox from "../structures/Jukebox";
-import type { IMessage, ClientEventListener } from "../../typings";
+import Jukebox from "../structures/Jukebox";
+import { IMessage, ClientEventListener } from "../../typings";
 
 export default class MessageEvent implements ClientEventListener {
     public readonly name = "message";

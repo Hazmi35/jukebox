@@ -2,12 +2,11 @@
 import BaseCommand from "../structures/BaseCommand";
 import ServerQueue from "../structures/ServerQueue";
 import ytdl from "../utils/YoutubeDownload";
-import { Util, MessageEmbed } from "discord.js";
+import { Util, MessageEmbed, VoiceChannel } from "discord.js";
 import { decodeHTML } from "entities";
-import type { VoiceChannel } from "discord.js";
-import type Jukebox from "../structures/Jukebox";
-import type { IMessage, ISong, IGuild } from "../../typings";
-import type { Video } from "../utils/YoutubeAPI/structures/Video";
+import Jukebox from "../structures/Jukebox";
+import { IMessage, ISong, IGuild } from "../../typings";
+import { Video } from "../utils/YoutubeAPI/structures/Video";
 
 export default class PlayCommand extends BaseCommand {
     public constructor(public client: Jukebox, public readonly path: string) {

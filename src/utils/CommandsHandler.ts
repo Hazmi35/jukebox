@@ -1,9 +1,8 @@
 import { promises as fs } from "fs";
 import { resolve } from "path";
-import type { Message, Snowflake } from "discord.js";
-import { Collection } from "discord.js";
-import type Jukebox from "../structures/Jukebox";
-import type { CommandComponent } from "../../typings";
+import { Message, Snowflake, Collection } from "discord.js";
+import Jukebox from "../structures/Jukebox";
+import { CommandComponent } from "../../typings";
 
 export default class CommandsHandler {
     public readonly commands: Collection<string, CommandComponent> = new Collection();

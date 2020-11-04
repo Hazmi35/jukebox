@@ -3,8 +3,8 @@ import { MessageEmbed, version } from "discord.js";
 import { uptime as osUptime } from "os";
 import path from "path";
 import { formatMS } from "../utils/formatMS";
-import type Jukebox from "../structures/Jukebox";
-import type { IMessage } from "../../typings";
+import Jukebox from "../structures/Jukebox";
+import { IMessage } from "../../typings";
 
 export default class AboutCommand extends BaseCommand {
     public constructor(public client: Jukebox, public readonly path: string) {
