@@ -1,5 +1,4 @@
 import { MessageEmbed } from "discord.js";
-import type { Snowflake } from "discord.js";
 import type Jukebox from "../structures/Jukebox";
 import type { IMessage, ClientEventListener } from "../../typings";
 
@@ -10,7 +9,7 @@ export default class MessageEvent implements ClientEventListener {
     public execute(message: IMessage): any {
         if (message.author.bot) return message;
         if (message.channel.type === "dm") return message;
-        if (message.mentions.users.has(this.client.user?.id as Snowflake)) {
+        if (message.content === message.guild?.me?.toString()) {
             return message.channel.send(
                 new MessageEmbed().setDescription(`Hi, I'm a simple music bot, see my commands with \`${this.client.config.prefix}help\``).setColor("#00FF00")
             );
