@@ -1,12 +1,11 @@
 /* eslint-disable no-underscore-dangle, @typescript-eslint/unbound-method, @typescript-eslint/restrict-plus-operands */
-import { Client, Collection } from "discord.js";
+import { Client, Collection, ClientOptions } from "discord.js";
 import { resolve } from "path";
 import * as config from "../config";
 import { createLogger } from "../utils/Logger";
 import CommandsHandler from "../utils/CommandsHandler";
 import ListenerLoader from "../utils/ListenerLoader";
 import { YoutubeAPI } from "../utils/YoutubeAPI";
-import type { ClientOptions } from "discord.js";
 
 // Extends DiscordJS Structures
 import "./Guild";

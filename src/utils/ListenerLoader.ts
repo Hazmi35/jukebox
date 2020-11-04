@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import { resolve } from "path";
-import type Jukebox from "../structures/Jukebox";
-import type { ClientEventListener } from "../../typings";
+import Jukebox from "../structures/Jukebox";
+import { ClientEventListener } from "../../typings";
 
 export default class ListenerLoader {
     public constructor(public client: Jukebox, public readonly path: string) {}
