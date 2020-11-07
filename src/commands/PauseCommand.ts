@@ -1,16 +1,16 @@
 import BaseCommand from "../structures/BaseCommand";
 import { MessageEmbed } from "discord.js";
-import { IMessage } from "../../typings";
+import { ICommandComponent, IMessage } from "../../typings";
 import Jukebox from "../structures/Jukebox";
+import { DefineCommand } from "../utils/decorators/DefineCommand";
 
+@DefineCommand({
+    name: "pause",
+    description: "Pause the current song.",
+    usage: "{prefix}pause"
+})
 export default class PauseCommand extends BaseCommand {
-    public constructor(client: Jukebox, public readonly path: string) {
-        super(client, path, {}, {
-            name: "pause",
-            description: "Pause the current song.",
-            usage: "{prefix}pause"
-        });
-    }
+    public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
 
     public execute(message: IMessage): any {
         if (!message.member?.voice.channel) return message.channel.send(new MessageEmbed().setDescription("You're not in a voice channel").setColor("#FFFF00"));

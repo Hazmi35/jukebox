@@ -1,14 +1,12 @@
 import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection, ClientEvents, VoiceState } from "discord.js";
 import Jukebox from "../src/structures/Jukebox";
 
-export interface CommandComponent {
-    conf: {
+export interface ICommandComponent {
+    meta: {
         aliases?: string[];
         cooldown?: number;
         disable?: boolean;
         path?: string;
-    };
-    help: {
         name: string;
         description?: string;
         usage?: string;

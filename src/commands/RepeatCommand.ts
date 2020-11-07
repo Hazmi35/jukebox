@@ -1,18 +1,17 @@
 import BaseCommand from "../structures/BaseCommand";
 import { MessageEmbed } from "discord.js";
-import { IMessage } from "../../typings";
+import { ICommandComponent, IMessage } from "../../typings";
 import Jukebox from "../structures/Jukebox";
+import { DefineCommand } from "../utils/decorators/DefineCommand";
 
+@DefineCommand({
+    aliases: ["loop", "music-loop", "music-repeat"],
+    name: "repeat",
+    description: "Repeat current song or queue",
+    usage: "{prefix}repeat <all | one | disable>"
+})
 export default class RepeatCommand extends BaseCommand {
-    public constructor(public client: Jukebox, public readonly path: string) {
-        super(client, path, {
-            aliases: ["loop", "music-loop", "music-repeat"]
-        }, {
-            name: "repeat",
-            description: "Repeat current song or queue",
-            usage: "{prefix}repeat <all | one | disable>"
-        });
-    }
+    public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
 
     public execute(message: IMessage, args: string[]): any {
         const mode = args[0];
@@ -33,6 +32,6 @@ export default class RepeatCommand extends BaseCommand {
             message.guild.queue.loopMode = 0;
             return message.channel.send(new MessageEmbed().setDescription("▶ Repeating disabled.").setColor("#00FF00"));
         }
-        message.channel.send(`Invalid value, see \`${this.client.config.prefix}help ${this.help.name}\` for more info!`).catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
+        message.channel.send(`Invalid value, see \`${this.client.config.prefix}help ${this.meta.name}\` for more info!`).catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
     }
 }
