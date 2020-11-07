@@ -8,6 +8,7 @@ import Jukebox from "../structures/Jukebox";
 import { IMessage, ISong, IGuild, ICommandComponent } from "../../typings";
 import { Video } from "../utils/YoutubeAPI/structures/Video";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
+import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
@@ -18,19 +19,11 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
 export default class PlayCommand extends BaseCommand {
     public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
 
+    @isUserInTheVoiceChannel()
+    @isValidVoiceChannel()
+    @isSameVoiceChannel()
     public async execute(message: IMessage, args: string[]): Promise<any> {
-        const voiceChannel = message.member?.voice.channel;
-        if (!voiceChannel) return message.channel.send(new MessageEmbed().setDescription("I'm sorry but you need to be in a voice channel to play music").setColor("#FFFF00"));
-        if (!voiceChannel.joinable) {
-            return message.channel.send(
-                new MessageEmbed().setDescription("I'm sorry but I can't connect to your voice channel, make sure I have the proper permissions!").setColor("#FF0000")
-            );
-        }
-        if (!voiceChannel.speakable) {
-            voiceChannel.leave();
-            return message.channel.send(new MessageEmbed().setDescription("I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions")
-                .setColor("#FF0000"));
-        }
+        const voiceChannel = message.member!.voice.channel!;
         if (!args[0]) {
             return message.channel.send(
                 new MessageEmbed().setDescription(`Invalid args, type \`${this.client.config.prefix}help play\` for more info`).setColor("#00FF00")

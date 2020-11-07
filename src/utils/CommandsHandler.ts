@@ -2,7 +2,7 @@ import { promises as fs } from "fs";
 import { resolve } from "path";
 import { Message, Snowflake, Collection } from "discord.js";
 import Jukebox from "../structures/Jukebox";
-import { ICommandComponent } from "../../typings";
+import { ICommandComponent, IMessage } from "../../typings";
 
 export default class CommandsHandler {
     public readonly commands: Collection<string, ICommandComponent> = new Collection();
@@ -32,8 +32,8 @@ export default class CommandsHandler {
         return undefined;
     }
 
-    public handle(message: Message): any {
-        const args = message.content.substring(this.client.config.prefix.length).trim().split(/ +/g);
+    public handle(message: IMessage): any {
+        const args = message.content.substring(this.client.config.prefix.length).trim().split(/ +/);
         const cmd = args.shift()?.toLowerCase();
         const command = this.commands.get(cmd!) ?? this.commands.get(this.aliases.get(cmd!)!);
         if (!command || command.meta.disable) return undefined;
