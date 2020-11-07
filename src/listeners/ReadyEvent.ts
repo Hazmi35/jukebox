@@ -1,9 +1,10 @@
 import { ClientEventListener } from "../../typings";
 import Jukebox from "../structures/Jukebox";
+import { DefineListener } from "../utils/decorators/DefineListener";
 
+@DefineListener("ready")
 export default class ReadyEvent implements ClientEventListener {
-    public readonly name = "ready";
-    public constructor(private readonly client: Jukebox) {}
+    public constructor(private readonly client: Jukebox, public name: ClientEventListener["name"]) {}
 
     public execute(): void {
         this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} I'm ready to serve ${this.client.guilds.cache.size} guilds!`);

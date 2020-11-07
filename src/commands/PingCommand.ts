@@ -1,18 +1,17 @@
 import BaseCommand from "../structures/BaseCommand";
 import { MessageEmbed } from "discord.js";
-import { IMessage } from "../../typings";
+import { ICommandComponent, IMessage } from "../../typings";
 import Jukebox from "../structures/Jukebox";
+import { DefineCommand } from "../utils/decorators/DefineCommand";
 
+@DefineCommand({
+    aliases: ["pong", "peng", "pingpong"],
+    name: "ping",
+    description: "Shows the current ping of the bot.",
+    usage: "{prefix}ping"
+})
 export default class PingCommand extends BaseCommand {
-    public constructor(client: Jukebox, public readonly path: string) {
-        super(client, path, {
-            aliases: ["pong", "peng", "pingpong"]
-        }, {
-            name: "ping",
-            description: "Shows the current ping of the bot.",
-            usage: "{prefix}ping"
-        });
-    }
+    public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
 
     public execute(message: IMessage): IMessage {
         const before = Date.now();
