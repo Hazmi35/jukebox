@@ -5,17 +5,18 @@ import ytdl from "../utils/YoutubeDownload";
 import { Util, MessageEmbed, VoiceChannel } from "discord.js";
 import { decodeHTML } from "entities";
 import Jukebox from "../structures/Jukebox";
-import { IMessage, ISong, IGuild } from "../../typings";
+import { IMessage, ISong, IGuild, ICommandComponent } from "../../typings";
 import { Video } from "../utils/YoutubeAPI/structures/Video";
+import { DefineCommand } from "../utils/decorators/DefineCommand";
 
+@DefineCommand({
+    aliases: ["play-music", "add", "p"],
+    name: "play",
+    description: "Play some music",
+    usage: "{prefix}play <yt video or playlist link / yt video name>"
+})
 export default class PlayCommand extends BaseCommand {
-    public constructor(public client: Jukebox, public readonly path: string) {
-        super(client, path, { aliases: ["play-music", "add", "p"] }, {
-            name: "play",
-            description: "Play some music",
-            usage: "{prefix}play <yt video or playlist link / yt video name>"
-        });
-    }
+    public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
 
     public async execute(message: IMessage, args: string[]): Promise<any> {
         const voiceChannel = message.member?.voice.channel;

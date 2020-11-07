@@ -1,16 +1,17 @@
 import BaseCommand from "../structures/BaseCommand";
 import { MessageEmbed } from "discord.js";
-import { IMessage } from "../../typings";
+import { ICommandComponent, IMessage } from "../../typings";
 import Jukebox from "../structures/Jukebox";
+import { DefineCommand } from "../utils/decorators/DefineCommand";
 
+@DefineCommand({
+    aliases: ["vol"],
+    name: "volume",
+    description: "Show or change the music volume",
+    usage: "{prefix}volume [new volume]"
+})
 export default class VolumeCommand extends BaseCommand {
-    public constructor(public client: Jukebox, public readonly path: string) {
-        super(client, path, {}, {
-            name: "volume",
-            description: "Show or change the music volume",
-            usage: "{prefix}volume [new volume]"
-        });
-    }
+    public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
 
     public execute(message: IMessage, args: string[]): any {
         let volume = Number(args[0]);

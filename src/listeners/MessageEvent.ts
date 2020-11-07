@@ -1,10 +1,11 @@
 import { MessageEmbed } from "discord.js";
 import Jukebox from "../structures/Jukebox";
 import { IMessage, ClientEventListener } from "../../typings";
+import { DefineListener } from "../utils/decorators/DefineListener";
 
+@DefineListener("message")
 export default class MessageEvent implements ClientEventListener {
-    public readonly name = "message";
-    public constructor(private readonly client: Jukebox) {}
+    public constructor(private readonly client: Jukebox, public name: ClientEventListener["name"]) {}
 
     public execute(message: IMessage): any {
         if (message.author.bot) return message;

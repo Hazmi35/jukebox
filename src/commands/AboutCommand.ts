@@ -4,16 +4,17 @@ import { uptime as osUptime } from "os";
 import path from "path";
 import { formatMS } from "../utils/formatMS";
 import Jukebox from "../structures/Jukebox";
-import { IMessage } from "../../typings";
+import { ICommandComponent, IMessage } from "../../typings";
+import { DefineCommand } from "../utils/decorators/DefineCommand";
 
+@DefineCommand({
+    aliases: ["botinfo", "info", "stats"],
+    name: "about",
+    description: "Send the bot's info",
+    usage: "{prefix}about"
+})
 export default class AboutCommand extends BaseCommand {
-    public constructor(public client: Jukebox, public readonly path: string) {
-        super(client, path, { aliases: ["botinfo", "info", "stats"] }, {
-            name: "about",
-            description: "Send the bot's info",
-            usage: "{prefix}about"
-        });
-    }
+    public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
 
     public async execute(message: IMessage): Promise<void> {
         message.channel.send(new MessageEmbed()

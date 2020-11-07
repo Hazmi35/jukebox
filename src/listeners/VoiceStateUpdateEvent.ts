@@ -2,10 +2,11 @@ import { Snowflake, TextChannel, Collection, GuildMember, MessageEmbed } from "d
 import { formatMS } from "../utils/formatMS";
 import { ClientEventListener, IVoiceState } from "../../typings";
 import Jukebox from "../structures/Jukebox";
+import { DefineListener } from "../utils/decorators/DefineListener";
 
+@DefineListener("voiceStateUpdate")
 export default class VoiceStateUpdateEvent implements ClientEventListener {
-    public readonly name = "voiceStateUpdate";
-    public constructor(private readonly client: Jukebox) {}
+    public constructor(private readonly client: Jukebox, public name: ClientEventListener["name"]) {}
 
     public execute(oldState: IVoiceState, newState: IVoiceState): any {
         if (newState.guild.queue) {

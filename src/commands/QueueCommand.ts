@@ -1,16 +1,17 @@
 import BaseCommand from "../structures/BaseCommand";
 import { MessageEmbed } from "discord.js";
-import { IMessage } from "../../typings";
+import { ICommandComponent, IMessage } from "../../typings";
 import Jukebox from "../structures/Jukebox";
+import { DefineCommand } from "../utils/decorators/DefineCommand";
 
+@DefineCommand({
+    aliases: ["q"],
+    name: "queue",
+    description: "Show the current queue",
+    usage: "{prefix}queue"
+})
 export default class QueueCommand extends BaseCommand {
-    public constructor(public client: Jukebox, public readonly path: string) {
-        super(client, path, {}, {
-            name: "queue",
-            description: "Show the current queue",
-            usage: "{prefix}queue"
-        });
-    }
+    public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
 
     public execute(message: IMessage): any {
         if (!message.guild?.queue) return message.channel.send(new MessageEmbed().setDescription("There is nothing playing.").setColor("#FFFF00"));
