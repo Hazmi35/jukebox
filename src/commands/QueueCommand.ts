@@ -3,6 +3,7 @@ import { MessageEmbed } from "discord.js";
 import { ICommandComponent, IMessage } from "../../typings";
 import Jukebox from "../structures/Jukebox";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
+import { isMusicPlaying } from "../utils/decorators/MusicHelper";
 
 @DefineCommand({
     aliases: ["q"],
@@ -13,16 +14,15 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
 export default class QueueCommand extends BaseCommand {
     public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
 
+    @isMusicPlaying()
     public execute(message: IMessage): any {
-        if (!message.guild?.queue) return message.channel.send(new MessageEmbed().setDescription("There is nothing playing.").setColor("#FFFF00"));
-
         const embed = new MessageEmbed().setTitle("**Song Queue**").setColor("#00FF00")
             .setThumbnail(message.client.user?.avatarURL() as string);
 
         let num = 1;
-        const songs = message.guild.queue.songs.map(s => `**${num++}.** **[${s.title}](${s.url})**`);
-        if (message.guild.queue.songs.size > 12) {
-            const indexes: string[] = this.chunk(songs, 12);
+        const songs = message.guild?.queue?.songs.map(s => `**${num++}.** **[${s.title}](${s.url})**`);
+        if (Number(message.guild?.queue?.songs.size) > 12) {
+            const indexes: string[] = this.chunk(songs!, 12);
             let index = 0;
             embed.setDescription(indexes[index]).setFooter(`Page ${index + 1} of ${indexes.length}`, "https://hzmi.xyz/assets/images/390511462361202688.png");
             message.channel.send(embed).then(msg => {
@@ -43,7 +43,7 @@ export default class QueueCommand extends BaseCommand {
                 }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
             }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
         } else {
-            message.channel.send(embed.setDescription(songs.join("\n"))).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
+            message.channel.send(embed.setDescription(songs!.join("\n"))).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
         }
     }
 

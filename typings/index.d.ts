@@ -11,7 +11,7 @@ export interface ICommandComponent {
         description?: string;
         usage?: string;
     };
-    execute(message: Message, args: string[]): any;
+    execute(message: IMessage, args: string[]): any;
 }
 export interface IGuild extends Guild {
     client: Jukebox;
@@ -25,14 +25,38 @@ export interface IMessage extends Message {
 export interface ITextChannel extends TextChannel {
     client: Jukebox;
     guild: IGuild;
+    send(
+        content: APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions,
+    ): Promise<IMessage>;
+    send(options: MessageOptions & { split: true | SplitOptions }): Promise<IMessage[]>;
+    send(options: MessageOptions | APIMessage): Promise<IMessage | IMessage[]>;
+    send(content: StringResolvable, options: (MessageOptions & { split?: false }) | MessageAdditions): Promise<IMessage>;
+    send(content: StringResolvable, options: MessageOptions & { split: true | SplitOptions }): Promise<IMessage[]>;
+    send(content: StringResolvable, options: MessageOptions): Promise<IMessage | IMessage[]>;
 }
 export interface INewsChannel extends NewsChannel {
     client: Jukebox;
     guild: IGuild;
+    send(
+        content: APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions,
+    ): Promise<IMessage>;
+    send(options: MessageOptions & { split: true | SplitOptions }): Promise<IMessage[]>;
+    send(options: MessageOptions | APIMessage): Promise<IMessage | IMessage[]>;
+    send(content: StringResolvable, options: (MessageOptions & { split?: false }) | MessageAdditions): Promise<IMessage>;
+    send(content: StringResolvable, options: MessageOptions & { split: true | SplitOptions }): Promise<IMessage[]>;
+    send(content: StringResolvable, options: MessageOptions): Promise<IMessage | IMessage[]>;
 }
 export interface IDMChannel extends DMChannel {
     client: Jukebox;
     guild: null;
+    send(
+        content: APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions,
+    ): Promise<IMessage>;
+    send(options: MessageOptions & { split: true | SplitOptions }): Promise<IMessage[]>;
+    send(options: MessageOptions | APIMessage): Promise<IMessage | IMessage[]>;
+    send(content: StringResolvable, options: (MessageOptions & { split?: false }) | MessageAdditions): Promise<IMessage>;
+    send(content: StringResolvable, options: MessageOptions & { split: true | SplitOptions }): Promise<IMessage[]>;
+    send(content: StringResolvable, options: MessageOptions): Promise<IMessage | IMessage[]>;
 }
 
 export interface IServerQueue {

@@ -3,6 +3,7 @@ import { MessageEmbed } from "discord.js";
 import { ICommandComponent, IMessage } from "../../typings";
 import Jukebox from "../structures/Jukebox";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
+import { isUserInTheVoiceChannel, isMusicPlaying, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 
 @DefineCommand({
     name: "pause",
@@ -12,16 +13,11 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
 export default class PauseCommand extends BaseCommand {
     public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
 
+    @isUserInTheVoiceChannel()
+    @isMusicPlaying()
+    @isSameVoiceChannel()
     public execute(message: IMessage): any {
-        if (!message.member?.voice.channel) return message.channel.send(new MessageEmbed().setDescription("You're not in a voice channel").setColor("#FFFF00"));
-        if (!message.guild?.queue) return message.channel.send(new MessageEmbed().setDescription("There is nothing playing.").setColor("#FFFF00"));
-        if (message.member.voice.channel.id !== message.guild.queue.voiceChannel?.id) {
-            return message.channel.send(
-                new MessageEmbed().setDescription("You need to be in the same voice channel as mine").setColor("#FF0000")
-            );
-        }
-
-        if (message.guild.queue.playing) {
+        if (message.guild?.queue?.playing) {
             message.guild.queue.playing = false;
             message.guild.queue.connection?.dispatcher.pause();
             return message.channel.send(new MessageEmbed().setDescription("⏸ Paused the music for you!").setColor("#00FF00"));
