@@ -1,6 +1,4 @@
-/* eslint-disable block-scoped-var */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-// TODO: Find or create typings for simple-youtube-api or wait for v6 released and then remove no-extra-parens
+/* eslint-disable block-scoped-var, @typescript-eslint/restrict-template-expressions */
 import BaseCommand from "../structures/BaseCommand";
 import ServerQueue from "../structures/ServerQueue";
 import ytdl from "../utils/YoutubeDownload";
@@ -9,6 +7,7 @@ import { decodeHTML } from "entities";
 import type { VoiceChannel } from "discord.js";
 import type Jukebox from "../structures/Jukebox";
 import type { IMessage, ISong, IGuild } from "../../typings";
+import type { Video } from "../utils/YoutubeAPI/structures/Video";
 
 export default class PlayCommand extends BaseCommand {
     public constructor(public client: Jukebox, public readonly path: string) {
@@ -42,45 +41,51 @@ export default class PlayCommand extends BaseCommand {
 
         if (message.guild?.queue !== null && voiceChannel.id !== message.guild?.queue.voiceChannel?.id) {
             return message.channel.send(new MessageEmbed()
-                .setDescription(`Music is on this server is already playing on: **${message.guild?.queue.voiceChannel?.name}** voice channel`)
+                .setDescription(`Music on this server is already playing to: **${message.guild?.queue.voiceChannel?.name}** voice channel`)
                 .setColor("#FFFF00"));
         }
 
         if (/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/.exec(url)) {
-            const playlist = await this.client.youtube.getPlaylist(url);
-            const videos = await playlist.getVideos();
-            let skikppedVideos = 0;
-            message.channel.send(new MessageEmbed().setDescription(`Adding all videos in playlist: **[${playlist.title}](${playlist.url})**, Hang on...`).setColor("#00FF00"))
-                .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
-            for (const video of Object.values(videos)) {
-                if ((video as any).raw.status.privacyStatus === "private") {
-                    skikppedVideos++;
-                    continue;
-                } else {
-                    const video2 = await this.client.youtube.getVideoByID((video as any).id); // TODO: Find or create typings for simple-youtube-api or wait for v6 released
-                    await this.handleVideo(video2, message, voiceChannel, true);
+            try {
+                const playlist = await this.client.youtube.getPlaylistByURL(url);
+                const videos = await playlist.getVideos();
+                let skippedVideos = 0;
+                message.channel.send(new MessageEmbed().setDescription(`Adding all videos in playlist: **[${playlist.title}](${playlist.url})**, Hang on...`).setColor("#00FF00"))
+                    .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                for (const video of Object.values(videos)) {
+                    if (video.status.privacyStatus === "private") {
+                        skippedVideos++;
+                        continue;
+                    } else {
+                        const video2 = await this.client.youtube.getVideo(video.id);
+                        await this.handleVideo(video2, message, voiceChannel, true);
+                    }
                 }
+                if (skippedVideos !== 0) {
+                    message.channel.send(
+                        new MessageEmbed()
+                            .setDescription(`${skippedVideos} ${skippedVideos >= 2 ? `videos` : `video`} are skipped because it's a private video`)
+                            .setColor("#FFFF00")
+                    ).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                }
+                if (skippedVideos === playlist.itemCount) return message.channel.send(new MessageEmbed().setDescription(`Failed to load playlist **[${playlist.title}](${playlist.url})** because all of the items are private videos`).setColor("#FFFF00"));
+                return message.channel.send(new MessageEmbed().setDescription(`All videos in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`).setColor("#00FF00"));
+            } catch (e) {
+                this.client.logger.error("YT_SEARCH_ERR:", e);
+                return message.channel.send(new MessageEmbed().setDescription(`I could not load the playlist!\nError: \`${e.message}\``).setColor("#FFFF00"));
             }
-            if (skikppedVideos !== 0) {
-                message.channel.send(
-                    new MessageEmbed()
-                        .setDescription(`${skikppedVideos >= 2 ? `${skikppedVideos} videos` : `${skikppedVideos} video`} are skipped because it's a private video`)
-                        .setColor("#FFFF00")
-                ).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
-            }
-            return message.channel.send(new MessageEmbed().setDescription(`All videos in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`).setColor("#00FF00"));
         }
         try {
             // eslint-disable-next-line no-var, block-scoped-var
-            var video = await this.client.youtube.getVideo(url);
+            var video = await this.client.youtube.getVideoByURL(url);
         } catch (e) {
             try {
                 const videos = await this.client.youtube.searchVideos(searchString, 12);
                 if (videos.length === 0) return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
                 let index = 0;
                 const msg = await message.channel.send(new MessageEmbed()
-                    .setAuthor("Song Selection") // TODO: Find or create typings for simple-youtube-api or wait for v6 released
-                    .setDescription(`${videos.map((video: any) => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
+                    .setAuthor("Song Selection")
+                    .setDescription(`${videos.map(video => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
                         "*Type `cancel` or `c` to cancel song selection*")
                     .setThumbnail(message.client.user?.displayAvatarURL() as string)
                     .setColor("#00FF00")
@@ -98,7 +103,7 @@ export default class PlayCommand extends BaseCommand {
                         errors: ["time"]
                     });
                     msg.delete().catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
-                    response.first()?.delete({ timeout: 3000 }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                    response.first()?.delete({ timeout: 3000 }).catch(e => e); // do nothing
                 } catch (error) {
                     msg.delete().catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                     return message.channel.send(new MessageEmbed().setDescription("No or invalid value entered, song selection canceled.").setColor("#FF0000"));
@@ -108,20 +113,20 @@ export default class PlayCommand extends BaseCommand {
                 }
                 const videoIndex = parseInt(response.first()?.content as string, 10);
                 // eslint-disable-next-line no-var
-                video = await this.client.youtube.getVideoByID(videos[videoIndex - 1].id);
+                video = await this.client.youtube.getVideo(videos[videoIndex - 1].id);
             } catch (err) {
-                this.client.logger.error("YT_SEARCH_ERR: ", err);
-                return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
+                this.client.logger.error("YT_SEARCH_ERR:", err);
+                return message.channel.send(new MessageEmbed().setDescription(`I could not obtain any search results!\nError: \`${err.message}\``).setColor("#FFFF00"));
             }
         }
         return this.handleVideo(video, message, voiceChannel);
     }
 
-    private async handleVideo(video: any, message: IMessage, voiceChannel: VoiceChannel, playlist = false): Promise<any> { // TODO: Find or create typings for simple-youtube-api or wait for v6 released
+    private async handleVideo(video: Video, message: IMessage, voiceChannel: VoiceChannel, playlist = false): Promise<any> {
         const song: ISong = {
             id: video.id,
             title: this.cleanTitle(video.title),
-            url: `https://youtube.com/watch?v=${video.id}`
+            url: video.url
         };
         if (message.guild?.queue) {
             if (!this.client.config.allowDuplicate && message.guild.queue.songs.find(s => s.id === song.id)) {
