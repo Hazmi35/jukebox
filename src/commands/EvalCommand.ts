@@ -3,8 +3,7 @@ import BaseCommand from "../structures/BaseCommand";
 import { MessageEmbed } from "discord.js";
 import { request } from "https";
 import { inspect } from "util";
-import Jukebox from "../structures/Jukebox";
-import { ICommandComponent, IMessage } from "../../typings";
+import { IMessage } from "../../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
 
@@ -16,8 +15,6 @@ import { createEmbed } from "../utils/createEmbed";
     usage: "{prefix}eval <some js code>"
 })
 export default class EvalCommand extends BaseCommand {
-    public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
-
     public async execute(message: IMessage, args: string[]): Promise<any> {
         const msg = message;
         const client = this.client;

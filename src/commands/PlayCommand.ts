@@ -4,8 +4,7 @@ import ServerQueue from "../structures/ServerQueue";
 import ytdl from "../utils/YoutubeDownload";
 import { Util, MessageEmbed, VoiceChannel } from "discord.js";
 import { decodeHTML } from "entities";
-import Jukebox from "../structures/Jukebox";
-import { IMessage, ISong, IGuild, ICommandComponent } from "../../typings";
+import { IMessage, ISong, IGuild } from "../../typings";
 import { Video } from "../utils/YoutubeAPI/structures/Video";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
@@ -18,8 +17,6 @@ import { createEmbed } from "../utils/createEmbed";
     usage: "{prefix}play <yt video or playlist link / yt video name>"
 })
 export default class PlayCommand extends BaseCommand {
-    public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
-
     @isUserInTheVoiceChannel()
     @isValidVoiceChannel()
     @isSameVoiceChannel()

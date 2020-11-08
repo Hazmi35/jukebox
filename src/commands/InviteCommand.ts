@@ -1,19 +1,16 @@
 import BaseCommand from "../structures/BaseCommand";
-import { ICommandComponent, IMessage } from "../../typings";
-import Jukebox from "../structures/Jukebox";
+import { IMessage } from "../../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
+import { disableInviteCmd } from "../config";
 
 @DefineCommand({
     name: "invite",
     description: "Send the bot's invite link",
-    usage: "{prefix}invite"
+    usage: "{prefix}invite",
+    disable: disableInviteCmd
 })
 export default class InviteCommand extends BaseCommand {
-    public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) {
-        super(client, Object.assign(meta, { disable: client.config.disableInviteCmd }));
-    }
-
     public async execute(message: IMessage): Promise<void> {
         message.channel.send(
             createEmbed("info")

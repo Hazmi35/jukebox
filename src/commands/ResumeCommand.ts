@@ -1,6 +1,5 @@
 import BaseCommand from "../structures/BaseCommand";
-import { ICommandComponent, IMessage } from "../../typings";
-import Jukebox from "../structures/Jukebox";
+import { IMessage } from "../../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isMusicPlaying, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
@@ -11,8 +10,6 @@ import { createEmbed } from "../utils/createEmbed";
     usage: "{prefix}resume"
 })
 export default class ResumeCommand extends BaseCommand {
-    public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) { super(client, meta); }
-
     @isUserInTheVoiceChannel()
     @isMusicPlaying()
     @isSameVoiceChannel()
