@@ -90,6 +90,11 @@
             "description": "Whether to disable selecting songs on play command, this will automatically selects the first song from search results (default: no)",
             "required": false,
             "value": "no"
+        },
+        "CONFIG_SEARCH_MAX_RESULTS": {
+            "description": "Maximum songs to list in song selection (default: 12, max: 12)",
+            "required": false,
+            "value": "12"
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",
