@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import { resolve } from "path";
 import Jukebox from "../structures/Jukebox";
-import { ClientEventListener } from "../../typings";
+import { IListener } from "../../typings";
 
 export default class ListenerLoader {
     public constructor(public client: Jukebox, public readonly path: string) {}
@@ -9,7 +9,7 @@ export default class ListenerLoader {
     public async load(): Promise<Jukebox> {
         const files: string[] | undefined = await fs.readdir(resolve(this.path));
         for (const file of files) {
-            const event: ClientEventListener = await this.import(resolve(this.path, file), this.client);
+            const event: IListener = await this.import(resolve(this.path, file), this.client);
             this.client.on(event.name, (...args) => event.execute(...args));
             this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Listener for event ${event.name} has been loaded!`);
         }
@@ -17,7 +17,7 @@ export default class ListenerLoader {
         return this.client;
     }
 
-    private async import(path: string, ...args: any[]): Promise<ClientEventListener> {
+    private async import(path: string, ...args: any[]): Promise<IListener> {
         return new (await import(resolve(path)).then(m => m.default))(...args);
     }
 }
