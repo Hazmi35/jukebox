@@ -64,7 +64,11 @@ export default class PlayCommand extends BaseCommand {
                 if (skippedVideos === playlist.itemCount) return message.channel.send(new MessageEmbed().setDescription(`Failed to load playlist **[${playlist.title}](${playlist.url})** because all of the items are private videos`).setColor("#FFFF00"));
                 return message.channel.send(new MessageEmbed().setDescription(`All videos in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`).setColor("#00FF00"));
             } catch (e) {
-                this.client.logger.error("YT_SEARCH_ERR:", e);
+                if (e.response.body.error.message === 'The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.') {
+                    this.client.logger.error("YT_PLAYLIST_ERR:", new Error("YouTube Data API Quota exceeded."));
+                    return message.channel.send(new MessageEmbed().setDescription(`Error: \`Youtube Data API Quota exceeded.\` please contact the bot owner`).setColor("#FFFF00"));
+                }
+                this.client.logger.error("YT_PLAYLIST_ERR:", e);
                 return message.channel.send(new MessageEmbed().setDescription(`I could not load the playlist!\nError: \`${e.message}\``).setColor("#FFFF00"));
             }
         }
@@ -108,6 +112,10 @@ export default class PlayCommand extends BaseCommand {
                 // eslint-disable-next-line no-var
                 video = await this.client.youtube.getVideo(videos[videoIndex - 1].id);
             } catch (err) {
+                if (e.response.body.error.message === 'The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.') {
+                    this.client.logger.error("YT_PLAYLIST_ERR:", new Error("YouTube Data API Quota exceeded."));
+                    return message.channel.send(new MessageEmbed().setDescription(`Error: \`Youtube Data API Quota exceeded.\` please contact the bot owner`).setColor("#FFFF00"));
+                }
                 this.client.logger.error("YT_SEARCH_ERR:", err);
                 return message.channel.send(new MessageEmbed().setDescription(`I could not obtain any search results!\nError: \`${err.message}\``).setColor("#FFFF00"));
             }
