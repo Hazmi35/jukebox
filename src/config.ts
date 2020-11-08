@@ -17,3 +17,4 @@ export const status = {
     activity: process.env.CONFIG_STATUS_ACTIVITY ?? "music on {guildsCount}"
 };
 export const fetchAllUsers = process.env.CONFIG_FETCH_ALL_USERS === "yes";
+export const selectTimeout = Number(process.env.CONFIG_SELECT_TIMEOUT) * 1000 || 20 * 1000;
