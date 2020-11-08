@@ -18,3 +18,4 @@ export const status = {
 };
 export const fetchAllUsers = process.env.CONFIG_FETCH_ALL_USERS === "yes";
 export const selectTimeout = Number(process.env.CONFIG_SELECT_TIMEOUT) * 1000 || 20 * 1000;
+export const disableSongSelection = process.env.CONFIG_DISABLE_SONG_SELECTION === "yes";
