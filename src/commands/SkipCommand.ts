@@ -22,8 +22,11 @@ export default class SkipCommand extends BaseCommand {
         message.guild!.queue?.connection?.dispatcher.resume();
         message.guild!.queue?.connection?.dispatcher.end();
 
+        const song = message.guild?.queue?.songs.first();
+
         message.channel.send(
-            createEmbed("info", `⏭ Skipped [**${message.guild?.queue?.songs.first()?.title as string}**](${message.guild?.queue?.songs.first()?.url as string}})`)
+            createEmbed("info", `⏭ Skipped [**${song?.title as string}**](${song?.url as string}})`)
+                .setThumbnail(song?.thumbnail as string)
         )
             .catch(e => this.client.logger.error("SKIP_CMD_ERR:", e));
     }
