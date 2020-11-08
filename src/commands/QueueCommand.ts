@@ -1,9 +1,9 @@
 import BaseCommand from "../structures/BaseCommand";
-import { MessageEmbed } from "discord.js";
 import { ICommandComponent, IMessage } from "../../typings";
 import Jukebox from "../structures/Jukebox";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isMusicPlaying } from "../utils/decorators/MusicHelper";
+import { createEmbed } from "../utils/createEmbed";
 
 @DefineCommand({
     aliases: ["q"],
@@ -16,7 +16,8 @@ export default class QueueCommand extends BaseCommand {
 
     @isMusicPlaying()
     public execute(message: IMessage): any {
-        const embed = new MessageEmbed().setTitle("**Song Queue**").setColor("#00FF00")
+        const embed = createEmbed("info")
+            .setTitle("**Song Queue**")
             .setThumbnail(message.client.user?.avatarURL() as string);
 
         let num = 1;

@@ -6,6 +6,7 @@ import { inspect } from "util";
 import Jukebox from "../structures/Jukebox";
 import { ICommandComponent, IMessage } from "../../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
+import { createEmbed } from "../utils/createEmbed";
 
 @DefineCommand({
     aliases: ["ev", "js-exec", "e", "evaluate"],
@@ -22,8 +23,7 @@ export default class EvalCommand extends BaseCommand {
         const client = this.client;
 
         if (!client.config.owners.includes(msg.author.id)) {
-            return message.channel.send(new MessageEmbed()
-                .setDescription("❗ Only the bot owner can use this command").setColor("#FF0000"));
+            return message.channel.send(createEmbed("error", "❗ Only the bot owner can use this command"));
         }
 
         const embed = new MessageEmbed()
