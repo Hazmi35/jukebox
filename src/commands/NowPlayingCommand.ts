@@ -1,9 +1,9 @@
 import BaseCommand from "../structures/BaseCommand";
-import { MessageEmbed } from "discord.js";
 import { ICommandComponent, IMessage } from "../../typings";
 import Jukebox from "../structures/Jukebox";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isMusicPlaying } from "../utils/decorators/MusicHelper";
+import { createEmbed } from "../utils/createEmbed";
 
 @DefineCommand({
     aliases: ["np", "now-playing"],
@@ -16,11 +16,7 @@ export default class NowPlayingCommand extends BaseCommand {
 
     @isMusicPlaying()
     public execute(message: IMessage): any {
-        console.log(message);
-        return message.channel.send(
-            new MessageEmbed().setDescription(`${message.guild?.queue?.playing ? "▶ Now playing:" : "⏸ Now playing (paused):"} ` +
-                `**[${message.guild?.queue?.songs.first()?.title as string}](${message.guild?.queue?.songs.first()?.url as string})**`)
-                .setColor("#00FF00")
-        );
+        return message.channel.send(createEmbed("info", `${message.guild?.queue?.playing ? "▶ Now playing:" : "⏸ Now playing (paused):"} ` +
+                `**[${message.guild?.queue?.songs.first()?.title as string}](${message.guild?.queue?.songs.first()?.url as string})**`));
     }
 }

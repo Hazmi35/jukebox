@@ -1,9 +1,9 @@
 import BaseCommand from "../structures/BaseCommand";
-import { MessageEmbed } from "discord.js";
 import { ICommandComponent, IMessage } from "../../typings";
 import Jukebox from "../structures/Jukebox";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isMusicPlaying, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
+import { createEmbed } from "../utils/createEmbed";
 
 @DefineCommand({
     aliases: ["vol"],
@@ -20,18 +20,18 @@ export default class VolumeCommand extends BaseCommand {
     public execute(message: IMessage, args: string[]): any {
         let volume = Number(args[0]);
 
-        if (isNaN(volume)) return message.channel.send(new MessageEmbed().setDescription(`📶 The current volume is ${message.guild!.queue!.volume.toString()}`).setColor("#00FF00"));
+        if (isNaN(volume)) return message.channel.send(createEmbed("info", `📶 The current volume is ${message.guild!.queue!.volume.toString()}`));
 
         if (volume < 0) volume = 0;
-        if (volume === 0) return message.channel.send(new MessageEmbed().setDescription("❗ Please pause the music instead of setting the volume to 0").setColor("#FFFF00"));
+        if (volume === 0) return message.channel.send(createEmbed("warn", "❗ Please pause the music instead of setting the volume to 0"));
         if (Number(args[0]) > this.client.config.maxVolume) {
             return message.channel.send(
-                new MessageEmbed().setDescription(`❗ Can't set the volume above ${this.client.config.maxVolume}`).setColor("#FFFF00")
+                createEmbed("warn", `❗ Can't set the volume above ${this.client.config.maxVolume}`)
             );
         }
 
         message.guild!.queue!.volume = Number(args[0]);
         message.guild!.queue!.connection?.dispatcher.setVolume(Number(args[0]) / this.client.config.maxVolume);
-        message.channel.send(new MessageEmbed().setDescription(`📶 Volume set to ${args[0]}`).setColor("#00FF00")).catch(console.error);
+        message.channel.send(createEmbed("info", `📶 Volume set to ${args[0]}`)).catch(console.error);
     }
 }

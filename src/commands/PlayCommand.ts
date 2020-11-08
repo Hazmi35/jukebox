@@ -9,6 +9,7 @@ import { IMessage, ISong, IGuild, ICommandComponent } from "../../typings";
 import { Video } from "../utils/YoutubeAPI/structures/Video";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
+import { createEmbed } from "../utils/createEmbed";
 
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
@@ -26,16 +27,16 @@ export default class PlayCommand extends BaseCommand {
         const voiceChannel = message.member!.voice.channel!;
         if (!args[0]) {
             return message.channel.send(
-                new MessageEmbed().setDescription(`Invalid args, type \`${this.client.config.prefix}help play\` for more info`).setColor("#00FF00")
+                createEmbed("warn", `Invalid args, type \`${this.client.config.prefix}help play\` for more info`)
             );
         }
         const searchString = args.join(" ");
         const url = searchString.replace(/<(.+)>/g, "$1");
 
         if (message.guild?.queue !== null && voiceChannel.id !== message.guild?.queue.voiceChannel?.id) {
-            return message.channel.send(new MessageEmbed()
-                .setDescription(`Music on this server is already playing to: **${message.guild?.queue.voiceChannel?.name}** voice channel`)
-                .setColor("#FFFF00"));
+            return message.channel.send(
+                createEmbed("warn", `Music on this server is already playing to: **${message.guild?.queue.voiceChannel?.name}** voice channel`)
+            );
         }
 
         if (/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/.exec(url)) {
@@ -43,7 +44,7 @@ export default class PlayCommand extends BaseCommand {
                 const playlist = await this.client.youtube.getPlaylistByURL(url);
                 const videos = await playlist.getVideos();
                 let skippedVideos = 0;
-                message.channel.send(new MessageEmbed().setDescription(`Adding all videos in playlist: **[${playlist.title}](${playlist.url})**, Hang on...`).setColor("#00FF00"))
+                message.channel.send(createEmbed("info", `Adding all videos in playlist: **[${playlist.title}](${playlist.url})**, Hang on...`))
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 for (const video of Object.values(videos)) {
                     if (video.status.privacyStatus === "private") {
@@ -56,20 +57,18 @@ export default class PlayCommand extends BaseCommand {
                 }
                 if (skippedVideos !== 0) {
                     message.channel.send(
-                        new MessageEmbed()
-                            .setDescription(`${skippedVideos} ${skippedVideos >= 2 ? `videos` : `video`} are skipped because it's a private video`)
-                            .setColor("#FFFF00")
+                        createEmbed("warn", `${skippedVideos} ${skippedVideos >= 2 ? `videos` : `video`} are skipped because it's a private video`)
                     ).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 }
-                if (skippedVideos === playlist.itemCount) return message.channel.send(new MessageEmbed().setDescription(`Failed to load playlist **[${playlist.title}](${playlist.url})** because all of the items are private videos`).setColor("#FFFF00"));
-                return message.channel.send(new MessageEmbed().setDescription(`All videos in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`).setColor("#00FF00"));
+                if (skippedVideos === playlist.itemCount) return message.channel.send(createEmbed("error", `Failed to load playlist **[${playlist.title}](${playlist.url})** because all of the items are private videos`));
+                return message.channel.send(createEmbed("info", `All videos in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`));
             } catch (e) {
                 if (e.response.body.error.message === 'The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.') {
                     this.client.logger.error("YT_PLAYLIST_ERR:", new Error("YouTube Data API Quota exceeded."));
-                    return message.channel.send(new MessageEmbed().setDescription(`Error: \`Youtube Data API Quota exceeded.\` please contact the bot owner`).setColor("#FFFF00"));
+                    return message.channel.send(createEmbed("error", `Error: \`Youtube Data API Quota exceeded.\` please contact the bot owner`));
                 }
                 this.client.logger.error("YT_PLAYLIST_ERR:", e);
-                return message.channel.send(new MessageEmbed().setDescription(`I could not load the playlist!\nError: \`${e.message}\``).setColor("#FFFF00"));
+                return message.channel.send(createEmbed("error", `I could not load the playlist!\nError: \`${e.message}\``));
             }
         }
         try {
@@ -78,7 +77,7 @@ export default class PlayCommand extends BaseCommand {
         } catch (e) {
             try {
                 const videos = await this.client.youtube.searchVideos(searchString, 12);
-                if (videos.length === 0) return message.channel.send(new MessageEmbed().setDescription("I could not obtain any search results!").setColor("#FFFF00"));
+                if (videos.length === 0) return message.channel.send(createEmbed("warn", "I could not obtain any search results!"));
                 let index = 0;
                 const msg = await message.channel.send(new MessageEmbed()
                     .setAuthor("Song Selection")
@@ -103,21 +102,21 @@ export default class PlayCommand extends BaseCommand {
                     response.first()?.delete({ timeout: 3000 }).catch(e => e); // do nothing
                 } catch (error) {
                     msg.delete().catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
-                    return message.channel.send(new MessageEmbed().setDescription("No or invalid value entered, song selection canceled.").setColor("#FF0000"));
+                    return message.channel.send(createEmbed("error", "No or invalid value entered, song selection canceled."));
                 }
                 if (response.first()?.content === "c" || response.first()?.content === "cancel") {
-                    return message.channel.send(new MessageEmbed().setDescription("Song selection canceled").setColor("#00FF00"));
+                    return message.channel.send(createEmbed("info", "Song selection canceled").setColor("#00FF00"));
                 }
                 const videoIndex = parseInt(response.first()?.content as string, 10);
                 // eslint-disable-next-line no-var
                 video = await this.client.youtube.getVideo(videos[videoIndex - 1].id);
             } catch (err) {
                 if (e.response.body.error.message === 'The request cannot be completed because you have exceeded your <a href="/youtube/v3/getting-started#quota">quota</a>.') {
-                    this.client.logger.error("YT_PLAYLIST_ERR:", new Error("YouTube Data API Quota exceeded."));
-                    return message.channel.send(new MessageEmbed().setDescription(`Error: \`Youtube Data API Quota exceeded.\` please contact the bot owner`).setColor("#FFFF00"));
+                    this.client.logger.error("YT_SEARCH_ERR:", new Error("YouTube Data API Quota exceeded."));
+                    return message.channel.send(createEmbed("error", `Error: \`Youtube Data API Quota exceeded.\` please contact the bot owner`));
                 }
                 this.client.logger.error("YT_SEARCH_ERR:", err);
-                return message.channel.send(new MessageEmbed().setDescription(`I could not obtain any search results!\nError: \`${err.message}\``).setColor("#FFFF00"));
+                return message.channel.send(createEmbed("error", `I could not obtain any search results!\nError: \`${err.message}\``));
             }
         }
         return this.handleVideo(video, message, voiceChannel);
@@ -131,15 +130,15 @@ export default class PlayCommand extends BaseCommand {
         };
         if (message.guild?.queue) {
             if (!this.client.config.allowDuplicate && message.guild.queue.songs.find(s => s.id === song.id)) {
-                return message.channel.send(new MessageEmbed()
-                    .setTitle("Already queued.")
-                    .setColor("#FFFF00")
-                    .setDescription(`Song: **[${song.title}](${song.id})** is already queued, and this bot configuration disallow duplicated song in queue, ` +
-                `please use \`${this.client.config.prefix}repeat\` instead`));
+                return message.channel.send(
+                    createEmbed("warn", `Song: **[${song.title}](${song.id})** is already queued, and this bot configuration disallow duplicated song in queue, ` +
+                `please use \`${this.client.config.prefix}repeat\` instead`)
+                        .setTitle("Already queued.")
+                );
             }
             message.guild.queue.songs.addSong(song);
             if (playlist) return;
-            message.channel.send(new MessageEmbed().setDescription(`✅ Song **[${song.title}](${song.url})** has been added to the queue`).setColor("#00FF00"))
+            message.channel.send(createEmbed("info", `✅ Song **[${song.title}](${song.url})** has been added to the queue`))
                 .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
         } else {
             message.guild!.queue = new ServerQueue(message.channel, voiceChannel);
@@ -151,12 +150,12 @@ export default class PlayCommand extends BaseCommand {
                 message.guild?.queue.songs.clear();
                 message.guild!.queue = null;
                 this.client.logger.error("PLAY_CMD_ERR:", error);
-                message.channel.send(new MessageEmbed().setDescription(`Error: Could not join the voice channel. reason:\n\`${error}\``).setColor("#FF0000"))
+                message.channel.send(createEmbed("error", `Error: Could not join the voice channel. reason:\n\`${error}\``).setColor("#FF0000"))
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return undefined;
             }
             this.play(message.guild!).catch(err => {
-                message.channel.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${err}\``).setColor("#FF0000"))
+                message.channel.send(createEmbed("error", `Error while trying to play music:\n\`${err}\``).setColor("#FF0000"))
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return this.client.logger.error("PLAY_CMD_ERR:", err);
             });
@@ -169,7 +168,7 @@ export default class PlayCommand extends BaseCommand {
         const song = serverQueue.songs.first();
         if (!song) {
             serverQueue.textChannel?.send(
-                new MessageEmbed().setDescription(`⏹ Queue is finished! Use "${guild.client.config.prefix}play" to play more songs`).setColor("#00FF00")
+                createEmbed("info", `⏹ Queue is finished! Use "${guild.client.config.prefix}play" to play more songs`)
             ).catch(e => this.client.logger.error("PLAY_ERR:", e));
             serverQueue.connection?.disconnect();
             return guild.queue = null;
@@ -184,17 +183,17 @@ export default class PlayCommand extends BaseCommand {
             .on("start", () => {
                 serverQueue.playing = true;
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
-                serverQueue.textChannel?.send(new MessageEmbed().setDescription(`▶ Start playing: **[${song.title}](${song.url})**`).setColor("#00FF00"))
+                serverQueue.textChannel?.send(createEmbed("info", `▶ Start playing: **[${song.title}](${song.url})**`))
                     .catch(e => this.client.logger.error("PLAY_ERR:", e));
             })
             .on("finish", () => {
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
                 // eslint-disable-next-line max-statements-per-line
                 if (serverQueue.loopMode === 0) { serverQueue.songs.deleteFirst(); } else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
-                serverQueue.textChannel?.send(new MessageEmbed().setDescription(`⏹ Stop playing: **[${song.title}](${song.url})**`).setColor("#00FF00"))
+                serverQueue.textChannel?.send(createEmbed("info", `⏹ Stop playing: **[${song.title}](${song.url})**`))
                     .catch(e => this.client.logger.error("PLAY_ERR:", e));
                 this.play(guild).catch(e => {
-                    serverQueue.textChannel?.send(new MessageEmbed().setDescription(`Error while trying to play music:\n\`${e}\``).setColor("#FF0000"))
+                    serverQueue.textChannel?.send(createEmbed("error", `Error while trying to play music:\n\`${e}\``))
                         .catch(e => this.client.logger.error("PLAY_ERR:", e));
                     serverQueue.connection?.dispatcher.end();
                     return this.client.logger.error("PLAY_ERR:", e);
