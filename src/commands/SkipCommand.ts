@@ -22,7 +22,7 @@ export default class SkipCommand extends BaseCommand {
         const song = message.guild?.queue?.songs.first();
 
         message.channel.send(
-            createEmbed("info", `⏭ Skipped [**${song?.title as string}**](${song?.url as string}})`)
+            createEmbed("info", `⏭ Skipped **[${song!.title}](${song!.url}})**`)
                 .setThumbnail(song?.thumbnail as string)
         )
             .catch(e => this.client.logger.error("SKIP_CMD_ERR:", e));
