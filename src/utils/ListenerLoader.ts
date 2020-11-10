@@ -3,7 +3,7 @@ import { resolve } from "path";
 import Jukebox from "../structures/Jukebox";
 import { IListener } from "../../typings";
 
-export default class ListenerLoader {
+export class ListenerLoader {
     public constructor(public client: Jukebox, public readonly path: string) {}
 
     public async load(): Promise<Jukebox> {
