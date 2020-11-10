@@ -10,7 +10,7 @@ import { createEmbed } from "../utils/createEmbed";
     description: "Show or change the music volume",
     usage: "{prefix}volume [new volume]"
 })
-export default class VolumeCommand extends BaseCommand {
+export class VolumeCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
     @isMusicPlaying()
     @isSameVoiceChannel()

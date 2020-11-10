@@ -10,7 +10,7 @@ import { disableInviteCmd } from "../config";
     usage: "{prefix}invite",
     disable: disableInviteCmd
 })
-export default class InviteCommand extends BaseCommand {
+export class InviteCommand extends BaseCommand {
     public async execute(message: IMessage): Promise<void> {
         message.channel.send(
             createEmbed("info")
