@@ -4,11 +4,10 @@ import { Message, Snowflake, Collection } from "discord.js";
 import Jukebox from "../structures/Jukebox";
 import { ICommandComponent, IMessage } from "../../typings";
 
-export default class CommandsHandler {
-    public readonly commands: Collection<string, ICommandComponent> = new Collection();
+export class CommandsManager extends Collection<string, ICommandComponent> {
     public readonly aliases: Collection<string, string> = new Collection();
     public readonly cooldowns: Collection<string, Collection<Snowflake, number>> = new Collection();
-    public constructor(public client: Jukebox, public readonly path: string) {}
+    public constructor(public client: Jukebox, public readonly path: string) { super(); }
     public load(): void {
         fs.readdir(resolve(this.path))
             .then(async files => {
@@ -22,7 +21,7 @@ export default class CommandsHandler {
                             this.aliases.set(alias, command.meta.name);
                         });
                     }
-                    this.commands.set(command.meta.name, command);
+                    this.set(command.meta.name, command);
                     if (command.meta.disable === true) disabledCount++;
                 }
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} A total of ${files.length} commands has been loaded!`);
@@ -35,7 +34,7 @@ export default class CommandsHandler {
     public handle(message: IMessage): any {
         const args = message.content.substring(this.client.config.prefix.length).trim().split(/ +/);
         const cmd = args.shift()?.toLowerCase();
-        const command = this.commands.get(cmd!) ?? this.commands.get(this.aliases.get(cmd!)!);
+        const command = this.get(cmd!) ?? this.get(this.aliases.get(cmd!)!);
         if (!command || command.meta.disable) return undefined;
         if (!this.cooldowns.has(command.meta.name)) this.cooldowns.set(command.meta.name, new Collection());
         const now = Date.now();
