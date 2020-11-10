@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import { resolve } from "path";
 import { Message, Snowflake, Collection } from "discord.js";
-import Jukebox from "../structures/Jukebox";
+import { Jukebox } from "../structures/Jukebox";
 import { ICommandComponent, IMessage } from "../../typings";
 
 export class CommandsManager extends Collection<string, ICommandComponent> {

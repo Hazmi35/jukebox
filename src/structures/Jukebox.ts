@@ -10,7 +10,7 @@ import { YoutubeAPI } from "../utils/YoutubeAPI";
 // Extends DiscordJS Structures
 import "./Guild";
 
-export default class Jukebox extends Client {
+export class Jukebox extends Client {
     public readonly config = config;
     public readonly logger = createLogger(config.name, config.debug);
     public readonly youtube = new YoutubeAPI(process.env.YT_API_KEY!);

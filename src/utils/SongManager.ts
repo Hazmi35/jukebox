@@ -1,7 +1,7 @@
 import { Snowflake, SnowflakeUtil, Collection } from "discord.js";
 import { ISongs as ISongManager, ISong } from "../../typings";
 
-export default class SongManager extends Collection<Snowflake, ISong> implements ISongManager {
+export class SongManager extends Collection<Snowflake, ISong> implements ISongManager {
     public constructor(data?: ReadonlyArray<readonly [Snowflake, ISong]> | null) {
         super(data);
     }

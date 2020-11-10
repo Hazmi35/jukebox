@@ -1,5 +1,5 @@
 import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection, ClientEvents, VoiceState } from "discord.js";
-import Jukebox from "../src/structures/Jukebox";
+import { Jukebox } from "../src/structures/Jukebox";
 
 export interface ICommandComponent {
     meta: {

@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 import { resolve } from "path";
-import Jukebox from "../structures/Jukebox";
+import { Jukebox } from "../structures/Jukebox";
 import { IListener } from "../../typings";
 
 export class ListenerLoader {

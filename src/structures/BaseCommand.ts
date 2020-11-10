@@ -1,4 +1,4 @@
-import Jukebox from "./Jukebox";
+import { Jukebox } from "./Jukebox";
 import { ICommandComponent } from "../../typings";
 import { Message } from "discord.js";
 export class BaseCommand implements ICommandComponent {
