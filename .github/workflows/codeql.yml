@@ -1,0 +1,33 @@
+name: CodeQL
+
+on: 
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+  schedule:
+    - cron: '0 6 * * 1-5' # “At 06:00 on every day-of-week from Monday through Friday.” - crontab.guru
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        languange: ['javascript']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2.3.4
+  
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Autobuild (Attempts to build any compiled languages)
+        uses: github/codeql-action/autobuild@v1
+      
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1

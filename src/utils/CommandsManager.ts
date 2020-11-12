@@ -1,29 +1,29 @@
 import { promises as fs } from "fs";
-import { resolve } from "path";
-import type { Message, Snowflake } from "discord.js";
-import { Collection } from "discord.js";
-import type Jukebox from "../structures/Jukebox";
-import type { CommandComponent } from "../../typings";
+import { parse, resolve } from "path";
+import { Message, Snowflake, Collection } from "discord.js";
+import { Jukebox } from "../structures/Jukebox";
+import { ICommandComponent, IMessage } from "../../typings";
 
-export default class CommandsHandler {
-    public readonly commands: Collection<string, CommandComponent> = new Collection();
+export class CommandsManager extends Collection<string, ICommandComponent> {
     public readonly aliases: Collection<string, string> = new Collection();
     public readonly cooldowns: Collection<string, Collection<Snowflake, number>> = new Collection();
-    public constructor(public client: Jukebox, public readonly path: string) {}
+    public constructor(public client: Jukebox, public readonly path: string) { super(); }
     public load(): void {
         fs.readdir(resolve(this.path))
             .then(async files => {
                 let disabledCount = 0;
                 for (const file of files) {
                     const path = resolve(this.path, file);
-                    const command: CommandComponent = new (await import(path).then(m => m.default))(this.client, path);
-                    if (Number(command.conf.aliases?.length) > 0) {
-                        command.conf.aliases?.forEach(alias => {
-                            this.aliases.set(alias, command.help.name);
+                    const command = await this.import(path, this.client, { path });
+                    if (command === undefined) throw new Error(`File ${file} is not a valid command file`);
+                    command.meta = Object.assign(command.meta, { path });
+                    if (Number(command.meta.aliases?.length) > 0) {
+                        command.meta.aliases?.forEach(alias => {
+                            this.aliases.set(alias, command.meta.name);
                         });
                     }
-                    this.commands.set(command.help.name, command);
-                    if (command.conf.disable === true) disabledCount++;
+                    this.set(command.meta.name, command);
+                    if (command.meta.disable === true) disabledCount++;
                 }
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} A total of ${files.length} commands has been loaded!`);
                 if (disabledCount !== 0) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${disabledCount} out of ${files.length} commands is disabled.`);
@@ -32,15 +32,15 @@ export default class CommandsHandler {
         return undefined;
     }
 
-    public handle(message: Message): any {
-        const args = message.content.substring(this.client.config.prefix.length).trim().split(/ +/g);
+    public handle(message: IMessage): any {
+        const args = message.content.substring(this.client.config.prefix.length).trim().split(/ +/);
         const cmd = args.shift()?.toLowerCase();
-        const command = this.commands.get(cmd!) ?? this.commands.get(this.aliases.get(cmd!)!);
-        if (!command || command.conf.disable) return undefined;
-        if (!this.cooldowns.has(command.help.name)) this.cooldowns.set(command.help.name, new Collection());
+        const command = this.get(cmd!) ?? this.get(this.aliases.get(cmd!)!);
+        if (!command || command.meta.disable) return undefined;
+        if (!this.cooldowns.has(command.meta.name)) this.cooldowns.set(command.meta.name, new Collection());
         const now = Date.now();
-        const timestamps: Collection<Snowflake, number> = this.cooldowns.get(command.help.name)!;
-        const cooldownAmount = (command.conf.cooldown ?? 3) * 1000;
+        const timestamps: Collection<Snowflake, number> = this.cooldowns.get(command.meta.name)!;
+        const cooldownAmount = (command.meta.cooldown ?? 3) * 1000;
         if (timestamps.has(message.author.id)) {
             const expirationTime = timestamps.get(message.author.id)! + cooldownAmount;
             if (now < expirationTime) {
@@ -62,7 +62,12 @@ export default class CommandsHandler {
         } catch (e) {
             this.client.logger.error("CMD_HANDLER_ERR:", e);
         } finally {
-            this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${message.author.tag} is using ${command.help.name} command on ${message.guild ? message.guild.name : "DM Channel"}`);
+            this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${message.author.tag} is using ${command.meta.name} command on ${message.guild ? message.guild.name : "DM Channel"}`);
         }
+    }
+
+    private async import(path: string, ...args: any[]): Promise<ICommandComponent | undefined> {
+        const file = (await import(resolve(path)).then(m => m[parse(path).name]));
+        return file ? new file(...args) : undefined;
     }
 }

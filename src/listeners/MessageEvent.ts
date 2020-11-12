@@ -1,21 +1,19 @@
-import { MessageEmbed } from "discord.js";
-import type { Snowflake } from "discord.js";
-import type Jukebox from "../structures/Jukebox";
-import type { IMessage, ClientEventListener } from "../../typings";
+import { IMessage } from "../../typings";
+import { DefineListener } from "../utils/decorators/DefineListener";
+import { createEmbed } from "../utils/createEmbed";
+import { BaseListener } from "../structures/BaseListener";
 
-export default class MessageEvent implements ClientEventListener {
-    public readonly name = "message";
-    public constructor(private readonly client: Jukebox) {}
-
+@DefineListener("message")
+export class MessageEvent extends BaseListener {
     public execute(message: IMessage): any {
         if (message.author.bot) return message;
         if (message.channel.type === "dm") return message;
-        if (message.mentions.users.has(this.client.user?.id as Snowflake)) {
+        if (message.content === message.guild?.me?.toString()) {
             return message.channel.send(
-                new MessageEmbed().setDescription(`Hi, I'm a simple music bot, see my commands with \`${this.client.config.prefix}help\``).setColor("#00FF00")
+                createEmbed("info", `Hi, I'm a simple music bot, see my commands with \`${this.client.config.prefix}help\``)
             );
         }
         if (!message.content.toLowerCase().startsWith(this.client.config.prefix)) return message;
-        return this.client.CommandsHandler.handle(message);
+        return this.client.commands.handle(message);
     }
 }

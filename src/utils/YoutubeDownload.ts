@@ -1,12 +1,10 @@
-import type { videoInfo, downloadOptions, videoFormat } from "ytdl-core";
-import { getInfo, downloadFromInfo } from "ytdl-core";
-import type { Readable } from "stream";
-import { PassThrough } from "stream";
+import { videoInfo, downloadOptions, videoFormat, getInfo, downloadFromInfo } from "ytdl-core";
+import { Readable, PassThrough } from "stream";
 import { resolve as resolvePath } from "path";
 import { createReadStream, createWriteStream, existsSync, appendFileSync } from "fs";
 
 // Inspired by ytdl-core-discord (https://github.com/amishshah/ytdl-core-discord)  // 1048576 * 1 = 1MB
-export default function playSong(youtubeLink: string, options: IdownloadOptions = { filter: "audio", quality: "highestaudio", highWaterMark: 1048576 * 32 }): Promise<ISongData> {
+export function playSong(youtubeLink: string, options: IdownloadOptions = { filter: "audio", quality: "highestaudio", highWaterMark: 1048576 * 32 }): Promise<ISongData> {
     return new Promise((resolve, reject) => {
         getInfo(youtubeLink).then(info => {
             const canDemux: boolean = info.formats.find(filter) !== undefined && Number(info.videoDetails.lengthSeconds) !== 0;

@@ -1,10 +1,8 @@
-import type { ClientEventListener } from "../../typings";
-import type Jukebox from "../structures/Jukebox";
+import { BaseListener } from "../structures/BaseListener";
+import { DefineListener } from "../utils/decorators/DefineListener";
 
-export default class ReadyEvent implements ClientEventListener {
-    public readonly name = "ready";
-    public constructor(private readonly client: Jukebox) {}
-
+@DefineListener("ready")
+export class ReadyEvent extends BaseListener {
     public execute(): void {
         this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} I'm ready to serve ${this.client.guilds.cache.size} guilds!`);
         const updatePresence = async (): Promise<void> => {

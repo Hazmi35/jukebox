@@ -1,27 +1,26 @@
 /* eslint-disable no-underscore-dangle, @typescript-eslint/unbound-method, @typescript-eslint/restrict-plus-operands */
-import { Client, Collection } from "discord.js";
+import { Client, Collection, ClientOptions } from "discord.js";
 import { resolve } from "path";
 import * as config from "../config";
 import { createLogger } from "../utils/Logger";
-import CommandsHandler from "../utils/CommandsHandler";
-import ListenerLoader from "../utils/ListenerLoader";
+import { CommandsManager } from "../utils/CommandsManager";
+import { ListenerLoader } from "../utils/ListenerLoader";
 import { YoutubeAPI } from "../utils/YoutubeAPI";
-import type { ClientOptions } from "discord.js";
 
 // Extends DiscordJS Structures
 import "./Guild";
 
-export default class Jukebox extends Client {
+export class Jukebox extends Client {
     public readonly config = config;
     public readonly logger = createLogger(config.name, config.debug);
     public readonly youtube = new YoutubeAPI(process.env.YT_API_KEY!);
-    public readonly CommandsHandler = new CommandsHandler(this, resolve(__dirname, "..", "commands"));
-    public readonly ListenerLoader = new ListenerLoader(this, resolve(__dirname, "..", "listeners"));
+    public readonly commands = new CommandsManager(this, resolve(__dirname, "..", "commands"));
+    public readonly listenerLoader = new ListenerLoader(this, resolve(__dirname, "..", "listeners"));
     public constructor(opt: ClientOptions) { super(opt); }
 
     public async build(token: string): Promise<Jukebox> {
-        this.on("ready", () => this.CommandsHandler.load());
-        this.ListenerLoader.load().catch(e => this.logger.error("LISTENER_LOADER_ERR:", e));
+        this.on("ready", () => this.commands.load());
+        this.listenerLoader.load().catch(e => this.logger.error("LISTENER_LOADER_ERR:", e));
         await this.login(token);
         return this;
     }

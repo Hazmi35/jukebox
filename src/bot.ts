@@ -1,11 +1,11 @@
 import "dotenv/config";
 import { fetchAllUsers } from "./config";
-import Client from "./structures/Jukebox";
-import type { BitFieldResolvable, IntentsString } from "discord.js";
+import { Jukebox } from "./structures/Jukebox";
+import { BitFieldResolvable, IntentsString } from "discord.js";
 
 const intents: BitFieldResolvable<IntentsString> = ["GUILDS", "GUILD_VOICE_STATES", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS"];
 
-const client = new Client({
+const client = new Jukebox({
     disableMentions: "everyone",
     fetchAllMembers: fetchAllUsers,
     messageCacheLifetime: 60,

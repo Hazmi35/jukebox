@@ -80,6 +80,21 @@
             "description": "Whether to fetch all users on startup (warning: increased memory usage especially for bots with large users) (default: no) (note: You need to enable privileged GUILD_MEMBERS Intents on the developer page)",
             "required": false,
             "value": "no"
+        },
+        "CONFIG_SELECT_TIMEOUT": {
+            "description": "Select song timeout when searching songs (in seconds) (default: 20 seconds)",
+            "required": false,
+            "value": "20"
+        },
+        "CONFIG_DISABLE_SONG_SELECTION": {
+            "description": "Whether to disable selecting songs on play command, this will automatically selects the first song from search results (default: no)",
+            "required": false,
+            "value": "no"
+        },
+        "CONFIG_SEARCH_MAX_RESULTS": {
+            "description": "Maximum songs to list in song selection (default: 12, max: 12)",
+            "required": false,
+            "value": "12"
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",

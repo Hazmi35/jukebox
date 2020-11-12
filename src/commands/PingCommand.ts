@@ -1,19 +1,15 @@
-import BaseCommand from "../structures/BaseCommand";
+import { BaseCommand } from "../structures/BaseCommand";
 import { MessageEmbed } from "discord.js";
-import type { IMessage } from "../../typings";
-import type Jukebox from "../structures/Jukebox";
+import { IMessage } from "../../typings";
+import { DefineCommand } from "../utils/decorators/DefineCommand";
 
-export default class PingCommand extends BaseCommand {
-    public constructor(client: Jukebox, public readonly path: string) {
-        super(client, path, {
-            aliases: ["pong", "peng", "pingpong"]
-        }, {
-            name: "ping",
-            description: "Shows the current ping of the bot.",
-            usage: "{prefix}ping"
-        });
-    }
-
+@DefineCommand({
+    aliases: ["pong", "peng", "pingpong"],
+    name: "ping",
+    description: "Shows the current ping of the bot.",
+    usage: "{prefix}ping"
+})
+export class PingCommand extends BaseCommand {
     public execute(message: IMessage): IMessage {
         const before = Date.now();
         message.channel.send("🏓 Pong!").then((msg: IMessage | any) => {
@@ -31,9 +27,7 @@ export default class PingCommand extends BaseCommand {
                     value: `**\`${wsLatency}\`** ms`,
                     inline: true
                 })
-                .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL())
-                .setTimestamp();
-
+                .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL());
             msg.edit(embed);
             msg.edit("");
         }).catch(e => this.client.logger.error("PING_CMD_ERR:", e));

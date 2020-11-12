@@ -1,25 +1,23 @@
-import BaseCommand from "../structures/BaseCommand";
-import { MessageEmbed } from "discord.js";
-import type { IMessage } from "../../typings";
-import type Jukebox from "../structures/Jukebox";
+import { BaseCommand } from "../structures/BaseCommand";
+import { IMessage } from "../../typings";
+import { DefineCommand } from "../utils/decorators/DefineCommand";
+import { isMusicPlaying } from "../utils/decorators/MusicHelper";
+import { createEmbed } from "../utils/createEmbed";
 
-export default class NowPlayingCommand extends BaseCommand {
-    public constructor(client: Jukebox, public readonly path: string) {
-        super(client, path, {
-            aliases: ["np", "now-playing"]
-        }, {
-            name: "nowplaying",
-            description: "Send an info about the current playing song",
-            usage: "{prefix}nowplaying"
-        });
-    }
-
+@DefineCommand({
+    aliases: ["np", "now-playing"],
+    name: "nowplaying",
+    description: "Send an info about the current playing song",
+    usage: "{prefix}nowplaying"
+})
+export class NowPlayingCommand extends BaseCommand {
+    @isMusicPlaying()
     public execute(message: IMessage): any {
-        if (!message.guild?.queue) return message.channel.send(new MessageEmbed().setDescription("There is nothing playing.").setColor("#FFFF00"));
+        const song = message.guild?.queue?.songs.first();
         return message.channel.send(
-            new MessageEmbed().setDescription(`${message.guild.queue.playing ? "▶ Now playing:" : "⏸ Now playing (paused):"} ` +
-                `**[${message.guild.queue.songs.first()?.title as string}](${message.guild.queue.songs.first()?.url as string})**`)
-                .setColor("#00FF00")
+            createEmbed("info", `${message.guild?.queue?.playing ? "▶ Now playing:" : "⏸ Now playing (paused):"} ` +
+                `**[${song?.title as string}](${song?.url as string})**`)
+                .setThumbnail(song?.thumbnail as string)
         );
     }
 }

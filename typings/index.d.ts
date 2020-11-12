@@ -1,19 +1,17 @@
-import type { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection, ClientEvents, VoiceState } from "discord.js";
-import type Jukebox from "../src/structures/Jukebox";
+import { Message, Guild, TextChannel, VoiceChannel, DMChannel, NewsChannel, VoiceConnection, Collection, ClientEvents, VoiceState } from "discord.js";
+import { Jukebox } from "../src/structures/Jukebox";
 
-export interface CommandComponent {
-    conf: {
+export interface ICommandComponent {
+    meta: {
         aliases?: string[];
         cooldown?: number;
         disable?: boolean;
         path?: string;
-    };
-    help: {
         name: string;
         description?: string;
         usage?: string;
     };
-    execute(message: Message, args: string[]): any;
+    execute(message: IMessage, args: string[]): any;
 }
 export interface IGuild extends Guild {
     client: Jukebox;
@@ -27,14 +25,38 @@ export interface IMessage extends Message {
 export interface ITextChannel extends TextChannel {
     client: Jukebox;
     guild: IGuild;
+    send(
+        content: APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions,
+    ): Promise<IMessage>;
+    send(options: MessageOptions & { split: true | SplitOptions }): Promise<IMessage[]>;
+    send(options: MessageOptions | APIMessage): Promise<IMessage | IMessage[]>;
+    send(content: StringResolvable, options: (MessageOptions & { split?: false }) | MessageAdditions): Promise<IMessage>;
+    send(content: StringResolvable, options: MessageOptions & { split: true | SplitOptions }): Promise<IMessage[]>;
+    send(content: StringResolvable, options: MessageOptions): Promise<IMessage | IMessage[]>;
 }
 export interface INewsChannel extends NewsChannel {
     client: Jukebox;
     guild: IGuild;
+    send(
+        content: APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions,
+    ): Promise<IMessage>;
+    send(options: MessageOptions & { split: true | SplitOptions }): Promise<IMessage[]>;
+    send(options: MessageOptions | APIMessage): Promise<IMessage | IMessage[]>;
+    send(content: StringResolvable, options: (MessageOptions & { split?: false }) | MessageAdditions): Promise<IMessage>;
+    send(content: StringResolvable, options: MessageOptions & { split: true | SplitOptions }): Promise<IMessage[]>;
+    send(content: StringResolvable, options: MessageOptions): Promise<IMessage | IMessage[]>;
 }
 export interface IDMChannel extends DMChannel {
     client: Jukebox;
     guild: null;
+    send(
+        content: APIMessageContentResolvable | (MessageOptions & { split?: false }) | MessageAdditions,
+    ): Promise<IMessage>;
+    send(options: MessageOptions & { split: true | SplitOptions }): Promise<IMessage[]>;
+    send(options: MessageOptions | APIMessage): Promise<IMessage | IMessage[]>;
+    send(content: StringResolvable, options: (MessageOptions & { split?: false }) | MessageAdditions): Promise<IMessage>;
+    send(content: StringResolvable, options: MessageOptions & { split: true | SplitOptions }): Promise<IMessage[]>;
+    send(content: StringResolvable, options: MessageOptions): Promise<IMessage | IMessage[]>;
 }
 
 export interface IServerQueue {
@@ -55,10 +77,11 @@ export interface ISong {
     id: string;
     title: string;
     url: string;
+    thumbnail: string;
 }
-export interface ClientEventListener {
+export interface IListener {
     name: keyof ClientEvents;
-    execute(...args: ClientEvents[EventProp["name"]]): any;
+    execute(...args: any): any;
 }
 export interface IVoiceState extends VoiceState {
     guild: IGuild;

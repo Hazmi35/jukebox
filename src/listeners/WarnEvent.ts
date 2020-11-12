@@ -1,10 +1,8 @@
-import type { ClientEventListener } from "../../typings";
-import type Jukebox from "../structures/Jukebox";
+import { BaseListener } from "../structures/BaseListener";
+import { DefineListener } from "../utils/decorators/DefineListener";
 
-export default class WarnEvent implements ClientEventListener {
-    public readonly name = "warn";
-    public constructor(private readonly client: Jukebox) {}
-
+@DefineListener("warn")
+export class WarnEvent extends BaseListener {
     public execute(warn: string): void {
         this.client.logger.warn("CLIENT_WARN:", warn);
     }

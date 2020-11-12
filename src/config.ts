@@ -1,4 +1,4 @@
-import type { ActivityType } from "discord.js";
+import { ActivityType } from "discord.js";
 
 export const name: string = process.env.CONFIG_NAME ?? "Jukebox";
 export const prefix = process.env.CONFIG_PREFIX?.replace(/"/g, "") ?? "jukebox "; // Temporary workaround for https://github.com/docker/compose/issues/6951
@@ -17,3 +17,9 @@ export const status = {
     activity: process.env.CONFIG_STATUS_ACTIVITY ?? "music on {guildsCount}"
 };
 export const fetchAllUsers = process.env.CONFIG_FETCH_ALL_USERS === "yes";
+export const selectTimeout = Number(process.env.CONFIG_SELECT_TIMEOUT) * 1000 || 20 * 1000;
+export const disableSongSelection = process.env.CONFIG_DISABLE_SONG_SELECTION === "yes";
+export const searchMaxResults = Number(process.env.CONFIG_SEARCH_MAX_RESULTS) || 12;
+
+if (searchMaxResults < 1) throw new Error("CONFIG_SEARCH_MAX_RESULTS cannot be smaller than 1");
+if (searchMaxResults > 12) throw new Error("CONFIG_SEARCH_MAX_RESULTS cannot be higher than 12");

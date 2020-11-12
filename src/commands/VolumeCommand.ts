@@ -1,39 +1,34 @@
-import BaseCommand from "../structures/BaseCommand";
-import { MessageEmbed } from "discord.js";
-import type { IMessage } from "../../typings";
-import type Jukebox from "../structures/Jukebox";
+import { BaseCommand } from "../structures/BaseCommand";
+import { IMessage } from "../../typings";
+import { DefineCommand } from "../utils/decorators/DefineCommand";
+import { isUserInTheVoiceChannel, isMusicPlaying, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
+import { createEmbed } from "../utils/createEmbed";
 
-export default class VolumeCommand extends BaseCommand {
-    public constructor(public client: Jukebox, public readonly path: string) {
-        super(client, path, {}, {
-            name: "volume",
-            description: "Show or change the music volume",
-            usage: "{prefix}volume [new volume]"
-        });
-    }
-
+@DefineCommand({
+    aliases: ["vol"],
+    name: "volume",
+    description: "Show or change the music volume",
+    usage: "{prefix}volume [new volume]"
+})
+export class VolumeCommand extends BaseCommand {
+    @isUserInTheVoiceChannel()
+    @isMusicPlaying()
+    @isSameVoiceChannel()
     public execute(message: IMessage, args: string[]): any {
         let volume = Number(args[0]);
-        if (!message.member?.voice.channel) return message.channel.send(new MessageEmbed().setDescription("You're not in a voice channel").setColor("#FFFF00"));
-        if (!message.guild?.queue) return message.channel.send(new MessageEmbed().setDescription("There is nothing playing.").setColor("#FFFF00"));
-        if (message.member.voice.channel.id !== message.guild.queue.voiceChannel?.id) {
-            return message.channel.send(
-                new MessageEmbed().setDescription("You need to be in the same voice channel as mine").setColor("#FF0000")
-            );
-        }
 
-        if (isNaN(volume)) return message.channel.send(new MessageEmbed().setDescription(`📶 The current volume is ${message.guild.queue.volume}`).setColor("#00FF00"));
+        if (isNaN(volume)) return message.channel.send(createEmbed("info", `📶 The current volume is ${message.guild!.queue!.volume.toString()}`));
 
         if (volume < 0) volume = 0;
-        if (volume === 0) return message.channel.send(new MessageEmbed().setDescription("❗ Please pause the music instead of setting the volume to 0").setColor("#FFFF00"));
+        if (volume === 0) return message.channel.send(createEmbed("warn", "❗ Please pause the music instead of setting the volume to 0"));
         if (Number(args[0]) > this.client.config.maxVolume) {
             return message.channel.send(
-                new MessageEmbed().setDescription(`❗ Can't set the volume above ${this.client.config.maxVolume}`).setColor("#FFFF00")
+                createEmbed("warn", `❗ Can't set the volume above ${this.client.config.maxVolume}`)
             );
         }
 
-        message.guild.queue.volume = Number(args[0]);
-        message.guild.queue.connection?.dispatcher.setVolume(Number(args[0]) / this.client.config.maxVolume);
-        message.channel.send(new MessageEmbed().setDescription(`📶 Volume set to ${args[0]}`).setColor("#00FF00")).catch(console.error);
+        message.guild!.queue!.volume = Number(args[0]);
+        message.guild!.queue!.connection?.dispatcher.setVolume(Number(args[0]) / this.client.config.maxVolume);
+        message.channel.send(createEmbed("info", `📶 Volume set to ${args[0]}`)).catch(console.error);
     }
 }

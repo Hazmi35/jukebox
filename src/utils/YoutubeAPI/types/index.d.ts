@@ -1,4 +1,4 @@
-import type { Duration } from "iso8601-duration";
+import { Duration } from "iso8601-duration";
 
 export type privacyStatus = "public" | "private" | "unlisted";
 export type uploadStatus = "deleted" | "failed" | "processed" | "rejected" | "uploaded";
@@ -11,22 +11,22 @@ export interface IThumbnails {
         width: 120;
         height: 90;
     };
-    medium: {
+    medium?: {
         url: "https://i.ytimg.com/vi/SlPhMPnQ58k/mqdefault.jpg";
         width: 320;
         height: 180;
     };
-    high: {
+    high?: {
         url: "https://i.ytimg.com/vi/SlPhMPnQ58k/hqdefault.jpg";
         width: 480;
         height: 360;
     };
-    standard: {
+    standard?: {
         url: "https://i.ytimg.com/vi/SlPhMPnQ58k/sddefault.jpg";
         width: 640;
         height: 480;
     };
-    maxres: {
+    maxres?: {
         url: "https://i.ytimg.com/vi/SlPhMPnQ58k/maxresdefault.jpg";
         width: 1280;
         height: 720;

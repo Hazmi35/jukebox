@@ -1,24 +1,22 @@
-import BaseCommand from "../structures/BaseCommand";
-import { MessageEmbed, version } from "discord.js";
+import { BaseCommand } from "../structures/BaseCommand";
+import { version } from "discord.js";
 import { uptime as osUptime } from "os";
 import path from "path";
 import { formatMS } from "../utils/formatMS";
-import type Jukebox from "../structures/Jukebox";
-import type { IMessage } from "../../typings";
+import { IMessage } from "../../typings";
+import { DefineCommand } from "../utils/decorators/DefineCommand";
+import { createEmbed } from "../utils/createEmbed";
 
-export default class AboutCommand extends BaseCommand {
-    public constructor(public client: Jukebox, public readonly path: string) {
-        super(client, path, { aliases: ["botinfo", "info", "stats"] }, {
-            name: "about",
-            description: "Send the bot's info",
-            usage: "{prefix}about"
-        });
-    }
-
+@DefineCommand({
+    aliases: ["botinfo", "info", "stats"],
+    name: "about",
+    description: "Send the bot's info",
+    usage: "{prefix}about"
+})
+export class AboutCommand extends BaseCommand {
     public async execute(message: IMessage): Promise<void> {
-        message.channel.send(new MessageEmbed()
-            .setAuthor(`${this.client.user?.username as string} - Just a simple Discord music bot.`)
-            .setDescription(`
+        message.channel.send(
+            createEmbed("info", `
 \`\`\`asciidoc
 Cached users count  :: ${await this.client.getUsersCount()}
 Channels count      :: ${await this.client.getChannelsCount()}
@@ -40,9 +38,9 @@ Bot Version         :: v${(await import(path.join(process.cwd(), "package.json")
 
 Source code         :: https://sh.hzmi.xyz/jukebox
 \`\`\`
-    `)
-            .setColor("#00FF00")
-            .setTimestamp()).catch(e => this.client.logger.error("ABOUT_CMD_ERR:", e));
+        `)
+                .setAuthor(`${this.client.user?.username as string} - Just a simple Discord music bot.`)
+        ).catch(e => this.client.logger.error("ABOUT_CMD_ERR:", e));
     }
 
     private bytesToSize(bytes: number): string { // Function From Rendang's util (https://github.com/Hazmi35/rendang)
