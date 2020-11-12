@@ -17,7 +17,7 @@ export function inhibit(func: ICommandComponent["execute"]) {
 
 export function isMusicPlaying(): any {
     return inhibit(message => {
-        if (message.guild?.queue === null) return message.channel.send(createEmbed("warn", "There is nothing playing.").setColor("#FFFF00"));
+        if (message.guild?.queue === null) return message.channel.send(createEmbed("warn", "There is nothing playing."));
     });
 }
 
