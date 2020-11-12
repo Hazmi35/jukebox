@@ -6,7 +6,7 @@
 <a href='https://hub.docker.com/r/hazmi35/jukebox' alt="Available on Docker Hub"><img src="https://badgen.net/docker/size/hazmi35/jukebox/latest/amd64"></a>
 <a href='https://github.com/Hazmi35/jukebox/actions?query=workflow%3A%22Lint+code+%26+compile+test%22'><img src='https://github.com/Hazmi35/jukebox/workflows/Lint%20code%20&%20compile%20test/badge.svg' alt='CI Status' /></a>
 <img src="https://badgen.net/badge/icon/typescript?icon=typescript&label">
-<a href="https://heroku.com/deploy?template=https://github.com/Hazmi35/jukebox/tree/stable"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy"></a>
+<a href="https://heroku.com/deploy"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy"></a>
 
 ## Usage
 
