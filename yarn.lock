@@ -1294,9 +1294,9 @@ mimic-response@^3.1.0:
   integrity sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==
 
 miniget@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/miniget/-/miniget-3.0.0.tgz#4d6f4c250f5540efeb9fbe9e965a6660174fb9cd"
-  integrity sha512-s+gfqBEEGyoCf+1OG/6OKJDLXUubASlcVoBeXpftT0uyWha2G1qnxE63XLoD8F4Wq+KsTK70raxPoFkOmrzW5g==
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/miniget/-/miniget-3.1.0.tgz#ce9b1059062d63dfe23620774654f4feb608fcb4"
+  integrity sha512-cf18w/CV7RIgGbsi8jg5gmrrrgziLPk3KzC3bWAZW58Rrunlii75eSKPZVAoG7XGA86AYitzY+8Z0j4pafydmw==
 
 minimatch@^3.0.4:
   version "3.0.4"
