@@ -31,3 +31,19 @@ updates:
   commit-message:
     prefix: ci
     include: scope
+- package-ecosystem: docker
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "06:00"
+    timezone: Asia/Jakarta
+  open-pull-requests-limit: 99
+  target-branch: dev
+  reviewers:
+  - Hazmi35
+  labels:
+  - docker
+  - dependencies
+  commit-message:
+    prefix: chore
+    include: scope
