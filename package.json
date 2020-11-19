@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@hazmi35/eslint-config": "^3.2.0",
-    "@types/node": "^14.14.7",
+    "@types/node": "^14.14.8",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
     "eslint": "^7.13.0",
