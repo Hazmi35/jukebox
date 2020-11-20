@@ -149,12 +149,12 @@ export class PlayCommand extends BaseCommand {
                 message.guild?.queue.songs.clear();
                 message.guild!.queue = null;
                 this.client.logger.error("PLAY_CMD_ERR:", error);
-                message.channel.send(createEmbed("error", `Error: Could not join the voice channel. reason:\n\`${error}\``).setColor("#FF0000"))
+                message.channel.send(createEmbed("error", `Error: Could not join the voice channel. reason:\n\`${error.message}\``).setColor("#FF0000"))
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return undefined;
             }
             this.play(message.guild!).catch(err => {
-                message.channel.send(createEmbed("error", `Error while trying to play music:\n\`${err}\``).setColor("#FF0000"))
+                message.channel.send(createEmbed("error", `Error while trying to play music:\n\`${err.message}\``).setColor("#FF0000"))
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return this.client.logger.error("PLAY_CMD_ERR:", err);
             });
@@ -199,6 +199,10 @@ export class PlayCommand extends BaseCommand {
                 });
             })
             .on("error", (err: Error) => {
+                serverQueue.textChannel?.send(createEmbed("error", `Error while playing music:\n\`${err.message}\``).setColor("#FF0000"))
+                    .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                guild.queue?.voiceChannel?.leave();
+                guild.queue = null;
                 this.client.logger.error("PLAY_ERR:", err);
             })
             .setVolume(serverQueue.volume / guild.client.config.maxVolume);
