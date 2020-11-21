@@ -1,3 +1,4 @@
+import fetch from "node-fetch";
 import { parse as parseURL, resolve as resolveURL } from "url";
 import { parse as parseQuery, stringify as stringifyQuery, ParsedUrlQueryInput } from "querystring";
 import { Playlist } from "./structures/Playlist";

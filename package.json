@@ -31,8 +31,8 @@
     "dotenv": "^8.2.0",
     "entities": "^2.1.0",
     "ffmpeg-static": "^4.2.7",
-    "got": "^11.8.0",
     "iso8601-duration": "^1.2.0",
+    "node-fetch": "^2.6.1",
     "opusscript": "^0.0.7",
     "pretty-ms": "^7.0.1",
     "tslib": "^2.0.3",
@@ -42,6 +42,7 @@
   "devDependencies": {
     "@hazmi35/eslint-config": "^3.2.0",
     "@types/node": "^14.14.9",
+    "@types/node-fetch": "^2.5.7",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
     "eslint": "^7.14.0",
