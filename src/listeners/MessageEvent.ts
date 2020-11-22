@@ -13,7 +13,6 @@ export class MessageEvent extends BaseListener {
                 createEmbed("info", `Hi, I'm a simple music bot, see my commands with \`${this.client.config.prefix}help\``)
             );
         }
-        if (!message.content.toLowerCase().startsWith(this.client.config.prefix)) return message;
         return this.client.commands.handle(message);
     }
 
