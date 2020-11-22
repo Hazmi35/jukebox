@@ -9,11 +9,6 @@
         "YT_API_KEY": {
             "description": "Youtube API Key for querying the Youtube API for video data."
         },
-        "CONFIG_NAME": {
-            "description": "Your bot's name",
-            "required": false,
-            "value": "Jukebox"
-        },
         "CONFIG_PREFIX": {
             "description": "Your bot prefix"
         },

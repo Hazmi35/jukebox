@@ -1,6 +1,5 @@
 import { ActivityType } from "discord.js";
 
-export const name: string = process.env.CONFIG_NAME ?? "Jukebox";
 export const prefix = process.env.CONFIG_PREFIX?.replace(/"/g, "") ?? "jukebox "; // Temporary workaround for https://github.com/docker/compose/issues/6951
 export const owners: string[] = process.env.CONFIG_OWNERS?.replace(/  +/g, " ").split(/,[ ]?/) ?? [];
 export const totalShards: string | number = process.env.CONFIG_TOTALSHARDS ?? "auto";
