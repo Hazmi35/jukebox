@@ -7,8 +7,7 @@ import { User } from "discord.js";
 @DefineListener("message")
 export class MessageEvent extends BaseListener {
     public async execute(message: IMessage): Promise<any> {
-        if (message.author.bot) return message;
-        if (message.channel.type === "dm") return message;
+        if (message.author.bot || message.channel.type !== "text") return message;
         if ((await this.getUserFromMention(message.content))?.id === message.client.user?.id) {
             return message.channel.send(
                 createEmbed("info", `Hi, I'm a simple music bot, see my commands with \`${this.client.config.prefix}help\``)
