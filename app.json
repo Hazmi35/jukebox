@@ -92,6 +92,5 @@
             "value": "12"
         }
     },
-    "repository": "https://github.com/Hazmi35/jukebox",
-    "buildpacks": [{ "url": "heroku/nodejs" }]
+    "repository": "https://github.com/Hazmi35/jukebox"
 }
