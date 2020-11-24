@@ -10,7 +10,7 @@
 
 ## Usage
 
-**[⚠] Requires [Node.JS](https://nodejs.org) version v12 or above.**
+**[⚠] Requires [Node.JS](https://nodejs.org) version 12.9.0 or above.**
 
 1. Install [Node.JS](https://nodejs.org) and [Yarn (Optional)](https://yarnpkg.com)
 2. Rename `.env.schema` to `.env` and fill out the values (example on .env.example)
