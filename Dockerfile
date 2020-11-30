@@ -27,10 +27,13 @@ RUN yarn install --production
 # Get ready for production
 FROM node:14.15.1-alpine
 
-WORKDIR /app
-
 LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
+
+WORKDIR /app
+
+# Install dependencies
+RUN apk add --no-cache tzdata
 
 # Copy needed files
 COPY --from=build-stage /tmp/build/package.json .
