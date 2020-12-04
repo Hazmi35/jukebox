@@ -16,7 +16,7 @@
 2. Rename `.env.schema` to `.env` and fill out the values (example on .env.example)
 3. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
 4. Run `npm run build` or `yarn run build` if you're using yarn.
-5. (Optional) Prune devDependencies (This is good to save disk spaces):
+5. (Optional) Prune dev dependencies (This is good to save disk spaces):
 ```shell script
 $ npm prune --production
 #or with yarn
@@ -47,7 +47,7 @@ $ yarn install
 For optional packages, you need to install build tools as stated [here](https://github.com/nodejs/node-gyp#installation) and you also need to install [Git](https://git-scm.com/)
 
 ## Docker
-Want to use Dockerized version of jukebox? sure! we provide them on the [Docker Hub](https://hub.docker.com/r/hazmi35/jukebox)
+Want to use Dockerized version of jukebox? sure! we provide them on the [Docker Hub](https://hub.docker.com/r/hazmi35/jukebox) and also in [GitHub Container Registry](https://github.com/users/Hazmi35/packages/container/package/jukebox)
 
 ### Volumes
 [Docker Volumes](https://docs.docker.com/storage/volumes/) are needed to store cache and logs persistently
@@ -70,6 +70,6 @@ $ docker-compose up
 - Caching! (cache youtube downloads)
 - Configurable
 - Docker-friendly
-- Lightweight (only around 150MB!)
+- Lightweight (only around 120MB with dev dependecies pruned)
 
 Based on [discord-music-bot](https://github.com/iCrawl/discord-music-bot)
