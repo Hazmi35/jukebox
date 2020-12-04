@@ -59,6 +59,7 @@ Source code         :: https://sh.hzmi.xyz/jukebox
     }
 
     private getPackageJSON(pkgName: string): string {
+        if (process.platform === "win32") pkgName = pkgName.replace("/", "\\");
         const resolvedPath = resolve(require.resolve(pkgName));
         return resolve(resolvedPath.split(pkgName)[0], pkgName, "package.json");
     }
