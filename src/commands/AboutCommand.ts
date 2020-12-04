@@ -1,7 +1,7 @@
 import { BaseCommand } from "../structures/BaseCommand";
 import { version } from "discord.js";
 import { uptime as osUptime } from "os";
-import path from "path";
+import path, { resolve } from "path";
 import { formatMS } from "../utils/formatMS";
 import { IMessage } from "../../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
@@ -15,6 +15,7 @@ import { createEmbed } from "../utils/createEmbed";
 })
 export class AboutCommand extends BaseCommand {
     public async execute(message: IMessage): Promise<void> {
+        const opusEncoderName = this.getOpusEncoder().name;
         message.channel.send(
             createEmbed("info", `
 \`\`\`asciidoc
@@ -32,8 +33,11 @@ Memory              :: ${this.bytesToSize(await this.client.getTotalMemory("rss"
 Process Uptime      :: ${formatMS(process.uptime() * 1000)}
 Bot Uptime          :: ${formatMS(this.client.uptime!)}
 
-NodeJS version      :: ${process.version}
-DiscordJS version   :: v${version}
+Node.js version     :: ${process.version}
+Discord.js version  :: v${version}
+FFmpeg version      :: v${(await import(this.getPackageJSON("ffmpeg-static")))["ffmpeg-static"]["binary-release-name"]}
+YTDL-Core version   :: v${(await import(this.getPackageJSON("ytdl-core"))).version}
+Opus Encoder        :: ${opusEncoderName} v${(await import(this.getPackageJSON(opusEncoderName))).version}
 Bot Version         :: v${(await import(path.join(process.cwd(), "package.json"))).version}
 
 Source code         :: https://sh.hzmi.xyz/jukebox
@@ -52,5 +56,26 @@ Source code         :: https://sh.hzmi.xyz/jukebox
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (sizes[i] === undefined) return `${bytes} ${sizes[sizes.length - 1]}`;
         return `${Number(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
+    }
+
+    private getPackageJSON(pkgName: string): string {
+        const resolvedPath = resolve(require.resolve(pkgName));
+        return resolve(resolvedPath.split(pkgName)[0], pkgName, "package.json");
+    }
+
+    private getOpusEncoder(): any {
+        const list = ["@discordjs/opus", "opusscript"];
+        const errorLog = [];
+        for (const name of list) {
+            try {
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
+                const data = require(name);
+                data.name = name;
+                return data;
+            } catch (e) {
+                errorLog.push(e);
+            }
+        }
+        throw new Error(errorLog.join("\n"));
     }
 }
