@@ -1,7 +1,7 @@
 import { BaseCommand } from "../structures/BaseCommand";
 import { version } from "discord.js";
 import { uptime as osUptime } from "os";
-import path, { resolve } from "path";
+import path from "path";
 import { formatMS } from "../utils/formatMS";
 import { IMessage } from "../../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
@@ -38,7 +38,7 @@ Discord.js version  :: v${version}
 FFmpeg version      :: v${(await import(this.getPackageJSON("ffmpeg-static")))["ffmpeg-static"]["binary-release-name"]}
 YTDL-Core version   :: v${(await import(this.getPackageJSON("ytdl-core"))).version}
 Opus Encoder        :: ${opusEncoderName} v${(await import(this.getPackageJSON(opusEncoderName))).version}
-Bot Version         :: v${(await import(path.join(process.cwd(), "package.json"))).version}
+Bot Version         :: v${(await import(path.resolve(process.cwd(), "package.json"))).version}
 
 Source code         :: https://sh.hzmi.xyz/jukebox
 \`\`\`
@@ -60,8 +60,8 @@ Source code         :: https://sh.hzmi.xyz/jukebox
 
     private getPackageJSON(pkgName: string): string {
         if (process.platform === "win32") pkgName = pkgName.replace("/", "\\");
-        const resolvedPath = resolve(require.resolve(pkgName));
-        return resolve(resolvedPath.split(pkgName)[0], pkgName, "package.json");
+        const resolvedPath = path.resolve(require.resolve(pkgName));
+        return path.resolve(resolvedPath.split(pkgName)[0], pkgName, "package.json");
     }
 
     private getOpusEncoder(): any {
