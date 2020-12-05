@@ -30,14 +30,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
-      
-      - name: Cache Docker layers
-        uses: actions/cache@v2.1.3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
 
       - name: Extract tag name
         id: tags
@@ -57,8 +49,8 @@ jobs:
             hazmi35/jukebox:${{ steps.tags.outputs.name }}
             ghcr.io/hazmi35/jukebox:latest
             ghcr.io/hazmi35/jukebox:${{ steps.tags.outputs.name }}
-          cache-from: type=local,src=/tmp/.buildx-cache,mode=max
-          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+          cache-from: type=registry,ref=Hazmi35/jukebox:latest
+          cache-to: type=inline
 
       # Well, turns out it doesn't support PAT yet. Please see https://github.com/peter-evans/dockerhub-description/issues/24 and https://github.com/docker/roadmap/issues/115
       #- name: Update repo description
