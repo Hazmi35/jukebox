@@ -10,9 +10,7 @@ import { formatMS } from "../utils/formatMS";
 export class VoiceStateUpdateEvent extends BaseListener {
     public execute(oldState: IVoiceState, newState: IVoiceState): any {
         const queue = newState.guild.queue;
-
         if (!queue) return undefined;
-
         const newVC = newState.channel;
         const oldVC = oldState.channel;
         const oldID = oldVC?.id;
@@ -36,7 +34,15 @@ export class VoiceStateUpdateEvent extends BaseListener {
             }
         }
 
-        if (newState.mute !== oldState.mute || newState.deaf !== oldState.deaf) return undefined;
+        // Handle when the bot gets muted and or every user in voice channel is deaf
+        if (newState.mute !== oldState.mute || newState.deaf !== oldState.deaf) {
+            // If Jukebox is muted then do:
+            if (newState.mute && member?.id === botID) return console.log("BOT IS MUTED!");
+            // If some bot is deafened do nthing
+            if (newState.deaf && member?.user.bot) return undefined;
+            // If some user deafened then do:
+            if (newState.deaf && !member?.user.bot) return console.log("SOME GUY DEAFENED");
+        }
 
         // Handle when the bot is moved to another voice channel
         if (member?.id === botID && oldID === queueVC.id && newID !== queueVC.id && newID !== undefined) {
