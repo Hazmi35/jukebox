@@ -41,7 +41,6 @@ export class VoiceStateUpdateEvent extends BaseListener {
     public doTimeout(vcMembers: Collection<Snowflake, GuildMember>, queue: ServerQueue, newState: IVoiceState): any {
         try {
             if (vcMembers.size !== 0) return undefined;
-            console.log(vcMembers.size);
             clearTimeout(queue.timeout!);
             newState.guild.queue!.timeout = null;
             newState.guild.queue!.playing = false;
