@@ -1,91 +1,42 @@
-import { Snowflake, TextChannel, Collection, GuildMember } from "discord.js";
-import { formatMS } from "../utils/formatMS";
+import { VoiceChannel } from "discord.js";
 import { IVoiceState } from "../../typings";
-import { DefineListener } from "../utils/decorators/DefineListener";
-import { createEmbed } from "../utils/createEmbed";
 import { BaseListener } from "../structures/BaseListener";
+import { createEmbed } from "../utils/createEmbed";
+import { DefineListener } from "../utils/decorators/DefineListener";
 
 @DefineListener("voiceStateUpdate")
 export class VoiceStateUpdateEvent extends BaseListener {
     public execute(oldState: IVoiceState, newState: IVoiceState): any {
-        if (newState.guild.queue) {
-            const oldID = oldState.channel?.id;
-            const newID = newState.channel?.id;
-            const musicVcID = newState.guild.queue.voiceChannel?.id;
+        const queue = newState.guild.queue;
 
-            // Handle when bot gets kicked from the voice channel
-            if (oldState.id === this.client.user?.id && oldID === newState.guild.queue.voiceChannel?.id && newID === undefined) {
-                try {
-                    this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Disconnected from the voice channel at ${newState.guild.name}, queue deleted.`);
-                    newState.guild.queue.textChannel?.send(createEmbed("warn", "I'm disconnected from the voice channel, the queue will be deleted"))
-                        .catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
-                    return newState.guild.queue = null;
-                } catch (e) {
-                    this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e);
-                }
-            }
+        if (!queue) return undefined;
 
-            // Handle when the bot is moved to another voice channel
-            if (oldState.member?.user.id === this.client.user?.id && oldID === musicVcID && newID !== musicVcID) {
-                const vc = newState.channel?.members.filter(m => !m.user.bot);
-                if (vc?.size === 0 && newState.guild.queue?.timeout === null) this.doTimeout(vc, newState);
+        const oldID = oldState.channel?.id;
+        const newID = newState.channel?.id;
+        const vc = queue.voiceChannel!;
+        const member = newState.member;
+        const vcMembers = vc.members.filter(m => !m.user.bot);
 
-                this.resumeTimeout(vc, newState);
-                newState.guild.queue!.voiceChannel = newState.channel;
-            }
-
-            const vc = newState.guild.queue?.voiceChannel?.members.filter(m => !m.user.bot);
-            // Handle when user leaves voice channel
-            if (oldID === musicVcID && newID !== musicVcID && !newState.member?.user.bot && newState.guild.queue?.timeout === null) this.doTimeout(vc, newState);
-
-            // Handle when user joins voice channel or bot gets moved
-            if (newID === musicVcID && !newState.member?.user.bot) this.resumeTimeout(vc, newState);
-        }
-    }
-
-    private doTimeout(vc: Collection<string, GuildMember> | undefined, newState: IVoiceState): void {
-        try {
-            if (vc?.size !== 0) return undefined;
-            clearTimeout(newState.guild.queue?.timeout as NodeJS.Timeout);
-            newState.guild.queue!.timeout = null;
-            newState.guild.queue!.playing = false;
-            newState.guild.queue?.connection?.dispatcher.pause();
-            const timeout = this.client.config.deleteQueueTimeout;
-            const duration = formatMS(timeout);
-            newState.guild.queue!.timeout = setTimeout(() => {
-                const textChannel = this.client.channels.resolve(newState.guild.queue?.textChannel?.id as Snowflake) as TextChannel;
-                newState.guild.queue?.voiceChannel?.leave();
-                newState.guild.queue = null;
-                textChannel.send(
-                    createEmbed("error", `${duration} have passed and there is no one who joins my voice channel, the queue was deleted.`)
-                        .setTitle("⏹ Queue deleted.")
-                ).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
-            }, timeout);
-            newState.guild.queue?.textChannel?.send(
-                createEmbed("warn", "Currently, no one is in my voice channel, to save resources, the queue was paused. " +
-                    `If there's no one who joins my voice channel in the next ${duration}, the queue will be deleted.`)
-                    .setTitle("⏸ Queue paused.")
-            ).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
-        } catch (e) { this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e); }
-    }
-
-    private resumeTimeout(vc: Collection<string, GuildMember> | undefined, newState: IVoiceState): void {
-        if (Number(vc?.size) > 0) {
-            if (Number(vc?.size) === 1) { clearTimeout(newState.guild.queue?.timeout as NodeJS.Timeout); newState.guild.queue!.timeout = null; }
-            if (!newState.guild.queue?.playing && Number(vc?.size) < 2) {
-                try {
-                    const song = newState.guild.queue?.songs.first();
-                    newState.guild.queue?.textChannel?.send(
-                        createEmbed("info", `Someones joins the voice channel. Enjoy the music 🎶\nNow Playing: **[${song!.title}](${song!.url})**`)
-                            .setThumbnail(song!.thumbnail)
-                            .setTitle("▶ Queue resumed")
-                    ).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
-                    newState.guild.queue!.playing = true;
-                    newState.guild.queue?.connection?.dispatcher.resume();
-                } catch (e) {
-                    this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e);
-                }
+        // Handle when bot gets kicked from the voice channel
+        if (oldState.id === this.client.user?.id && oldID === vc.id && newID === undefined) {
+            try {
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Disconnected from the voice channel at ${newState.guild.name}, queue deleted.`);
+                queue.textChannel?.send(createEmbed("warn", "I'm disconnected from the voice channel, the queue will be deleted"))
+                    .catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
+                return newState.guild.queue = null;
+            } catch (e) {
+                this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e);
             }
         }
+
+        // Handle when user leaves voice channel
+        if (oldID === vc.id && newID === vc.id && member?.user.bot && queue.timeout === null) this.doTimeout(vc, newState);
+
+        // Handle when user joins voice channel or bot gets moved
+        if (newID === vc.id && member?.user.bot) this.resumeTimeout(vc, newState);
     }
+
+    public doTimeout(vc: VoiceChannel, newState: IVoiceState): any {}
+
+    public resumeTimeout(vc: VoiceChannel, newState: IVoiceState): any {}
 }
