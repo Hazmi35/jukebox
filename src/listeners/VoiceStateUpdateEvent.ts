@@ -36,6 +36,8 @@ export class VoiceStateUpdateEvent extends BaseListener {
             }
         }
 
+        if (newState.mute !== oldState.mute || newState.deaf !== oldState.deaf) return undefined;
+
         // Handle when the bot is moved to another voice channel
         if (member?.id === botID && oldID === queueVC.id && newID !== queueVC.id && newID !== undefined) {
             if (!newVCMembers) return undefined;
