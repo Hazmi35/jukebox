@@ -9,6 +9,8 @@ import { formatMS } from "../utils/formatMS";
 @DefineListener("voiceStateUpdate")
 export class VoiceStateUpdateEvent extends BaseListener {
     public execute(oldState: IVoiceState, newState: IVoiceState): any {
+        if (newState.speaking || oldState.speaking) return undefined;
+
         const queue = newState.guild.queue;
         if (!queue) return undefined;
         const newVC = newState.channel;
@@ -36,12 +38,15 @@ export class VoiceStateUpdateEvent extends BaseListener {
 
         // Handle when the bot gets muted and or every user in voice channel is deaf
         if (newState.mute !== oldState.mute || newState.deaf !== oldState.deaf) {
-            // If Jukebox is muted then do:
-            if (newState.mute && member?.id === botID) return console.log("BOT IS MUTED!");
+            // If Jukebox is muted or unmuted then do:
+            if (newState.mute !== oldState.mute && member?.id === botID) {
+                if (newState.mute) this.doTimeout(queueVCMembers, queue, newState, true);
+                else this.resumeTimeout(queueVCMembers, queue, newState);
+            }
             // If some bot is deafened do nthing
             if (newState.deaf && member?.user.bot) return undefined;
             // If some user deafened then do:
-            if (newState.deaf && !member?.user.bot) return console.log("SOME GUY DEAFENED");
+            if (newState.deaf !== oldState.deaf && !member?.user.bot) return console.log("SOME GUY DEAFENED");
         }
 
         // Handle when the bot is moved to another voice channel
@@ -59,9 +64,10 @@ export class VoiceStateUpdateEvent extends BaseListener {
         if (newID === queueVC.id && !member?.user.bot) this.resumeTimeout(queueVCMembers, queue, newState);
     }
 
-    private doTimeout(vcMembers: Collection<Snowflake, GuildMember>, queue: ServerQueue, newState: IVoiceState): any {
+    private doTimeout(vcMembers: Collection<Snowflake, GuildMember>, queue: ServerQueue, newState: IVoiceState, alt = false): any {
         try {
-            if (vcMembers.size !== 0) return undefined;
+            if (vcMembers.size !== 0 && !alt) return undefined;
+            if (queue.timeout !== null) return undefined;
             clearTimeout(queue.timeout!);
             newState.guild.queue!.timeout = null;
             newState.guild.queue!.playing = false;
