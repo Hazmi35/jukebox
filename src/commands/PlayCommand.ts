@@ -2,14 +2,16 @@
 import { BaseCommand } from "../structures/BaseCommand";
 import { ServerQueue } from "../structures/ServerQueue";
 import { playSong } from "../utils/YoutubeDownload";
-import { Util, MessageEmbed, VoiceChannel } from "discord.js";
+import { Util, MessageEmbed, VoiceChannel, Collection } from "discord.js";
 import { decodeHTML } from "entities";
 import { IMessage, ISong, IGuild, ITextChannel } from "../../typings";
 import { Video } from "../utils/YoutubeAPI/structures/Video";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
-
+import { YoutubeScrape } from "../utils/YoutubeScrape";
+import { Playlist } from "../utils/YoutubeScrape/structures/Playlist";
+import { VideoInfo } from "../utils/YoutubeScrape/structures/Video";
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
     name: "play",
@@ -34,6 +36,54 @@ export class PlayCommand extends BaseCommand {
             return message.channel.send(
                 createEmbed("warn", `Music on this server is already playing to: **${message.guild?.queue.voiceChannel?.name}** voice channel`)
             );
+        }
+
+        if (this.client.config.youtubeScrape) {
+            const scrapper = new YoutubeScrape(this.client);
+            const result = await scrapper.load(searchString);
+            if (result instanceof Playlist) {
+                try {
+                    message.channel.send(createEmbed("info", `Adding all videos in playlist: **[${result.title}](${result.url})**, Hang on...`))
+                        .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                    for (const song of result.videos) {
+                        await this.handleVideo(song, message, voiceChannel, true);
+                    }
+                } catch (e) {
+                    this.client.logger.error("YT_PLAYLIST_ERR:", new Error(e.message));
+                    return message.channel.send(createEmbed("error", `I could not load the playlist!\nError: \`${e.message}\``));
+                }
+                return message.channel.send(createEmbed("info", `All videos in playlist: **[${result.title}](${result.url})**, has been added to the queue!`));
+            }
+            let video = undefined;
+            if (!result.length) return message.channel.send(createEmbed("warn", "I could not obtain any search results!"));
+            if (this.client.config.disableSongSelection) { video = result[0]; } else {
+                let index = 0;
+                const msg = await message.channel.send(new MessageEmbed()
+                    .setAuthor("Song Selection")
+                    .setDescription(`${result.map(video => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
+                    "*Type `cancel` or `c` to cancel song selection*")
+                    .setThumbnail(message.client.user?.displayAvatarURL() as string)
+                    .setColor("#00FF00")
+                    .setFooter("Please provide a value to select one of the search results ranging from 1-12"));
+                const response = await message.channel.awaitMessages((msg2: IMessage) => {
+                    if (message.author.id !== msg2.author.id) return false;
+
+                    if (msg2.content === "cancel" || msg2.content === "c") return true;
+                    return Number(msg2.content) > 0 && Number(msg2.content) < 13;
+                }, {
+                    max: 1,
+                    time: this.client.config.selectTimeout,
+                    errors: ["time"]
+                }).catch(() => message.channel.send(createEmbed("error", "No or invalid value entered, song selection canceled."))) as Collection<string, IMessage>;
+                response.first()?.delete({ timeout: 3000 }).catch(e => e); // do nothing
+                msg.delete().catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                if (response.first()?.content === "c" || response.first()?.content === "cancel") {
+                    return message.channel.send(createEmbed("info", "Song selection canceled"));
+                }
+                const videoIndex = parseInt(response.first()?.content as string, 10);
+                video = result[videoIndex - 1];
+            }
+            return this.handleVideo(video, message, voiceChannel);
         }
 
         if (/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)$/.exec(url)) {
@@ -112,7 +162,7 @@ export class PlayCommand extends BaseCommand {
         return this.handleVideo(video, message, voiceChannel);
     }
 
-    private async handleVideo(video: Video, message: IMessage, voiceChannel: VoiceChannel, playlist = false): Promise<any> {
+    private async handleVideo(video: Video|VideoInfo, message: IMessage, voiceChannel: VoiceChannel, playlist = false): Promise<any> {
         const song: ISong = {
             id: video.id,
             title: this.cleanTitle(video.title),

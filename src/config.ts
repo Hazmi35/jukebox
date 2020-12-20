@@ -19,7 +19,9 @@ export const fetchAllUsers = process.env.CONFIG_FETCH_ALL_USERS === "yes";
 export const selectTimeout = Number(process.env.CONFIG_SELECT_TIMEOUT) * 1000 || 20 * 1000;
 export const disableSongSelection = process.env.CONFIG_DISABLE_SONG_SELECTION === "yes";
 export const searchMaxResults = Number(process.env.CONFIG_SEARCH_MAX_RESULTS) || 12;
+export const youtubeScrape = process.env.CONFIG_YOUTUBE_SCRAPE === "yes";
 
 if (searchMaxResults < 1) throw new Error("CONFIG_SEARCH_MAX_RESULTS cannot be smaller than 1");
 if (searchMaxResults > 12) throw new Error("CONFIG_SEARCH_MAX_RESULTS cannot be higher than 12");
 if (totalShards !== "auto" && isNaN(totalShards as unknown as number)) throw new Error("CONFIG_TOTALSHARDS must be a number or \"auto\"");
+if (youtubeScrape && process.env.YT_API_KEY) console.warn("[WARN] You may not fill YT_API_KEY because you enable youtube scrapping which doesn't require API key.");
