@@ -9,7 +9,6 @@ import { Video } from "../utils/YoutubeAPI/structures/Video";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
-import { YoutubeScrape } from "../utils/YoutubeScrape";
 import { Playlist } from "../utils/YoutubeScrape/structures/Playlist";
 import { VideoInfo } from "../utils/YoutubeScrape/structures/Video";
 @DefineCommand({
@@ -39,8 +38,7 @@ export class PlayCommand extends BaseCommand {
         }
 
         if (this.client.config.youtubeScrape) {
-            const scrapper = new YoutubeScrape(this.client);
-            const result = await scrapper.load(searchString);
+            const result = await this.client.youtubeScrapper.load(searchString);
             if (result instanceof Playlist) {
                 try {
                     message.channel.send(createEmbed("info", `Adding all videos in playlist: **[${result.title}](${result.url})**, Hang on...`))
