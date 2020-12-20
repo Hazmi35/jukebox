@@ -1,17 +1,26 @@
-/* eslint-disable no-mixed-operators */
+/* eslint-disable no-mixed-operators, radix */
 import { Jukebox } from "../../structures/Jukebox";
 import { Playlist } from "./structures/Playlist";
 import { VideoInfo } from "./structures/Video";
 import fetch from "node-fetch";
+import { getSongInfo } from "../YoutubeDownload";
 
 export class YoutubeScrape {
     private readonly initialDataRegex = /(window\["ytInitialData"]|var ytInitialData)\s*=\s*(.*);/;
     private readonly playlistURLRegex = /^https?:\/\/(?:www.|)youtube.com\/playlist\?list=(.*)$/;
+    private readonly videoURLRegex = /^https?:\/\/((?:www\.|)youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)(\S+)$/;
     public constructor(public readonly client: Jukebox) {}
 
     public async load(query: string): Promise<Playlist|VideoInfo[]> {
         if (this.playlistURLRegex.test(query)) return this.loadPlaylist(query);
+        if (this.videoURLRegex.test(query)) return this.loadVideo(query);
         return this.search(query);
+    }
+
+    public async loadVideo(url: string): Promise<VideoInfo[]> {
+        const { videoDetails: { title, videoId, author: { name: authorName }, lengthSeconds } } = await getSongInfo(url);
+        const durationMs = parseInt(lengthSeconds) * 1000;
+        return [new VideoInfo(videoId, title, authorName, durationMs)];
     }
 
     public async search(query: string): Promise<VideoInfo[]> {
