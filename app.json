@@ -7,7 +7,7 @@
             "description": "Your Discord bot's token"
         },
         "YT_API_KEY": {
-            "description": "Youtube API Key for querying the Youtube API for video data."
+            "description": "Youtube API Key for querying the Youtube API for video data. You may not fill the API config if you use CONFIG_YOUTUBE_SCRAPE."
         },
         "CONFIG_PREFIX": {
             "description": "Your bot prefix"
@@ -75,6 +75,9 @@
         "CONFIG_SEARCH_MAX_RESULTS": {
             "description": "Maximum songs to list in song selection (default: 12, max: 12)",
             "required": false
+        },
+        "CONFIG_YOUTUBE_SCRAPE": {
+            "description": "Whether to scrape youtube instead using API."
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox"
