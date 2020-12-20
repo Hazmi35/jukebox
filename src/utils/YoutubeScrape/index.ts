@@ -42,7 +42,7 @@ export class YoutubeScrape {
 
     private extractPlaylist(html: string): Playlist {
         const matched = this.initialDataRegex.exec(html)![2];
-        const result = JSON.parse(matched);
+        const result = JSON.parse(matched.split(";</script>")[0]);
         const playlistInfo = result.sidebar.playlistSidebarRenderer.items[0].playlistSidebarPrimaryInfoRenderer;
         const playlistOwner = result.sidebar.playlistSidebarRenderer.items[1].playlistSidebarSecondaryInfoRenderer.videoOwner.videoOwnerRenderer;
         const videos = result
