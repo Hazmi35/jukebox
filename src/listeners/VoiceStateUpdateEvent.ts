@@ -6,16 +6,28 @@ import { createEmbed } from "../utils/createEmbed";
 import { DefineListener } from "../utils/decorators/DefineListener";
 import { formatMS } from "../utils/formatMS";
 
-enum Messages {
-    NO_PEOPLE = "Currently, no one is in my voice channel, to save resources, the queue was paused. " +
-    `If there's no one who joins my voice channel in the next {duration}, the queue will be deleted.`,
-    NO_PEOPLE_TIMEOUT = "{duration} has passed and there is no one who joins my voice channel, the queue was deleted.",
-    NO_PEOPLE_END = "Someones joins the voice channel. Enjoy the music 🎶\nNow Playing: **[{song.title}]({song.url})**",
-    BOT_MUTED = "I see that I'm server muted. And I can't play a song while muted, the queue will be paused, " +
-    "If I'm not unmuted by the next {duration}, the queue will be deleted.",
-    BOT_MUTED_TIMEOUT = "{duration} has passed, and I'm still muted, the queue was deleted.",
-    BOT_MUTED_END = "Hooray! I'm not muted anymore, Enjoy the music 🎶\nNow Playing: **[{song.title}]({song.url})**"
-}
+type TimeoutType = "NO_PEOPLE" | "BOT_MUTED" | "ALL_DEAF";
+
+const Messages = {
+    NO_PEOPLE: {
+        WARNING: "Currently, no one is in my voice channel, to save resources, the queue will be paused. " +
+        "If there's no one who joins my voice channel in the next {duration}, the queue will be deleted.",
+        TIMEOUT: "{duration} has passed and there is no one who joins my voice channel, the queue was deleted.",
+        END: "Someones joins the voice channel. Enjoy the music 🎶\nNow Playing: **[{song.title}]({song.url})**"
+    },
+    BOT_MUTED: {
+        WARNING: "I see that I'm server muted. And I can't play a song while muted, the queue will be paused, " +
+        "If I'm not unmuted by the next {duration}, the queue will be deleted.",
+        TIMEOUT: "{duration} has passed, and I'm still muted, the queue was deleted.",
+        END: "Hooray! I'm not muted anymore, Enjoy the music 🎶\nNow Playing: **[{song.title}]({song.url})**"
+    },
+    ALL_DEAF: {
+        WARNING: "I see that everyone is deafened. To save resources, the queue will be paused. " +
+        "If no one is listening in the next {duration}, the queue will be deleted",
+        TIMEOUT: "{duration} has passed, and no one is listening to the music, the queue was deleted.",
+        END: "Someone is now listening, Enjoy the music 🎶\nNow Playing: **[{song.title}]({song.url})**"
+    }
+};
 
 @DefineListener("voiceStateUpdate")
 export class VoiceStateUpdateEvent extends BaseListener {
@@ -49,18 +61,25 @@ export class VoiceStateUpdateEvent extends BaseListener {
 
         // Handle when the bot gets muted and or every user in voice channel is deaf
         if (newState.mute !== oldState.mute || newState.deaf !== oldState.deaf) {
-            if (oldState.mute === null) return undefined;
-            if (oldState.deaf === null) return undefined;
+            if (oldState.mute === null && !newState.mute) return undefined;
+            if (oldState.deaf === null && !member?.user.bot) return undefined;
 
             // If Jukebox is muted or unmuted then do:
             if (newState.mute !== oldState.mute && member?.id === botID) {
-                if (newState.mute) this.doTimeout(queueVCMembers, queue, newState, true);
-                else this.resumeTimeout(queueVCMembers, queue, newState, true);
+                if (newState.mute) this.doTimeout(queueVCMembers, queue, newState, "BOT_MUTED");
+                else this.resumeTimeout(queueVCMembers, queue, newState, "BOT_MUTED");
             }
             // If some bot is deafened do nothing
             if (newState.deaf && member?.user.bot) return undefined;
             // If some user deafened then do:
-            if (newState.deaf !== oldState.deaf && !member?.user.bot) return console.log("SOME GUY DEAFENED");
+            if (newState.deaf !== oldState.deaf && !member?.user.bot) {
+                const nMembers = newVCMembers!;
+                const dMembers = nMembers.filter(m => m.voice.deaf!)!;
+                if (dMembers.size === nMembers.size) this.doTimeout(queueVCMembers, queue, newState, "ALL_DEAF");
+                else this.resumeTimeout(queueVCMembers, queue, newState, "ALL_DEAF");
+            }
+
+            return undefined;
         }
 
         // Handle when the bot is moved to another voice channel
@@ -78,9 +97,9 @@ export class VoiceStateUpdateEvent extends BaseListener {
         if (newID === queueVC.id && !member?.user.bot) this.resumeTimeout(queueVCMembers, queue, newState);
     }
 
-    private doTimeout(vcMembers: Collection<Snowflake, GuildMember>, queue: ServerQueue, newState: IVoiceState, alt = false): any {
+    private doTimeout(vcMembers: Collection<Snowflake, GuildMember>, queue: ServerQueue, newState: IVoiceState, type: TimeoutType = "NO_PEOPLE"): any {
         try {
-            if (vcMembers.size !== 0 && !alt) return undefined;
+            if (vcMembers.size !== 0 && type === "NO_PEOPLE") return undefined;
             if (queue.timeout !== null) return undefined;
             clearTimeout(queue.timeout!);
             newState.guild.queue!.timeout = null;
@@ -92,18 +111,18 @@ export class VoiceStateUpdateEvent extends BaseListener {
                 queue.voiceChannel?.leave();
                 newState.guild.queue = null;
                 queue.textChannel?.send(
-                    createEmbed("error", alt ? this.formatString(Messages.BOT_MUTED_TIMEOUT, duration) : this.formatString(Messages.NO_PEOPLE_TIMEOUT, duration))
+                    createEmbed("error", this.formatString(Messages[type].TIMEOUT, duration))
                         .setTitle("⏹ Queue deleted.")
                 ).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
             }, timeout);
             queue.textChannel?.send(
-                createEmbed("warn", alt ? this.formatString(Messages.BOT_MUTED, duration) : this.formatString(Messages.NO_PEOPLE, duration))
+                createEmbed("warn", this.formatString(Messages[type].WARNING, duration))
                     .setTitle("⏸ Queue paused.")
             ).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
         } catch (e) { this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e); }
     }
 
-    private resumeTimeout(vcMembers: Collection<Snowflake, GuildMember>, queue: ServerQueue, newState: IVoiceState, alt = false): any {
+    private resumeTimeout(vcMembers: Collection<Snowflake, GuildMember>, queue: ServerQueue, newState: IVoiceState, type: TimeoutType = "NO_PEOPLE"): any {
         if (vcMembers.size > 0) {
             if (queue.playing) return undefined;
             try {
@@ -111,7 +130,7 @@ export class VoiceStateUpdateEvent extends BaseListener {
                 newState.guild.queue!.timeout = null;
                 const song = queue.songs.first();
                 queue.textChannel?.send(
-                    createEmbed("info", alt ? this.formatString(Messages.BOT_MUTED_END, song) : this.formatString(Messages.NO_PEOPLE_END, song))
+                    createEmbed("info", this.formatString(Messages[type].END, song))
                         .setThumbnail(song!.thumbnail)
                         .setTitle("▶ Queue resumed")
                 ).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
