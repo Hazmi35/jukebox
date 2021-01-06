@@ -35,7 +35,7 @@
     "node-fetch": "^2.6.1",
     "opusscript": "^0.0.7",
     "pretty-ms": "^7.0.1",
-    "tslib": "^2.0.3",
+    "tslib": "^2.1.0",
     "winston": "^3.3.3",
     "ytdl-core": "^4.4.0"
   },
