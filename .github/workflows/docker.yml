@@ -49,7 +49,7 @@ jobs:
             hazmi35/jukebox:${{ steps.tags.outputs.name }}
             ghcr.io/hazmi35/jukebox:latest
             ghcr.io/hazmi35/jukebox:${{ steps.tags.outputs.name }}
-          cache-from: type=registry,ref=Hazmi35/jukebox:latest
+          cache-from: type=registry,ref=hazmi35/jukebox:latest
           cache-to: type=inline
 
       # Well, turns out it doesn't support PAT yet. Please see https://github.com/peter-evans/dockerhub-description/issues/24 and https://github.com/docker/roadmap/issues/115
