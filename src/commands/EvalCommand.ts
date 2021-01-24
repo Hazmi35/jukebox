@@ -10,7 +10,7 @@ import { createEmbed } from "../utils/createEmbed";
 @DefineCommand({
     aliases: ["ev", "js-exec", "e", "evaluate"],
     cooldown: 0,
-    description: "Only the bot owner can use this command.",
+    description: "Only the bot owner can use this command",
     name: "eval",
     usage: "{prefix}eval <some js code>"
 })

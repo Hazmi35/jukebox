@@ -6,7 +6,7 @@ import { createEmbed } from "../utils/createEmbed";
 
 @DefineCommand({
     name: "resume",
-    description: "Resume the music.",
+    description: "Resume the music",
     usage: "{prefix}resume"
 })
 export class ResumeCommand extends BaseCommand {

@@ -6,7 +6,7 @@ import { createEmbed } from "../utils/createEmbed";
 
 @DefineCommand({
     name: "pause",
-    description: "Pause the current song.",
+    description: "Pause the current song",
     usage: "{prefix}pause"
 })
 export class PauseCommand extends BaseCommand {
