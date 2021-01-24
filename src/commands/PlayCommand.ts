@@ -146,7 +146,7 @@ export class PlayCommand extends BaseCommand {
                 return undefined;
             }
             this.play(message.guild!).catch(err => {
-                message.channel.send(createEmbed("error", `Error while trying to play music:\n\`${err.message}\``)
+                message.channel.send(createEmbed("error", `Error while trying to play music:\n\`${err.message}\``))
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return this.client.logger.error("PLAY_CMD_ERR:", err);
             });
@@ -194,7 +194,7 @@ export class PlayCommand extends BaseCommand {
                 });
             })
             .on("error", (err: Error) => {
-                serverQueue.textChannel?.send(createEmbed("error", `Error while playing music:\n\`${err.message}\``)
+                serverQueue.textChannel?.send(createEmbed("error", `Error while playing music:\n\`${err.message}\``))
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 guild.queue?.voiceChannel?.leave();
                 guild.queue = null;
