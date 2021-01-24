@@ -6,13 +6,13 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
 @DefineCommand({
     aliases: ["pong", "peng", "pingpong"],
     name: "ping",
-    description: "Shows the current ping of the bot.",
+    description: "Shows the current ping of the bot",
     usage: "{prefix}ping"
 })
 export class PingCommand extends BaseCommand {
     public execute(message: IMessage): IMessage {
         const before = Date.now();
-        message.channel.send("🏓 Pong!").then((msg: IMessage | any) => {
+        message.channel.send("🏓 Pinging...").then((msg: IMessage | any) => {
             const latency = Date.now() - before;
             const wsLatency = this.client.ws.ping.toFixed(0);
             const embed = new MessageEmbed()
