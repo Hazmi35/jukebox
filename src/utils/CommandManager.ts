@@ -3,7 +3,7 @@ import { parse, resolve } from "path";
 import { Snowflake, Collection } from "discord.js";
 import { Jukebox } from "../structures/Jukebox";
 import { ICommandComponent, IMessage } from "../../typings";
-import { createEmbed } from "../createEmbed";
+import { createEmbed } from "./createEmbed";
 
 export class CommandManager extends Collection<string, ICommandComponent> {
     public readonly aliases: Collection<string, string> = new Collection();
