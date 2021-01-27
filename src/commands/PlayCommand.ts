@@ -79,7 +79,7 @@ export class PlayCommand extends BaseCommand {
                         "*Type `cancel` or `c` to cancel song selection*")
                         .setThumbnail(message.client.user?.displayAvatarURL() as string)
                         .setColor("#00FF00")
-                        .setFooter("Please select one of the results ranging 1-12"));
+                        .setFooter("Please select one of the results ranging from 1-12"));
                     try {
                     // eslint-disable-next-line no-var
                         var response = await message.channel.awaitMessages((msg2: IMessage) => {
