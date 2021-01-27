@@ -52,7 +52,7 @@ export function isValidVoiceChannel(): any {
         }
         if (!voiceChannel.speakable) {
             voiceChannel.leave();
-            return message.channel.send(createEmbed("error", "I'm sorry, but I can't speak in this voice channel. make sure I have a proper permissions!"));
+            return message.channel.send(createEmbed("error", "I'm sorry, but I can't speak in this voice channel. make sure I have the proper permissions!"));
         }
     });
 }
