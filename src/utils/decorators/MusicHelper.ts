@@ -28,7 +28,7 @@ export function isSameVoiceChannel(): any {
         const botVoiceChannel = message.guild.queue?.voiceChannel?.id ?? message.guild.me.voice.channel.id;
         if (message.member?.voice.channel?.id !== botVoiceChannel) {
             return message.channel.send(
-                createEmbed("warn", "You need to be in a same voice channel as mine")
+                createEmbed("warn", "You need to be in the same voice channel as mine")
             );
         }
     });
