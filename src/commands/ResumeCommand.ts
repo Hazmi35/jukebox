@@ -19,7 +19,7 @@ export class ResumeCommand extends BaseCommand {
         } else {
             message.guild!.queue!.playing = true;
             message.guild?.queue?.connection?.dispatcher.resume();
-            message.channel.send(createEmbed("info", "▶ Resumed the music player!")).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
+            message.channel.send(createEmbed("info", "▶ The music player resumed")).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
         }
     }
 }
