@@ -141,7 +141,7 @@ export class PlayCommand extends BaseCommand {
                 message.guild?.queue.songs.clear();
                 message.guild!.queue = null;
                 this.client.logger.error("PLAY_CMD_ERR:", error);
-                message.channel.send(createEmbed("error", `I can't join to the voice channel!\nError: \`${error.message}\``))
+                message.channel.send(createEmbed("error", `Error: Could not join the voice channel!\nReason: \`${error.message}\``))
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return undefined;
             }
