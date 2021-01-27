@@ -7,7 +7,7 @@ import { createEmbed } from "../utils/createEmbed";
 @DefineCommand({
     aliases: ["loop", "music-loop", "music-repeat"],
     name: "repeat",
-    description: "Repeat current song or queue",
+    description: "Repeat current music or the queue",
     usage: "{prefix}repeat <all | one | disable>"
 })
 export class RepeatCommand extends BaseCommand {

@@ -7,7 +7,7 @@ import { createEmbed } from "../utils/createEmbed";
 @DefineCommand({
     aliases: ["s"],
     name: "skip",
-    description: "Skip the current song",
+    description: "Skip the current music",
     usage: "{prefix}skip"
 })
 export class SkipCommand extends BaseCommand {

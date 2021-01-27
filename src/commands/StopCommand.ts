@@ -7,7 +7,7 @@ import { createEmbed } from "../utils/createEmbed";
 @DefineCommand({
     aliases: ["st"],
     name: "stop",
-    description: "Stop the current queue",
+    description: "Stop the queue",
     usage: "{prefix}stop"
 })
 export class StopCommand extends BaseCommand {
@@ -18,7 +18,7 @@ export class StopCommand extends BaseCommand {
         message.guild?.queue?.voiceChannel?.leave();
         message.guild!.queue = null;
 
-        message.channel.send(createEmbed("info", "⏹ Queue stopped..."))
+        message.channel.send(createEmbed("info", "⏹ Queue stopped."))
             .catch(e => this.client.logger.error("STOP_CMD_ERR:", e));
     }
 }

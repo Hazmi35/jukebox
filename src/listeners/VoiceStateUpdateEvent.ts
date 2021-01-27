@@ -27,8 +27,8 @@ export class VoiceStateUpdateEvent extends BaseListener {
         // Handle when bot gets kicked from the voice channel
         if (oldMember?.id === botID && oldID === queueVC.id && newID === undefined) {
             try {
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Disconnected from the voice channel at ${newState.guild.name}, queue deleted.`);
-                queue.textChannel?.send(createEmbed("warn", "I'm disconnected from the voice channel, the queue will be deleted"))
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Disconnected from the voice channel at ${newState.guild.name}, the queue was deleted.`);
+                queue.textChannel?.send(createEmbed("warn", "I was disconnected from the voice channel, the queue will be deleted"))
                     .catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
                 return newState.guild.queue = null;
             } catch (e) {
@@ -66,12 +66,12 @@ export class VoiceStateUpdateEvent extends BaseListener {
                 queue.voiceChannel?.leave();
                 newState.guild.queue = null;
                 queue.textChannel?.send(
-                    createEmbed("error", `${duration} have passed and there is no one who joins my voice channel, the queue was deleted.`)
+                    createEmbed("error", `\`${duration}\` have passed and there is no one who joins my voice channel, the queue was deleted.`)
                         .setTitle("⏹ Queue deleted.")
                 ).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
             }, timeout);
             queue.textChannel?.send(
-                createEmbed("warn", "Currently, no one is in my voice channel, to save resources, the queue was paused. " +
+                createEmbed("warn", "Everyone has left from my voice channel, to save resources, the queue was paused. " +
                     `If there's no one who joins my voice channel in the next ${duration}, the queue will be deleted.`)
                     .setTitle("⏸ Queue paused.")
             ).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
@@ -86,7 +86,7 @@ export class VoiceStateUpdateEvent extends BaseListener {
                 newState.guild.queue!.timeout = null;
                 const song = queue.songs.first();
                 queue.textChannel?.send(
-                    createEmbed("info", `Someones joins the voice channel. Enjoy the music 🎶\nNow Playing: **[${song!.title}](${song!.url})**`)
+                    createEmbed("info", `Someone joins the voice channel. Enjoy the music 🎶\nNow Playing: **[${song!.title}](${song!.url})**`)
                         .setThumbnail(song!.thumbnail)
                         .setTitle("▶ Queue resumed")
                 ).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
