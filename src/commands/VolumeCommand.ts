@@ -23,7 +23,7 @@ export class VolumeCommand extends BaseCommand {
         if (volume === 0) return message.channel.send(createEmbed("warn", "❗ Please pause the music player instead of setting the volume to \`0\`"));
         if (Number(args[0]) > this.client.config.maxVolume) {
             return message.channel.send(
-                createEmbed("warn", `❗ I can't set the volume above ${this.client.config.maxVolume}`)
+                createEmbed("warn", `❗ I can't set the volume above \`${this.client.config.maxVolume}\``)
             );
         }
 
