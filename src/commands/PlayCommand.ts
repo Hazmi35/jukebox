@@ -74,9 +74,9 @@ export class PlayCommand extends BaseCommand {
                 if (this.client.config.disableSongSelection) { video = await this.client.youtube.getVideo(videos[0].id); } else {
                     let index = 0;
                     const msg = await message.channel.send(new MessageEmbed()
-                        .setAuthor("Song Selection")
+                        .setAuthor("Music Selection")
                         .setDescription(`${videos.map(video => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
-                        "*Type `cancel` or `c` to cancel song selection*")
+                        "*Type `cancel` or `c` to cancel music selection*")
                         .setThumbnail(message.client.user?.displayAvatarURL() as string)
                         .setColor("#00FF00")
                         .setFooter("Please select one of the results ranging from 1-12"));
@@ -96,10 +96,10 @@ export class PlayCommand extends BaseCommand {
                         response.first()?.delete({ timeout: 3000 }).catch(e => e); // do nothing
                     } catch (error) {
                         msg.delete().catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
-                        return message.channel.send(createEmbed("error", "No or invalid value entered, song selection canceled."));
+                        return message.channel.send(createEmbed("error", "No or invalid value entered, music selection canceled."));
                     }
                     if (response.first()?.content === "c" || response.first()?.content === "cancel") {
-                        return message.channel.send(createEmbed("info", "Song selection canceled."));
+                        return message.channel.send(createEmbed("info", "Music selection canceled."));
                     }
                     const videoIndex = parseInt(response.first()?.content as string, 10);
                     video = await this.client.youtube.getVideo(videos[videoIndex - 1].id);
@@ -146,7 +146,7 @@ export class PlayCommand extends BaseCommand {
                 return undefined;
             }
             this.play(message.guild!).catch(err => {
-                message.channel.send(createEmbed("error", `Error while trying to play music:\n\`${err.message}\``))
+                message.channel.send(createEmbed("error", `Error while trying to play music\nReason: \`${err.message}\``))
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return this.client.logger.error("PLAY_CMD_ERR:", err);
             });
@@ -187,14 +187,14 @@ export class PlayCommand extends BaseCommand {
                 serverQueue.textChannel?.send(createEmbed("info", `⏹ Stop playing: **[${song.title}](${song.url})**`).setThumbnail(song.thumbnail))
                     .catch(e => this.client.logger.error("PLAY_ERR:", e));
                 this.play(guild).catch(e => {
-                    serverQueue.textChannel?.send(createEmbed("error", `Error while trying to play music:\n\`${e}\``))
+                    serverQueue.textChannel?.send(createEmbed("error", `Error while trying to play music\nReason: \`${e}\``))
                         .catch(e => this.client.logger.error("PLAY_ERR:", e));
                     serverQueue.connection?.dispatcher.end();
                     return this.client.logger.error("PLAY_ERR:", e);
                 });
             })
             .on("error", (err: Error) => {
-                serverQueue.textChannel?.send(createEmbed("error", `Error while playing music:\n\`${err.message}\``))
+                serverQueue.textChannel?.send(createEmbed("error", `Error while playing music\nReason: \`${err.message}\``))
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 guild.queue?.voiceChannel?.leave();
                 guild.queue = null;
