@@ -42,8 +42,10 @@ export class PlayCommand extends BaseCommand {
                 const playlist = await this.client.youtube.getPlaylist(id);
                 const videos = await playlist.getVideos();
                 let skippedVideos = 0;
-                message.channel.send(createEmbed("info", `Adding all videos in playlist: **[${playlist.title}](${playlist.url})**, hang on...`))
-                    .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                const addingPlaylistVideoMessage = await message.channel.send(
+                    createEmbed("info", `Adding all videos in playlist: **[${playlist.title}](${playlist.url})**, hang on...`)
+                        .setThumbnail(playlist.thumbnailURL)
+                );
                 for (const video of Object.values(videos)) {
                     if (video.status.privacyStatus === "private") {
                         skippedVideos++;
@@ -58,8 +60,18 @@ export class PlayCommand extends BaseCommand {
                         createEmbed("warn", `${skippedVideos} ${skippedVideos >= 2 ? `videos` : `video`} are skipped because it's a private video`)
                     ).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 }
-                if (skippedVideos === playlist.itemCount) return message.channel.send(createEmbed("error", `Failed to load playlist **[${playlist.title}](${playlist.url})** because all of the items are private videos`));
-                return message.channel.send(createEmbed("info", `All videos in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`));
+                message.channel.messages.fetch(addingPlaylistVideoMessage.id, false).then(m => m.delete()).catch(e => this.client.logger.error("YT_PLAYLIST_ERR:", e));
+                if (skippedVideos === playlist.itemCount) {
+                    return message.channel.send(
+                        createEmbed("error", `Failed to load playlist **[${playlist.title}](${playlist.url})** because all of the items are private videos`)
+                            .setThumbnail(playlist.thumbnailURL)
+                    );
+                }
+                return message.channel.send(
+                    createEmbed("info", `All videos in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`)
+                        .setThumbnail(playlist.thumbnailURL)
+
+                );
             } catch (e) {
                 this.client.logger.error("YT_PLAYLIST_ERR:", new Error(e.message));
                 return message.channel.send(createEmbed("error", `I could not load the playlist!\nError: \`${e.message}\``));
@@ -130,12 +142,17 @@ export class PlayCommand extends BaseCommand {
                 );
             }
             message.guild.queue.songs.addSong(song);
-            if (playlist) return;
-            message.channel.send(createEmbed("info", `✅ Music **[${song.title}](${song.url})** has been added to the queue`).setThumbnail(song.thumbnail))
-                .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+            if (!playlist) {
+                message.channel.send(createEmbed("info", `✅ Music **[${song.title}](${song.url})** has been added to the queue`).setThumbnail(song.thumbnail))
+                    .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+            }
         } else {
             message.guild!.queue = new ServerQueue(message.channel as ITextChannel, voiceChannel);
             message.guild?.queue.songs.addSong(song);
+            if (!playlist) {
+                message.channel.send(createEmbed("info", `✅ Music **[${song.title}](${song.url})** has been added to the queue`).setThumbnail(song.thumbnail))
+                    .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+            }
             try {
                 const connection = await message.guild!.queue.voiceChannel!.join();
                 message.guild!.queue.connection = connection;
@@ -160,6 +177,8 @@ export class PlayCommand extends BaseCommand {
         const serverQueue = guild.queue!;
         const song = serverQueue.songs.first();
         if (!song) {
+            if (serverQueue.lastMusicMessageID !== null) serverQueue.textChannel?.messages.fetch(serverQueue.lastMusicMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("PLAY_ERR:", e));
+            if (serverQueue.lastVoiceStateUpdateMessageID !== null) serverQueue.textChannel?.messages.fetch(serverQueue.lastVoiceStateUpdateMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("PLAY_ERR:", e));
             serverQueue.textChannel?.send(
                 createEmbed("info", `⏹ Queue is finished! Use "${guild.client.config.prefix}play" to play more music`)
             ).catch(e => this.client.logger.error("PLAY_ERR:", e));
@@ -191,13 +210,15 @@ export class PlayCommand extends BaseCommand {
                 if (serverQueue.lastMusicMessageID !== null) serverQueue.textChannel?.messages.fetch(serverQueue.lastMusicMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("PLAY_ERR:", e));
                 serverQueue.textChannel?.send(createEmbed("info", `⏹ Stop playing: **[${song.title}](${song.url})**`).setThumbnail(song.thumbnail))
                     .then(m => serverQueue.lastMusicMessageID = m.id)
-                    .catch(e => this.client.logger.error("PLAY_ERR:", e));
-                this.play(guild).catch(e => {
-                    serverQueue.textChannel?.send(createEmbed("error", `Error while trying to play music\nReason: \`${e}\``))
-                        .catch(e => this.client.logger.error("PLAY_ERR:", e));
-                    serverQueue.connection?.dispatcher.end();
-                    return this.client.logger.error("PLAY_ERR:", e);
-                });
+                    .catch(e => this.client.logger.error("PLAY_ERR:", e))
+                    .finally(() => {
+                        this.play(guild).catch(e => {
+                            serverQueue.textChannel?.send(createEmbed("error", `Error while trying to play music\nReason: \`${e}\``))
+                                .catch(e => this.client.logger.error("PLAY_ERR:", e));
+                            serverQueue.connection?.dispatcher.end();
+                            return this.client.logger.error("PLAY_ERR:", e);
+                        });
+                    });
             })
             .on("error", (err: Error) => {
                 serverQueue.textChannel?.send(createEmbed("error", `Error while playing music\nReason: \`${err.message}\``))
