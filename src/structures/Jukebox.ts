@@ -9,13 +9,11 @@ import { YoutubeAPI } from "../utils/YoutubeAPI";
 
 // Extends DiscordJS Structures
 import "./Guild";
-import { YoutubeScrape } from "../utils/YoutubeScrape";
 
 export class Jukebox extends Client {
     public readonly config = config;
     public readonly logger = createLogger("main", config.debug);
     public readonly youtube = new YoutubeAPI(process.env.YT_API_KEY!);
-    public readonly youtubeScrapper = new YoutubeScrape(this);
     public readonly commands = new CommandManager(this, resolve(__dirname, "..", "commands"));
     public readonly listenerLoader = new ListenerLoader(this, resolve(__dirname, "..", "listeners"));
     public constructor(opt: ClientOptions) { super(opt); }
