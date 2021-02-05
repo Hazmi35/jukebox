@@ -6,8 +6,8 @@ import fetch from "node-fetch";
 import { getSongInfo } from "../YoutubeDownload";
 
 export class YoutubeScrape {
-    private readonly initialDataRegex = /(window\["ytInitialData"]|var ytInitialData)\s*=\s*(.*);/;
-    private readonly playlistURLRegex = /^https?:\/\/(?:www.|)youtube.com\/playlist\?list=(.*)$/;
+    private readonly initialDataRegex = /(window\["ytInitialData"]|var ytInitialData)\s*=\s*(.*);<\/script>/;
+    private readonly playlistURLRegex = /^https?:\/\/(?:www\.|)youtube\.com\/playlist\?list=(.*)$/;
     private readonly videoURLRegex = /^https?:\/\/((?:www\.|)youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)(\S+)$/;
     public constructor(public readonly client: Jukebox) {}
 
@@ -24,7 +24,7 @@ export class YoutubeScrape {
     }
 
     public async search(query: string): Promise<VideoInfo[]> {
-        const response = await (await fetch(`https://www.youtube.com/results?search_query=${decodeURIComponent(query)}`)).text();
+        const response = await (await fetch(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`)).text();
         return this.extractSearchResults(response);
     }
 
@@ -35,7 +35,7 @@ export class YoutubeScrape {
 
     private extractSearchResults(html: string): VideoInfo[] {
         const matched = this.initialDataRegex.exec(html)![2];
-        const result = JSON.parse(matched.split(";</script>")[0]);
+        const result = JSON.parse(matched);
         const videos = result
             .contents
             .twoColumnSearchResultsRenderer
@@ -51,7 +51,7 @@ export class YoutubeScrape {
 
     private extractPlaylist(html: string): Playlist {
         const matched = this.initialDataRegex.exec(html)![2];
-        const result = JSON.parse(matched.split(";</script>")[0]);
+        const result = JSON.parse(matched);
         const playlistInfo = result.sidebar.playlistSidebarRenderer.items[0].playlistSidebarPrimaryInfoRenderer;
         const playlistOwner = result.sidebar.playlistSidebarRenderer.items[1].playlistSidebarSecondaryInfoRenderer.videoOwner.videoOwnerRenderer;
         const videos = result
