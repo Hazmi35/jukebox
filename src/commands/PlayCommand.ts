@@ -124,14 +124,14 @@ export class PlayCommand extends BaseCommand {
         if (message.guild?.queue) {
             if (!this.client.config.allowDuplicate && message.guild.queue.songs.find(s => s.id === song.id)) {
                 return message.channel.send(
-                    createEmbed("warn", `Song **[${song.title}](${song.id})** is already queued, and this bot configuration disallow duplicated song in queue, ` +
+                    createEmbed("warn", `Music **[${song.title}](${song.id})** is already queued, and this bot configuration disallow duplicated music in queue, ` +
                 `please use \`${this.client.config.prefix}repeat\` instead`)
                         .setTitle("Already queued")
                 );
             }
             message.guild.queue.songs.addSong(song);
             if (playlist) return;
-            message.channel.send(createEmbed("info", `✅ Song **[${song.title}](${song.url})** has been added to the queue`).setThumbnail(song.thumbnail))
+            message.channel.send(createEmbed("info", `✅ Music **[${song.title}](${song.url})** has been added to the queue`).setThumbnail(song.thumbnail))
                 .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
         } else {
             message.guild!.queue = new ServerQueue(message.channel as ITextChannel, voiceChannel);
@@ -170,7 +170,7 @@ export class PlayCommand extends BaseCommand {
         serverQueue.connection?.voice?.setSelfDeaf(true).catch(e => this.client.logger.error("PLAY_ERR:", e));
         const songData = await playMusic(song.url, { cache: this.client.config.cacheYoutubeDownloads, cacheMaxLength: this.client.config.cacheMaxLengthAllowed, skipFFmpeg: true });
 
-        if (songData.cache) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Using cache for song "${song.title}" on ${guild.name}`);
+        if (songData.cache) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Using cache for music "${song.title}" on ${guild.name}`);
 
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         songData.on("error", err => { err.message = `YTDLError: ${err.message}`; serverQueue.connection?.dispatcher?.emit("error", err); });
@@ -178,14 +178,14 @@ export class PlayCommand extends BaseCommand {
         serverQueue.connection?.play(songData, { type: songData.info.canSkipFFmpeg ? "webm/opus" : "unknown", bitrate: "auto", highWaterMark: 1 })
             .on("start", () => {
                 serverQueue.playing = true;
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} started`);
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Music: "${song.title}" on ${guild.name} started`);
                 if (serverQueue.lastMusicMessageID !== null) serverQueue.textChannel?.messages.fetch(serverQueue.lastMusicMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("PLAY_ERR:", e));
                 serverQueue.textChannel?.send(createEmbed("info", `▶ Start playing: **[${song.title}](${song.url})**`).setThumbnail(song.thumbnail))
                     .then(m => serverQueue.lastMusicMessageID = m.id)
                     .catch(e => this.client.logger.error("PLAY_ERR:", e));
             })
             .on("finish", () => {
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Song: "${song.title}" on ${guild.name} ended`);
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Music: "${song.title}" on ${guild.name} ended`);
                 // eslint-disable-next-line max-statements-per-line
                 if (serverQueue.loopMode === 0) { serverQueue.songs.deleteFirst(); } else if (serverQueue.loopMode === 2) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
                 if (serverQueue.lastMusicMessageID !== null) serverQueue.textChannel?.messages.fetch(serverQueue.lastMusicMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("PLAY_ERR:", e));
