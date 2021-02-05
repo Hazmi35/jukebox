@@ -32,7 +32,7 @@ export class RepeatCommand extends BaseCommand {
             off: 0,
             0: 0
         };
-        const modeTypes = ["disabled", "only this music", "all music in the queue"];
+        const modeTypes = ["disabled", "current music", "all music in the queue"];
         const modeEmoji = ["▶", "🔂", "🔁"];
         const mode = args[0] as string | undefined;
         if (mode === undefined) {
