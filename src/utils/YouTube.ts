@@ -12,6 +12,7 @@ export class YouTube {
         });
         if (mode === "scrape") {
             this.engine = undefined;
+            throw new Error("scraping mode is not implemented yet.");
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         } else if (mode === "api") {
             if (!apiKey) throw new Error("Missing API Key for mode: api");
