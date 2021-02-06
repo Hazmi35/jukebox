@@ -4,10 +4,10 @@ import { ServerQueue } from "../structures/ServerQueue";
 import { Util, MessageEmbed, VoiceChannel } from "discord.js";
 import { decodeHTML } from "entities";
 import { IMessage, ISong, IGuild, ITextChannel } from "../../typings";
-import { Video } from "../utils/YouTube/utils/YouTubeAPI/structures/Video";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
+import { Video } from "../utils/YouTube/structures/Video";
 
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
@@ -46,7 +46,7 @@ export class PlayCommand extends BaseCommand {
                         .setThumbnail(playlist.thumbnailURL)
                 );
                 for (const video of Object.values(videos)) {
-                    if (video.status.privacyStatus === "private") {
+                    if (video.isPrivate) {
                         skippedVideos++;
                         continue;
                     } else {
