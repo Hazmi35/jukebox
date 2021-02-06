@@ -17,7 +17,7 @@ export class Item {
             ? (rawData as APIVideo).url
             : type === "scrape" ? (rawData as SRVideo).url : (rawData as YTDLInfo).video_url;
         this.thumbnailURL = type === "api"
-            ? (rawData as APIVideo).thumbnailURL
+            ? (rawData as APIVideo).thumbnailURL!
             : type === "scrape" ? (rawData as SRVideo).thumbnail!.displayThumbnailURL("maxresdefault") : (rawData as YTDLInfo).thumbnails[(rawData as YTDLInfo).thumbnails.length - 1].url;
     }
 }
