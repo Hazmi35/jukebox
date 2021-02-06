@@ -28,7 +28,7 @@ export class Video implements IVideo {
         this.thumbnails = raw.snippet.thumbnails;
         this.duration = raw.contentDetails?.duration ? parse(raw.contentDetails.duration) : null;
         this.durationMS = this.duration ? toSeconds(this.duration) * 1000 : null;
-        this.status = raw.status;
+        this.status = type === "searchResults" ? { privacyStatus: "public" } : raw.status;
         this.publishedAt = new Date(raw.snippet.publishedAt);
     }
 

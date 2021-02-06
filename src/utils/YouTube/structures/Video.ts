@@ -25,6 +25,9 @@ export class Video extends Item {
         this.duration = type === "api"
             ? (rawData as APIVideo).durationMS ? parse((rawData as APIVideo).durationMS!) : null
             : type === "scrape" ? parse((rawData as SRVideo).duration) : parse(Number((rawData as YTDLInfo).lengthSeconds) * 1000);
-        this.isPrivate = type === "api" ? (rawData as APIVideo).status.privacyStatus === "private" : (rawData as YTDLInfo).isPrivate;
+
+        this.isPrivate = type === "api"
+            ? (rawData as APIVideo).status.privacyStatus === "private"
+            : type === "scrape" ? false : (rawData as YTDLInfo).isPrivate;
     }
 }
