@@ -72,7 +72,7 @@ export class PlayCommand extends BaseCommand {
 
                 );
             } catch (e) {
-                this.client.logger.error("YT_PLAYLIST_ERR:", new Error(e.message));
+                this.client.logger.error("YT_PLAYLIST_ERR:", new Error(e.stack));
                 return message.channel.send(createEmbed("error", `I could not load the playlist!\nError: \`${e.message}\``));
             }
         }
