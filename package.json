@@ -1,6 +1,6 @@
 {
   "name": "jukebox",
-  "version": "4.25.0",
+  "version": "4.29.1",
   "private": true,
   "description": "Just a simple Discord music bot.",
   "homepage": "https://github.com/Hazmi35/jukebox#readme",
@@ -29,32 +29,32 @@
   "dependencies": {
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
-    "entities": "^2.1.0",
+    "entities": "^2.2.0",
     "ffmpeg-static": "^4.2.7",
     "iso8601-duration": "^1.3.0",
     "node-fetch": "^2.6.1",
     "opusscript": "^0.0.7",
     "pretty-ms": "^7.0.1",
-    "tslib": "^2.0.3",
+    "tslib": "^2.1.0",
     "winston": "^3.3.3",
-    "ytdl-core": "^4.2.1"
+    "ytdl-core": "^4.4.5"
   },
   "devDependencies": {
     "@hazmi35/eslint-config": "^3.4.0",
-    "@types/node": "^14.14.14",
-    "@types/node-fetch": "^2.5.7",
-    "@typescript-eslint/eslint-plugin": "^4.10.0",
-    "@typescript-eslint/parser": "^4.10.0",
-    "eslint": "^7.16.0",
+    "@types/node": "^14.14.25",
+    "@types/node-fetch": "^2.5.8",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
+    "@typescript-eslint/parser": "^4.14.2",
+    "eslint": "^7.19.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3"
   },
   "optionalDependencies": {
-    "@discordjs/opus": "^0.3.3",
-    "bufferutil": "^4.0.2",
+    "@discordjs/opus": "^0.4.0",
+    "bufferutil": "^4.0.3",
     "erlpack": "github:discord/erlpack",
-    "libsodium-wrappers": "^0.7.8",
-    "utf-8-validate": "^5.0.3",
+    "libsodium-wrappers": "^0.7.9",
+    "utf-8-validate": "^5.0.4",
     "zlib-sync": "^0.1.7"
   },
   "engines": {

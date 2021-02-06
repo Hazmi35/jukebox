@@ -17,7 +17,7 @@ export class HelpCommand extends BaseCommand {
         if (command && !command.meta.disable) {
             message.channel.send(
                 new MessageEmbed()
-                    .setTitle(`Help for ${command.meta.name} command`)
+                    .setTitle(`Information for the ${command.meta.name} command`)
                     .setThumbnail("https://raw.githubusercontent.com/Hazmi35/jukebox/stable/.github/images/question_mark.png")
                     .addFields({ name: "Name", value: `\`${command.meta.name}\``, inline: true },
                         { name: "Description", value: command.meta.description, inline: true },

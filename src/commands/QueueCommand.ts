@@ -14,7 +14,7 @@ export class QueueCommand extends BaseCommand {
     @isMusicPlaying()
     public execute(message: IMessage): any {
         const embed = createEmbed("info")
-            .setTitle("**Song Queue**")
+            .setTitle("Music Queue")
             .setThumbnail(message.client.user?.avatarURL() as string);
 
         let num = 1;

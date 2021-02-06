@@ -38,7 +38,7 @@ export function isUserInTheVoiceChannel(): any {
     return inhibit(message => {
         if (!message.member?.voice.channel) {
             return message.channel.send(
-                createEmbed("warn", "I'm sorry but you need to be in a voice channel to do that")
+                createEmbed("warn", "I'm sorry, but you need to be in a voice channel to do that")
             );
         }
     });
@@ -48,11 +48,11 @@ export function isValidVoiceChannel(): any {
     return inhibit(message => {
         const voiceChannel = message.member?.voice.channel;
         if (!voiceChannel?.joinable) {
-            return message.channel.send(createEmbed("error", "I'm sorry but I can't connect to your voice channel, make sure I have the proper permissions!"));
+            return message.channel.send(createEmbed("error", "I'm sorry, but I can't connect to your voice channel, make sure I have the proper permissions!"));
         }
         if (!voiceChannel.speakable) {
             voiceChannel.leave();
-            return message.channel.send(createEmbed("error", "I'm sorry but I can't speak in this voice channel. make sure I have the proper permissions"));
+            return message.channel.send(createEmbed("error", "I'm sorry, but I can't speak in this voice channel. make sure I have the proper permissions!"));
         }
     });
 }

@@ -10,7 +10,7 @@ import { createEmbed } from "../utils/createEmbed";
 @DefineCommand({
     aliases: ["ev", "js-exec", "e", "evaluate"],
     cooldown: 0,
-    description: "Only the bot owner can use this command.",
+    description: "Only the bot owner can use this command",
     name: "eval",
     usage: "{prefix}eval <some js code>"
 })
@@ -20,7 +20,7 @@ export class EvalCommand extends BaseCommand {
         const client = this.client;
 
         if (!client.config.owners.includes(msg.author.id)) {
-            return message.channel.send(createEmbed("error", "❗ Only the bot owner can use this command"));
+            return message.channel.send(createEmbed("error", "❗ This command is limited to the bot owner only"));
         }
 
         const embed = new MessageEmbed()
@@ -29,7 +29,7 @@ export class EvalCommand extends BaseCommand {
 
         try {
             const code = args.slice(0).join(" ");
-            if (!code) return message.channel.send("No js code was provided");
+            if (!code) return message.channel.send(createEmbed("error", "No js code was provided"));
             let evaled = await eval(code);
 
             if (typeof evaled !== "string") {

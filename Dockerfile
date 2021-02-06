@@ -1,4 +1,4 @@
-FROM node:14.15.3-alpine as build-stage
+FROM node:14.15.4-alpine as build-stage
 
 LABEL name "Jukebox (build stage)"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
@@ -25,7 +25,7 @@ RUN yarn run build
 RUN yarn install --production
 
 # Get ready for production
-FROM node:14.15.3-alpine
+FROM node:14.15.4-alpine
 
 LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"

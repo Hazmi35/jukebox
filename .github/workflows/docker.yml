@@ -16,7 +16,7 @@ jobs:
 
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v1.0.4
+        uses: docker/setup-buildx-action@v1.1.1
 
       - name: Login to Docker Hub
         uses: docker/login-action@v1.8.0
@@ -35,9 +35,17 @@ jobs:
         id: tags
         run: echo ::set-output name=name::${GITHUB_REF##*/}
 
+      - name: Cache Docker layers
+        uses: actions/cache@v2.1.4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v2.2.1
+        uses: docker/build-push-action@v2.2.2
         with:
           context: ./
           file: ./Dockerfile
@@ -49,8 +57,14 @@ jobs:
             hazmi35/jukebox:${{ steps.tags.outputs.name }}
             ghcr.io/hazmi35/jukebox:latest
             ghcr.io/hazmi35/jukebox:${{ steps.tags.outputs.name }}
-          cache-from: type=registry,ref=Hazmi35/jukebox:latest
-          cache-to: type=inline
+          cache-from: type=local,src=/tmp/.buildx-cache,mode=max
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+      - name: Move Docker layers cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          du -sh /tmp/.buildx-cache
 
       # Well, turns out it doesn't support PAT yet. Please see https://github.com/peter-evans/dockerhub-description/issues/24 and https://github.com/docker/roadmap/issues/115
       #- name: Update repo description

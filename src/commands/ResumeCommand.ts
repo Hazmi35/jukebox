@@ -6,7 +6,7 @@ import { createEmbed } from "../utils/createEmbed";
 
 @DefineCommand({
     name: "resume",
-    description: "Resume the music.",
+    description: "Resume the music player",
     usage: "{prefix}resume"
 })
 export class ResumeCommand extends BaseCommand {
@@ -15,11 +15,11 @@ export class ResumeCommand extends BaseCommand {
     @isSameVoiceChannel()
     public execute(message: IMessage): any {
         if (message.guild?.queue?.playing) {
-            message.channel.send(createEmbed("warn", "❗ Music is not paused!")).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
+            message.channel.send(createEmbed("warn", "❗ The music player is not paused!")).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
         } else {
             message.guild!.queue!.playing = true;
             message.guild?.queue?.connection?.dispatcher.resume();
-            message.channel.send(createEmbed("info", "▶ Resumed the music for you!")).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
+            message.channel.send(createEmbed("info", "▶ The music player resumed")).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
         }
     }
 }

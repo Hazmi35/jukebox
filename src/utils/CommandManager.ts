@@ -3,6 +3,7 @@ import { parse, resolve } from "path";
 import { Snowflake, Collection } from "discord.js";
 import { Jukebox } from "../structures/Jukebox";
 import { ICommandComponent, IMessage } from "../../typings";
+import { createEmbed } from "./createEmbed";
 
 export class CommandManager extends Collection<string, ICommandComponent> {
     public readonly aliases: Collection<string, string> = new Collection();
@@ -45,7 +46,7 @@ export class CommandManager extends Collection<string, ICommandComponent> {
             const expirationTime = timestamps.get(message.author.id)! + cooldownAmount;
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
-                message.channel.send(`**${message.author.username}**, please wait **${timeLeft.toFixed(1)}** cooldown time.`).then(msg => {
+                message.channel.send(createEmbed("warn", `**${message.author.username}**, please wait **${timeLeft.toFixed(1)}** cooldown time!`)).then(msg => {
                     msg.delete({ timeout: 3500 }).catch(e => this.client.logger.error("CMD_HANDLER_ERR:", e));
                 }).catch(e => this.client.logger.error("CMD_HANDLER_ERR:", e));
                 return undefined;
