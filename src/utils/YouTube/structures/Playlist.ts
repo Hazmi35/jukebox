@@ -21,6 +21,6 @@ export class Playlist extends Item {
         if (this.type === "api") videos = await (this.rawData as APIPlaylist).getVideos();
         else videos = (this.rawData as SRPlaylist).videos!;
         // @ts-expect-error IGNORE
-        return videos.map(i => new Video(i));
+        return videos.map(i => new Video(i, this.type));
     }
 }
