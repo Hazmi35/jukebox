@@ -8,6 +8,7 @@ export class Video extends Item {
     public channel: { id: string; name: string; url: string };
     public duration: parse.Parsed | null;
     public isPrivate: boolean;
+    public thumbnailURL: string;
     public constructor(protected readonly rawData: APIVideo | YTDLInfo | SRVideo, protected readonly type: "api" | "scrape" | "ytdl") {
         super(rawData, type);
         this.channel = {
@@ -29,5 +30,9 @@ export class Video extends Item {
         this.isPrivate = type === "api"
             ? (rawData as APIVideo).status.privacyStatus === "private"
             : type === "scrape" ? false : (rawData as YTDLInfo).isPrivate;
+
+        this.thumbnailURL = type === "api"
+            ? (rawData as APIVideo).thumbnailURL!
+            : type === "scrape" ? (rawData as SRVideo).thumbnail!.displayThumbnailURL("maxresdefault") : (rawData as YTDLInfo).thumbnails[(rawData as YTDLInfo).thumbnails.length - 1].url;
     }
 }

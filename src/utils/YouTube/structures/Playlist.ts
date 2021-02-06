@@ -6,6 +6,7 @@ import { Video } from "./Video";
 export class Playlist extends Item {
     public channel: APIPlaylist["channel"];
     public itemCount: APIPlaylist["itemCount"];
+    public thumbnailURL: string;
     public constructor(protected readonly rawData: APIPlaylist | SRPlaylist, protected readonly type: "api" | "scrape") {
         super(rawData, type);
         this.channel = {
@@ -14,6 +15,10 @@ export class Playlist extends Item {
             url: type === "api" ? (rawData as APIPlaylist).channel.url : (rawData as SRPlaylist).channel!.url!
         };
         this.itemCount = type === "api" ? (rawData as APIPlaylist).itemCount : (rawData as SRPlaylist).videoCount;
+
+        this.thumbnailURL = type === "api"
+            ? (rawData as APIPlaylist).thumbnailURL
+            : (rawData as SRPlaylist).thumbnail! as unknown as string;
     }
 
     public async getVideos(): Promise<Video[]> {
