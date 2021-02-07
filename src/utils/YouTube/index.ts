@@ -1,5 +1,5 @@
 import { YoutubeAPI } from "./utils/YouTubeAPI";
-import { YouTube as YouTubeSR, Video as VideoSR } from "youtube-sr";
+import { YouTube as YouTubeSR } from "youtube-sr";
 import { IMusicData, playMusic, IdownloadOptions, getMusicInfo, IMusicInfo } from "./downloader";
 import { Video } from "./structures/Video";
 import { Playlist } from "./structures/Playlist";
@@ -45,7 +45,7 @@ export class YouTube {
     public async searchVideos(query: string, maxResults = 5): Promise<Video[]> {
         let data;
         if (this.mode === "api") data = await (this.engine as YoutubeAPI).searchVideos(query, maxResults);
-        if (this.mode === "scrape") data = (await YouTubeSR.search(query, { type: "video", limit: maxResults })) as VideoSR[];
+        if (this.mode === "scrape") data = (await YouTubeSR.search(query, { type: "video", limit: maxResults }));
         if (data === undefined) throw new Error("I could not get any data!");
         // @ts-expect-error IGNORE
         return data.map((i: any) => new Video(i, this.mode!));
