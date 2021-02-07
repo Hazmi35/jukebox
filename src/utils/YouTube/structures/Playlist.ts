@@ -24,7 +24,7 @@ export class Playlist extends Item {
     public async getVideos(): Promise<Video[]> {
         let videos;
         if (this.type === "api") videos = await (this.rawData as APIPlaylist).getVideos();
-        else videos = (this.rawData as SRPlaylist).videos!;
+        else videos = (this.rawData as SRPlaylist).videos;
         // @ts-expect-error IGNORE
         return videos.map(i => new Video(i, this.type));
     }
