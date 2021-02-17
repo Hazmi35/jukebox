@@ -22,20 +22,20 @@ export class QueueCommand extends BaseCommand {
         if (Number(message.guild?.queue?.songs.size) > 12) {
             const indexes: string[] = this.chunk(songs!, 12);
             let index = 0;
-            embed.setDescription(indexes[index]).setFooter(`Page ${index + 1} of ${indexes.length}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/stable/.github/images/info.png");
+            embed.setDescription(indexes[index]).setFooter(`Page ${index + 1} of ${indexes.length}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png");
             message.channel.send(embed).then(msg => {
                 msg.react("◀️").then(() => {
                     msg.react("▶️").catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
                     msg.createReactionCollector((reaction, user) => reaction.emoji.name === "◀️" && user.id === message.author.id, { time: 80 * 1000 }).on("collect", () => {
                         if (index === 0) return undefined;
                         index--;
-                        embed.setDescription(indexes[index]).setFooter(`Page ${index + 1} of ${indexes.length}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/stable/.github/images/info.png");
+                        embed.setDescription(indexes[index]).setFooter(`Page ${index + 1} of ${indexes.length}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png");
                         msg.edit(embed).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
                     });
                     msg.createReactionCollector((reaction, user) => reaction.emoji.name === "▶️" && user.id === message.author.id, { time: 80 * 1000 }).on("collect", () => {
                         if (index + 1 === indexes.length) return undefined;
                         index++;
-                        embed.setDescription(indexes[index]).setFooter(`Page ${index + 1} of ${indexes.length}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/stable/.github/images/info.png");
+                        embed.setDescription(indexes[index]).setFooter(`Page ${index + 1} of ${indexes.length}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png");
                         msg.edit(embed).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
                     });
                 }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
