@@ -1,6 +1,6 @@
 import { YoutubeAPI } from "./utils/YouTubeAPI";
 import { YouTube as YouTubeSR } from "youtube-sr";
-import { IMusicData, playMusic, IdownloadOptions, getMusicInfo, IMusicInfo } from "./downloader";
+import { IMusicData, playMusic, IdownloadOptions } from "./downloader";
 import { Video } from "./structures/Video";
 import { Playlist } from "./structures/Playlist";
 
@@ -28,9 +28,9 @@ export class YouTube {
     public async getVideo(id: string): Promise<Video> {
         let data;
         if (this.mode === "api") data = await (this.engine as YoutubeAPI).getVideo(id);
-        if (this.mode === "scrape") data = (await getMusicInfo(`https://youtube.com/watch?v=${id}`)).videoDetails;
+        if (this.mode === "scrape") data = (await YouTubeSR.getVideo(`https://youtube.com/watch?v=${id}`));
         if (data === undefined) throw new Error("I could not get any data!");
-        return new Video(data, this.mode === "scrape" ? "ytdl" : "api");
+        return new Video(data, this.mode!);
     }
 
     public async getPlaylist(id: string): Promise<Playlist> {
@@ -51,5 +51,3 @@ export class YouTube {
         return data.map((i: any) => new Video(i, this.mode!));
     }
 }
-
-export type YTDLInfo = IMusicInfo["videoDetails"];
