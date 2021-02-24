@@ -10,11 +10,13 @@ export class Video extends Item {
     public thumbnailURL: string;
     public constructor(protected readonly rawData: APIVideo | SRVideo, protected readonly type: "api" | "scrape") {
         super(rawData, type);
+
         this.channel = {
             id: type === "api" ? (rawData as APIVideo).channel.id : (rawData as SRVideo).channel!.id!,
             name: type === "api" ? (rawData as APIVideo).channel.name : (rawData as SRVideo).channel!.name!,
             url: type === "api" ? (rawData as APIVideo).channel.url : (rawData as SRVideo).channel!.url!
         };
+
         // TODO: API Should always fetch Videos.
         this.duration = type === "api" ? (rawData as APIVideo).durationMS ? parse((rawData as APIVideo).durationMS!) : null : parse((rawData as SRVideo).duration);
 

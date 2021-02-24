@@ -8,7 +8,9 @@ export class Item {
     public url: string;
     public constructor(protected readonly rawData: APIVideo | SRVideo | APIPlaylist | SRPlaylist, protected readonly type: "api" | "scrape") {
         this.id = type === "api" ? (rawData as APIVideo).id : (rawData as SRVideo).id!;
+
         this.title = rawData.title!;
+
         this.url = type === "api" ? (rawData as APIVideo).url : (rawData as SRVideo).url;
     }
 }
