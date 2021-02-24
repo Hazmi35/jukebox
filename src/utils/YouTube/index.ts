@@ -38,7 +38,6 @@ export class YouTube {
         if (this.mode === "api") data = await (this.engine as YoutubeAPI).getPlaylist(id);
         if (this.mode === "scrape") data = (await YouTubeSR.getPlaylist(`https://youtube.com/playlist?list=${id}`));
         if (data === undefined) throw new Error("I could not get any data!");
-
         return new Playlist(data, this.mode!);
     }
 
@@ -47,7 +46,6 @@ export class YouTube {
         if (this.mode === "api") data = await (this.engine as YoutubeAPI).searchVideos(query, maxResults);
         if (this.mode === "scrape") data = (await YouTubeSR.search(query, { type: "video", limit: maxResults }));
         if (data === undefined) throw new Error("I could not get any data!");
-        // @ts-expect-error IGNORE
         return data.map((i: any) => new Video(i, this.mode!));
     }
 }
