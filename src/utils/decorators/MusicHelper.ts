@@ -47,6 +47,7 @@ export function isUserInTheVoiceChannel(): any {
 export function isValidVoiceChannel(): any {
     return inhibit(message => {
         const voiceChannel = message.member?.voice.channel;
+        if (voiceChannel?.id === message.guild?.me?.voice.channel?.id) return undefined;
         if (!voiceChannel?.joinable) {
             return message.channel.send(createEmbed("error", "I'm sorry, but I can't connect to your voice channel, make sure I have the proper permissions!"));
         }
