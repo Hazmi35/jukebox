@@ -1,3 +1,4 @@
+import { itemType } from "..";
 import { Playlist as APIPlaylist } from "../utils/YouTubeAPI/structures/Playlist";
 import { Result as SRPlaylist } from "ytpl";
 import { Item } from "./Item";
@@ -7,7 +8,7 @@ export class Playlist extends Item {
     public channel: APIPlaylist["channel"];
     public itemCount: APIPlaylist["itemCount"];
     public thumbnailURL: string;
-    public constructor(protected readonly rawData: APIPlaylist | SRPlaylist, protected readonly type: "api" | "scrape") {
+    public constructor(protected readonly rawData: APIPlaylist | SRPlaylist, protected readonly type: itemType) {
         super(rawData, type);
 
         this.channel = {
