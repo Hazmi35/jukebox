@@ -9,7 +9,8 @@ WORKDIR /tmp/build
 RUN apk add --no-cache build-base git python3
 
 # Copy package.json and package-lock.json
-COPY package*.json .
+COPY package.json .
+COPY package-lock.json .
 
 # Install dependencies
 RUN npm install
@@ -35,7 +36,8 @@ WORKDIR /app
 RUN apk add --no-cache tzdata
 
 # Copy needed files
-COPY --from=build-stage /tmp/build/package*.json .
+COPY --from=build-stage /tmp/build/package.json .
+COPY --from=build-stage /tmp/build/package-lock.json .
 COPY --from=build-stage /tmp/build/node_modules ./node_modules
 COPY --from=build-stage /tmp/build/dist .
 
