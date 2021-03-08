@@ -12,17 +12,15 @@
 
 **[⚠] Requires [Node.JS](https://nodejs.org) version 12.9.0 or above.**
 
-1. Install [Node.JS](https://nodejs.org) and [Yarn (Optional)](https://yarnpkg.com)
+1. Install [Node.JS](https://nodejs.org)
 2. Rename `.env.schema` to `.env` and fill out the values (example on .env.example)
 3. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
-4. Run `npm run build` or `yarn run build` if you're using yarn.
+4. Run `npm run build`
 5. (Optional) Prune dev dependencies (This is good to save disk spaces):
-```shell script
+```sh
 $ npm prune --production
-#or with yarn
-$ yarn install --production
 ```
-6. Start it with `npm start` or `yarn start`! And you're done!
+1. Start it with `npm start`. And you're done!
 
 Notes: 
 1. You only need to configure .env file when you're using the [Docker image](https://github.com/Hazmi35/jukebox#Docker)
@@ -31,18 +29,14 @@ Notes:
 ## Install
 
 Without optional packages
-```shell script
+```sh
 $ npm install --no-optional
-# or with yarn
-$ yarn install --ignore-optional
 ```
 
 With optional packages (Recommended)
 
-```shell script
+```sh
 $ npm install
-# or with yarn
-$ yarn install
 ```
 For optional packages, you need to install build tools as stated [here](https://github.com/nodejs/node-gyp#installation) and you also need to install [Git](https://git-scm.com/)
 
@@ -53,13 +47,13 @@ Want to use Dockerized version of jukebox? sure! we provide them on the [Docker 
 [Docker Volumes](https://docs.docker.com/storage/volumes/) are needed to store cache and logs persistently
 
 ### Example:
-```shell
+```sh
 $ docker run --env-file .env --volume cache:/app/cache --volume logs:/app/logs --restart unless-stopped hazmi35/jukebox
 ```
 We also provide [docker-compose.yml](docker-compose.yml) if you want to go that way
 
 ### Compose Example
-```
+```sh
 $ docker-compose up
 ```
 
