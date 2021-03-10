@@ -43,7 +43,7 @@
     "ytsr": "^3.3.1"
   },
   "devDependencies": {
-    "@hazmi35/eslint-config": "^3.5.0",
+    "@hazmi35/eslint-config": "^3.6.0",
     "@types/node": "^14.14.33",
     "@types/node-fetch": "^2.5.8",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
