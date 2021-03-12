@@ -114,7 +114,7 @@ export class PlayCommand extends BaseCommand {
                     if (response.first()?.content === "c" || response.first()?.content === "cancel") {
                         return message.channel.send(createEmbed("info", "Music selection canceled."));
                     }
-                    const videoIndex = parseInt(response.first()?.content as string, 10);
+                    const videoIndex = parseInt(response.first()?.content as string);
                     video = await this.client.youtube.getVideo(videos[videoIndex - 1].id);
                 }
             } catch (err) {
