@@ -2,12 +2,12 @@ import { itemType } from "..";
 import { Video as APIVideo } from "../utils/YouTubeAPI/structures/Video";
 import { Video as SRVideo } from "ytsr";
 import { Item } from "./Item";
-import parse, { TimeComponents } from "parse-ms";
+import parse from "parse-ms";
 import { IMusicInfo } from "../downloader";
 
 export class Video extends Item {
     public channel: { id: string; name: string; url: string };
-    public duration: TimeComponents | null;
+    public duration: parse.Parsed | null;
     public isPrivate: boolean;
     public thumbnailURL: string;
     public constructor(protected readonly rawData: APIVideo | SRVideo | IMusicInfo, protected readonly type: itemType) {
