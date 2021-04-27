@@ -6,7 +6,7 @@ import { BitFieldResolvable, IntentsString } from "discord.js";
 const intents: BitFieldResolvable<IntentsString> = ["GUILDS", "GUILD_VOICE_STATES", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS"];
 
 const client = new Jukebox({
-    disableMentions: "everyone",
+    allowedMentions: { parse: ["users"] },
     fetchAllMembers: fetchAllUsers,
     messageCacheLifetime: 60,
     messageCacheMaxSize: Infinity,
