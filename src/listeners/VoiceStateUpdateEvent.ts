@@ -58,14 +58,14 @@ export class VoiceStateUpdateEvent extends BaseListener {
     private doTimeout(vcMembers: Collection<Snowflake, GuildMember>, queue: ServerQueue, newState: IVoiceState): any {
         try {
             if (vcMembers.size !== 0) return undefined;
-            clearTimeout(queue.timeout!);
+            this.client.clearTimeout(queue.timeout!);
             newState.guild.queue!.timeout = null;
             newState.guild.queue!.playing = false;
             queue.connection?.dispatcher.pause();
             const timeout = this.client.config.deleteQueueTimeout;
             const duration = formatMS(timeout);
             if (queue.lastVoiceStateUpdateMessageID !== null) queue.textChannel?.messages.fetch(queue.lastVoiceStateUpdateMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
-            newState.guild.queue!.timeout = setTimeout(() => {
+            newState.guild.queue!.timeout = this.client.setTimeout(() => {
                 queue.voiceChannel?.leave();
                 newState.guild.queue = null;
                 if (queue.lastMusicMessageID !== null) queue.textChannel?.messages.fetch(queue.lastMusicMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
@@ -87,7 +87,7 @@ export class VoiceStateUpdateEvent extends BaseListener {
         if (vcMembers.size > 0) {
             if (queue.playing) return undefined;
             try {
-                clearTimeout(queue.timeout!);
+                this.client.clearTimeout(queue.timeout!);
                 newState.guild.queue!.timeout = null;
                 const song = queue.songs.first();
                 if (queue.lastVoiceStateUpdateMessageID !== null) queue.textChannel?.messages.fetch(queue.lastVoiceStateUpdateMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));

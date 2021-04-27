@@ -53,7 +53,7 @@ export class CommandManager extends Collection<string, ICommandComponent> {
             }
 
             timestamps.set(message.author.id, now);
-            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+            this.client.setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
         } else {
             timestamps?.set(message.author.id, now);
             if (this.client.config.owners.includes(message.author.id)) timestamps?.delete(message.author.id);
