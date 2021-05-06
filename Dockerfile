@@ -1,4 +1,4 @@
-FROM node:14.16.1-alpine as build-stage
+FROM node:16.1.0-alpine as build-stage
 
 LABEL name "Jukebox (build stage)"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
@@ -28,7 +28,7 @@ RUN npm run build
 RUN npm prune --production
 
 # Get ready for production
-FROM node:14.16.1-alpine
+FROM node:16.1.0-alpine
 
 LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
