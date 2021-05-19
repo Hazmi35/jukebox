@@ -27,7 +27,6 @@
     "ignorePatterns": "dist/*"
   },
   "dependencies": {
-    "@discordjs/opus": "^0.5.0",
     "discord.js": "^12.5.3",
     "dotenv": "^9.0.2",
     "entities": "^2.2.0",
@@ -54,6 +53,7 @@
     "typescript": "^4.2.4"
   },
   "optionalDependencies": {
+    "@discordjs/opus": "^0.5.0",
     "bufferutil": "^4.0.3",
     "erlpack": "github:discord/erlpack",
     "libsodium-wrappers": "^0.7.9",
