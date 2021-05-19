@@ -103,7 +103,10 @@ export class PlayCommand extends BaseCommand {
             try {
                 const videos = await this.client.youtube.searchVideos(searchString, this.client.config.searchMaxResults);
                 if (videos.length === 0) return message.channel.send(createEmbed("warn", "I could not obtain any search results!"));
-                if (this.client.config.disableSongSelection) { video = await this.client.youtube.getVideo(videos[0].id); } else {
+
+                if (videos.length === 1 || this.client.config.disableSongSelection) {
+                    video = await this.client.youtube.getVideo(videos[0].id);
+                } else {
                     let index = 0;
                     const msg = await message.channel.send(new MessageEmbed()
                         .setAuthor("Music Selection")
