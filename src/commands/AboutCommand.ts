@@ -15,7 +15,7 @@ import { createEmbed } from "../utils/createEmbed";
 })
 export class AboutCommand extends BaseCommand {
     public async execute(message: IMessage): Promise<void> {
-        const opusEncoderName = this.getOpusEncoder().name;
+        const opusEncoder = await this.getOpusEncoder();
         message.channel.send(
             createEmbed("info", `
 \`\`\`asciidoc
@@ -38,7 +38,7 @@ Node.js version     :: ${process.version}
 Discord.js version  :: v${version}
 FFmpeg version      :: v${(await import(this.getPackageJSON("ffmpeg-static")))["ffmpeg-static"]["binary-release-name"]}
 YTDL-Core version   :: v${(await import(this.getPackageJSON("ytdl-core"))).version}
-Opus Encoder        :: ${opusEncoderName} v${(await import(this.getPackageJSON(opusEncoderName))).version}
+Opus Encoder        :: ${opusEncoder.pkgMetadata.name} v${opusEncoder.pkgMetadata.version}
 Bot Version         :: v${(await import(path.resolve(process.cwd(), "package.json"))).version}
 
 Source code         :: https://sh.hzmi.xyz/jukebox
@@ -65,15 +65,14 @@ Source code         :: https://sh.hzmi.xyz/jukebox
         return path.resolve(resolvedPath.split(pkgName)[0], pkgName, "package.json");
     }
 
-    private getOpusEncoder(): any {
+    private async getOpusEncoder(): Promise<any> {
         const list = ["@discordjs/opus", "opusscript"];
         const errorLog = [];
         for (const name of list) {
             try {
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                const data = require(name);
-                data.name = name;
-                return data;
+                const data = (await import(name)).default;
+                const pkgMetadata = await import(this.getPackageJSON(name));
+                return { encoder: name === "@discordjs/opus" ? data.OpusEncoder : data, pkgMetadata };
             } catch (e) {
                 errorLog.push(e);
             }
