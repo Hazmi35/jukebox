@@ -4,16 +4,15 @@ import { IMessage } from "../../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 
 @DefineCommand({
-    aliases: ["pong", "peng", "pingpong"],
+    aliases: ["pong", "peng", "p", "pingpong"],
     name: "ping",
-    description: "Shows the current ping of the bot",
+    description: "Shows the current ping of the bot.",
     usage: "{prefix}ping"
 })
 export class PingCommand extends BaseCommand {
     public execute(message: IMessage): IMessage {
-        const before = Date.now();
-        message.channel.send("🏓 Pong!").then((msg: IMessage | any) => {
-            const latency = Date.now() - before;
+        message.channel.send("🏓 Pong!").then((msg: IMessage) => {
+            const latency = msg.createdTimestamp - message.createdTimestamp;
             const wsLatency = this.client.ws.ping.toFixed(0);
             const embed = new MessageEmbed()
                 .setAuthor("🏓 PONG!", message.client.user?.displayAvatarURL())
@@ -27,9 +26,11 @@ export class PingCommand extends BaseCommand {
                     value: `**\`${wsLatency}\`** ms`,
                     inline: true
                 })
-                .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL());
-            msg.edit("", { embed });
-        }).catch(e => this.client.logger.error("PING_CMD_ERR:", e));
+                .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true }))
+                .setTimestamp();
+
+            msg.edit("", { embed }).catch(e => this.client.logger.error("PROMISE_ERR:", e));
+        }).catch(e => this.client.logger.error("PROMISE_ERR:", e));
         return message;
     }
 
