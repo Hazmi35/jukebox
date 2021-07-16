@@ -8,6 +8,7 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
 import { Video } from "../utils/YouTube/structures/Video";
+import { resolveYTPlaylistID, resolveYTVideoID } from "../utils/YouTube/utils/YouTubeAPI/resolveYTURL";
 
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
@@ -39,7 +40,8 @@ export class PlayCommand extends BaseCommand {
 
         if (/^https?:\/\/((www|music)\.youtube\.com|youtube.com)\/playlist(.*)$/.exec(url)) {
             try {
-                const id = new URL(url).searchParams.get("list")!;
+                const id = resolveYTPlaylistID(url);
+                if (!id) return message.channel.send(createEmbed("error", "Invalid YouTube Playlist URL"));
                 const playlist = await this.client.youtube.getPlaylist(id);
                 const videos = await playlist.getVideos();
                 let skippedVideos = 0;
@@ -96,7 +98,8 @@ export class PlayCommand extends BaseCommand {
             }
         }
         try {
-            const id = new URL(url).searchParams.get("v")!;
+            const id = resolveYTVideoID(url);
+            if (!id) return message.channel.send(createEmbed("error", "Invalid YouTube Video URL"));
             // eslint-disable-next-line no-var, block-scoped-var
             var video = await this.client.youtube.getVideo(id);
         } catch (e) {
