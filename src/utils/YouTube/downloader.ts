@@ -19,7 +19,6 @@ export function getMusicInfo(link: string, options = defaultOptions): Promise<IM
 export function downloadMusic(info: IMusicInfo, options = defaultOptions): IMusicStream {
     options = Object.assign(options, defaultOptions);
     options = info.canSkipFFmpeg ? { ...options, filter } : { ...options };
-    console.log(options);
     return Object.assign(downloadFromInfo(info, options), { info });
 }
 
