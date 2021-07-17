@@ -85,5 +85,11 @@
         }
     },
     "repository": "https://github.com/Hazmi35/jukebox",
-    "stack": "container"
+    "stack": "container",
+    "formation": {
+        "worker": {
+            "quantity": 1,
+            "size": "free"
+        }
+    }
 }
