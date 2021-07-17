@@ -19,7 +19,7 @@ export const disableInviteCmd = process.env.CONFIG_DISABLE_INVITE_CMD?.toLowerCa
 export const debug = process.env.CONFIG_DEBUG?.toLowerCase() === "yes";
 export const status = {
     type: process.env.STATUS_TYPE?.toUpperCase() as ActivityType | null ?? "LISTENING",
-    activity: process.env.CONFIG_STATUS_ACTIVITY ?? "music on {guildsCount}"
+    activity: process.env.CONFIG_STATUS_ACTIVITY ?? "music on {guildsCount} guilds"
 };
 export const fetchAllUsers = process.env.CONFIG_FETCH_ALL_USERS?.toLowerCase() === "yes";
 export const selectTimeout = Number(process.env.CONFIG_SELECT_TIMEOUT) * 1000 || 20 * 1000;
