@@ -47,7 +47,7 @@
     "@hazmi35/eslint-config": "^4.0.0",
     "@types/node": "^16.4.1",
     "@types/node-fetch": "^2.5.12",
-    "@types/semver": "^7.3.7",
+    "@types/semver": "^7.3.8",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.28.4",
     "eslint": "^7.31.0",
