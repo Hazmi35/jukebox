@@ -1,7 +1,7 @@
 import { BaseCommand } from "../structures/BaseCommand";
 import { IMessage } from "../../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
-import { isUserInTheVoiceChannel, isMusicPlaying, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
+import { isUserInTheVoiceChannel, isMusicQueueExists, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
 
 @DefineCommand({
@@ -12,7 +12,7 @@ import { createEmbed } from "../utils/createEmbed";
 })
 export class VolumeCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
-    @isMusicPlaying()
+    @isMusicQueueExists()
     @isSameVoiceChannel()
     public execute(message: IMessage, args: string[]): any {
         let volume = Number(args[0]);

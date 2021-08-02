@@ -1,7 +1,7 @@
 import { BaseCommand } from "../structures/BaseCommand";
 import { IMessage } from "../../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
-import { isUserInTheVoiceChannel, isMusicPlaying, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
+import { isUserInTheVoiceChannel, isMusicQueueExists, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
 
 @DefineCommand({
@@ -12,7 +12,7 @@ import { createEmbed } from "../utils/createEmbed";
 })
 export class StopCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
-    @isMusicPlaying()
+    @isMusicQueueExists()
     @isSameVoiceChannel()
     public execute(message: IMessage): any {
         if (message.guild!.queue!.lastMusicMessageID !== null) message.guild!.queue!.textChannel?.messages.fetch(message.guild!.queue!.lastMusicMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("PLAY_ERR:", e));

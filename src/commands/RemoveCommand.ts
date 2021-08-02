@@ -2,7 +2,7 @@ import { IMessage } from "../../typings";
 import { BaseCommand } from "../structures/BaseCommand";
 import { createEmbed } from "../utils/createEmbed";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
-import { isMusicPlaying, isSameVoiceChannel, isUserInTheVoiceChannel } from "../utils/decorators/MusicHelper";
+import { isMusicQueueExists, isSameVoiceChannel, isUserInTheVoiceChannel } from "../utils/decorators/MusicHelper";
 
 @DefineCommand({
     aliases: ["rm"],
@@ -11,7 +11,7 @@ import { isMusicPlaying, isSameVoiceChannel, isUserInTheVoiceChannel } from "../
     usage: "{prefix}remove <Song number>"
 })
 export class RemoveCommand extends BaseCommand {
-    @isMusicPlaying()
+    @isMusicQueueExists()
     @isUserInTheVoiceChannel()
     @isSameVoiceChannel()
     public execute(message: IMessage, args: string[]): any {
