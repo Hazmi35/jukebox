@@ -1,4 +1,4 @@
-/* eslint-disable block-scoped-var, @typescript-eslint/restrict-template-expressions */
+/* eslint-disable no-var, block-scoped-var, @typescript-eslint/restrict-template-expressions */
 import { BaseCommand } from "../structures/BaseCommand";
 import { loopMode, ServerQueue } from "../structures/ServerQueue";
 import { Util, MessageEmbed, VoiceChannel, Message, TextChannel, Guild } from "discord.js";
@@ -100,7 +100,6 @@ export class PlayCommand extends BaseCommand {
         try {
             const id = resolveYTVideoID(url);
             if (!id) return message.channel.send(createEmbed("error", "Invalid YouTube Video URL"));
-            // eslint-disable-next-line no-var, block-scoped-var
             var video = await this.client.youtube.getVideo(id);
         } catch (e) {
             try {
@@ -220,8 +219,7 @@ export class PlayCommand extends BaseCommand {
 
         if (songData.cache) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Using cache for music "${song.title}" on ${guild.name}`);
 
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        songData.on("error", err => { err.message = `YTDLError: ${err.message}`; serverQueue.connection?.dispatcher?.emit("error", err); });
+        songData.on("error", err => { err.message = `YTDLError: ${err.message}`; serverQueue.connection?.dispatcher.emit("error", err); });
 
         serverQueue.connection?.play(songData, { type: songData.info.canSkipFFmpeg ? "webm/opus" : "unknown", bitrate: "auto", highWaterMark: 1 })
             .on("start", () => {
@@ -233,8 +231,11 @@ export class PlayCommand extends BaseCommand {
             })
             .on("finish", () => {
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Track: "${song.title}" on ${guild.name} ended`);
-                // eslint-disable-next-line max-statements-per-line
-                if (serverQueue.loopMode === loopMode.off) { serverQueue.songs.deleteFirst(); } else if (serverQueue.loopMode === loopMode.all) { serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song); }
+                if (serverQueue.loopMode === loopMode.off) {
+                    serverQueue.songs.deleteFirst();
+                } else if (serverQueue.loopMode === loopMode.all) {
+                    serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song);
+                }
                 serverQueue.textChannel?.send(createEmbed("info", `⏹ Stop playing: **[${song.title}](${song.url})**`).setThumbnail(song.thumbnail))
                     .then(m => serverQueue.oldMusicMessage = m.id)
                     .catch(e => this.client.logger.error("PLAY_ERR:", e))
