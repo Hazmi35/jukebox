@@ -4,48 +4,35 @@ import { IMessage } from "../../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isMusicQueueExists, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
+import { loopMode } from "../structures/ServerQueue";
 
 @DefineCommand({
     aliases: ["loop", "music-loop", "music-repeat"],
     name: "repeat",
     description: "Repeat current music or the queue",
-    usage: "{prefix}repeat [all | one | disable]"
+    usage: "{prefix}repeat [all | one | off]"
 })
 export class RepeatCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
     @isMusicQueueExists()
     @isSameVoiceChannel()
     public execute(message: IMessage, args: string[]): any {
-        const modes: Record<any, 0 | 1 | 2> = {
-            // Repeat All tracks in queue
-            all: 2,
-            queue: 2,
-            "*": 2,
-            2: 2,
-            // Repeat current track
-            current: 1,
-            one: 1,
-            musiconly: 1,
-            trackonly: 1,
-            1: 1,
-            // Disable repeat
-            disable: 0,
-            none: 0,
-            off: 0,
-            0: 0
-        };
         const modeTypes = ["disabled", "current track", "all tracks in the queue"];
         const modeEmoji = ["▶", "🔂", "🔁"];
-        const mode = args[0] as string | undefined;
-        if (mode === undefined) {
-            message.channel.send(createEmbed("info", `Current mode: "${modeEmoji[message.guild!.queue!.loopMode]} Repeating **${modeTypes[message.guild!.queue!.loopMode]}**"`))
-                .catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
-        } else if (Object.keys(modes).includes(mode)) {
-            message.guild!.queue!.loopMode = modes[mode];
-            message.channel.send(createEmbed("info", `${modeEmoji[message.guild!.queue!.loopMode]} Repeating **${modeTypes[message.guild!.queue!.loopMode]}**`))
+        if (!args[0]) {
+            return message.channel.send(
+                createEmbed("info", `Current mode: "${modeEmoji[message.guild!.queue!.loopMode]} Repeating **${modeTypes[message.guild!.queue!.loopMode]}**"`)
+            );
+        }
+
+        const mode = args[0] as keyof typeof loopMode;
+
+        if (loopMode[mode] as any === undefined || !isNaN(Number(mode))) {
+            message.channel.send(createEmbed("error", `Invalid value, see \`${this.client.config.prefix}help ${this.meta.name}\` for more info!`))
                 .catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
         } else {
-            message.channel.send(createEmbed("error", `Invalid value, see \`${this.client.config.prefix}help ${this.meta.name}\` for more info!`))
+            message.guild!.queue!.loopMode = loopMode[mode];
+            message.channel.send(createEmbed("info", `${modeEmoji[message.guild!.queue!.loopMode]} Repeating **${modeTypes[message.guild!.queue!.loopMode]}**`))
                 .catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
         }
     }
