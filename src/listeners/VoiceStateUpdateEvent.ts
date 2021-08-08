@@ -1,6 +1,6 @@
 import { Collection, GuildMember, Snowflake } from "discord.js";
 import { satisfies } from "semver";
-import { IVoiceState } from "../../typings";
+import { IVoiceState } from "../typings";
 import { BaseListener } from "../structures/BaseListener";
 import { ServerQueue } from "../structures/ServerQueue";
 import { createEmbed } from "../utils/createEmbed";

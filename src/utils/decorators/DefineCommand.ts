@@ -1,4 +1,4 @@
-import { ICommandComponent } from "../../../typings";
+import { ICommandComponent } from "../../typings";
 import { Jukebox } from "../../structures/Jukebox";
 
 export function DefineCommand(meta: ICommandComponent["meta"]): any {

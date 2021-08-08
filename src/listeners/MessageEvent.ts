@@ -1,4 +1,4 @@
-import { IMessage } from "../../typings";
+import { IMessage } from "../typings";
 import { DefineListener } from "../utils/decorators/DefineListener";
 import { createEmbed } from "../utils/createEmbed";
 import { BaseListener } from "../structures/BaseListener";

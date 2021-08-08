@@ -3,7 +3,7 @@ import { BaseCommand } from "../structures/BaseCommand";
 import { loopMode, ServerQueue } from "../structures/ServerQueue";
 import { Util, MessageEmbed, VoiceChannel } from "discord.js";
 import { decodeHTML } from "entities";
-import { IMessage, ISong, IGuild, ITextChannel } from "../../typings";
+import { IMessage, ISong, IGuild, ITextChannel } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";

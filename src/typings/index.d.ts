@@ -1,6 +1,6 @@
 import { Message, Guild, TextChannel, DMChannel, NewsChannel, Collection, ClientEvents, VoiceState } from "discord.js";
-import { Jukebox } from "../src/structures/Jukebox";
-import { ServerQueue } from "../src/structures/ServerQueue";
+import { Jukebox } from "../structures/Jukebox";
+import { ServerQueue } from "../structures/ServerQueue";
 
 export interface ICommandComponent {
     meta: {

@@ -1,5 +1,5 @@
 import { BaseCommand } from "../structures/BaseCommand";
-import { IMessage } from "../../typings";
+import { IMessage } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
 import { disableInviteCmd } from "../config";

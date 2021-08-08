@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import { parse, resolve } from "path";
 import { Jukebox } from "../structures/Jukebox";
-import { IListener } from "../../typings";
+import { IListener } from "../typings";
 
 export class ListenerLoader {
     public constructor(public client: Jukebox, public readonly path: string) {}

@@ -1,5 +1,5 @@
 import { Jukebox } from "./Jukebox";
-import { ICommandComponent } from "../../typings";
+import { ICommandComponent } from "../typings";
 import { Message } from "discord.js";
 export class BaseCommand implements ICommandComponent {
     public constructor(public client: Jukebox, public meta: ICommandComponent["meta"]) {}

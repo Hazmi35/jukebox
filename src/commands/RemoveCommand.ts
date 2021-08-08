@@ -1,4 +1,4 @@
-import { IMessage } from "../../typings";
+import { IMessage } from "../typings";
 import { BaseCommand } from "../structures/BaseCommand";
 import { createEmbed } from "../utils/createEmbed";
 import { DefineCommand } from "../utils/decorators/DefineCommand";

@@ -1,5 +1,5 @@
 import { BaseCommand } from "../structures/BaseCommand";
-import { IMessage } from "../../typings";
+import { IMessage } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isMusicQueueExists, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
