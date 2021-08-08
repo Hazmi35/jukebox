@@ -1,8 +1,8 @@
 import { BaseCommand } from "../structures/BaseCommand";
-import { IMessage } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isMusicQueueExists } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
+import { Message } from "discord.js";
 
 @DefineCommand({
     aliases: ["np", "now-playing"],
@@ -12,7 +12,7 @@ import { createEmbed } from "../utils/createEmbed";
 })
 export class NowPlayingCommand extends BaseCommand {
     @isMusicQueueExists()
-    public execute(message: IMessage): any {
+    public execute(message: Message): any {
         const song = message.guild?.queue?.songs.first();
         return message.channel.send(
             createEmbed("info", `${message.guild?.queue?.playing ? "▶ Now playing:" : "⏸ Now playing (paused):"} ` +

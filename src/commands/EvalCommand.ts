@@ -1,9 +1,8 @@
 /* eslint-disable no-eval */
 import { BaseCommand } from "../structures/BaseCommand";
-import { MessageEmbed } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 import { request } from "https";
 import { inspect } from "util";
-import { IMessage } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
 
@@ -15,7 +14,7 @@ import { createEmbed } from "../utils/createEmbed";
     usage: "{prefix}eval <some js code>"
 })
 export class EvalCommand extends BaseCommand {
-    public async execute(message: IMessage, args: string[]): Promise<any> {
+    public async execute(message: Message, args: string[]): Promise<any> {
         const msg = message;
         const client = this.client;
 

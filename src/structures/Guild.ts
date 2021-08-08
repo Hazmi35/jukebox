@@ -1,10 +1,7 @@
-import { Structures } from "discord.js";
-import { IGuild } from "../typings";
-import { Jukebox } from "./Jukebox";
+import { Client, Structures } from "discord.js";
 import { ServerQueue } from "./ServerQueue";
 
-Structures.extend("Guild", dJSGuild => class Guild extends dJSGuild implements IGuild {
-    public client!: IGuild["client"];
+Structures.extend("Guild", dJSGuild => class Guild extends dJSGuild {
     public queue: ServerQueue | null = null;
-    public constructor(client: Jukebox, data: Guild) { super(client, data); }
+    public constructor(client: Client, data: Guild) { super(client, data); }
 });

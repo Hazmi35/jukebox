@@ -1,9 +1,9 @@
 /* eslint-disable block-scoped-var, @typescript-eslint/restrict-template-expressions */
 import { BaseCommand } from "../structures/BaseCommand";
 import { loopMode, ServerQueue } from "../structures/ServerQueue";
-import { Util, MessageEmbed, VoiceChannel } from "discord.js";
+import { Util, MessageEmbed, VoiceChannel, Message, TextChannel, Guild } from "discord.js";
 import { decodeHTML } from "entities";
-import { IMessage, ISong, IGuild, ITextChannel } from "../typings";
+import { ISong } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
@@ -22,7 +22,7 @@ export class PlayCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
     @isValidVoiceChannel()
     @isSameVoiceChannel()
-    public async execute(message: IMessage, args: string[]): Promise<any> {
+    public async execute(message: Message, args: string[]): Promise<any> {
         const voiceChannel = message.member!.voice.channel!;
         if (!args[0]) {
             return message.channel.send(
@@ -120,7 +120,7 @@ export class PlayCommand extends BaseCommand {
                         .setFooter("Please select one of the results ranging from 1-12"));
                     try {
                     // eslint-disable-next-line no-var
-                        var response = await message.channel.awaitMessages((msg2: IMessage) => {
+                        var response = await message.channel.awaitMessages((msg2: Message) => {
                             if (message.author.id !== msg2.author.id) return false;
 
                             if (msg2.content === "cancel" || msg2.content === "c") return true;
@@ -150,7 +150,7 @@ export class PlayCommand extends BaseCommand {
         return this.handleVideo(video, message, voiceChannel);
     }
 
-    private async handleVideo(video: Video, message: IMessage, voiceChannel: VoiceChannel, playlist = false): Promise<any> {
+    private async handleVideo(video: Video, message: Message, voiceChannel: VoiceChannel, playlist = false): Promise<any> {
         const song: ISong = {
             id: video.id,
             title: this.cleanTitle(video.title),
@@ -173,7 +173,7 @@ export class PlayCommand extends BaseCommand {
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
         } else {
-            message.guild!.queue = new ServerQueue(message.channel as ITextChannel, voiceChannel);
+            message.guild!.queue = new ServerQueue(message.channel as TextChannel, voiceChannel);
             message.guild?.queue.songs.addSong(song);
             if (!playlist) {
                 message.channel.send(createEmbed("info", `✅ Track **[${song.title}](${song.url})** has been added to the queue`).setThumbnail(song.thumbnail))
@@ -199,7 +199,7 @@ export class PlayCommand extends BaseCommand {
         return message;
     }
 
-    private async play(guild: IGuild): Promise<any> {
+    private async play(guild: Guild): Promise<any> {
         const serverQueue = guild.queue!;
         const song = serverQueue.songs.first();
         if (!song) {

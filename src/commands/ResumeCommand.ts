@@ -1,9 +1,9 @@
 import { BaseCommand } from "../structures/BaseCommand";
-import { IMessage } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isMusicQueueExists, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
 import { satisfies } from "semver";
+import { Message } from "discord.js";
 
 @DefineCommand({
     name: "resume",
@@ -14,7 +14,7 @@ export class ResumeCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
     @isMusicQueueExists()
     @isSameVoiceChannel()
-    public execute(message: IMessage): any {
+    public execute(message: Message): any {
         if (message.guild?.queue?.playing) {
             message.channel.send(createEmbed("warn", "❗ The music player is not paused!")).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
         } else {

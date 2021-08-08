@@ -1,6 +1,5 @@
 import { BaseCommand } from "../structures/BaseCommand";
-import { MessageEmbed } from "discord.js";
-import { IMessage } from "../typings";
+import { Message, MessageEmbed } from "discord.js";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 
 @DefineCommand({
@@ -10,8 +9,8 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
     usage: "{prefix}ping"
 })
 export class PingCommand extends BaseCommand {
-    public execute(message: IMessage): IMessage {
-        message.channel.send("🏓 Pong!").then((msg: IMessage) => {
+    public execute(message: Message): Message {
+        message.channel.send("🏓 Pong!").then((msg: Message) => {
             const latency = msg.createdTimestamp - message.createdTimestamp;
             const wsLatency = this.client.ws.ping.toFixed(0);
             const embed = new MessageEmbed()

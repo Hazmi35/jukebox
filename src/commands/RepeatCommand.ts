@@ -1,10 +1,10 @@
 /* eslint-disable sort-keys */
 import { BaseCommand } from "../structures/BaseCommand";
-import { IMessage } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isMusicQueueExists, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
 import { loopMode } from "../structures/ServerQueue";
+import { Message } from "discord.js";
 
 @DefineCommand({
     aliases: ["loop", "music-loop", "music-repeat"],
@@ -16,7 +16,7 @@ export class RepeatCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
     @isMusicQueueExists()
     @isSameVoiceChannel()
-    public execute(message: IMessage, args: string[]): any {
+    public execute(message: Message, args: string[]): any {
         const modeTypes = ["disabled", "current track", "all tracks in the queue"];
         const modeEmoji = ["▶", "🔂", "🔁"];
         if (!args[0]) {

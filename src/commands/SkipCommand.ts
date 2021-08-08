@@ -1,8 +1,8 @@
 import { BaseCommand } from "../structures/BaseCommand";
-import { IMessage } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isMusicQueueExists, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
+import { Message } from "discord.js";
 
 @DefineCommand({
     aliases: ["s"],
@@ -14,7 +14,7 @@ export class SkipCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
     @isMusicQueueExists()
     @isSameVoiceChannel()
-    public execute(message: IMessage): any {
+    public execute(message: Message): any {
         message.guild!.queue!.playing = true;
         message.guild?.queue?.connection?.dispatcher.once("speaking", () => message.guild?.queue?.connection?.dispatcher.end());
         message.guild!.queue?.connection?.dispatcher.resume();

@@ -1,6 +1,5 @@
 import { BaseCommand } from "../structures/BaseCommand";
-import { MessageEmbed } from "discord.js";
-import { IMessage } from "../typings";
+import { Message, MessageEmbed } from "discord.js";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
 
@@ -11,7 +10,7 @@ import { createEmbed } from "../utils/createEmbed";
     usage: "{prefix}help [command]"
 })
 export class HelpCommand extends BaseCommand {
-    public execute(message: IMessage, args: string[]): void {
+    public execute(message: Message, args: string[]): void {
         const command = message.client.commands.get(args[0]) ??
             message.client.commands.get(message.client.commands.aliases.get(args[0])!);
         if (command && !command.meta.disable) {

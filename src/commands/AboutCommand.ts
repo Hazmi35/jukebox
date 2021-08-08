@@ -1,9 +1,8 @@
 import { BaseCommand } from "../structures/BaseCommand";
-import { version } from "discord.js";
+import { Message, version } from "discord.js";
 import { uptime as osUptime } from "os";
 import path from "path";
 import { formatMS } from "../utils/formatMS";
-import { IMessage } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
 
@@ -14,7 +13,7 @@ import { createEmbed } from "../utils/createEmbed";
     usage: "{prefix}about"
 })
 export class AboutCommand extends BaseCommand {
-    public async execute(message: IMessage): Promise<void> {
+    public async execute(message: Message): Promise<void> {
         const opusEncoder = await this.getOpusEncoder();
         message.channel.send(
             createEmbed("info", `

@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle, @typescript-eslint/unbound-method, @typescript-eslint/restrict-plus-operands */
-import { Client, Collection, ClientOptions } from "discord.js";
+import { Client as BotClient, Collection, ClientOptions } from "discord.js";
 import { resolve } from "path";
 import * as config from "../config";
 import { createLogger } from "../utils/Logger";
@@ -10,17 +10,17 @@ import { YouTube } from "../utils/YouTube";
 // Extends DiscordJS Structures
 import "./Guild";
 
-export class Jukebox extends Client {
+export class Jukebox extends BotClient {
     public readonly config = config;
     public readonly logger = createLogger("main", config.debug);
     public readonly youtube = new YouTube(config.YouTubeDataRetrievingStrategy, process.env.SECRET_YT_API_KEY);
     public readonly commands = new CommandManager(this, resolve(__dirname, "..", "commands"));
-    public readonly listenerLoader = new ListenerLoader(this, resolve(__dirname, "..", "listeners"));
+    public readonly listeners = new ListenerLoader(this, resolve(__dirname, "..", "listeners"));
     public constructor(opt: ClientOptions) { super(opt); }
 
-    public async build(token: string): Promise<Jukebox> {
+    public async build(token: string): Promise<this> {
         this.on("ready", () => this.commands.load());
-        this.listenerLoader.load().catch(e => this.logger.error("LISTENER_LOADER_ERR:", e));
+        this.listeners.load().catch(e => this.logger.error("LISTENER_LOADER_ERR:", e));
         await this.login(token);
         return this;
     }

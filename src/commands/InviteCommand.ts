@@ -1,8 +1,8 @@
 import { BaseCommand } from "../structures/BaseCommand";
-import { IMessage } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
 import { disableInviteCmd } from "../config";
+import { Message } from "discord.js";
 
 @DefineCommand({
     name: "invite",
@@ -11,7 +11,7 @@ import { disableInviteCmd } from "../config";
     disable: disableInviteCmd
 })
 export class InviteCommand extends BaseCommand {
-    public async execute(message: IMessage): Promise<void> {
+    public async execute(message: Message): Promise<void> {
         message.channel.send(
             createEmbed("info")
                 .addField("Discord bot invite link", `[Click here](${await this.client.generateInvite({ permissions: 53857345 })})`)
