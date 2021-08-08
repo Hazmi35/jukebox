@@ -14,7 +14,7 @@ export interface ICommandComponent {
     };
     execute(message: IMessage, args: string[]): any;
 }
-export interface IListener {
+export interface IEvent {
     name: keyof ClientEvents;
     execute(...args: any): any;
 }
@@ -23,7 +23,7 @@ declare module "discord.js" {
         public readonly config: Jukebox["config"];
         public readonly logger: Jukebox["logger"];
         public readonly commands: Jukebox["commands"];
-        public readonly listeners: Jukebox["listeners"];
+        public readonly events: Jukebox["events"];
         public readonly youtube: Jukebox["youtube"];
 
         public async build(token: string): Promise<this>;
