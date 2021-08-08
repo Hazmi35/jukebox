@@ -28,8 +28,7 @@ export class VoiceStateUpdateEvent extends BaseListener {
         // Handle when bot gets kicked from the voice channel
         if (oldMember?.id === botID && oldID === queueVC.id && newID === undefined) {
             try {
-                if (queue.lastMusicMessageID !== null) queue.textChannel?.messages.fetch(queue.lastMusicMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
-                if (queue.lastVoiceStateUpdateMessageID !== null) queue.textChannel?.messages.fetch(queue.lastVoiceStateUpdateMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
+                queue.oldMusicMessage = null; queue.oldVoiceStateUpdateMessage = null;
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Disconnected from the voice channel at ${newState.guild.name}, the queue was deleted.`);
                 queue.textChannel?.send(createEmbed("warn", "I was disconnected from the voice channel, the queue will be deleted"))
                     .catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
@@ -65,12 +64,11 @@ export class VoiceStateUpdateEvent extends BaseListener {
             queue.connection?.dispatcher.pause();
             const timeout = this.client.config.deleteQueueTimeout;
             const duration = formatMS(timeout);
-            if (queue.lastVoiceStateUpdateMessageID !== null) queue.textChannel?.messages.fetch(queue.lastVoiceStateUpdateMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
+            queue.oldVoiceStateUpdateMessage = null;
             newState.guild.queue!.timeout = this.client.setTimeout(() => {
                 queue.voiceChannel?.leave();
                 newState.guild.queue = null;
-                if (queue.lastMusicMessageID !== null) queue.textChannel?.messages.fetch(queue.lastMusicMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
-                if (queue.lastVoiceStateUpdateMessageID !== null) queue.textChannel?.messages.fetch(queue.lastVoiceStateUpdateMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
+                queue.oldMusicMessage = null; queue.oldVoiceStateUpdateMessage = null;
                 queue.textChannel?.send(
                     createEmbed("error", `**${duration}** have passed and there is no one who joins my voice channel, the queue was deleted.`)
                         .setTitle("⏹ Queue deleted.")
@@ -80,7 +78,7 @@ export class VoiceStateUpdateEvent extends BaseListener {
                 createEmbed("warn", "Everyone has left from my voice channel, to save resources, the queue was paused. " +
                     `If there's no one who joins my voice channel in the next **${duration}**, the queue will be deleted.`)
                     .setTitle("⏸ Queue paused.")
-            ).then(m => queue.lastVoiceStateUpdateMessageID = m.id).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
+            ).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
         } catch (e) { this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e); }
     }
 
@@ -91,12 +89,11 @@ export class VoiceStateUpdateEvent extends BaseListener {
                 this.client.clearTimeout(queue.timeout!);
                 newState.guild.queue!.timeout = null;
                 const song = queue.songs.first();
-                if (queue.lastVoiceStateUpdateMessageID !== null) queue.textChannel?.messages.fetch(queue.lastVoiceStateUpdateMessageID, false).then(m => m.delete()).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
                 queue.textChannel?.send(
                     createEmbed("info", `Someone joins the voice channel. Enjoy the music 🎶\nNow Playing: **[${song!.title}](${song!.url})**`)
                         .setThumbnail(song!.thumbnail)
                         .setTitle("▶ Queue resumed")
-                ).then(m => queue.lastVoiceStateUpdateMessageID = m.id).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
+                ).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
                 newState.guild.queue!.playing = true;
                 newState.guild.queue?.connection?.dispatcher.resume();
                 // TODO: Revert this change after the issue #494 is fixed
