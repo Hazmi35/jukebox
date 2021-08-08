@@ -33,10 +33,10 @@ export class ServerQueue {
             timeout: {
                 enumerable: false
             },
-            lastMusicMessageID: {
+            _lastMusicMessageID: {
                 enumerable: false
             },
-            lastVoiceStateUpdateMessageID: {
+            _lastVoiceStateUpdateMessageID: {
                 enumerable: false
             }
         });
