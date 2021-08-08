@@ -7,8 +7,8 @@ import { isMusicQueueExists, isSameVoiceChannel, isUserInTheVoiceChannel } from 
 @DefineCommand({
     aliases: ["rm"],
     name: "remove",
-    description: "Remove a song from the current queue",
-    usage: "{prefix}remove <Song number>"
+    description: "Remove a track from the current queue",
+    usage: "{prefix}remove <Track number>"
 })
 export class RemoveCommand extends BaseCommand {
     @isMusicQueueExists()
