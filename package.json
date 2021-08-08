@@ -39,13 +39,13 @@
     "semver": "^7.3.5",
     "tslib": "^2.3.0",
     "winston": "^3.3.3",
-    "ytdl-core": "^4.9.0",
-    "ytpl": "^2.2.1",
-    "ytsr": "^3.5.0"
+    "ytdl-core": "^4.9.1",
+    "ytpl": "^2.2.3",
+    "ytsr": "^3.5.2"
   },
   "devDependencies": {
     "@hazmi35/eslint-config": "^4.0.0",
-    "@types/node": "^16.4.10",
+    "@types/node": "^16.4.13",
     "@types/node-fetch": "^2.5.12",
     "@types/semver": "^7.3.8",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
