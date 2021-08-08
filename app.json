@@ -28,7 +28,7 @@
             "required": false
         },
         "CONFIG_MAX_VOLUME": {
-            "description": "Max volume allowed for music (default: 100)",
+            "description": "Max volume allowed for track (default: 100)",
             "required": false
         },
         "CONFIG_DEFAULT_VOLUME": {
@@ -36,7 +36,7 @@
             "required": false
         },
         "CONFIG_ALLOW_DUPLICATE": {
-            "description": "Whether to allow users to add duplicate of songs (yes or no) (default: no)",
+            "description": "Whether to allow users to add duplicate of tracks (yes or no) (default: no)",
             "required": false
         },
         "CONFIG_DELETE_QUEUE_TIMEOUT": {
@@ -44,11 +44,11 @@
             "required": false
         },
         "CONFIG_CACHE_YOUTUBE_DOWNLOADS": {
-            "description": "Whether to download and cache music from youtube (yes or no) (default: no)",
+            "description": "Whether to download and cache tracks from youtube (yes or no) (default: no)",
             "required": false
         },
         "CONFIG_CACHE_MAX_LENGTH": {
-            "description": "Max song length in seconds that are allowed to be cached (default: 5400 <1 hour 30 minutes>)",
+            "description": "Max track length in seconds that are allowed to be cached (default: 5400 <1 hour 30 minutes>)",
             "required": false
         },
         "CONFIG_DISABLE_INVITE_CMD": {
@@ -72,15 +72,15 @@
             "required": false
         },
         "CONFIG_SELECT_TIMEOUT": {
-            "description": "Select song timeout when searching songs (in seconds) (default: 20 seconds)",
+            "description": "Select track timeout when searching tracks (in seconds) (default: 20 seconds)",
             "required": false
         },
         "CONFIG_DISABLE_SONG_SELECTION": {
-            "description": "Whether to disable selecting songs on play command, this will automatically selects the first song from search results (default: no)",
+            "description": "Whether to disable selecting tracks on play command, this will automatically selects the first track from search results (default: no)",
             "required": false
         },
         "CONFIG_SEARCH_MAX_RESULTS": {
-            "description": "Maximum songs to list in song selection (default: 12, max: 12)",
+            "description": "Maximum tracks to list in tracks selection (default: 12, max: 12)",
             "required": false
         }
     },

@@ -17,15 +17,16 @@ export class RepeatCommand extends BaseCommand {
     @isSameVoiceChannel()
     public execute(message: IMessage, args: string[]): any {
         const modes: Record<any, 0 | 1 | 2> = {
-            // Repeat All Music in Queue
+            // Repeat All tracks in queue
             all: 2,
             queue: 2,
             "*": 2,
             2: 2,
-            // Repeat current music
+            // Repeat current track
             current: 1,
             one: 1,
             musiconly: 1,
+            trackonly: 1,
             1: 1,
             // Disable repeat
             disable: 0,
@@ -33,7 +34,7 @@ export class RepeatCommand extends BaseCommand {
             off: 0,
             0: 0
         };
-        const modeTypes = ["disabled", "current music", "all music in the queue"];
+        const modeTypes = ["disabled", "current track", "all tracks in the queue"];
         const modeEmoji = ["▶", "🔂", "🔁"];
         const mode = args[0] as string | undefined;
         if (mode === undefined) {
