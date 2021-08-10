@@ -1,7 +1,6 @@
-/* eslint-disable no-var, block-scoped-var, @typescript-eslint/restrict-template-expressions */
 import { BaseCommand } from "../structures/BaseCommand";
 import { loopMode, ServerQueue } from "../structures/ServerQueue";
-import { Util, VoiceChannel, Message, TextChannel, Guild } from "discord.js";
+import { Util, VoiceChannel, Message, TextChannel, Guild, Collection, Snowflake } from "discord.js";
 import { decodeHTML } from "entities";
 import { ISong } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
@@ -17,7 +16,7 @@ import { resolveYTPlaylistID, resolveYTVideoID } from "../utils/YouTube/utils/Yo
     usage: "{prefix}play <yt video or playlist link / yt video name>"
 })
 export class PlayCommand extends BaseCommand {
-    private readonly _playlistAlreadyQueued: ISong[] = [];
+    private readonly playlistAlreadyQueued: Collection<Snowflake, ISong[]> = new Collection();
 
     @isUserInTheVoiceChannel()
     @isValidVoiceChannel()
@@ -34,9 +33,12 @@ export class PlayCommand extends BaseCommand {
 
         if (message.guild?.queue !== null && voiceChannel.id !== message.guild?.queue.voiceChannel?.id) {
             return message.channel.send(
-                createEmbed("warn", `The music player is already playing to **${message.guild?.queue.voiceChannel?.name}** voice channel`)
+                createEmbed("warn", `The music player is already playing to **${message.guild!.queue.voiceChannel!.name}** voice channel`)
             );
         }
+
+        let video: Video | null = null;
+        let response: Collection<Snowflake, Message> | null = null;
 
         if (/^https?:\/\/((www|music)\.youtube\.com|youtube.com)\/playlist(.*)$/.exec(url)) {
             try {
@@ -63,11 +65,12 @@ export class PlayCommand extends BaseCommand {
                         createEmbed("warn", `${skippedVideos} track${skippedVideos >= 2 ? "s" : ""} are skipped because it's a private video`)
                     ).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 }
-                if (this._playlistAlreadyQueued.length !== 0) {
+                const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id);
+                if (!this.client.config.allowDuplicate && Number(playlistAlreadyQueued?.length) > 0) {
                     let num = 1;
-                    const songs = this._playlistAlreadyQueued.map(s => `**${num++}.** **[${s.title}](${s.url})**`);
+                    const songs = playlistAlreadyQueued!.map(s => `**${num++}.** **[${s.title}](${s.url})**`);
                     message.channel.send(
-                        createEmbed("warn", `Over ${this._playlistAlreadyQueued.length} track${this._playlistAlreadyQueued.length >= 2 ? "s" : ""} are skipped because it was a duplicate` +
+                        createEmbed("warn", `Over ${playlistAlreadyQueued!.length} track${playlistAlreadyQueued!.length >= 2 ? "s" : ""} are skipped because it was a duplicate` +
                         ` and this bot configuration disallow duplicated tracks in queue, please use \`${this.client.config.prefix}repeat\` instead`)
                             .setTitle("Already queued / duplicate")
                     ).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
@@ -79,7 +82,7 @@ export class PlayCommand extends BaseCommand {
                         if (howManyMessage === 1) embed.setTitle("Duplicated tracks");
                         await message.channel.send(embed);
                     }
-                    this._playlistAlreadyQueued.splice(0, this._playlistAlreadyQueued.length);
+                    this.playlistAlreadyQueued.delete(message.guild.id);
                 }
                 message.channel.messages.fetch(addingPlaylistVideoMessage.id, false).then(m => m.delete()).catch(e => this.client.logger.error("YT_PLAYLIST_ERR:", e));
                 if (skippedVideos === playlist.itemCount) {
@@ -100,7 +103,7 @@ export class PlayCommand extends BaseCommand {
         try {
             const id = resolveYTVideoID(url);
             if (!id) return message.channel.send(createEmbed("error", "Invalid YouTube Video URL"));
-            var video = await this.client.youtube.getVideo(id);
+            video = await this.client.youtube.getVideo(id);
         } catch (e) {
             try {
                 const videos = await this.client.youtube.searchVideos(searchString, this.client.config.searchMaxResults);
@@ -118,12 +121,10 @@ export class PlayCommand extends BaseCommand {
                                 "*Type `cancel` or `c` to cancel tracks selection*"
                             )
                             .setThumbnail(message.client.user?.displayAvatarURL() as string)
-                            .setColor("#00FF00")
                             .setFooter("Please select one of the results ranging from 1-12")
                     );
                     try {
-                    // eslint-disable-next-line no-var
-                        var response = await message.channel.awaitMessages((msg2: Message) => {
+                        response = await message.channel.awaitMessages((msg2: Message) => {
                             if (message.author.id !== msg2.author.id) return false;
 
                             if (msg2.content === "cancel" || msg2.content === "c") return true;
@@ -162,7 +163,12 @@ export class PlayCommand extends BaseCommand {
         };
         if (message.guild?.queue) {
             if (!this.client.config.allowDuplicate && message.guild.queue.songs.find(s => s.id === song.id)) {
-                if (playlist) return this._playlistAlreadyQueued.push(song);
+                if (playlist) {
+                    const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id) ?? [];
+                    playlistAlreadyQueued.push(song);
+                    this.playlistAlreadyQueued.set(message.guild.id, playlistAlreadyQueued);
+                    return undefined;
+                }
                 return message.channel.send(
                     createEmbed("warn", `Track **[${song.title}](${song.url})** is already queued, and this bot configuration disallow duplicated tracks in queue, ` +
                 `please use \`${this.client.config.prefix}repeat\` instead`)
@@ -221,20 +227,19 @@ export class PlayCommand extends BaseCommand {
             skipFFmpeg: true
         });
 
-        if (songData.cache) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Using cache for music "${song.title}" on ${guild.name}`);
+        if (songData.cache) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Using cache for music "${song.title}" on ${guild.name}`);
 
         songData.on("error", err => { err.message = `YTDLError: ${err.message}`; serverQueue.connection?.dispatcher.emit("error", err); });
-
         serverQueue.connection?.play(songData, { type: songData.info.canSkipFFmpeg ? "webm/opus" : "unknown", bitrate: "auto", highWaterMark: 1 })
             .on("start", () => {
                 serverQueue.playing = true;
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Track: "${song.title}" on ${guild.name} started`);
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${song.title}" on ${guild.name} started`);
                 serverQueue.textChannel?.send(createEmbed("info", `▶ Start playing: **[${song.title}](${song.url})**`).setThumbnail(song.thumbnail))
                     .then(m => serverQueue.oldMusicMessage = m.id)
                     .catch(e => this.client.logger.error("PLAY_ERR:", e));
             })
             .on("finish", () => {
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids}]` : ""} Track: "${song.title}" on ${guild.name} ended`);
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${song.title}" on ${guild.name} ended`);
                 if (serverQueue.loopMode === loopMode.off) {
                     serverQueue.songs.deleteFirst();
                 } else if (serverQueue.loopMode === loopMode.all) {
