@@ -1,6 +1,6 @@
 /* eslint-disable no-eval */
 import { BaseCommand } from "../structures/BaseCommand";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import { inspect } from "util";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
@@ -21,8 +21,7 @@ export class EvalCommand extends BaseCommand {
             return message.channel.send(createEmbed("error", "❗ This command is limited to the bot owner only"));
         }
 
-        const embed = new MessageEmbed()
-            .setColor("#00FF00")
+        const embed = createEmbed("info")
             .addField("Input", `\`\`\`js\n${args.join(" ")}\`\`\``);
 
         try {

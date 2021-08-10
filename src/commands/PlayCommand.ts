@@ -1,7 +1,7 @@
 /* eslint-disable no-var, block-scoped-var, @typescript-eslint/restrict-template-expressions */
 import { BaseCommand } from "../structures/BaseCommand";
 import { loopMode, ServerQueue } from "../structures/ServerQueue";
-import { Util, MessageEmbed, VoiceChannel, Message, TextChannel, Guild } from "discord.js";
+import { Util, VoiceChannel, Message, TextChannel, Guild } from "discord.js";
 import { decodeHTML } from "entities";
 import { ISong } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
@@ -110,13 +110,17 @@ export class PlayCommand extends BaseCommand {
                     video = await this.client.youtube.getVideo(videos[0].id);
                 } else {
                     let index = 0;
-                    const msg = await message.channel.send(new MessageEmbed()
-                        .setAuthor("Tracks Selection")
-                        .setDescription(`${videos.map(video => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
-                        "*Type `cancel` or `c` to cancel tracks selection*")
-                        .setThumbnail(message.client.user?.displayAvatarURL() as string)
-                        .setColor("#00FF00")
-                        .setFooter("Please select one of the results ranging from 1-12"));
+                    const msg = await message.channel.send(
+                        createEmbed("info")
+                            .setAuthor("Tracks Selection")
+                            .setDescription(
+                                `${videos.map(video => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
+                                "*Type `cancel` or `c` to cancel tracks selection*"
+                            )
+                            .setThumbnail(message.client.user?.displayAvatarURL() as string)
+                            .setColor("#00FF00")
+                            .setFooter("Please select one of the results ranging from 1-12")
+                    );
                     try {
                     // eslint-disable-next-line no-var
                         var response = await message.channel.awaitMessages((msg2: Message) => {
