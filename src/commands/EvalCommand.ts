@@ -1,7 +1,6 @@
 /* eslint-disable no-eval */
 import { BaseCommand } from "../structures/BaseCommand";
 import { Message, MessageEmbed } from "discord.js";
-import { request } from "https";
 import { inspect } from "util";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
@@ -39,18 +38,18 @@ export class EvalCommand extends BaseCommand {
 
             const output = this.clean(evaled);
             if (output.length > 1024) {
-                const hastebin = await this.hastebin(output);
+                const hastebin = await client.util.hastebin(output);
                 embed.addField("Output", `${hastebin}.js`);
             } else { embed.addField("Output", `\`\`\`js\n${output}\`\`\``); }
             void message.channel.send(embed);
         } catch (e) {
             const error = this.clean(e);
             if (error.length > 1024) {
-                const hastebin = await this.hastebin(error);
+                const hastebin = await client.util.hastebin(error);
                 embed.addField("Error", `${hastebin}.js`);
             } else { embed.setColor("#FF0000").addField("Error", `\`\`\`js\n${error}\`\`\``); }
-            message.channel.send(embed).catch(e => this.client.logger.error("EVAL_CMD_MSG_ERR:", e));
-            this.client.logger.error("EVAL_CMD_ERR:", e);
+            message.channel.send(embed).catch(e => client.logger.error("EVAL_CMD_MSG_ERR:", e));
+            client.logger.error("EVAL_CMD_ERR:", e);
         }
 
         return message;
@@ -64,20 +63,5 @@ export class EvalCommand extends BaseCommand {
                 .replace(/`/g, `\`${String.fromCharCode(8203)}`)
                 .replace(/@/g, `@${String.fromCharCode(8203)}`);
         } return text;
-    }
-
-    private hastebin(text: string): Promise<string> {
-        return new Promise((resolve, reject) => {
-            const req = request({ hostname: "bin.hzmi.xyz", path: "/documents", method: "POST", minVersion: "TLSv1.3" }, res => {
-                let raw = "";
-                res.on("data", chunk => raw += chunk);
-                res.on("end", () => {
-                    if (res.statusCode! >= 200 && res.statusCode! < 300) return resolve(`https://bin.hzmi.xyz/${JSON.parse(raw).key as string}`);
-                    return reject(new Error(`[hastebin] Error while trying to send data to https://bin.hzmi.xyz/documents, ${res.statusCode as number} ${res.statusMessage as string}`));
-                });
-            }).on("error", reject);
-            req.write(typeof text === "object" ? JSON.stringify(text, null, 2) : text);
-            req.end();
-        });
     }
 }

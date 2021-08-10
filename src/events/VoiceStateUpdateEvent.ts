@@ -4,7 +4,6 @@ import { BaseListener } from "../structures/BaseListener";
 import { ServerQueue } from "../structures/ServerQueue";
 import { createEmbed } from "../utils/createEmbed";
 import { DefineListener } from "../utils/decorators/DefineListener";
-import { formatMS } from "../utils/formatMS";
 
 @DefineListener("voiceStateUpdate")
 export class VoiceStateUpdateEvent extends BaseListener {
@@ -62,7 +61,7 @@ export class VoiceStateUpdateEvent extends BaseListener {
             newState.guild.queue!.playing = false;
             queue.connection?.dispatcher.pause();
             const timeout = this.client.config.deleteQueueTimeout;
-            const duration = formatMS(timeout);
+            const duration = this.client.util.formatMS(timeout);
             queue.oldVoiceStateUpdateMessage = null;
             newState.guild.queue!.timeout = this.client.setTimeout(() => {
                 queue.voiceChannel?.leave();
