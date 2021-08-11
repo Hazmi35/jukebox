@@ -16,7 +16,7 @@
             "required": false
         },
         "CONFIG_YOUTUBE_DATA_STRATEGY": {
-            "description": "Strategy for getting video info from youtube (scrape, or api) (default: scrape) (I recommends using api because it's more mature)",
+            "description": "Strategy for getting video info from youtube (scrape, or api) (default: scrape)",
             "required": false
         },
         "SECRET_YT_API_KEY": {
