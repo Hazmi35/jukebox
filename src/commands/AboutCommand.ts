@@ -27,9 +27,9 @@ YT Data Strategy    :: ${await this.client.config.YouTubeDataRetrievingStrategy 
 Platform            :: ${process.platform}
 Arch                :: ${process.arch}
 OS Uptime           :: ${this.client.util.formatMS(osUptime() * 1000)}
-Memory (RSS)        :: ${this.client.util.bytesToSize(await this.client.util.getTotalMemory("rss"))} 
-Memory (Heap Total) :: ${this.client.util.bytesToSize(await this.client.util.getTotalMemory("heapTotal"))}
-Memory (Heap Used)  :: ${this.client.util.bytesToSize(await this.client.util.getTotalMemory("heapUsed"))}
+Memory (RSS)        :: ${this.client.util.bytesToSize(process.memoryUsage().rss)} 
+Memory (Heap Total) :: ${this.client.util.bytesToSize(process.memoryUsage().heapTotal)}
+Memory (Heap Used)  :: ${this.client.util.bytesToSize(process.memoryUsage().heapUsed)}
 Process Uptime      :: ${this.client.util.formatMS(process.uptime() * 1000)}
 Bot Uptime          :: ${this.client.util.formatMS(this.client.uptime!)}
 
