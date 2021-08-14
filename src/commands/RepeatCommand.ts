@@ -12,7 +12,7 @@ import { Message } from "discord.js";
     usage: "{prefix}repeat [all | one | off]"
 })
 export class RepeatCommand extends BaseCommand {
-    @isUserInTheVoiceChannel()
+/*     @isUserInTheVoiceChannel()
     @isMusicQueueExists()
     @isSameVoiceChannel()
     public execute(message: Message, args: string[]): any {
@@ -34,5 +34,5 @@ export class RepeatCommand extends BaseCommand {
             message.channel.send(createEmbed("info", `${modeEmoji[message.guild!.queue!.loopMode]} Repeating **${modeTypes[message.guild!.queue!.loopMode]}**`))
                 .catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
         }
-    }
+    } */
 }

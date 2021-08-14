@@ -11,7 +11,7 @@ import { isMusicQueueExists, isSameVoiceChannel, isUserInTheVoiceChannel } from 
     usage: "{prefix}remove <Track number>"
 })
 export class RemoveCommand extends BaseCommand {
-    @isMusicQueueExists()
+/*     @isMusicQueueExists()
     @isUserInTheVoiceChannel()
     @isSameVoiceChannel()
     public execute(message: Message, args: string[]): any {
@@ -33,5 +33,5 @@ export class RemoveCommand extends BaseCommand {
             createEmbed("info", `✅ Removed **[${song.title}](${song.url}})**`)
                 .setThumbnail(song.thumbnail)
         ).catch(e => this.client.logger.error("REMOVE_COMMAND_ERR:", e));
-    }
+    } */
 }
