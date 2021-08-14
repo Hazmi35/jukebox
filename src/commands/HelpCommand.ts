@@ -14,22 +14,28 @@ export class HelpCommand extends BaseCommand {
         const command = message.client.commands.get(args[0]) ??
             message.client.commands.get(message.client.commands.aliases.get(args[0])!);
         if (command && !command.meta.disable) {
-            message.channel.send(
-                createEmbed("info")
-                    .setTitle(`Information for the ${command.meta.name} command`)
-                    .setThumbnail("https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/question_mark.png")
-                    .addFields({ name: "Name", value: `\`${command.meta.name}\``, inline: true },
-                        { name: "Description", value: command.meta.description, inline: true },
-                        { name: "Aliases", value: `${Number(command.meta.aliases?.length) > 0 ? command.meta.aliases?.map(c => `\`${c}\``).join(", ") as string : "None."}`, inline: true },
-                        { name: "Usage", value: `\`${command.meta.usage?.replace(/{prefix}/g, message.client.config.prefix) as string}\``, inline: false })
-            ).catch(e => this.client.logger.error("HELP_CMD_ERR:", e));
+            message.channel.send({
+                embeds: [
+                    createEmbed("info")
+                        .setTitle(`Information for the ${command.meta.name} command`)
+                        .setThumbnail("https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/question_mark.png")
+                        .addFields([
+                            { name: "Name", value: `\`${command.meta.name}\``, inline: true },
+                            { name: "Description", value: command.meta.description!, inline: true },
+                            { name: "Aliases", value: `${Number(command.meta.aliases?.length) > 0 ? command.meta.aliases?.map(c => `\`${c}\``).join(", ") as string : "None."}`, inline: true },
+                            { name: "Usage", value: `\`${command.meta.usage?.replace(/{prefix}/g, message.client.config.prefix) as string}\``, inline: false }
+                        ])
+                ]
+            }).catch(e => this.client.logger.error("HELP_CMD_ERR:", e));
         } else {
-            message.channel.send(
-                createEmbed("info", message.client.commands.filter(cmd => !cmd.meta.disable && cmd.meta.name !== "eval").map(c => `\`${c.meta.name}\``).join(" "))
-                    .setTitle("Help Menu")
-                    .setThumbnail(message.client.user?.displayAvatarURL() as string)
-                    .setFooter(`Use ${message.client.config.prefix}help <command> to get more info on a specific command!`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png")
-            ).catch(e => this.client.logger.error("HELP_CMD_ERR:", e));
+            message.channel.send({
+                embeds: [
+                    createEmbed("info", message.client.commands.filter(cmd => !cmd.meta.disable && cmd.meta.name !== "eval").map(c => `\`${c.meta.name}\``).join(" "))
+                        .setTitle("Help Menu")
+                        .setThumbnail(message.client.user?.displayAvatarURL() as string)
+                        .setFooter(`Use ${message.client.config.prefix}help <command> to get more info on a specific command!`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png")
+                ]
+            }).catch(e => this.client.logger.error("HELP_CMD_ERR:", e));
         }
     }
 }
