@@ -94,11 +94,6 @@ export class VoiceStateUpdateEvent extends BaseListener {
                 ).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
                 newState.guild.queue!.playing = true;
                 newState.guild.queue?.connection?.dispatcher.resume();
-                // TODO: Revert this change after the issue #494 is fixed
-                if (satisfies(process.version, ">=14.17.0")) {
-                    newState.guild.queue?.connection?.dispatcher.pause();
-                    newState.guild.queue?.connection?.dispatcher.resume();
-                }
             } catch (e) { this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e); }
         }
     }
