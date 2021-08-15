@@ -229,7 +229,8 @@ export class PlayCommand extends BaseCommand {
     }
 
     private async play(guild: Guild): Promise<any> {
-        const serverQueue = guild.queue!;
+        const serverQueue = guild.queue;
+        if (!serverQueue) return undefined;
         const song = serverQueue.songs.first();
         if (!song) {
             serverQueue.oldMusicMessage = null; serverQueue.oldVoiceStateUpdateMessage = null;
