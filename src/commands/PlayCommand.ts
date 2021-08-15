@@ -8,7 +8,7 @@ import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from
 import { createEmbed } from "../utils/createEmbed";
 import { Video } from "../utils/YouTube/structures/Video";
 import { resolveYTPlaylistID, resolveYTVideoID } from "../utils/YouTube/utils/YouTubeAPI/resolveYTURL";
-import { AudioPlayerError, AudioPlayerStatus, createAudioResource, joinVoiceChannel, VoiceConnectionStatus } from "@discordjs/voice";
+import { AudioPlayerError, AudioPlayerStatus, createAudioResource, entersState, joinVoiceChannel, VoiceConnectionStatus } from "@discordjs/voice";
 
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
@@ -251,8 +251,12 @@ export class PlayCommand extends BaseCommand {
 
         songData.on("error", err => { err.message = `YTDLError: ${err.message}`; serverQueue.player.emit("error", new AudioPlayerError(err, playerResource)); });
 
-        serverQueue.player.play(playerResource);
         serverQueue.connection?.subscribe(serverQueue.player);
+
+        // Wait for 15 seconds for the connection to be ready.
+        entersState(serverQueue.connection!, VoiceConnectionStatus.Ready, 15 * 1000)
+            .then(() => serverQueue.player.play(playerResource))
+            .catch(e => serverQueue.player.emit("error", new AudioPlayerError(e, playerResource)));
 
         if (songData.cache) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Using cache for music "${song.title}" on ${guild.name}`);
 
