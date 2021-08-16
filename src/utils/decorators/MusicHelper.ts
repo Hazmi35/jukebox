@@ -38,7 +38,7 @@ export function isValidVoiceChannel(): any {
             return message.channel.send({ embeds: [createEmbed("error", "I'm sorry, but I can't connect to your voice channel, make sure I have the proper permissions!")] });
         }
         if (!(voiceChannel as VoiceChannel).speakable) {
-            return message.channel.send({ embeds: [createEmbed("error", "I'm sorry, but I can't speak in this voice channel. make sure I have the proper permissions!")] });
+            return message.channel.send({ embeds: [createEmbed("error", "I'm sorry, but I can't speak in that voice channel. make sure I have the proper permissions!")] });
         }
     });
 }
