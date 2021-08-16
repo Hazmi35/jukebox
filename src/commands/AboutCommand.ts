@@ -13,8 +13,9 @@ import { createEmbed } from "../utils/createEmbed";
 export class AboutCommand extends BaseCommand {
     public async execute(message: Message): Promise<void> {
         const opusEncoder = await this.client.util.getOpusEncoder();
-        message.channel.send(
-            createEmbed("info", `
+        message.channel.send({
+            embeds: [
+                createEmbed("info", `
 \`\`\`asciidoc
 Cached users count  :: ${await this.client.util.getUsersCount()}
 Channels count      :: ${await this.client.util.getChannelsCount()}
@@ -42,7 +43,8 @@ Bot Version         :: v${(await this.client.util.getPackageJSON()).version}
 
 Source code         :: https://sh.hzmi.xyz/jukebox
 \`\`\`
-        `).setAuthor(`${this.client.user?.username as string} - Just a simple Discord music bot.`)
-        ).catch(e => this.client.logger.error("ABOUT_CMD_ERR:", e));
+                        `).setAuthor(`${this.client.user?.username as string} - Just a simple Discord music bot.`)
+            ]
+        }).catch(e => this.client.logger.error("ABOUT_CMD_ERR:", e));
     }
 }

@@ -3,8 +3,7 @@ import { Readable } from "stream";
 import { resolve as resolvePath } from "path";
 import { createReadStream, createWriteStream, existsSync, appendFileSync, unlinkSync } from "fs";
 
-// 1048576 * 1 = 1MB
-const defaultOptions: IdownloadOptions = { quality: "highestaudio", highWaterMark: 1048576 * 32 };
+const defaultOptions: IdownloadOptions = { quality: "highestaudio" };
 
 export function getMusicInfo(link: string, options = defaultOptions): Promise<IMusicInfo> {
     options = Object.assign(options, defaultOptions);

@@ -1,7 +1,7 @@
-import { MessageEmbed } from "discord.js";
+import { ColorResolvable, MessageEmbed } from "discord.js";
 
 type hexColorsType = "info" | "warn" | "error";
-const hexColors: Record<hexColorsType, string> = {
+const hexColors: Record<hexColorsType, ColorResolvable> = {
     info: "#00FF00",
     warn: "#FFFF00",
     error: "#FF0000"

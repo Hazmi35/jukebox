@@ -1,4 +1,4 @@
-import { Client as OClient, ClientEvents, Guild as OGuild } from "discord.js";
+import { Client as OClient, ClientEvents, Guild as OGuild, Message } from "discord.js";
 import { Jukebox } from "../structures/Jukebox";
 import { ServerQueue } from "../structures/ServerQueue";
 
@@ -12,23 +12,25 @@ export interface ICommandComponent {
         description?: string;
         usage?: string;
     };
-    execute(message: IMessage, args: string[]): any;
+    execute(message: Message, args: string[]): any;
 }
 export interface IEvent {
     name: keyof ClientEvents;
     execute(...args: any): any;
 }
 declare module "discord.js" {
+    // @ts-expect-error Override
     export interface Client extends OClient {
-        public readonly config: Jukebox["config"];
-        public readonly logger: Jukebox["logger"];
-        public readonly commands: Jukebox["commands"];
-        public readonly events: Jukebox["events"];
-        public readonly youtube: Jukebox["youtube"];
-        public readonly util: Jukebox["util"];
+        readonly config: Jukebox["config"];
+        readonly logger: Jukebox["logger"];
+        readonly commands: Jukebox["commands"];
+        readonly events: Jukebox["events"];
+        readonly youtube: Jukebox["youtube"];
+        readonly util: Jukebox["util"];
 
-        public async build(token: string): Promise<this>;
+        build(token: string): Promise<this>;
     }
+    // @ts-expect-error Override
     export interface Guild extends OGuild {
         queue: ServerQueue | null;
     }
