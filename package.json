@@ -1,6 +1,6 @@
 {
   "name": "jukebox",
-  "version": "4.42.2",
+  "version": "5.0.0-dev",
   "private": true,
   "description": "Just a simple Discord music bot.",
   "homepage": "https://github.com/Hazmi35/jukebox#readme",
