@@ -20,9 +20,7 @@ export class VoiceStateUpdateEvent extends BaseListener {
         const member = newState.member;
         const queueVCMembers = queueVC.members.filter(m => !m.user.bot);
         const newVCMembers = newVC?.members.filter(m => !m.user.bot);
-        const botID = this.client.user?.id;
-
-        console.log("hello", oldMember?.id, botID, oldID, queueVC.id, newID);
+        const botID = this.client.user?.id; // TODO: Handle bot moved & kicked from voice channel in VoiceConnection directly?
 
         // Handle when bot gets kicked from the voice channel
         if (oldMember?.id === botID && oldID === queueVC.id && newID === undefined) {
@@ -38,7 +36,7 @@ export class VoiceStateUpdateEvent extends BaseListener {
             }
         }
 
-        if (newState.mute !== oldState.mute || newState.deaf !== oldState.deaf) return undefined;
+        if (newState.mute !== oldState.mute || newState.deaf !== oldState.deaf) return undefined; // TODO: Handle all listeners deaf & bot muted event?
 
         // Handle when the bot is moved to another voice channel
         if (member?.id === botID && oldID === queueVC.id && newID !== queueVC.id && newID !== undefined) {
