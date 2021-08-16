@@ -7,7 +7,7 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
 import { Video } from "../utils/YouTube/structures/Video";
-import { resolveYTPlaylistID, resolveYTVideoID } from "../utils/YouTube/utils/YouTubeAPI/resolveYTURL";
+import { resolveYTPlaylistID, resolveYTVideoID } from "../utils/YouTube/utils/resolveYTURL";
 import { AudioPlayerError, AudioPlayerStatus, createAudioPlayer, createAudioResource, entersState, joinVoiceChannel, VoiceConnectionStatus } from "@discordjs/voice";
 
 @DefineCommand({
@@ -47,26 +47,13 @@ export class PlayCommand extends BaseCommand {
                 if (!id) return message.channel.send({ embeds: [createEmbed("error", "Invalid YouTube Playlist URL")] });
                 const playlist = await this.client.youtube.getPlaylist(id);
                 const videos = await playlist.getVideos();
-                let skippedVideos = 0;
                 const addingPlaylistVideoMessage = await message.channel.send({
                     embeds: [
                         createEmbed("info", `Adding all tracks in playlist: **[${playlist.title}](${playlist.url})**, hang on...`)
                             .setThumbnail(playlist.thumbnailURL)
                     ]
                 });
-                for (const video of Object.values(videos)) {
-                    if (video.isPrivate) {
-                        skippedVideos++;
-                        continue;
-                    } else {
-                        await this.handleVideo(video, message, voiceChannel, true);
-                    }
-                }
-                if (skippedVideos !== 0) {
-                    message.channel.send({
-                        embeds: [createEmbed("warn", `${skippedVideos} track${skippedVideos >= 2 ? "s" : ""} are skipped because it's a private video`)]
-                    }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
-                }
+                for (const video of Object.values(videos)) { await this.handleVideo(video, message, voiceChannel, true); }
                 const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id);
                 if (!this.client.config.allowDuplicate && Number(playlistAlreadyQueued?.length) > 0) {
                     let num = 1;
@@ -90,14 +77,6 @@ export class PlayCommand extends BaseCommand {
                 }
                 message.channel.messages.fetch(addingPlaylistVideoMessage.id, { cache: false })
                     .then(m => m.delete()).catch(e => this.client.logger.error("YT_PLAYLIST_ERR:", e));
-                if (skippedVideos === playlist.itemCount) {
-                    return message.channel.send({
-                        embeds: [
-                            createEmbed("error", `Failed to load playlist **[${playlist.title}](${playlist.url})** because all of the items are private videos`)
-                                .setThumbnail(playlist.thumbnailURL)
-                        ]
-                    });
-                }
                 return message.channel.send({
                     embeds: [
                         createEmbed("info", `All tracks in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`)

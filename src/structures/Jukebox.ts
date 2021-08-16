@@ -15,7 +15,7 @@ import "./Guild";
 export class Jukebox extends BotClient {
     public readonly config = config;
     public readonly logger = createLogger("main", config.debug);
-    public readonly youtube = new YouTube(config.YouTubeDataRetrievingStrategy, process.env.SECRET_YT_API_KEY);
+    public readonly youtube = new YouTube("scrape");
     public readonly commands = new CommandManager(this, resolve(__dirname, "..", "commands"));
     public readonly events = new EventsLoader(this, resolve(__dirname, "..", "events"));
     public readonly util: Util = new Util(this);

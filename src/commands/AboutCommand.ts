@@ -23,7 +23,6 @@ Guilds count        :: ${await this.client.util.getGuildsCount()}
 Shards count        :: ${this.client.shard ? `${this.client.shard.count}` : "N/A"}
 Shard ID            :: ${this.client.shard ? `${this.client.shard.ids[0]}` : "N/A"}
 Playing Music on    :: ${await this.client.util.getTotalPlaying()} guilds
-YT Data Strategy    :: ${await this.client.config.YouTubeDataRetrievingStrategy === "api" ? "REST API" : "HTML SCRAPING"}
 
 Platform            :: ${process.platform}
 Arch                :: ${process.arch}
