@@ -19,7 +19,7 @@ export class ResumeCommand extends BaseCommand {
             message.channel.send({ embeds: [createEmbed("warn", "❗ The music player is not paused!")] }).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
         } else {
             message.guild!.queue!.playing = true;
-            message.guild?.queue?.player.unpause();
+            message.guild?.queue?.currentPlayer!.unpause();
             message.channel.send({ embeds: [createEmbed("info", "▶ The music player resumed")] }).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
         }
     }
