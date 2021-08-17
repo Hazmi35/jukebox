@@ -10,7 +10,7 @@
 
 ## Usage
 
-**[⚠] Requires [Node.JS](https://nodejs.org) version 12.9.0 or above.**
+**[⚠] Requires [Node.JS](https://nodejs.org) version 16.6.0 or above.**
 
 1. Install [Node.JS](https://nodejs.org)
 2. Rename `.env.schema` to `.env` and fill out the values (example on .env.example)
