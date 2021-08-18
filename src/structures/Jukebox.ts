@@ -4,7 +4,6 @@ import * as config from "../config";
 import { createLogger } from "../utils/Logger";
 import { CommandManager } from "../utils/CommandManager";
 import { EventsLoader } from "../utils/EventsLoader";
-import { YouTube } from "../utils/youtube";
 import { Util } from "../utils/Util";
 import { ServerQueue } from "./ServerQueue";
 
@@ -15,7 +14,6 @@ import "./Guild";
 export class Jukebox extends BotClient {
     public readonly config = config;
     public readonly logger = createLogger("main", config.debug);
-    public readonly youtube = new YouTube("scrape");
     public readonly commands = new CommandManager(this, resolve(__dirname, "..", "commands"));
     public readonly events = new EventsLoader(this, resolve(__dirname, "..", "events"));
     public readonly util: Util = new Util(this);

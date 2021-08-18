@@ -1,4 +1,5 @@
 import { Client as OClient, ClientEvents, Guild as OGuild, Message } from "discord.js";
+import { Readable } from "stream";
 import { Jukebox } from "../structures/Jukebox";
 import { ServerQueue } from "../structures/ServerQueue";
 
@@ -25,7 +26,6 @@ declare module "discord.js" {
         readonly logger: Jukebox["logger"];
         readonly commands: Jukebox["commands"];
         readonly events: Jukebox["events"];
-        readonly youtube: Jukebox["youtube"];
         readonly util: Jukebox["util"];
 
         build(token: string): Promise<this>;
@@ -40,4 +40,5 @@ export interface ISong {
     title: string;
     url: string;
     thumbnail: string;
+    download(): Readable;
 }
