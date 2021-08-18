@@ -7,6 +7,7 @@ export const defaultVolume = Number(process.env.CONFIG_DEFAULT_VOLUME) || 100;
 export const maxVolume = Number(process.env.CONFIG_MAX_VOLUME) || 100;
 export const allowDuplicate: boolean = process.env.CONFIG_ALLOW_DUPLICATE?.toLowerCase() === "yes";
 export const deleteQueueTimeout = Number(process.env.CONFIG_DELETE_QUEUE_TIMEOUT) * 1000 || 180 * 1000;
+// TODO: Recreate cache system
 export const cacheYoutubeDownloads: boolean = process.env.CONFIG_CACHE_YOUTUBE_DOWNLOADS?.toLowerCase() === "yes";
 export const cacheMaxLengthAllowed = Number(process.env.CONFIG_CACHE_MAX_LENGTH) || 5400;
 export const disableInviteCmd = process.env.CONFIG_DISABLE_INVITE_CMD?.toLowerCase() === "yes";
