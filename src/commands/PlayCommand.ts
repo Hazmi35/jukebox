@@ -6,8 +6,8 @@ import { ISong } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
-import { Video } from "../utils/YouTube/structures/Video";
-import { resolveYTPlaylistID, resolveYTVideoID } from "../utils/YouTube/utils/resolveYTURL";
+import { Video } from "../utils/youtube/structures/Video";
+import { resolveYTPlaylistID, resolveYTVideoID } from "../utils/youtube/utils/resolveYTURL";
 import { AudioPlayerError, AudioPlayerStatus, createAudioPlayer, createAudioResource, entersState, joinVoiceChannel, VoiceConnectionStatus } from "@discordjs/voice";
 
 @DefineCommand({

@@ -4,7 +4,7 @@ import * as config from "../config";
 import { createLogger } from "../utils/Logger";
 import { CommandManager } from "../utils/CommandManager";
 import { EventsLoader } from "../utils/EventsLoader";
-import { YouTube } from "../utils/YouTube";
+import { YouTube } from "../utils/youtube";
 import { Util } from "../utils/Util";
 import { ServerQueue } from "./ServerQueue";
 
