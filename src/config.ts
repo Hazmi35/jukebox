@@ -2,12 +2,12 @@ import { ActivityType } from "discord.js";
 
 export const prefix = process.env.CONFIG_PREFIX?.replace(/"/g, "") ?? "jukebox "; // Temporary workaround for https://github.com/docker/compose/issues/6951
 export const owners: string[] = process.env.CONFIG_OWNERS?.replace(/  +/g, " ").split(/,[ ]?/) ?? [];
-export const YouTubeDataRetrievingStrategy = process.env.CONFIG_YOUTUBE_DATA_STRATEGY?.toLowerCase() as ("scrape" | "api" | undefined) ?? "scrape";
 export const totalShards: string | number = process.env.CONFIG_TOTALSHARDS?.toLowerCase() ?? "auto";
 export const defaultVolume = Number(process.env.CONFIG_DEFAULT_VOLUME) || 100;
 export const maxVolume = Number(process.env.CONFIG_MAX_VOLUME) || 100;
 export const allowDuplicate: boolean = process.env.CONFIG_ALLOW_DUPLICATE?.toLowerCase() === "yes";
 export const deleteQueueTimeout = Number(process.env.CONFIG_DELETE_QUEUE_TIMEOUT) * 1000 || 180 * 1000;
+// TODO: Recreate cache system
 export const cacheYoutubeDownloads: boolean = process.env.CONFIG_CACHE_YOUTUBE_DOWNLOADS?.toLowerCase() === "yes";
 export const cacheMaxLengthAllowed = Number(process.env.CONFIG_CACHE_MAX_LENGTH) || 5400;
 export const disableInviteCmd = process.env.CONFIG_DISABLE_INVITE_CMD?.toLowerCase() === "yes";
@@ -24,4 +24,3 @@ export const searchMaxResults = Number(process.env.CONFIG_SEARCH_MAX_RESULTS) ||
 if (searchMaxResults < 1) throw new Error("CONFIG_SEARCH_MAX_RESULTS cannot be smaller than 1");
 if (searchMaxResults > 12) throw new Error("CONFIG_SEARCH_MAX_RESULTS cannot be higher than 12");
 if (totalShards !== "auto" && isNaN(totalShards as unknown as number)) throw new Error("CONFIG_TOTALSHARDS must be a number or \"auto\"");
-if (!["scrape", "api"].includes(YouTubeDataRetrievingStrategy)) throw new Error("CONFIG_YOUTUBE_DATA_STRATEGY must be scrape or api");

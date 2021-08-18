@@ -6,9 +6,10 @@ import { ISong } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
-import { Video } from "../utils/YouTube/structures/Video";
-import { resolveYTPlaylistID, resolveYTVideoID } from "../utils/YouTube/utils/YouTubeAPI/resolveYTURL";
+import { Video } from "../utils/youtube/structures/Video";
+import { resolveYTPlaylistID, resolveYTVideoID } from "../utils/youtube/utils/resolveYTURL";
 import { AudioPlayerError, AudioPlayerStatus, createAudioPlayer, createAudioResource, entersState, joinVoiceChannel, VoiceConnectionStatus } from "@discordjs/voice";
+import { YouTube } from "../utils/youtube";
 
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
@@ -45,28 +46,15 @@ export class PlayCommand extends BaseCommand {
             try {
                 const id = resolveYTPlaylistID(url);
                 if (!id) return message.channel.send({ embeds: [createEmbed("error", "Invalid YouTube Playlist URL")] });
-                const playlist = await this.client.youtube.getPlaylist(id);
+                const playlist = await YouTube.getPlaylist(id);
                 const videos = await playlist.getVideos();
-                let skippedVideos = 0;
                 const addingPlaylistVideoMessage = await message.channel.send({
                     embeds: [
                         createEmbed("info", `Adding all tracks in playlist: **[${playlist.title}](${playlist.url})**, hang on...`)
-                            .setThumbnail(playlist.thumbnailURL)
+                            .setThumbnail(playlist.bestThumbnailURL!)
                     ]
                 });
-                for (const video of Object.values(videos)) {
-                    if (video.isPrivate) {
-                        skippedVideos++;
-                        continue;
-                    } else {
-                        await this.handleVideo(video, message, voiceChannel, true);
-                    }
-                }
-                if (skippedVideos !== 0) {
-                    message.channel.send({
-                        embeds: [createEmbed("warn", `${skippedVideos} track${skippedVideos >= 2 ? "s" : ""} are skipped because it's a private video`)]
-                    }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
-                }
+                for (const video of Object.values(videos)) { await this.handleVideo(video, message, voiceChannel, true); }
                 const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id);
                 if (!this.client.config.allowDuplicate && Number(playlistAlreadyQueued?.length) > 0) {
                     let num = 1;
@@ -90,18 +78,10 @@ export class PlayCommand extends BaseCommand {
                 }
                 message.channel.messages.fetch(addingPlaylistVideoMessage.id, { cache: false })
                     .then(m => m.delete()).catch(e => this.client.logger.error("YT_PLAYLIST_ERR:", e));
-                if (skippedVideos === playlist.itemCount) {
-                    return message.channel.send({
-                        embeds: [
-                            createEmbed("error", `Failed to load playlist **[${playlist.title}](${playlist.url})** because all of the items are private videos`)
-                                .setThumbnail(playlist.thumbnailURL)
-                        ]
-                    });
-                }
                 return message.channel.send({
                     embeds: [
                         createEmbed("info", `All tracks in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`)
-                            .setThumbnail(playlist.thumbnailURL)
+                            .setThumbnail(playlist.bestThumbnailURL!)
                     ]
                 });
             } catch (e) {
@@ -112,14 +92,14 @@ export class PlayCommand extends BaseCommand {
         try {
             const id = resolveYTVideoID(url);
             if (!id) return message.channel.send({ embeds: [createEmbed("error", "Invalid YouTube Video URL")] });
-            video = await this.client.youtube.getVideo(id);
+            video = await YouTube.getVideo(id);
         } catch (e) {
             try {
-                const videos = await this.client.youtube.searchVideos(searchString, this.client.config.searchMaxResults);
+                const videos = await YouTube.searchVideos(searchString, this.client.config.searchMaxResults);
                 if (videos.length === 0) return message.channel.send({ embeds: [createEmbed("warn", "I could not obtain any search results!")] });
 
                 if (videos.length === 1 || this.client.config.disableSongSelection) {
-                    video = await this.client.youtube.getVideo(videos[0].id);
+                    video = await YouTube.getVideo(videos[0].id);
                 } else {
                     let index = 0;
                     const msg = await message.channel.send({
@@ -155,7 +135,7 @@ export class PlayCommand extends BaseCommand {
                         return message.channel.send({ embeds: [createEmbed("info", "Tracks selection canceled.")] });
                     }
                     const videoIndex = parseInt(response.first()?.content as string);
-                    video = await this.client.youtube.getVideo(videos[videoIndex - 1].id);
+                    video = await YouTube.getVideo(videos[videoIndex - 1].id);
                 }
             } catch (err) {
                 this.client.logger.error("YT_SEARCH_ERR:", err);
@@ -167,10 +147,11 @@ export class PlayCommand extends BaseCommand {
 
     private async handleVideo(video: Video, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false): Promise<any> {
         const song: ISong = {
+            download: () => video.download("audio"),
             id: video.id,
+            thumbnail: video.bestThumbnailURL!,
             title: this.cleanTitle(video.title),
-            url: video.url,
-            thumbnail: video.thumbnailURL
+            url: video.url
         };
         if (message.guild?.queue) {
             if (!this.client.config.allowDuplicate && message.guild.queue.songs.find(s => s.id === song.id)) {
@@ -242,13 +223,11 @@ export class PlayCommand extends BaseCommand {
             return guild.queue = null;
         }
 
-        const songData = await this.client.youtube.downloadVideo(song.url, {
-            cache: false, // TODO: Recreate YTDL Caching (currently throws YTDLError: Premature close)
-            cacheMaxLength: this.client.config.cacheMaxLengthAllowed,
-            skipFFmpeg: false // TODO: Recreate this functionality
-        });
+        // TODO: Recreate YTDL Caching
+        const songData = song.download();
 
-        const playerResource = createAudioResource(songData, { inlineVolume: false }); // TODO: Add config for this.
+        // TODO: Store Song metadata inside here.
+        const playerResource = createAudioResource<any>(songData, { inlineVolume: false }); // TODO: Reintroduce volume feature
 
         songData.on("error", err => { err.message = `YTDLError: ${err.message}`; serverQueue.currentPlayer!.emit("error", new AudioPlayerError(err, playerResource)); });
 
@@ -258,8 +237,6 @@ export class PlayCommand extends BaseCommand {
         entersState(serverQueue.connection!, VoiceConnectionStatus.Ready, 15 * 1000)
             .then(() => serverQueue.currentPlayer!.play(playerResource))
             .catch(e => serverQueue.currentPlayer!.emit("error", new AudioPlayerError(e, playerResource)));
-
-        if (songData.cache) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Using cache for music "${song.title}" on ${guild.name}`);
 
         serverQueue.currentPlayer.on("stateChange", (oldState, newState) => {
             if (newState.status === AudioPlayerStatus.Playing) {
