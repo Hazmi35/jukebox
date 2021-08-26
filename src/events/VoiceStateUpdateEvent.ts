@@ -1,11 +1,11 @@
 import { Collection, GuildMember, Snowflake, VoiceState } from "discord.js";
-import { BaseListener } from "../structures/BaseListener";
+import { BaseEvent } from "../structures/BaseEvent";
 import { ServerQueue } from "../structures/ServerQueue";
 import { createEmbed } from "../utils/createEmbed";
-import { DefineListener } from "../utils/decorators/DefineListener";
+import { DefineEvent } from "../utils/decorators/DefineEvent";
 
-@DefineListener("voiceStateUpdate")
-export class VoiceStateUpdateEvent extends BaseListener {
+@DefineEvent("voiceStateUpdate")
+export class VoiceStateUpdateEvent extends BaseEvent {
     public execute(oldState: VoiceState, newState: VoiceState): any {
         const queue = newState.guild.queue;
 
