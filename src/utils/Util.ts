@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
-import { Channel, Client, Collection, Guild, Presence, Snowflake, User } from "discord.js";
+import { Channel, Client, Collection, Guild, Snowflake, User } from "discord.js";
 import { request } from "https";
 import { promises as fs } from "fs";
 import path from "path";
@@ -163,17 +162,6 @@ export class Util {
 
         const id = matches[1];
         return this.client.users.fetch(id);
-    }
-
-    public async updatePresence(): Promise<Presence | undefined> {
-        const activityName = this.client.config.status.activity
-            .replace(/{guildsCount}/g, (await this.getGuildsCount()).toString())
-            .replace(/{playingCount}/g, (await this.getTotalPlaying()).toString())
-            .replace(/{usersCount}/g, (await this.getUsersCount()).toString())
-            .replace(/{botPrefix}/g, this.client.config.prefix);
-        return this.client.user!.setPresence({
-            activities: [{ name: activityName, type: this.client.config.status.type }]
-        });
     }
 
     private _getMergedBroadcastEval<T>(broadcastEval: T[][]): Iterable<[Snowflake, T]> {

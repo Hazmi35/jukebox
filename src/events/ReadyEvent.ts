@@ -1,3 +1,4 @@
+import { Presence } from "discord.js";
 import { BaseEvent } from "../structures/BaseEvent";
 import { DefineEvent } from "../utils/decorators/DefineEvent";
 
@@ -13,12 +14,23 @@ export class ReadyEvent extends BaseEvent {
     }
 
     private doPresence(): void {
-        this.client.util.updatePresence()
-            .then(() => setInterval(() => this.client.util.updatePresence(), 30 * 1000))
+        this.updatePresence()
+            .then(() => setInterval(() => this.updatePresence(), 30 * 1000))
             .catch(e => {
                 if (e.message === "Shards are still being spawned.") return this.doPresence();
                 this.client.logger.error("DO_PRESENCE_ERR:", e);
             });
         return undefined;
+    }
+
+    private async updatePresence(): Promise<Presence | undefined> {
+        const activityName = this.client.config.status.activity
+            .replace(/{guildsCount}/g, (await this.client.util.getGuildsCount()).toString())
+            .replace(/{playingCount}/g, (await this.client.util.getTotalPlaying()).toString())
+            .replace(/{usersCount}/g, (await this.client.util.getUsersCount()).toString())
+            .replace(/{botPrefix}/g, this.client.config.prefix);
+        return this.client.user!.setPresence({
+            activities: [{ name: activityName, type: this.client.config.status.type }]
+        });
     }
 }
