@@ -1,10 +1,10 @@
-import { DefineListener } from "../utils/decorators/DefineListener";
+import { DefineEvent } from "../utils/decorators/DefineEvent";
 import { createEmbed } from "../utils/createEmbed";
-import { BaseListener } from "../structures/BaseListener";
+import { BaseEvent } from "../structures/BaseEvent";
 import { Message } from "discord.js";
 
-@DefineListener("message")
-export class MessageEvent extends BaseListener {
+@DefineEvent("message")
+export class MessageEvent extends BaseEvent {
     public async execute(message: Message): Promise<any> {
         if (message.author.bot || message.channel.type !== "text") return message;
 

@@ -1,8 +1,8 @@
-import { BaseListener } from "../structures/BaseListener";
-import { DefineListener } from "../utils/decorators/DefineListener";
+import { BaseEvent } from "../structures/BaseEvent";
+import { DefineEvent } from "../utils/decorators/DefineEvent";
 
-@DefineListener("warn")
-export class WarnEvent extends BaseListener {
+@DefineEvent("warn")
+export class WarnEvent extends BaseEvent {
     public execute(warn: string): void {
         this.client.logger.warn("CLIENT_WARN:", warn);
     }
