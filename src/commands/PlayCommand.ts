@@ -229,7 +229,7 @@ export class PlayCommand extends BaseCommand {
         // TODO: Store Song metadata inside here.
         const playerResource = createAudioResource<any>(songData, { inlineVolume: false }); // TODO: Reintroduce volume feature
 
-        songData.on("error", err => { err.message = `YTDLError: ${err.message}`; serverQueue.currentPlayer!.emit("error", new AudioPlayerError(err, playerResource)); });
+        songData.on("error", err => { err.message = `YTDLError: ${err.message}`; });
 
         serverQueue.connection?.subscribe(serverQueue.currentPlayer);
 
