@@ -4,8 +4,6 @@ import { Video as IVideo } from "ytsr";
 import { Item, itemType } from "./Item";
 
 type downloadType = "both" | "video" | "audio";
-
-// TODO: Duration for Videos
 export class Video extends Item {
     public constructor(public raw: IVideo | videoInfo, protected readonly _type: itemType) {
         super(raw, _type);
