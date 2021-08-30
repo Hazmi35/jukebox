@@ -4,6 +4,7 @@ import ytsr, { Video as IVideo } from "ytsr";
 import { Playlist } from "./structures/Playlist";
 import { Video } from "./structures/Video";
 import { resolveYTPlaylistID } from "./utils/resolveYTURL";
+import { YouTubeError } from "./utils/YouTubeError";
 
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class YouTube {
@@ -12,7 +13,7 @@ export class YouTube {
             const data = await getInfo(url);
             return new Video(data, "ytdl");
         } catch (error) {
-            throw new Error(`Could not get video data, err: ${error.stack}`);
+            throw new YouTubeError("Could not get video data", error);
         }
     }
 
@@ -23,7 +24,7 @@ export class YouTube {
             const data = await ytpl(id);
             return new Playlist(data, "normal");
         } catch (error) {
-            throw new Error(`Could not get playlist data, err: ${error.stack}`);
+            throw new YouTubeError(`Could not get playlist data`, error);
         }
     }
 
@@ -32,7 +33,7 @@ export class YouTube {
             const data = await ytsr(query, { limit: maxResults, safeSearch: false });
             return data.items.filter(x => x.type === "video").map(i => new Video(i as IVideo, "normal"));
         } catch (error) {
-            throw new Error(`Could not get search data, err: ${error.stack}`);
+            throw new YouTubeError(`Could not get search data`, error);
         }
     }
 }
