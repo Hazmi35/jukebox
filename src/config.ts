@@ -13,7 +13,7 @@ export const cacheMaxLengthAllowed = Number(process.env.CONFIG_CACHE_MAX_LENGTH)
 export const disableInviteCmd = process.env.CONFIG_DISABLE_INVITE_CMD?.toLowerCase() === "yes";
 export const debug = process.env.CONFIG_DEBUG?.toLowerCase() === "yes";
 export const status = {
-    type: process.env.STATUS_TYPE?.toUpperCase() as ActivityType | null ?? "LISTENING",
+    type: process.env.CONFIG_STATUS_TYPE?.toUpperCase() as ActivityType | null ?? "LISTENING",
     activity: process.env.CONFIG_STATUS_ACTIVITY ?? "music on {guildsCount} guilds"
 };
 export const fetchAllUsers = process.env.CONFIG_FETCH_ALL_USERS?.toLowerCase() === "yes";
