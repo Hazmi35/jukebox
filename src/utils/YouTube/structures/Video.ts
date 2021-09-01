@@ -36,8 +36,8 @@ export class Video extends Item {
                 ? parse((rawData as APIVideo).durationMS!)
                 : null
             : type === "scrape"
-                ? parse(this.durationToMS((rawData as SRVideo).duration))
-                : parse(Number((rawData as IMusicInfo).videoDetails.lengthSeconds) * 1000);
+                ? (rawData as SRVideo).duration ? parse(this.durationToMS((rawData as SRVideo).duration)) : null
+                : (rawData as IMusicInfo).videoDetails.isLiveContent ? parse(Number((rawData as IMusicInfo).videoDetails.lengthSeconds) * 1000) : null;
 
         this.isPrivate = type === "api" ? (rawData as APIVideo).status.privacyStatus === "private" : false;
 
