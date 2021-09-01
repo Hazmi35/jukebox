@@ -36,7 +36,7 @@ export class Video extends Item {
                 ? parse((rawData as APIVideo).durationMS!)
                 : null
             : type === "scrape"
-                ? parse(this.durationToMS((rawData as SRVideo).duration!))
+                ? parse(this.durationToMS((rawData as SRVideo).duration))
                 : parse(Number((rawData as IMusicInfo).videoDetails.lengthSeconds) * 1000);
 
         this.isPrivate = type === "api" ? (rawData as APIVideo).status.privacyStatus === "private" : false;
@@ -48,21 +48,11 @@ export class Video extends Item {
                 : (rawData as IMusicInfo).videoDetails.thumbnails[(rawData as IMusicInfo).videoDetails.thumbnails.length - 1].url;
     }
 
-    private durationToMS(duration: string): number {
-        const args = duration.split(":");
-        let dur = 0;
+    private durationToMS(duration: string | null): number {
+        if (duration === null) return 0;
 
-        switch (args.length) {
-            case 3:
-                dur = ((parseInt(args[0]) * 60) * 60) * ((1000 + parseInt(args[1])) * 60) * (1000 + parseInt(args[2])) * 1000;
-                break;
-            case 2:
-                dur = (parseInt(args[0]) * 60) * (1000 + (parseInt(args[1]) * 1000));
-                break;
-            default:
-                dur = parseInt(args[0]) * 1000;
-        }
+        const seconds = duration.split(":").reduce((acc, time) => (60 * acc) + Number(time), 0);
 
-        return dur;
+        return seconds * 1000;
     }
 }
