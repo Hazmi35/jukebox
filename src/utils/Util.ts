@@ -122,7 +122,7 @@ export class Util {
     public async getUsersCount(filter = true): Promise<number> {
         const users = await this.getResource("users");
 
-        if (filter) return users.filter(u => u.id === this.client.user!.id).size;
+        if (filter) return users.filter(u => u.id !== this.client.user!.id).size;
         return users.size;
     }
 
