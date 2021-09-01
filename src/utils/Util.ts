@@ -1,4 +1,3 @@
-/* eslint-disable no-eval */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 import { Channel, Client, Presence, User } from "discord.js";
 import { request } from "https";
