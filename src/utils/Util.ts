@@ -102,7 +102,7 @@ export class Util {
         let result: getResourceReturnType<T>;
         if (this.client.shard) {
             result = new Collection<Snowflake, getResourceResourceType[T]>(
-                await this._getMergedBroadcastEval<getResourceResourceType[T]>(evalResult as (getResourceResourceType[T])[][])
+                await this.mergeBroadcastEval<getResourceResourceType[T]>(evalResult as (getResourceResourceType[T])[][])
             );
         } else { result = evalResult as getResourceReturnType<T>; }
         return result;
@@ -192,7 +192,7 @@ export class Util {
         return this.client.users.fetch(id);
     }
 
-    private _getMergedBroadcastEval<T>(broadcastEval: T[][]): Iterable<[Snowflake, T]> {
+    public mergeBroadcastEval<T>(broadcastEval: T[][]): Iterable<[Snowflake, T]> {
         return broadcastEval.reduce((p, c) => [...p, ...c]) as Iterable<[Snowflake, T]>;
     }
 }
