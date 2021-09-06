@@ -8,7 +8,7 @@
             "required": true
         },
         "CONFIG_PREFIX": {
-            "description": "Your bot prefix",
+            "description": "Your bot's prefix",
             "required": true
         },
         "CONFIG_OWNERS": {
@@ -16,15 +16,15 @@
             "required": false
         },
         "CONFIG_TOTALSHARDS": {
-            "description": "Total shards to spawn, use \"auto\" or a number (default: auto)",
+            "description": "Total shards to spawn, use 'auto' or a number (default: auto)",
             "required": false
         },
-        "CONFIG_MAX_VOLUME": {
-            "description": "Max volume allowed for track (default: 100)",
+        "CONFIG_DEBUG": {
+            "description": "Should logging use debug level? Please note that this is not recommended in production (yes or no) (default: no)",
             "required": false
         },
-        "CONFIG_DEFAULT_VOLUME": {
-            "description": "Default volume for music (default: 100)",
+        "CONFIG_CACHE_USERS": {
+            "description": "Whether to cache users to memory (yes or no) (default: no)",
             "required": false
         },
         "CONFIG_ALLOW_DUPLICATE": {
@@ -33,6 +33,26 @@
         },
         "CONFIG_DELETE_QUEUE_TIMEOUT": {
             "description": "Timeout in seconds before queue is deleted when no one is in the voice channel (default: 180 <3 minutes>)",
+            "required": false
+        },
+        "CONFIG_SELECT_TIMEOUT": {
+            "description": "Select track timeout when searching tracks (in seconds) (default: 20)",
+            "required": false
+        },
+        "CONFIG_DISABLE_SONG_SELECTION": {
+            "description": "Whether to disable selecting tracks on play command, this will automatically selects the first track from search results (yes or no) (default: no)",
+            "required": false
+        },
+        "CONFIG_SEARCH_MAX_RESULTS": {
+            "description": "Maximum tracks to list in track selection (default: 12, max: 12)",
+            "required": false
+        },
+        "CONFIG_DEFAULT_VOLUME": {
+            "description": "Default volume for music (default: 100)",
+            "required": false
+        },
+        "CONFIG_MAX_VOLUME": {
+            "description": "Max volume allowed for music (default: 100)",
             "required": false
         },
         "CONFIG_CACHE_YOUTUBE_DOWNLOADS": {
@@ -44,11 +64,7 @@
             "required": false
         },
         "CONFIG_DISABLE_INVITE_CMD": {
-            "description": "Whether to disable the invite command or not (default: no)",
-            "required": false
-        },
-        "CONFIG_DEBUG": {
-            "description": "Should logging use debug level? Please note that this is not recommended in production (default: no)",
+            "description": "Whether to disable the invite command or not (yes or no) (default: no)",
             "required": false
         },
         "CONFIG_STATUS_TYPE": {
@@ -56,23 +72,7 @@
             "required": false
         },
         "CONFIG_STATUS_ACTIVITY": {
-            "description": "What status does the bot display (default: \"music on {guildsCount} guilds!\") (available variables: guildsCount, usersCount, playingCount, and botPrefix). NOTE ON {usersCount} VARIABLE: This only displays cached usersCount, to get full usersCount, please enable CONFIG_FETCH_ALL_USERS",
-            "required": false
-        },
-        "CONFIG_CACHE_USERS": {
-            "description": "Whether to cache users to memory (default: no) ",
-            "required": false
-        },
-        "CONFIG_SELECT_TIMEOUT": {
-            "description": "Select track timeout when searching tracks (in seconds) (default: 20 seconds)",
-            "required": false
-        },
-        "CONFIG_DISABLE_SONG_SELECTION": {
-            "description": "Whether to disable selecting tracks on play command, this will automatically selects the first track from search results (default: no)",
-            "required": false
-        },
-        "CONFIG_SEARCH_MAX_RESULTS": {
-            "description": "Maximum tracks to list in tracks selection (default: 12, max: 12)",
+            "description": "What status does the bot display (default: 'music on {guildsCount} guilds!') (available variables: guildsCount, usersCount, playingCount, and botPrefix). NOTE ON {usersCount} VARIABLE: The value will be 0 if CONFIG_CACHE_USERS is not set to yes",
             "required": false
         }
     },
