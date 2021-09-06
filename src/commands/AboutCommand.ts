@@ -16,7 +16,6 @@ export class AboutCommand extends BaseCommand {
             embeds: [
                 createEmbed("info", `
 \`\`\`asciidoc
-Cached users count  :: ${await this.client.util.getUsersCount()}
 Channels count      :: ${await this.client.util.getChannelsCount()}
 Guilds count        :: ${await this.client.util.getGuildsCount()}
 Shards count        :: ${this.client.shard ? `${this.client.shard.count}` : "N/A"}
