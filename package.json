@@ -33,8 +33,8 @@
     "entities": "^3.0.1",
     "ffmpeg-static": "^4.4.0",
     "opusscript": "^0.0.8",
-    "parse-ms": "^2.1.0",
     "pretty-ms": "^7.0.1",
+    "prism-media": "^1.3.2",
     "tslib": "^2.3.1",
     "winston": "^3.3.3",
     "ytdl-core": "^4.9.1",
@@ -44,8 +44,6 @@
   "devDependencies": {
     "@hazmi35/eslint-config": "^5.0.0",
     "@types/node": "^16.7.10",
-    "@types/node-fetch": "^3.0.3",
-    "@types/semver": "^7.3.8",
     "@typescript-eslint/eslint-plugin": "^4.30.0",
     "@typescript-eslint/parser": "^4.30.0",
     "eslint": "^7.32.0",
