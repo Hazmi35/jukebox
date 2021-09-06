@@ -172,7 +172,7 @@ export class Util {
     }
 
     public async getOpusEncoderName(): Promise<string> {
-        if (this.client.util.doesFFmpegHasLibOpus()) {
+        if (this.client.util.doesFFmpegHasLibOpus() && !this.client.config.enableInlineVolume) {
             return `ffmpeg libopus v${this.client.util.getFFmpegVersion().trim()}`;
         }
 

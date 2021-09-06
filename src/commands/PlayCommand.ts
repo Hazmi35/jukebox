@@ -222,7 +222,7 @@ export class PlayCommand extends BaseCommand {
         const songData = song.download();
 
         // TODO: Store Song metadata inside here.
-        const playerResource = createAudioResource<any>(songData, { inlineVolume: false }); // TODO: Reintroduce volume feature
+        serverQueue.currentResource = createAudioResource<any>(songData, { inlineVolume: this.client.config.enableInlineVolume });
 
         songData.on("error", err => { err.message = `YTDLError: ${err.message}`; });
 
@@ -230,10 +230,10 @@ export class PlayCommand extends BaseCommand {
 
         // Wait for 15 seconds for the connection to be ready.
         entersState(serverQueue.connection!, VoiceConnectionStatus.Ready, 15 * 1000)
-            .then(() => serverQueue.currentPlayer!.play(playerResource))
+            .then(() => serverQueue.currentPlayer!.play(serverQueue.currentResource!))
             .catch(e => {
                 if (e.message === "The operation was aborted") e.message = "Could not establish a voice connection within 15 seconds.";
-                serverQueue.currentPlayer!.emit("error", new AudioPlayerError(e, playerResource));
+                serverQueue.currentPlayer!.emit("error", new AudioPlayerError(e, serverQueue.currentResource!));
             });
 
         serverQueue.currentPlayer.on("stateChange", (oldState, newState) => {
