@@ -16,7 +16,7 @@ export const status = {
     type: process.env.CONFIG_STATUS_TYPE?.toUpperCase() as ActivityType | null ?? "LISTENING",
     activity: process.env.CONFIG_STATUS_ACTIVITY ?? "music on {guildsCount} guilds"
 };
-export const fetchAllUsers = process.env.CONFIG_FETCH_ALL_USERS?.toLowerCase() === "yes";
+export const cacheUsers = process.env.CONFIG_CACHE_USERS?.toLowerCase() === "yes";
 export const selectTimeout = Number(process.env.CONFIG_SELECT_TIMEOUT) * 1000 || 20 * 1000;
 export const disableSongSelection = process.env.CONFIG_DISABLE_SONG_SELECTION?.toLowerCase() === "yes";
 export const searchMaxResults = Number(process.env.CONFIG_SEARCH_MAX_RESULTS) || 12;
