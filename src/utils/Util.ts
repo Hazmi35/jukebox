@@ -36,31 +36,6 @@ export class Util {
         return JSON.parse((await fs.readFile(resolvedPackageJSONPath)).toString());
     }
 
-    public async getOpusEncoder(): Promise<any> {
-        if (this.doesFFmpegHasLibOpus()) {
-            return {
-                encoder: "ffmpeg",
-                pkgMetadata: {
-                    name: "ffmpeg libopus",
-                    version: this.getFFmpegVersion()
-                }
-            };
-        }
-
-        const list = ["@discordjs/opus", "opusscript"];
-        const errorLog = [];
-        for (const name of list) {
-            try {
-                const data = (await import(name)).default;
-                const pkgMetadata = await this.getPackageJSON(name);
-                return { encoder: name === "@discordjs/opus" ? data.OpusEncoder : data, pkgMetadata };
-            } catch (e) {
-                errorLog.push(e);
-            }
-        }
-        throw new Error(errorLog.join("\n"));
-    }
-
     public getFFmpegInfo(): FFmpegInfo {
         return FFmpeg.getInfo();
     }
