@@ -59,8 +59,8 @@
             "description": "What status does the bot display (default: \"music on {guildsCount} guilds!\") (available variables: guildsCount, usersCount, playingCount, and botPrefix). NOTE ON {usersCount} VARIABLE: This only displays cached usersCount, to get full usersCount, please enable CONFIG_FETCH_ALL_USERS",
             "required": false
         },
-        "CONFIG_FETCH_ALL_USERS": {
-            "description": "Whether to fetch all users on startup (warning: increased memory usage especially for bots with large users) (default: no) (note: You need to enable privileged GUILD_MEMBERS Intents on the developer page)",
+        "CONFIG_CACHE_USERS": {
+            "description": "Whether to cache users to memory (default: no) ",
             "required": false
         },
         "CONFIG_SELECT_TIMEOUT": {
