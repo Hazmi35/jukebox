@@ -17,7 +17,7 @@ export class VolumeCommand extends BaseCommand {
     public execute(message: Message, args: string[]): any {
         let volume = Number(args[0]);
 
-        if (isNaN(volume)) return message.channel.send(createEmbed("info", `📶 The current volume is ${message.guild!.queue!.volume.toString()}`));
+        if (isNaN(volume)) return message.channel.send(createEmbed("info", `📶 The current volume is \`${message.guild!.queue!.volume.toString()}\``));
 
         if (volume < 0) volume = 0;
         if (volume === 0) return message.channel.send(createEmbed("warn", "❗ Please pause the music player instead of setting the volume to \`0\`"));
@@ -29,6 +29,6 @@ export class VolumeCommand extends BaseCommand {
 
         message.guild!.queue!.volume = Number(args[0]);
         message.guild!.queue!.connection?.dispatcher.setVolume(Number(args[0]) / this.client.config.maxVolume);
-        message.channel.send(createEmbed("info", `📶 Volume set to ${args[0]}`)).catch(e => this.client.logger.error("VOLUME_CMD_ERR:", e));
+        message.channel.send(createEmbed("info", `📶 Volume set to \`${args[0]}\``)).catch(e => this.client.logger.error("VOLUME_CMD_ERR:", e));
     }
 }
