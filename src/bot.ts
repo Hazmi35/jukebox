@@ -22,7 +22,7 @@ const cacheOptions: CacheWithLimitsOptions = {
     }
 };
 
-if (cacheUsers) Object.assign(cacheOptions, { UserManager: { maxSize: 0 } });
+if (!cacheUsers) Object.assign(cacheOptions, { UserManager: { maxSize: 0 } });
 
 const client = new Jukebox({
     allowedMentions: { parse: ["users"] },
