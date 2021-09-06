@@ -23,6 +23,9 @@ export class Jukebox extends BotClient {
     public async build(token: string): Promise<this> {
         this.on("ready", () => this.commands.load());
         this.events.load().catch(e => this.logger.error("EVENTS_LOADER_ERR:", e));
+        this.util.getOpusEncoderName()
+            .then(name => this.logger.info(`${this.shard ? `[Shard #${this.shard.ids[0]}]` : ""} Using "${name}" as the preferred opus encoder.`))
+            .catch(e => { this.logger.error("JUKEBOX_INIT_ERR:", new Error(`Could not load any opus encoder\n${e.message}`)); process.exit(1); });
         await this.login(token);
         return this;
     }
