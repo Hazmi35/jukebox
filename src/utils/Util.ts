@@ -170,6 +170,25 @@ export class Util {
     public mergeBroadcastEval<T>(broadcastEval: T[][]): Iterable<[Snowflake, T]> {
         return broadcastEval.reduce((p, c) => [...p, ...c]) as Iterable<[Snowflake, T]>;
     }
+
+    public async getOpusEncoderName(): Promise<string> {
+        if (this.client.util.doesFFmpegHasLibOpus()) {
+            return `ffmpeg libopus v${this.client.util.getFFmpegVersion().trim()}`;
+        }
+
+        const list = ["@discordjs/opus", "opusscript"];
+        const errorLog = [];
+        for (const name of list) {
+            try {
+                await import(name); // Tries to import the module, if fails then the next line of code won't run
+                const pkgMetadata = await this.client.util.getPackageJSON(name);
+                return `${pkgMetadata.name} v${pkgMetadata.version}`;
+            } catch (e) {
+                errorLog.push(e);
+            }
+        }
+        throw new Error(errorLog.join("\n"));
+    }
 }
 
 interface getResourceResourceType {

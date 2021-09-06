@@ -36,7 +36,7 @@ Node.js version     :: ${process.version}
 Discord.js version  :: v${version}
 FFmpeg version      :: v${this.client.util.getFFmpegVersion()}
 YTDL-Core version   :: v${(await this.client.util.getPackageJSON("ytdl-core")).version}
-Opus Encoder        :: ${(await this.getOpusEncoderName())}
+Opus Encoder        :: ${(await this.client.util.getOpusEncoderName())}
 Bot Version         :: v${(await this.client.util.getPackageJSON()).version}
 
 Source code         :: https://sh.hzmi.xyz/jukebox
@@ -44,24 +44,5 @@ Source code         :: https://sh.hzmi.xyz/jukebox
                         `).setAuthor(`${this.client.user?.username as string} - Just a simple Discord music bot.`)
             ]
         }).catch(e => this.client.logger.error("ABOUT_CMD_ERR:", e));
-    }
-
-    public async getOpusEncoderName(): Promise<string> {
-        if (this.client.util.doesFFmpegHasLibOpus()) {
-            return `ffmpeg libopus ${this.client.util.getFFmpegVersion()}`;
-        }
-
-        const list = ["@discordjs/opus", "opusscript"];
-        const errorLog = [];
-        for (const name of list) {
-            try {
-                await import(name); // Tries to import the module, if fails then the next line of code won't run
-                const pkgMetadata = await this.client.util.getPackageJSON(name);
-                return `${pkgMetadata.name} ${pkgMetadata.version}`;
-            } catch (e) {
-                errorLog.push(e);
-            }
-        }
-        throw new Error(errorLog.join("\n"));
     }
 }
