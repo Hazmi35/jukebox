@@ -12,7 +12,7 @@ export class YouTube {
         try {
             const data = await getInfo(url);
             return new Video(data, "ytdl");
-        } catch (error) {
+        } catch (error: any) {
             throw new YouTubeError("Could not get video data", error);
         }
     }
@@ -23,7 +23,7 @@ export class YouTube {
             if (!id) throw new Error(`Could not extract Playlist ID from url, URL is: ${url}`);
             const data = await ytpl(id);
             return new Playlist(data, "normal");
-        } catch (error) {
+        } catch (error: any) {
             throw new YouTubeError(`Could not get playlist data`, error);
         }
     }
@@ -32,7 +32,7 @@ export class YouTube {
         try {
             const data = await ytsr(query, { limit: maxResults, safeSearch: false });
             return data.items.filter(x => x.type === "video").map(i => new Video(i as IVideo, "normal"));
-        } catch (error) {
+        } catch (error: any) {
             throw new YouTubeError(`Could not get search data`, error);
         }
     }

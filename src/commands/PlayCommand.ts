@@ -81,7 +81,7 @@ export class PlayCommand extends BaseCommand {
                             .setThumbnail(playlist.bestThumbnailURL!)
                     ]
                 });
-            } catch (e) {
+            } catch (e: any) {
                 this.client.logger.error("YT_PLAYLIST_ERR:", new Error(e.stack));
                 return message.channel.send({ embeds: [createEmbed("error", `I could not load the playlist!\nError: \`${e.message}\``)] });
             }
@@ -132,7 +132,7 @@ export class PlayCommand extends BaseCommand {
                     const videoIndex = parseInt(response.first()?.content as string);
                     video = await YouTube.getVideo(videos[videoIndex - 1].id);
                 }
-            } catch (err) {
+            } catch (err: any) {
                 this.client.logger.error("YT_SEARCH_ERR:", err);
                 return message.channel.send({ embeds: [createEmbed("error", `I could not obtain any search results!\nError: \`${err.message}\``)] });
             }
@@ -187,7 +187,7 @@ export class PlayCommand extends BaseCommand {
                     selfDeaf: true
                 });
                 message.guild!.queue.connection = connection;
-            } catch (error) {
+            } catch (error: any) {
                 message.guild?.queue.songs.clear();
                 message.guild!.queue = null;
                 this.client.logger.error("PLAY_CMD_ERR:", error);
