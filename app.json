@@ -47,12 +47,16 @@
             "description": "Maximum tracks to list in track selection (default: 12, max: 12)",
             "required": false
         },
+        "CONFIG_ENABLE_INLINE_VOLUME": {
+            "description": "Enable inline volume feature or not (yes or no) (default: no)",
+            "required": false
+        },
         "CONFIG_DEFAULT_VOLUME": {
-            "description": "Default volume for music (default: 100)",
+            "description": "Default volume for music (Requires CONFIG_ENABLE_INLINE_VOLUME to be enabled) (default: 100)",
             "required": false
         },
         "CONFIG_MAX_VOLUME": {
-            "description": "Max volume allowed for music (default: 100)",
+            "description": "Max volume allowed for music (Requires CONFIG_ENABLE_INLINE_VOLUME to be enabled) (default: 100)",
             "required": false
         },
         "CONFIG_CACHE_YOUTUBE_DOWNLOADS": {

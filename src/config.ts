@@ -22,6 +22,7 @@ if (searchMaxResults < 1) throw new Error("CONFIG_SEARCH_MAX_RESULTS cannot be s
 if (searchMaxResults > 12) throw new Error("CONFIG_SEARCH_MAX_RESULTS cannot be higher than 12");
 
 // Volume config
+export const enableInlineVolume = process.env.CONFIG_ENABLE_INLINE_VOLUME?.toLowerCase() === "yes";
 export const defaultVolume = Number(process.env.CONFIG_DEFAULT_VOLUME) || 100;
 export const maxVolume = Number(process.env.CONFIG_MAX_VOLUME) || 100;
 
