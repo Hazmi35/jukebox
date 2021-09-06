@@ -1,0 +1,20 @@
+{
+  "ignore": {
+    "discord.js": {
+      "versions": "13.x",
+      "reason": "Jukebox v4 uses Discord.js v12, upgraded to v13 in Jukebox v5"
+    },
+    "node-fetch": {
+      "versions": "3.x",
+      "reason": "Jukebox v4 uses v2, because v3 is ESM-only package"
+    },
+    "@types/node-fetch": {
+      "versions": "3.x",
+      "reason": "Jukebox v4 uses v2, because v3 is ESM-only package"
+    },
+    "parse-ms": {
+      "versions": "3.x",
+      "reason": "Jukebox v4 uses v2 because v3 is ESM-only package"
+    }
+  }
+}
