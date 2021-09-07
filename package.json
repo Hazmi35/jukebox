@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@hazmi35/eslint-config": "^6.0.2",
-    "@types/node": "^16.7.10",
+    "@types/node": "^16.7.13",
     "@types/node-fetch": "^2.5.12",
     "@types/semver": "^7.3.8",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
