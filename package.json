@@ -44,7 +44,7 @@
     "ytsr": "^3.5.3"
   },
   "devDependencies": {
-    "@hazmi35/eslint-config": "^5.0.0",
+    "@hazmi35/eslint-config": "^6.0.2",
     "@types/node": "^16.7.10",
     "@types/node-fetch": "^2.5.12",
     "@types/semver": "^7.3.8",
