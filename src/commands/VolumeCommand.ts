@@ -11,11 +11,9 @@ import { Message } from "discord.js";
     usage: "{prefix}volume [new volume]"
 })
 export class VolumeCommand extends BaseCommand {
-    @isUserInTheVoiceChannel() // TODO: VolumeCommand is disabled for now.
+    @isUserInTheVoiceChannel()
     @isMusicQueueExists()
     @isSameVoiceChannel()
-    // TODO: Remove this if it's reeenabled.
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public execute(message: Message, args: string[]): any {
         if (!this.client.config.enableInlineVolume) return message.channel.send({ embeds: [createEmbed("warn", "⚠ Volume command is disabled within this bot configuration. Please use the volume functionality in Discord client directly")] });
 
