@@ -22,11 +22,9 @@ const cacheOptions: CacheWithLimitsOptions = {
     }
 };
 
-if (!cacheUsers) Object.assign(cacheOptions, { UserManager: { maxSize: 0 } });
-
 const client = new Jukebox({
     allowedMentions: { parse: ["users"] },
-    makeCache: Options.cacheWithLimits(cacheOptions),
+    makeCache: Options.cacheWithLimits(cacheUsers ? cacheOptions : Object.assign(cacheOptions, { UserManager: { maxSize: 0 } })),
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS]
 });
 
