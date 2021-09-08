@@ -65,5 +65,3 @@ $ docker-compose up
 - Configurable
 - Docker-friendly
 - Lightweight (only around 120MB with dev dependencies pruned)
-
-Based on [discord-music-bot](https://github.com/iCrawl/discord-music-bot)
