@@ -1,6 +1,5 @@
 import { Inhibit } from "./Inhibit";
 import { createEmbed } from "../createEmbed";
-import { VoiceChannel } from "discord.js";
 
 export function isMusicQueueExists(): any {
     return Inhibit(message => {
@@ -33,11 +32,15 @@ export function isUserInTheVoiceChannel(): any {
 export function isValidVoiceChannel(): any {
     return Inhibit(message => {
         const voiceChannel = message.member?.voice.channel;
+        const perms = voiceChannel?.permissionsFor(message.guild!.me!);
         if (voiceChannel?.id === message.guild?.me?.voice.channel?.id) return undefined;
         if (!voiceChannel?.joinable) {
             return message.channel.send({ embeds: [createEmbed("error", "I'm sorry, but I can't connect to your voice channel, make sure I have the proper permissions!")] });
         }
-        if (!(voiceChannel as VoiceChannel).speakable) {
+        if (voiceChannel.type === "GUILD_STAGE_VOICE" && !perms?.has("REQUEST_TO_SPEAK")) { // TODO: Stage Channel Moderators requires permissions other than Manage Channels, please see https://discord.com/developers/docs/resources/stage-instance#definitions
+            if (!perms?.has("MANAGE_CHANNELS")) return message.channel.send({ embeds: [createEmbed("error", `I'm sorry, but I need to have "Request to Speak" or "Manage Channels" permission for joining Stage Channels!`)] });
+        }
+        if (voiceChannel.type === "GUILD_VOICE" && voiceChannel.speakable) {
             return message.channel.send({ embeds: [createEmbed("error", "I'm sorry, but I can't speak in that voice channel. make sure I have the proper permissions!")] });
         }
     });

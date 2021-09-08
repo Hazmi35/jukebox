@@ -230,7 +230,37 @@ export class PlayCommand extends BaseCommand {
 
         // Wait for 15 seconds for the connection to be ready.
         entersState(serverQueue.connection!, VoiceConnectionStatus.Ready, 15 * 1000)
-            .then(() => serverQueue.currentPlayer!.play(serverQueue.currentResource!))
+            .then(async () => {
+                const playSong = (): any => serverQueue.currentPlayer!.play(serverQueue.currentResource!);
+                const voiceChannel = serverQueue.voiceChannel!;
+                const myself = serverQueue.voiceChannel!.guild.me!;
+                const perms = voiceChannel.permissionsFor(myself);
+                if (voiceChannel.type === "GUILD_STAGE_VOICE") {
+                    /* TODO: Handle and test these permissions
+                    * REFS #0: https://discord.com/developers/docs/resources/stage-instance#definitions
+                    * REFS #1: https://discord.com/developers/docs/resources/guild#modify-current-user-voice-state-caveats
+                    */
+                    if (voiceChannel.stageInstance === null) {
+                        if (perms.has("MANAGE_CHANNELS") && perms.has("MUTE_MEMBERS") && perms.has("MOVE_MEMBERS")) {
+                            voiceChannel.createStageInstance({ topic: `Music by ${myself.user.username}` })
+                                .then(() => myself.voice.setSuppressed(false).then(playSong))
+                                .catch(e => serverQueue.currentPlayer?.emit("error", e));
+                        } else {
+                            throw new Error("Stage Channel is not initialized yet");
+                        }
+                    } else if (perms.has("REQUEST_TO_SPEAK")) {
+                        myself.voice.setRequestToSpeak(true) // TODO: Handle requestToSpeak (the bot should notify the user that Jukebox is requesting to speak)
+                            .then(async () => {
+                                // Make self as the speaker (Requires MUTE_MEMBERS permission? not tested, REFS #1 said that  You can always suppress yourself) (See REFS #1)
+                                if (perms.has("MUTE_MEMBERS")) await myself.voice.setSuppressed(false);
+                                playSong();
+                            })
+                            .catch(e => serverQueue.currentPlayer?.emit("error", e));
+                    }
+                } else { // TODO: Handle errors (It should end the stage channel on bot disconnect (if the bot is the only speaker that is))
+                    playSong();
+                }
+            })
             .catch(e => {
                 if (e.message === "The operation was aborted") e.message = "Could not establish a voice connection within 15 seconds.";
                 serverQueue.currentPlayer!.emit("error", new AudioPlayerError(e, serverQueue.currentResource!));
