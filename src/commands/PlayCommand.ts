@@ -87,8 +87,8 @@ export class PlayCommand extends BaseCommand {
                     }
                     this.playlistAlreadyQueued.delete(message.guild.id);
                 }
-                message.channel.messages.fetch(addingPlaylistVideoMessage.id, { cache: false })
-                    .then(m => m.delete()).catch(e => this.client.logger.error("YT_PLAYLIST_ERR:", e));
+                addingPlaylistVideoMessage.delete()
+                    .catch(e => this.client.logger.error("YT_PLAYLIST_ERR:", e));
                 return message.channel.send({
                     embeds: [
                         createEmbed("info", `All tracks in playlist: **[${playlist.title}](${generateYouTubePLURL(playlist.id)}})**, has been added to the queue!`)
