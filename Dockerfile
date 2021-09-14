@@ -1,19 +1,10 @@
-FROM node:14.17.6-alpine as build-stage
+FROM hazmi35/node:14-dev-alpine as build-stage
 
 LABEL name "Jukebox (build stage)"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
-WORKDIR /tmp/build
-
-# Install node-gyp dependencies
-RUN apk add --no-cache build-base git python3
-
 # Copy package.json and package-lock.json
-COPY package.json .
-COPY package-lock.json .
-
-# Set jobs to max in npm config
-RUN npm config set jobs max --global
+COPY package*.json .
 
 # Install dependencies
 RUN npm install
@@ -28,15 +19,10 @@ RUN npm run build
 RUN npm prune --production
 
 # Get ready for production
-FROM node:14.17.6-alpine
+FROM hazmi35/node:14-alpine
 
 LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
-
-WORKDIR /app
-
-# Install dependencies
-RUN apk add --no-cache tzdata
 
 # Copy needed files
 COPY --from=build-stage /tmp/build/package.json .
