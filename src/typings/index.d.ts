@@ -1,5 +1,5 @@
 import { Client as OClient, ClientEvents, Guild as OGuild, Message } from "discord.js";
-import { Readable } from "stream";
+import { Video } from "../utils/youtube/structures/Video";
 import { Jukebox } from "../structures/Jukebox";
 import { ServerQueue } from "../structures/ServerQueue";
 
@@ -41,5 +41,5 @@ export interface ISong {
     title: string;
     url: string;
     thumbnail: string;
-    download(): Readable;
+    download(): ReturnType<Video["download"]>;
 }

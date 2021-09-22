@@ -142,7 +142,7 @@ export class PlayCommand extends BaseCommand {
 
     private async handleVideo(video: Video, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false): Promise<any> {
         const song: ISong = {
-            download: () => video.download("audio"),
+            download: () => video.download(),
             id: video.id,
             thumbnail: video.bestThumbnailURL!,
             title: this.cleanTitle(video.title),
@@ -219,12 +219,12 @@ export class PlayCommand extends BaseCommand {
         }
 
         // TODO: Recreate YTDL Caching
-        const songData = song.download();
+        const songData = await song.download();
 
         // TODO: Store Song metadata inside here.
-        serverQueue.currentResource = createAudioResource<any>(songData, { inlineVolume: this.client.config.enableInlineVolume });
+        serverQueue.currentResource = createAudioResource<any>(songData.stream, { inlineVolume: this.client.config.enableInlineVolume });
 
-        songData.on("error", err => { err.message = `YTDLError: ${err.message}`; });
+        songData.stream.on("error", err => { err.message = `PLAY-DL ERR: ${err.message}`; });
 
         serverQueue.connection?.subscribe(serverQueue.currentPlayer);
 
