@@ -1,4 +1,4 @@
-import { getInfo } from "ytdl-core";
+import { video_basic_info } from "play-dl";
 import ytpl from "ytpl";
 import ytsr, { Video as IVideo } from "ytsr";
 import { Playlist } from "./structures/Playlist";
@@ -10,8 +10,8 @@ import { YouTubeError } from "./utils/YouTubeError";
 export class YouTube {
     public static async getVideo(url: string): Promise<Video> {
         try {
-            const data = await getInfo(url);
-            return new Video(data, "ytdl");
+            const data = await video_basic_info(url);
+            return new Video(data, "play-dl");
         } catch (error: any) {
             throw new YouTubeError("Could not get video data", error);
         }
