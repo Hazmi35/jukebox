@@ -224,7 +224,7 @@ export class PlayCommand extends BaseCommand {
         // TODO: Store Song metadata inside here.
         serverQueue.currentResource = createAudioResource<any>(songData.stream, { inlineVolume: this.client.config.enableInlineVolume });
 
-        songData.stream.on("error", err => { err.message = `PLAY-DL ERR: ${err.message}`; });
+        songData.stream.on("error", err => { err.message = `play-dl ERR: ${err.message}`; });
 
         serverQueue.connection?.subscribe(serverQueue.currentPlayer);
 
