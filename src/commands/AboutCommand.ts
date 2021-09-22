@@ -34,7 +34,6 @@ Bot Uptime          :: ${this.client.util.formatMS(this.client.uptime!)}
 Node.js version     :: ${process.version}
 Discord.js version  :: v${version}
 FFmpeg version      :: v${this.client.util.getFFmpegVersion()}
-play-dl version     :: v${(await this.client.util.getPackageJSON("play-dl")).version}
 Opus Encoder        :: ${(await this.client.util.getOpusEncoderName())}
 Bot Version         :: v${(await this.client.util.getPackageJSON()).version}
 
