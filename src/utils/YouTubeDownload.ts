@@ -1,5 +1,5 @@
 import { Readable } from "stream";
-import { raw } from "youtube-dl-exec";
+import { raw } from "@jukeboxbot/youtube-dl-exec";
 
 export function YouTubeDownload(url: string): Promise<Readable> {
     return new Promise<Readable>((res, rej) => {
