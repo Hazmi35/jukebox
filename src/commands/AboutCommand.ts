@@ -3,6 +3,7 @@ import { Message, version } from "discord.js";
 import { uptime as osUptime } from "os";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
+import youtube from "@jukeboxbot/youtube-dl-exec";
 
 @DefineCommand({
     aliases: ["botinfo", "info", "stats"],
@@ -34,7 +35,7 @@ Bot Uptime          :: ${this.client.util.formatMS(this.client.uptime!)}
 Node.js version     :: ${process.version}
 Discord.js version  :: v${version}
 FFmpeg version      :: v${this.client.util.getFFmpegVersion()}
-YTDL-Core version   :: v${(await this.client.util.getPackageJSON("ytdl-core")).version}
+youtube-dl          :: yt-dlp ${(await youtube("--version") as any).toString()}
 Opus Encoder        :: ${(await this.client.util.getOpusEncoderName())}
 Bot Version         :: v${(await this.client.util.getPackageJSON()).version}
 
