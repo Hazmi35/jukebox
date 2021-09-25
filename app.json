@@ -44,7 +44,7 @@
             "required": false
         },
         "CONFIG_SEARCH_MAX_RESULTS": {
-            "description": "Maximum tracks to list in track selection (default: 12, max: 12)",
+            "description": "Maximum tracks to list in track selection (default: 10, max: 15)",
             "required": false
         },
         "CONFIG_ENABLE_INLINE_VOLUME": {
