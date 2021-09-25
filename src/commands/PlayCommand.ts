@@ -9,7 +9,7 @@ import { createEmbed } from "../utils/createEmbed";
 import { AudioPlayerError, AudioPlayerStatus, createAudioPlayer, createAudioResource, entersState, joinVoiceChannel, VoiceConnectionStatus } from "@discordjs/voice";
 import { Client, LiveVideo, MixPlaylist, Video } from "youtubei";
 import { generateYouTubePLURL, generateYouTubeVidURL } from "../utils/YouTubeURL";
-import ytdl from "ytdl-core";
+import { YouTubeDownload } from "../utils/YouTubeDownload";
 
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
@@ -153,14 +153,13 @@ export class PlayCommand extends BaseCommand {
                 return message.channel.send({ embeds: [createEmbed("error", `I could not obtain any search results!\nError: \`${err.message}\``)] });
             }
         }
-        console.log(video);
         return this.handleVideo(video, message, voiceChannel);
     }
 
     private async handleVideo(video: Video | LiveVideo, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false): Promise<any> {
         const url = generateYouTubeVidURL(video.id);
         const song: ISong = {
-            download: () => ytdl(url),
+            download: () => YouTubeDownload(url),
             id: video.id,
             thumbnail: video.thumbnails.best!,
             title: this.cleanTitle(video.title),
@@ -237,7 +236,7 @@ export class PlayCommand extends BaseCommand {
         }
 
         // TODO: Recreate YTDL Caching
-        const songData = song.download();
+        const songData = await song.download();
 
         // TODO: Store Song metadata inside here.
         serverQueue.currentResource = createAudioResource<any>(songData, { inlineVolume: this.client.config.enableInlineVolume });
