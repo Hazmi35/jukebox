@@ -38,9 +38,7 @@
     "tslib": "^2.3.1",
     "winston": "^3.3.3",
     "youtubei": "^0.0.1-rc.24",
-    "ytdl-core": "^4.9.1",
-    "ytpl": "^2.2.3",
-    "ytsr": "^3.5.3"
+    "ytdl-core": "^4.9.1"
   },
   "devDependencies": {
     "@hazmi35/eslint-config": "^6.0.2",
