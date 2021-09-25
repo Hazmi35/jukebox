@@ -6,9 +6,10 @@ import { ISong } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
-import { Video } from "../utils/youtube/structures/Video";
 import { AudioPlayerError, AudioPlayerStatus, createAudioPlayer, createAudioResource, entersState, joinVoiceChannel, VoiceConnectionStatus } from "@discordjs/voice";
-import { YouTube } from "../utils/youtube";
+import { Client, LiveVideo, MixPlaylist, Video } from "youtubei";
+import { generateYouTubePLURL, generateYouTubeVidURL } from "../utils/YouTubeURL";
+import ytdl from "ytdl-core";
 
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
@@ -17,6 +18,7 @@ import { YouTube } from "../utils/youtube";
     usage: "{prefix}play <yt video or playlist link / yt video name>"
 })
 export class PlayCommand extends BaseCommand {
+    private readonly youtube = new Client();
     private readonly playlistAlreadyQueued: Collection<Snowflake, ISong[]> = new Collection();
 
     @isUserInTheVoiceChannel()
@@ -38,20 +40,32 @@ export class PlayCommand extends BaseCommand {
             });
         }
 
-        let video: Video | null = null;
+        let video: Video | LiveVideo | undefined = undefined;
         let response: Collection<Snowflake, Message> | null = null;
 
         if (/^https?:\/\/((www|music)\.youtube\.com|youtube.com)\/playlist(.*)$/.exec(url)) {
             try {
-                const playlist = await YouTube.getPlaylist(url);
-                const videos = await playlist.getVideos();
+                const playlist = await this.youtube.getPlaylist(url);
+                if (playlist === undefined) throw new Error("Playlist not found");
+                if (playlist instanceof MixPlaylist) {
+                    return message.channel.send({
+                        embeds: [
+                            createEmbed("error", "RD / YouTube mix playlist is not supported yet. Please see [this issue](https://github.com/Hazmi35/jukebox/issues/594)")
+                        ]
+                    });
+                }
+                await playlist.next(0);
+                const { videos } = playlist;
                 const addingPlaylistVideoMessage = await message.channel.send({
                     embeds: [
-                        createEmbed("info", `Adding all tracks in playlist: **[${playlist.title}](${playlist.url})**, hang on...`)
-                            .setThumbnail(playlist.bestThumbnailURL!)
+                        createEmbed("info", `Adding all tracks in playlist: **[${playlist.title}](${generateYouTubePLURL(playlist.id)}})**, hang on...`)
+                            .setThumbnail(playlist.videos[0].thumbnails.best!)
                     ]
                 });
-                for (const video of Object.values(videos)) { await this.handleVideo(video, message, voiceChannel, true); }
+                for (const videoCompact of Object.values(videos)) {
+                    const video = await this.youtube.getVideo(videoCompact.id);
+                    await this.handleVideo(video!, message, voiceChannel, true);
+                }
                 const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id);
                 if (!this.client.config.allowDuplicate && Number(playlistAlreadyQueued?.length) > 0) {
                     let num = 1;
@@ -77,8 +91,8 @@ export class PlayCommand extends BaseCommand {
                     .then(m => m.delete()).catch(e => this.client.logger.error("YT_PLAYLIST_ERR:", e));
                 return message.channel.send({
                     embeds: [
-                        createEmbed("info", `All tracks in playlist: **[${playlist.title}](${playlist.url})**, has been added to the queue!`)
-                            .setThumbnail(playlist.bestThumbnailURL!)
+                        createEmbed("info", `All tracks in playlist: **[${playlist.title}](${generateYouTubePLURL(playlist.id)}})**, has been added to the queue!`)
+                            .setThumbnail(playlist.videos[0].thumbnails.best!)
                     ]
                 });
             } catch (e: any) {
@@ -87,14 +101,15 @@ export class PlayCommand extends BaseCommand {
             }
         }
         try {
-            video = await YouTube.getVideo(url);
+            video = await this.youtube.getVideo(url);
+            if (video === undefined) throw new Error("Video not found");
         } catch (e) {
             try {
-                const videos = await YouTube.searchVideos(searchString, this.client.config.searchMaxResults);
+                const videos = await this.youtube.search(searchString, { type: "video" });
                 if (videos.length === 0) return message.channel.send({ embeds: [createEmbed("warn", "I could not obtain any search results!")] });
-
                 if (videos.length === 1 || this.client.config.disableSongSelection) {
-                    video = await YouTube.getVideo(videos[0].id);
+                    video = await this.youtube.getVideo(videos[0].id);
+                    if (video === undefined) throw new Error("Video not found");
                 } else {
                     let index = 0;
                     const msg = await message.channel.send({
@@ -102,7 +117,7 @@ export class PlayCommand extends BaseCommand {
                             createEmbed("info")
                                 .setAuthor("Tracks Selection")
                                 .setDescription(
-                                    `${videos.map(video => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
+                                    `${videos.slice(0, this.client.config.searchMaxResults).map(video => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
                                 "*Type `cancel` or `c` to cancel tracks selection*"
                                 )
                                 .setThumbnail(message.client.user?.displayAvatarURL() as string)
@@ -130,23 +145,26 @@ export class PlayCommand extends BaseCommand {
                         return message.channel.send({ embeds: [createEmbed("info", "Tracks selection canceled.")] });
                     }
                     const videoIndex = parseInt(response.first()?.content as string);
-                    video = await YouTube.getVideo(videos[videoIndex - 1].id);
+                    video = await this.youtube.getVideo(videos[videoIndex - 1].id);
+                    if (video === undefined) throw new Error("Video not found");
                 }
             } catch (err: any) {
                 this.client.logger.error("YT_SEARCH_ERR:", err);
                 return message.channel.send({ embeds: [createEmbed("error", `I could not obtain any search results!\nError: \`${err.message}\``)] });
             }
         }
+        console.log(video);
         return this.handleVideo(video, message, voiceChannel);
     }
 
-    private async handleVideo(video: Video, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false): Promise<any> {
+    private async handleVideo(video: Video | LiveVideo, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false): Promise<any> {
+        const url = generateYouTubeVidURL(video.id);
         const song: ISong = {
-            download: () => video.download("audio"),
+            download: () => ytdl(url),
             id: video.id,
-            thumbnail: video.bestThumbnailURL!,
+            thumbnail: video.thumbnails.best!,
             title: this.cleanTitle(video.title),
-            url: video.url
+            url
         };
         if (message.guild?.queue) {
             if (!this.client.config.allowDuplicate && message.guild.queue.songs.find(s => s.id === song.id)) {

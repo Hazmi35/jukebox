@@ -22,3 +22,12 @@ export function resolveYTPlaylistID(url: string): string | null {
 
     return null;
 }
+
+export function generateYouTubePLURL(id: string): string {
+    if (id.startsWith("RD")) throw new Error("RD Playlist not supported");
+    return `https://youtube.com/playlist?list=${id}`;
+}
+
+export function generateYouTubeVidURL(id: string): string {
+    return `https://youtube.com/watch?v=${id}`;
+}
