@@ -38,8 +38,7 @@
     "tslib": "^2.3.1",
     "winston": "^3.3.3",
     "youtube-dl-exec": "github:hzmifork/youtube-dl-exec",
-    "youtubei": "^0.0.1-rc.24",
-    "ytdl-core": "^4.9.1"
+    "youtubei": "^0.0.1-rc.24"
   },
   "devDependencies": {
     "@hazmi35/eslint-config": "^6.0.2",
