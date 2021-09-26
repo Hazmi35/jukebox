@@ -24,6 +24,9 @@ FROM hazmi35/node:16-alpine
 LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
+# Install python3 (required for youtube-dl/yt-dlp)
+RUN apk add --no-cache python3 && ln -s /usr/bin/python3 /usr/local/bin/python
+
 # Copy needed files
 COPY --from=build-stage /tmp/build/package.json .
 COPY --from=build-stage /tmp/build/package-lock.json .
