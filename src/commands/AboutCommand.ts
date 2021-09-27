@@ -3,7 +3,7 @@ import { Message, version } from "discord.js";
 import { uptime as osUptime } from "os";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
-import youtube from "@jukeboxbot/youtube-dl-exec";
+import youtube from "youtube-dl-exec";
 
 @DefineCommand({
     aliases: ["botinfo", "info", "stats"],
