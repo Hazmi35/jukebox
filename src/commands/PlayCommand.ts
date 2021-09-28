@@ -157,12 +157,11 @@ export class PlayCommand extends BaseCommand {
     }
 
     private async handleVideo(video: Video | LiveVideo, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false): Promise<any> {
-        const url = generateYouTubeVidURL(video.id);
-        const song = await createYouTubeResource(url, {
+        const song = await createYouTubeResource({
             id: video.id,
             thumbnail: video.thumbnails.best!,
             title: this.cleanTitle(video.title),
-            url
+            url: generateYouTubeVidURL(video.id)
         });
         if (message.guild?.queue) {
             if (!this.client.config.allowDuplicate && message.guild.queue.songs.find(s => s.metadata.id === song.metadata.id)) {

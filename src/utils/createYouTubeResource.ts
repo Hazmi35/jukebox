@@ -3,10 +3,10 @@ import { raw as ytdl } from "youtube-dl-exec";
 import { ISong, ISongMetadata } from "../typings";
 
 // TODO: Recreate YTDL Caching
-export function createYouTubeResource(url: string, metadata: ISongMetadata): Promise<ISong> {
+export function createYouTubeResource(metadata: ISongMetadata): Promise<ISong> {
     return new Promise((resolve, reject) => {
         const process = ytdl(
-            url,
+            metadata.url,
             {
                 o: "-",
                 q: "",
