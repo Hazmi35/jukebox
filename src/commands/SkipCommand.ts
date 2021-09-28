@@ -15,15 +15,15 @@ export class SkipCommand extends BaseCommand {
     @isMusicQueueExists()
     @isSameVoiceChannel()
     public execute(message: Message): any {
-        if (message.guild?.queue?.playing === false) message.guild.queue.currentPlayer?.unpause();
-        message.guild!.queue?.currentPlayer!.stop();
+        if (message.guild?.queue?.playing === false) message.guild.queue.player.unpause();
+        message.guild!.queue?.player!.stop();
 
-        const song = message.guild?.queue?.songs.first();
+        const track = message.guild?.queue?.tracks.first();
 
         message.channel.send({
             embeds: [
-                createEmbed("info", `⏭ Skipped **[${song!.title}](${song!.url}})**`)
-                    .setThumbnail(song?.thumbnail as string)
+                createEmbed("info", `⏭ Skipped **[${track!.metadata.title}](${track!.metadata.url}})**`)
+                    .setThumbnail(track?.metadata.thumbnail as string)
             ]
         }).catch(e => this.client.logger.error("SKIP_CMD_ERR:", e));
     }

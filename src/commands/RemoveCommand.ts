@@ -21,21 +21,21 @@ export class RemoveCommand extends BaseCommand {
             });
         }
 
-        const songs = message.guild!.queue!.songs.map(s => s);
-        const currentSong = message.guild!.queue!.songs.first()!;
-        const song = songs[Number(args[0]) - 1];
+        const tracks = message.guild!.queue!.tracks.map(s => s);
+        const currentTrack = message.guild!.queue!.tracks.first()!;
+        const track = tracks[Number(args[0]) - 1];
 
-        if (currentSong.id === song.id) {
-            if (message.guild?.queue?.playing === false) message.guild.queue.currentPlayer?.unpause();
-            message.guild!.queue?.currentPlayer!.stop();
+        if (currentTrack.metadata.id === track.metadata.id) {
+            if (message.guild?.queue?.playing === false) message.guild.queue.player.unpause();
+            message.guild!.queue?.player!.stop();
         } else {
-            message.guild?.queue?.songs.delete(message.guild.queue.songs.findKey(x => x.id === song.id)!);
+            message.guild?.queue?.tracks.delete(message.guild.queue.tracks.findKey(x => x.metadata.id === track.metadata.id)!);
         }
 
         message.channel.send({
             embeds: [
-                createEmbed("info", `✅ Removed **[${song.title}](${song.url}})**`)
-                    .setThumbnail(song.thumbnail)
+                createEmbed("info", `✅ Removed **[${track.metadata.title}](${track.metadata.url}})**`)
+                    .setThumbnail(track.metadata.thumbnail)
             ]
         }).catch(e => this.client.logger.error("REMOVE_COMMAND_ERR:", e));
     }

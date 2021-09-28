@@ -25,7 +25,7 @@ export class VoiceStateUpdateEvent extends BaseEvent {
         // Handle when bot gets kicked from the voice channel
         if (oldMember?.id === botID && oldID === queueVC.id && newID === undefined) {
             try {
-                newState.guild.queue?.currentPlayer?.stop(true);
+                newState.guild.queue?.player.stop(true);
                 clearTimeout(queue.timeout!);
                 newState.guild.queue = null;
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Disconnected from the voice channel at ${newState.guild.name}, the queue was deleted.`);
@@ -59,7 +59,7 @@ export class VoiceStateUpdateEvent extends BaseEvent {
             if (vcMembers.size !== 0) return undefined;
             clearTimeout(queue.timeout!);
             newState.guild.queue!.timeout = null;
-            queue.currentPlayer?.pause();
+            queue.player.pause();
             const timeout = this.client.config.deleteQueueTimeout;
             const duration = this.client.util.formatMS(timeout);
             queue.oldVoiceStateUpdateMessage = null;
@@ -90,15 +90,15 @@ export class VoiceStateUpdateEvent extends BaseEvent {
             try {
                 clearTimeout(queue.timeout!);
                 newState.guild.queue!.timeout = null;
-                const song = queue.songs.first();
+                const tracks = queue.tracks.first();
                 queue.textChannel?.send({
                     embeds: [
-                        createEmbed("info", `Someone joins the voice channel. Enjoy the music 🎶\nNow Playing: **[${song!.title}](${song!.url})**`)
-                            .setThumbnail(song!.thumbnail)
+                        createEmbed("info", `Someone joins the voice channel. Enjoy the music 🎶\nNow Playing: **[${tracks!.metadata.title}](${tracks!.metadata.url})**`)
+                            .setThumbnail(tracks!.metadata.thumbnail)
                             .setTitle("▶ Queue resumed")
                     ]
                 }).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
-                newState.guild.queue?.currentPlayer?.unpause();
+                newState.guild.queue?.player.unpause();
             } catch (e) { this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e); }
         }
     }

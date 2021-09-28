@@ -1,15 +1,14 @@
 import { BaseCommand } from "../structures/BaseCommand";
-import { loopMode, ServerQueue } from "../structures/ServerQueue";
-import { Util, VoiceChannel, Message, TextChannel, Guild, Collection, Snowflake, StageChannel } from "discord.js";
+import { ServerQueue } from "../structures/ServerQueue";
+import { Util, VoiceChannel, Message, TextChannel, Collection, Snowflake, StageChannel } from "discord.js";
 import { decodeHTML } from "entities";
-import { ISong } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
-import { AudioPlayerError, AudioPlayerStatus, createAudioPlayer, createAudioResource, entersState, joinVoiceChannel, VoiceConnectionStatus } from "@discordjs/voice";
 import { Client, LiveVideo, MixPlaylist, Video } from "youtubei";
 import { generateYouTubePLURL, generateYouTubeVidURL } from "../utils/YouTubeURL";
-import { YouTubeDownload } from "../utils/YouTubeDownload";
+import { joinVoiceChannel } from "@discordjs/voice";
+import { ITrackMetadata } from "../typings";
 
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
@@ -19,7 +18,7 @@ import { YouTubeDownload } from "../utils/YouTubeDownload";
 })
 export class PlayCommand extends BaseCommand {
     private readonly youtube = new Client();
-    private readonly playlistAlreadyQueued: Collection<Snowflake, ISong[]> = new Collection();
+    private readonly playlistAlreadyQueued: Collection<Snowflake, ITrackMetadata[]> = new Collection();
 
     @isUserInTheVoiceChannel()
     @isValidVoiceChannel()
@@ -69,7 +68,7 @@ export class PlayCommand extends BaseCommand {
                 const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id);
                 if (!this.client.config.allowDuplicate && Number(playlistAlreadyQueued?.length) > 0) {
                     let num = 1;
-                    const songs = playlistAlreadyQueued!.map(s => `**${num++}.** **[${s.title}](${s.url})**`);
+                    const tracks = playlistAlreadyQueued!.map(s => `**${num++}.** **[${s.title}](${s.url})**`);
                     message.channel.send({
                         embeds: [
                             createEmbed("warn", `Over ${playlistAlreadyQueued!.length} track${playlistAlreadyQueued!.length >= 2 ? "s" : ""} are skipped because it was a duplicate` +
@@ -77,7 +76,7 @@ export class PlayCommand extends BaseCommand {
                                 .setTitle("Already queued / duplicate")
                         ]
                     }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
-                    const pages = this.client.util.paginate(songs.join("\n"));
+                    const pages = this.client.util.paginate(tracks.join("\n"));
                     let howManyMessage = 0;
                     for (const page of pages) {
                         howManyMessage++;
@@ -87,8 +86,8 @@ export class PlayCommand extends BaseCommand {
                     }
                     this.playlistAlreadyQueued.delete(message.guild.id);
                 }
-                message.channel.messages.fetch(addingPlaylistVideoMessage.id, { cache: false })
-                    .then(m => m.delete()).catch(e => this.client.logger.error("YT_PLAYLIST_ERR:", e));
+                addingPlaylistVideoMessage.delete()
+                    .catch(e => this.client.logger.error("YT_PLAYLIST_ERR:", e));
                 return message.channel.send({
                     embeds: [
                         createEmbed("info", `All tracks in playlist: **[${playlist.title}](${generateYouTubePLURL(playlist.id)}})**, has been added to the queue!`)
@@ -107,7 +106,7 @@ export class PlayCommand extends BaseCommand {
             try {
                 const videos = await this.youtube.search(searchString, { type: "video" });
                 if (videos.length === 0) return message.channel.send({ embeds: [createEmbed("warn", "I could not obtain any search results!")] });
-                if (videos.length === 1 || this.client.config.disableSongSelection) {
+                if (videos.length === 1 || this.client.config.disableTrackSelection) {
                     video = await this.youtube.getVideo(videos[0].id);
                     if (video === undefined) throw new Error("Video not found");
                 } else {
@@ -157,43 +156,42 @@ export class PlayCommand extends BaseCommand {
     }
 
     private async handleVideo(video: Video | LiveVideo, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false): Promise<any> {
-        const url = generateYouTubeVidURL(video.id);
-        const song: ISong = {
-            download: () => YouTubeDownload(url),
+        const metadata = {
             id: video.id,
+            inlineVolume: this.client.config.enableInlineVolume,
             thumbnail: video.thumbnails.best!,
             title: this.cleanTitle(video.title),
-            url
+            url: generateYouTubeVidURL(video.id)
         };
         if (message.guild?.queue) {
-            if (!this.client.config.allowDuplicate && message.guild.queue.songs.find(s => s.id === song.id)) {
+            if (!this.client.config.allowDuplicate && message.guild.queue.tracks.find(s => s.metadata.id === metadata.id)) {
                 if (playlist) {
                     const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id) ?? [];
-                    playlistAlreadyQueued.push(song);
+                    playlistAlreadyQueued.push(metadata);
                     this.playlistAlreadyQueued.set(message.guild.id, playlistAlreadyQueued);
                     return undefined;
                 }
                 return message.channel.send({
                     embeds: [
-                        createEmbed("warn", `Track **[${song.title}](${song.url})** is already queued, and this bot configuration disallow duplicated tracks in queue, ` +
+                        createEmbed("warn", `Track **[${metadata.title}](${metadata.url})** is already queued, and this bot configuration disallow duplicated tracks in queue, ` +
                         `please use \`${this.client.config.prefix}repeat\` instead`)
                             .setTitle("Already queued / duplicate")
-                            .setThumbnail(song.thumbnail)
+                            .setThumbnail(metadata.thumbnail)
                     ]
                 });
             }
-            message.guild.queue.songs.addSong(song);
+            message.guild.queue.tracks.add(metadata);
             if (!playlist) {
                 message.channel.send({
-                    embeds: [createEmbed("info", `✅ Track **[${song.title}](${song.url})** has been added to the queue`).setThumbnail(song.thumbnail)]
+                    embeds: [createEmbed("info", `✅ Track **[${metadata.title}](${metadata.url})** has been added to the queue`).setThumbnail(metadata.thumbnail)]
                 }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
         } else {
-            message.guild!.queue = new ServerQueue(message.channel as TextChannel, voiceChannel);
-            message.guild?.queue.songs.addSong(song);
+            message.guild!.queue = new ServerQueue(this.client, message.guild!, message.channel as TextChannel, voiceChannel);
+            const track = message.guild!.queue.tracks.add(metadata);
             if (!playlist) {
                 message.channel.send({
-                    embeds: [createEmbed("info", `✅ Track **[${song.title}](${song.url})** has been added to the queue`).setThumbnail(song.thumbnail)]
+                    embeds: [createEmbed("info", `✅ Track **[${metadata.title}](${metadata.url})** has been added to the queue`).setThumbnail(metadata.thumbnail)]
                 }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
             try {
@@ -205,93 +203,20 @@ export class PlayCommand extends BaseCommand {
                 });
                 message.guild!.queue.connection = connection;
             } catch (error: any) {
-                message.guild?.queue.songs.clear();
+                message.guild?.queue.tracks.clear();
                 message.guild!.queue = null;
                 this.client.logger.error("PLAY_CMD_ERR:", error);
                 message.channel.send({ embeds: [createEmbed("error", `Error: Could not join the voice channel!\nReason: \`${error.message}\``)] })
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return undefined;
             }
-            this.play(message.guild!).catch(err => {
+            message.guild?.queue.play(track).catch(err => {
                 message.channel.send({ embeds: [createEmbed("error", `Error while trying to play music\nReason: \`${err.message}\``)] })
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return this.client.logger.error("PLAY_CMD_ERR:", err);
             });
         }
         return message;
-    }
-
-    private async play(guild: Guild): Promise<any> {
-        const serverQueue = guild.queue;
-        if (!serverQueue) return undefined;
-        if (serverQueue.currentPlayer === null) serverQueue.currentPlayer = createAudioPlayer(); // TODO: Consider reusing AudioPlayer in the refactored Queue System
-        const song = serverQueue.songs.first();
-        if (!song) {
-            serverQueue.oldMusicMessage = null; serverQueue.oldVoiceStateUpdateMessage = null;
-            serverQueue.textChannel?.send({
-                embeds: [createEmbed("info", `⏹ Queue is finished! Use "${guild.client.config.prefix}play" to play more music`)]
-            }).catch(e => this.client.logger.error("PLAY_ERR:", e));
-            serverQueue.connection?.disconnect();
-            return guild.queue = null;
-        }
-
-        // TODO: Recreate YTDL Caching
-        const songData = await song.download();
-
-        // TODO: Store Song metadata inside here.
-        serverQueue.currentResource = createAudioResource<any>(songData, { inlineVolume: this.client.config.enableInlineVolume });
-
-        songData.on("error", err => { err.message = `YTDLError: ${err.message}`; });
-
-        serverQueue.connection?.subscribe(serverQueue.currentPlayer);
-
-        // Wait for 15 seconds for the connection to be ready.
-        entersState(serverQueue.connection!, VoiceConnectionStatus.Ready, 15 * 1000)
-            .then(() => serverQueue.currentPlayer!.play(serverQueue.currentResource!))
-            .catch(e => {
-                if (e.message === "The operation was aborted") e.message = "Could not establish a voice connection within 15 seconds.";
-                serverQueue.currentPlayer!.emit("error", new AudioPlayerError(e, serverQueue.currentResource!));
-            });
-
-        serverQueue.currentPlayer.on("stateChange", (oldState, newState) => {
-            if (newState.status === AudioPlayerStatus.Playing) {
-                if (oldState.status === AudioPlayerStatus.Paused) return undefined;
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${song.title}" on ${guild.name} started`);
-                serverQueue.textChannel?.send({ embeds: [createEmbed("info", `▶ Start playing: **[${song.title}](${song.url})**`).setThumbnail(song.thumbnail)] })
-                    .then(m => serverQueue.oldMusicMessage = m.id)
-                    .catch(e => this.client.logger.error("PLAY_ERR:", e));
-                return undefined;
-            }
-            if (newState.status === AudioPlayerStatus.Idle) {
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${song.title}" on ${guild.name} ended`);
-                if (serverQueue.loopMode === loopMode.off) {
-                    serverQueue.songs.deleteFirst();
-                } else if (serverQueue.loopMode === loopMode.all) {
-                    serverQueue.songs.deleteFirst(); serverQueue.songs.addSong(song);
-                }
-                serverQueue.textChannel?.send({ embeds: [createEmbed("info", `⏹ Stop playing: **[${song.title}](${song.url})**`).setThumbnail(song.thumbnail)] })
-                    .then(m => serverQueue.oldMusicMessage = m.id)
-                    .catch(e => this.client.logger.error("PLAY_ERR:", e))
-                    .finally(() => {
-                        serverQueue.currentPlayer = null;
-                        this.play(guild).catch(e => {
-                            serverQueue.textChannel?.send({ embeds: [createEmbed("error", `Error while trying to play music\nReason: \`${e}\``)] })
-                                .catch(e => this.client.logger.error("PLAY_ERR:", e));
-                            serverQueue.connection?.disconnect();
-                            return this.client.logger.error("PLAY_ERR:", e);
-                        });
-                    });
-                return undefined;
-            }
-        });
-
-        serverQueue.currentPlayer.on("error", err => {
-            serverQueue.textChannel?.send({ embeds: [createEmbed("error", `Error while playing music\nReason: \`${err.message}\``)] })
-                .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
-            serverQueue.connection?.disconnect();
-            guild.queue = null;
-            this.client.logger.error("PLAY_ERR:", err);
-        });
     }
 
     private cleanTitle(title: string): string {

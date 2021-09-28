@@ -18,9 +18,9 @@ export class QueueCommand extends BaseCommand {
             .setThumbnail(message.client.user?.avatarURL() as string);
 
         let num = 1;
-        const songs = message.guild?.queue?.songs.map(s => `**${num++}.** **[${s.title}](${s.url})**`);
-        if (Number(message.guild?.queue?.songs.size) > 12) {
-            const indexes: string[][] = this.client.util.chunk(songs!, 12);
+        const tracks = message.guild?.queue?.tracks.map(s => `**${num++}.** **[${s.metadata.title}](${s.metadata.url})**`);
+        if (Number(message.guild?.queue?.tracks.size) > 12) {
+            const indexes: string[][] = this.client.util.chunk(tracks!, 12);
             let index = 0;
             embed
                 .setDescription(indexes[index].join("\n"))
@@ -34,31 +34,32 @@ export class QueueCommand extends BaseCommand {
                         filter: (reaction, user) => reactions.includes(reaction.emoji.name!) && user.id === message.author.id,
                         time: 80 * 1000
                     });
-                    collector.on("collect", (reaction, user) => {
-                        if (isMessageManageable) reaction.users.remove(user).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
-                        switch (reaction.emoji.name!) {
-                            case "◀️":
-                                if (index === 0) return undefined;
-                                index--;
-                                break;
+                    collector
+                        .on("collect", (reaction, user) => {
+                            if (isMessageManageable) reaction.users.remove(user).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
+                            switch (reaction.emoji.name!) {
+                                case "◀️":
+                                    if (index === 0) return undefined;
+                                    index--;
+                                    break;
 
-                            case "▶️":
-                                if (index + 1 === indexes.length) return undefined;
-                                index++;
-                                break;
-                        }
-                        embed
-                            .setDescription(indexes[index].join("\n"))
-                            .setFooter(`Page ${index + 1} of ${indexes.length}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png");
-                        msg.edit({ embeds: [embed] }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
-                    })
+                                case "▶️":
+                                    if (index + 1 === indexes.length) return undefined;
+                                    index++;
+                                    break;
+                            }
+                            embed
+                                .setDescription(indexes[index].join("\n"))
+                                .setFooter(`Page ${index + 1} of ${indexes.length}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png");
+                            msg.edit({ embeds: [embed] }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
+                        })
                         .on("end", () => {
                             if (isMessageManageable) msg.reactions.removeAll().catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
                         });
                 }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
             }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
         } else {
-            message.channel.send({ embeds: [embed.setDescription(songs!.join("\n"))] }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
+            message.channel.send({ embeds: [embed.setDescription(tracks!.join("\n"))] }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
         }
     }
 }
