@@ -17,7 +17,6 @@ export class StopCommand extends BaseCommand {
     public execute(message: Message): any {
         message.guild?.queue?.tracks.clear();
         message.guild?.queue?.player.stop(true);
-        message.guild!.queue!.oldMusicMessage = null; message.guild!.queue!.oldVoiceStateUpdateMessage = null;
 
         message.channel.send({ embeds: [createEmbed("info", "⏹ Queue stopped.")] })
             .catch(e => this.client.logger.error("STOP_CMD_ERR:", e));

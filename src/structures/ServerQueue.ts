@@ -3,8 +3,7 @@ import { Guild, Snowflake, StageChannel, TextChannel, Util, VoiceChannel } from 
 import { AudioPlayer, AudioPlayerError, AudioPlayerStatus, createAudioPlayer, entersState, VoiceConnection, VoiceConnectionStatus } from "@discordjs/voice";
 import { createEmbed } from "../utils/createEmbed";
 import { Jukebox } from "./Jukebox";
-import { ITrack } from "../typings";
-import { createYouTubeResource } from "../utils/createYouTubeResource";
+import { Track } from "../structures/Track";
 
 export enum loopMode {
     off = 0,
@@ -22,13 +21,16 @@ export enum loopMode {
     disable = off
 }
 
+const nonEnum = { enumerable: false };
+
 export class ServerQueue {
     public connection: VoiceConnection | null = null;
     public readonly player: AudioPlayer = createAudioPlayer();
     public readonly tracks = new TrackManager();
-    public volume = 0;
     public loopMode = loopMode.disable;
     public timeout: NodeJS.Timeout | null = null;
+    private _currentTrack: Track | undefined = undefined;
+    private _volume = 0;
     private _lastMusicMessageID: Snowflake | null = null;
     private _lastVoiceStateUpdateMessageID: Snowflake | null = null;
     public constructor(
@@ -37,47 +39,44 @@ export class ServerQueue {
         public textChannel: TextChannel | null = null,
         public voiceChannel: VoiceChannel | StageChannel | null = null
     ) {
-        this.volume = textChannel!.client.config.defaultVolume;
         Object.defineProperties(this, {
-            timeout: {
-                enumerable: false
-            },
-            _lastMusicMessageID: {
-                enumerable: false
-            },
-            _lastVoiceStateUpdateMessageID: {
-                enumerable: false
-            }
+            _currentTrack: nonEnum,
+            _lastMusicMessageID: nonEnum,
+            _lastVoiceStateUpdateMessageID: nonEnum,
+            _volume: nonEnum,
+            timeout: nonEnum
         });
 
+        this._volume = textChannel!.client.config.defaultVolume;
+
         this.player.on("stateChange", async (oldState, newState) => {
-            const currentTrack = this.tracks.first();
+            this._currentTrack = this.tracks.first();
             // This usually happens when stop command is being used
-            if (!currentTrack) {
+            if (!this._currentTrack) {
+                this.oldMusicMessage = null; this.oldVoiceStateUpdateMessage = null;
                 this.guild.queue = null;
                 return;
             }
+
+            const { metadata } = this._currentTrack;
             if (newState.status === AudioPlayerStatus.Playing) {
                 if (oldState.status === AudioPlayerStatus.Paused) return undefined;
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${currentTrack.metadata.title}" on ${this.guild.name} started`);
-                this.textChannel?.send({ embeds: [createEmbed("info", `▶ Start playing: **[${currentTrack.metadata.title}](${currentTrack.metadata.url})**`).setThumbnail(currentTrack.metadata.thumbnail)] })
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${metadata.title}" on ${this.guild.name} started`);
+                this.textChannel?.send({ embeds: [createEmbed("info", `▶ Start playing: **[${metadata.title}](${metadata.url})**`).setThumbnail(metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
                     .catch(e => this.client.logger.error("PLAY_ERR:", e));
                 return undefined;
             }
             if (newState.status === AudioPlayerStatus.Idle) {
-                let nextTrack: ITrack | undefined;
-                if (this.loopMode === loopMode.one) {
-                    this.tracks.set(this.tracks.firstKey()!, await createYouTubeResource(currentTrack.metadata));
-                    nextTrack = this.tracks.first();
-                } else {
-                    this.tracks.deleteFirst();
-                    if (this.loopMode === loopMode.all) this.tracks.add(await createYouTubeResource(currentTrack.metadata));
-                    nextTrack = this.tracks.first();
+                // Handle loop/repeat feature
+                if (this.loopMode !== loopMode.one) { // If the loopMode is not one, then
+                    this.tracks.deleteFirst(); // Delete the first track
+                    if (this.loopMode === loopMode.all) this.tracks.add(metadata); // If the loopMode is all, then add the track back to the end of queue
                 }
+                const nextTrack = this.tracks.first();
 
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${currentTrack.metadata.title}" on ${this.guild.name} ended`);
-                this.textChannel?.send({ embeds: [createEmbed("info", `⏹ Stop playing: **[${currentTrack.metadata.title}](${currentTrack.metadata.url})**`).setThumbnail(currentTrack.metadata.thumbnail)] })
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${metadata.title}" on ${this.guild.name} ended`);
+                this.textChannel?.send({ embeds: [createEmbed("info", `⏹ Stop playing: **[${metadata.title}](${metadata.url})**`).setThumbnail(metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
                     .catch(e => this.client.logger.error("PLAY_ERR:", e))
                     .finally(() => {
@@ -109,20 +108,31 @@ export class ServerQueue {
         });
     }
 
-    public async play(track: ITrack): Promise<any> {
+    public async play(track: Track): Promise<any> {
         this.connection?.subscribe(this.player);
+
+        const resource = await track.createAudioResource();
 
         // Wait for 15 seconds for the connection to be ready.
         entersState(this.connection!, VoiceConnectionStatus.Ready, 15 * 1000)
-            .then(() => this.player.play(track))
+            .then(() => this.player.play(resource))
             .catch(e => {
                 if (e.message === "The operation was aborted") e.message = "Could not establish a voice connection within 15 seconds.";
-                this.player.emit("error", new AudioPlayerError(e, track));
+                this.player.emit("error", new AudioPlayerError(e, resource));
             });
     }
 
     public toJSON(): any {
         return Util.flatten(this);
+    }
+
+    public get volume(): number {
+        return this._volume;
+    }
+
+    public set volume(newVolume: number) {
+        this._currentTrack?.setVolume(newVolume / this.client.config.maxVolume);
+        this._volume = newVolume;
     }
 
     public get playing(): boolean {

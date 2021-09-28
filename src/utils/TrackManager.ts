@@ -1,13 +1,16 @@
 import { Snowflake, SnowflakeUtil, Collection } from "discord.js";
-import { ITrack } from "../typings";
+import { Track } from "../structures/Track";
+import { ITrackMetadata } from "../typings";
 
-export class TrackManager extends Collection<Snowflake, ITrack> {
-    public constructor(data?: ReadonlyArray<readonly [Snowflake, ITrack]> | null) {
+export class TrackManager extends Collection<Snowflake, Track> {
+    public constructor(data?: ReadonlyArray<readonly [Snowflake, Track]> | null) {
         super(data);
     }
 
-    public add(track: ITrack): this {
-        return this.set(SnowflakeUtil.generate(), track);
+    public add(metadata: ITrackMetadata): Track {
+        const track = new Track(metadata);
+        this.set(SnowflakeUtil.generate(), track);
+        return track;
     }
 
     public deleteFirst(): boolean {
@@ -15,7 +18,7 @@ export class TrackManager extends Collection<Snowflake, ITrack> {
     }
 
     public clear(): this {
-        this.forEach((v: ITrack, k: Snowflake) => {
+        this.forEach((v: Track, k: Snowflake) => {
             this.delete(k);
         });
         return this;

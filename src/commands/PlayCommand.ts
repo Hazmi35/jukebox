@@ -2,14 +2,13 @@ import { BaseCommand } from "../structures/BaseCommand";
 import { ServerQueue } from "../structures/ServerQueue";
 import { Util, VoiceChannel, Message, TextChannel, Collection, Snowflake, StageChannel } from "discord.js";
 import { decodeHTML } from "entities";
-import { ITrack } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
 import { Client, LiveVideo, MixPlaylist, Video } from "youtubei";
 import { generateYouTubePLURL, generateYouTubeVidURL } from "../utils/YouTubeURL";
-import { createYouTubeResource } from "../utils/createYouTubeResource";
 import { joinVoiceChannel } from "@discordjs/voice";
+import { ITrackMetadata } from "../typings";
 
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
@@ -19,7 +18,7 @@ import { joinVoiceChannel } from "@discordjs/voice";
 })
 export class PlayCommand extends BaseCommand {
     private readonly youtube = new Client();
-    private readonly playlistAlreadyQueued: Collection<Snowflake, ITrack[]> = new Collection();
+    private readonly playlistAlreadyQueued: Collection<Snowflake, ITrackMetadata[]> = new Collection();
 
     @isUserInTheVoiceChannel()
     @isValidVoiceChannel()
@@ -69,7 +68,7 @@ export class PlayCommand extends BaseCommand {
                 const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id);
                 if (!this.client.config.allowDuplicate && Number(playlistAlreadyQueued?.length) > 0) {
                     let num = 1;
-                    const tracks = playlistAlreadyQueued!.map(s => `**${num++}.** **[${s.metadata.title}](${s.metadata.url})**`);
+                    const tracks = playlistAlreadyQueued!.map(s => `**${num++}.** **[${s.title}](${s.url})**`);
                     message.channel.send({
                         embeds: [
                             createEmbed("warn", `Over ${playlistAlreadyQueued!.length} track${playlistAlreadyQueued!.length >= 2 ? "s" : ""} are skipped because it was a duplicate` +
@@ -157,41 +156,42 @@ export class PlayCommand extends BaseCommand {
     }
 
     private async handleVideo(video: Video | LiveVideo, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false): Promise<any> {
-        const track = await createYouTubeResource({
+        const metadata = {
             id: video.id,
+            inlineVolume: this.client.config.enableInlineVolume,
             thumbnail: video.thumbnails.best!,
             title: this.cleanTitle(video.title),
             url: generateYouTubeVidURL(video.id)
-        });
+        };
         if (message.guild?.queue) {
-            if (!this.client.config.allowDuplicate && message.guild.queue.tracks.find(s => s.metadata.id === track.metadata.id)) {
+            if (!this.client.config.allowDuplicate && message.guild.queue.tracks.find(s => s.metadata.id === metadata.id)) {
                 if (playlist) {
                     const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id) ?? [];
-                    playlistAlreadyQueued.push(track);
+                    playlistAlreadyQueued.push(metadata);
                     this.playlistAlreadyQueued.set(message.guild.id, playlistAlreadyQueued);
                     return undefined;
                 }
                 return message.channel.send({
                     embeds: [
-                        createEmbed("warn", `Track **[${track.metadata.title}](${track.metadata.url})** is already queued, and this bot configuration disallow duplicated tracks in queue, ` +
+                        createEmbed("warn", `Track **[${metadata.title}](${metadata.url})** is already queued, and this bot configuration disallow duplicated tracks in queue, ` +
                         `please use \`${this.client.config.prefix}repeat\` instead`)
                             .setTitle("Already queued / duplicate")
-                            .setThumbnail(track.metadata.thumbnail)
+                            .setThumbnail(metadata.thumbnail)
                     ]
                 });
             }
-            message.guild.queue.tracks.add(track);
+            message.guild.queue.tracks.add(metadata);
             if (!playlist) {
                 message.channel.send({
-                    embeds: [createEmbed("info", `✅ Track **[${track.metadata.title}](${track.metadata.url})** has been added to the queue`).setThumbnail(track.metadata.thumbnail)]
+                    embeds: [createEmbed("info", `✅ Track **[${metadata.title}](${metadata.url})** has been added to the queue`).setThumbnail(metadata.thumbnail)]
                 }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
         } else {
             message.guild!.queue = new ServerQueue(this.client, message.guild!, message.channel as TextChannel, voiceChannel);
-            message.guild?.queue.tracks.add(track);
+            const track = message.guild!.queue.tracks.add(metadata);
             if (!playlist) {
                 message.channel.send({
-                    embeds: [createEmbed("info", `✅ Track **[${track.metadata.title}](${track.metadata.url})** has been added to the queue`).setThumbnail(track.metadata.thumbnail)]
+                    embeds: [createEmbed("info", `✅ Track **[${metadata.title}](${metadata.url})** has been added to the queue`).setThumbnail(metadata.thumbnail)]
                 }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
             try {

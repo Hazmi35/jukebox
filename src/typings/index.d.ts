@@ -1,4 +1,3 @@
-import { AudioResource } from "@discordjs/voice";
 import { Client as OClient, ClientEvents, Guild as OGuild, Message } from "discord.js";
 import { Jukebox } from "../structures/Jukebox";
 import { ServerQueue } from "../structures/ServerQueue";
@@ -41,5 +40,6 @@ export interface ITrackMetadata {
     title: string;
     url: string;
     thumbnail: string;
+    inlineVolume: boolean;
 }
-export type ITrack = AudioResource<ITrackMetadata>;
+
