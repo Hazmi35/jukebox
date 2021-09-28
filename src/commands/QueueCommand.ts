@@ -19,8 +19,8 @@ export class QueueCommand extends BaseCommand {
 
         let num = 1;
         const tracks = message.guild?.queue?.tracks.map(s => `**${num++}.** **[${s.metadata.title}](${s.metadata.url})**`);
-        if (Number(message.guild?.queue?.tracks.size) > 12) {
-            const indexes: string[][] = this.client.util.chunk(tracks!, 12);
+        if (Number(message.guild?.queue?.tracks.size) > 15) {
+            const indexes: string[][] = this.client.util.chunk(tracks!, 15);
             let index = 0;
             embed
                 .setDescription(indexes[index].join("\n"))
