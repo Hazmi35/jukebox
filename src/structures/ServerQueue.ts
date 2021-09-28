@@ -4,6 +4,7 @@ import { AudioPlayer, AudioPlayerError, AudioPlayerStatus, createAudioPlayer, en
 import { createEmbed } from "../utils/createEmbed";
 import { Jukebox } from "./Jukebox";
 import { ITrack } from "../typings";
+import { createYouTubeResource } from "../utils/createYouTubeResource";
 
 export enum loopMode {
     off = 0,
@@ -49,7 +50,7 @@ export class ServerQueue {
             }
         });
 
-        this.player.on("stateChange", (oldState, newState) => {
+        this.player.on("stateChange", async (oldState, newState) => {
             const currentTrack = this.tracks.first();
             // This usually happens when stop command is being used
             if (!currentTrack) {
@@ -65,17 +66,21 @@ export class ServerQueue {
                 return undefined;
             }
             if (newState.status === AudioPlayerStatus.Idle) {
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${currentTrack.metadata.title}" on ${this.guild.name} ended`);
-                if (this.loopMode === loopMode.off) {
+                let nextTrack: ITrack | undefined;
+                if (this.loopMode === loopMode.one) {
+                    this.tracks.set(this.tracks.firstKey()!, await createYouTubeResource(currentTrack.metadata));
+                    nextTrack = this.tracks.first();
+                } else {
                     this.tracks.deleteFirst();
-                } else if (this.loopMode === loopMode.all) {
-                    this.tracks.deleteFirst(); this.tracks.add(currentTrack);
+                    if (this.loopMode === loopMode.all) this.tracks.add(await createYouTubeResource(currentTrack.metadata));
+                    nextTrack = this.tracks.first();
                 }
+
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${currentTrack.metadata.title}" on ${this.guild.name} ended`);
                 this.textChannel?.send({ embeds: [createEmbed("info", `⏹ Stop playing: **[${currentTrack.metadata.title}](${currentTrack.metadata.url})**`).setThumbnail(currentTrack.metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
                     .catch(e => this.client.logger.error("PLAY_ERR:", e))
                     .finally(() => {
-                        const nextTrack = this.tracks.first();
                         if (!nextTrack) {
                             this.oldMusicMessage = null; this.oldVoiceStateUpdateMessage = null;
                             this.textChannel?.send({
