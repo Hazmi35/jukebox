@@ -33,7 +33,6 @@ export class Track {
             };
             process
                 .once("spawn", () => {
-                    // TODO: Add inlineVolume
                     demuxProbe(stream)
                         .then(probe => {
                             this._resource = createAudioResource(probe.stream, {
