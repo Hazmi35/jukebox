@@ -54,6 +54,7 @@ export class ServerQueue {
             // This usually happens when stop command is being used
             if (!this._currentTrack) {
                 this.oldMusicMessage = null; this.oldVoiceStateUpdateMessage = null;
+                this.connection?.disconnect();
                 this.guild.queue = null;
                 return;
             }
