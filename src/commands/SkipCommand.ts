@@ -15,7 +15,7 @@ export class SkipCommand extends BaseCommand {
     @isMusicQueueExists()
     @isSameVoiceChannel()
     public execute(message: Message): any {
-        if (message.guild?.queue?.playing === false) message.guild.queue.player?.unpause();
+        if (message.guild?.queue?.playing === false) message.guild.queue.player.unpause();
         message.guild!.queue?.player!.stop();
 
         const song = message.guild?.queue?.songs.first();
