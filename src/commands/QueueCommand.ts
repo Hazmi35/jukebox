@@ -18,7 +18,7 @@ export class QueueCommand extends BaseCommand {
             .setThumbnail(message.client.user?.avatarURL() as string);
 
         let num = 1;
-        const songs = message.guild?.queue?.songs.map(s => `**${num++}.** **[${s.title}](${s.url})**`);
+        const songs = message.guild?.queue?.songs.map(s => `**${num++}.** **[${s.metadata.title}](${s.metadata.url})**`);
         if (Number(message.guild?.queue?.songs.size) > 12) {
             const indexes: string[][] = this.client.util.chunk(songs!, 12);
             let index = 0;

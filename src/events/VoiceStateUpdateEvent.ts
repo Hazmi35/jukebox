@@ -93,8 +93,8 @@ export class VoiceStateUpdateEvent extends BaseEvent {
                 const song = queue.songs.first();
                 queue.textChannel?.send({
                     embeds: [
-                        createEmbed("info", `Someone joins the voice channel. Enjoy the music 🎶\nNow Playing: **[${song!.title}](${song!.url})**`)
-                            .setThumbnail(song!.thumbnail)
+                        createEmbed("info", `Someone joins the voice channel. Enjoy the music 🎶\nNow Playing: **[${song!.metadata.title}](${song!.metadata.url})**`)
+                            .setThumbnail(song!.metadata.thumbnail)
                             .setTitle("▶ Queue resumed")
                     ]
                 }).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));

@@ -25,17 +25,17 @@ export class RemoveCommand extends BaseCommand {
         const currentSong = message.guild!.queue!.songs.first()!;
         const song = songs[Number(args[0]) - 1];
 
-        if (currentSong.id === song.id) {
+        if (currentSong.metadata.id === song.metadata.id) {
             if (message.guild?.queue?.playing === false) message.guild.queue.player.unpause();
             message.guild!.queue?.player!.stop();
         } else {
-            message.guild?.queue?.songs.delete(message.guild.queue.songs.findKey(x => x.id === song.id)!);
+            message.guild?.queue?.songs.delete(message.guild.queue.songs.findKey(x => x.metadata.id === song.metadata.id)!);
         }
 
         message.channel.send({
             embeds: [
-                createEmbed("info", `✅ Removed **[${song.title}](${song.url}})**`)
-                    .setThumbnail(song.thumbnail)
+                createEmbed("info", `✅ Removed **[${song.metadata.title}](${song.metadata.url}})**`)
+                    .setThumbnail(song.metadata.thumbnail)
             ]
         }).catch(e => this.client.logger.error("REMOVE_COMMAND_ERR:", e));
     }

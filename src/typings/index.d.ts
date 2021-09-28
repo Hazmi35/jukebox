@@ -1,5 +1,5 @@
+import { AudioResource } from "@discordjs/voice";
 import { Client as OClient, ClientEvents, Guild as OGuild, Message } from "discord.js";
-import { Readable } from "stream";
 import { Jukebox } from "../structures/Jukebox";
 import { ServerQueue } from "../structures/ServerQueue";
 
@@ -36,10 +36,10 @@ declare module "discord.js" {
         queue: ServerQueue | null;
     }
 }
-export interface ISong {
+export interface ISongMetadata {
     id: string;
     title: string;
     url: string;
     thumbnail: string;
-    download(): Promise<Readable>;
 }
+export type ISong = AudioResource<ISongMetadata>;

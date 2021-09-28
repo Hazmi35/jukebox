@@ -8,7 +8,7 @@ import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from
 import { createEmbed } from "../utils/createEmbed";
 import { Client, LiveVideo, MixPlaylist, Video } from "youtubei";
 import { generateYouTubePLURL, generateYouTubeVidURL } from "../utils/YouTubeURL";
-import { YouTubeDownload } from "../utils/YouTubeDownload";
+import { createYouTubeResource } from "../utils/createYouTubeResource";
 import { joinVoiceChannel } from "@discordjs/voice";
 
 @DefineCommand({
@@ -69,7 +69,7 @@ export class PlayCommand extends BaseCommand {
                 const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id);
                 if (!this.client.config.allowDuplicate && Number(playlistAlreadyQueued?.length) > 0) {
                     let num = 1;
-                    const songs = playlistAlreadyQueued!.map(s => `**${num++}.** **[${s.title}](${s.url})**`);
+                    const songs = playlistAlreadyQueued!.map(s => `**${num++}.** **[${s.metadata.title}](${s.metadata.url})**`);
                     message.channel.send({
                         embeds: [
                             createEmbed("warn", `Over ${playlistAlreadyQueued!.length} track${playlistAlreadyQueued!.length >= 2 ? "s" : ""} are skipped because it was a duplicate` +
@@ -158,15 +158,14 @@ export class PlayCommand extends BaseCommand {
 
     private async handleVideo(video: Video | LiveVideo, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false): Promise<any> {
         const url = generateYouTubeVidURL(video.id);
-        const song: ISong = {
-            download: () => YouTubeDownload(url),
+        const song = await createYouTubeResource(url, {
             id: video.id,
             thumbnail: video.thumbnails.best!,
             title: this.cleanTitle(video.title),
             url
-        };
+        });
         if (message.guild?.queue) {
-            if (!this.client.config.allowDuplicate && message.guild.queue.songs.find(s => s.id === song.id)) {
+            if (!this.client.config.allowDuplicate && message.guild.queue.songs.find(s => s.metadata.id === song.metadata.id)) {
                 if (playlist) {
                     const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id) ?? [];
                     playlistAlreadyQueued.push(song);
@@ -175,17 +174,17 @@ export class PlayCommand extends BaseCommand {
                 }
                 return message.channel.send({
                     embeds: [
-                        createEmbed("warn", `Track **[${song.title}](${song.url})** is already queued, and this bot configuration disallow duplicated tracks in queue, ` +
+                        createEmbed("warn", `Track **[${song.metadata.title}](${song.metadata.url})** is already queued, and this bot configuration disallow duplicated tracks in queue, ` +
                         `please use \`${this.client.config.prefix}repeat\` instead`)
                             .setTitle("Already queued / duplicate")
-                            .setThumbnail(song.thumbnail)
+                            .setThumbnail(song.metadata.thumbnail)
                     ]
                 });
             }
             message.guild.queue.songs.addSong(song);
             if (!playlist) {
                 message.channel.send({
-                    embeds: [createEmbed("info", `✅ Track **[${song.title}](${song.url})** has been added to the queue`).setThumbnail(song.thumbnail)]
+                    embeds: [createEmbed("info", `✅ Track **[${song.metadata.title}](${song.metadata.url})** has been added to the queue`).setThumbnail(song.metadata.thumbnail)]
                 }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
         } else {
@@ -193,7 +192,7 @@ export class PlayCommand extends BaseCommand {
             message.guild?.queue.songs.addSong(song);
             if (!playlist) {
                 message.channel.send({
-                    embeds: [createEmbed("info", `✅ Track **[${song.title}](${song.url})** has been added to the queue`).setThumbnail(song.thumbnail)]
+                    embeds: [createEmbed("info", `✅ Track **[${song.metadata.title}](${song.metadata.url})** has been added to the queue`).setThumbnail(song.metadata.thumbnail)]
                 }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
             try {

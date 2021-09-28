@@ -22,8 +22,8 @@ export class SkipCommand extends BaseCommand {
 
         message.channel.send({
             embeds: [
-                createEmbed("info", `⏭ Skipped **[${song!.title}](${song!.url}})**`)
-                    .setThumbnail(song?.thumbnail as string)
+                createEmbed("info", `⏭ Skipped **[${song!.metadata.title}](${song!.metadata.url}})**`)
+                    .setThumbnail(song?.metadata.thumbnail as string)
             ]
         }).catch(e => this.client.logger.error("SKIP_CMD_ERR:", e));
     }

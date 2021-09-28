@@ -17,8 +17,8 @@ export class NowPlayingCommand extends BaseCommand {
         return message.channel.send({
             embeds: [
                 createEmbed("info", `${message.guild?.queue?.playing ? "▶ Now playing:" : "⏸ Now playing (paused):"} ` +
-                    `**[${song?.title as string}](${song?.url as string})**`)
-                    .setThumbnail(song?.thumbnail as string)
+                    `**[${song?.metadata.title as string}](${song?.metadata.url as string})**`)
+                    .setThumbnail(song?.metadata.thumbnail as string)
             ]
         });
     }
