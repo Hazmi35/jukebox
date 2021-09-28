@@ -187,7 +187,7 @@ export class PlayCommand extends BaseCommand {
                 }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
         } else {
-            message.guild!.queue = new ServerQueue(this.client, message.channel as TextChannel, voiceChannel);
+            message.guild!.queue = new ServerQueue(this.client, message.guild!, message.channel as TextChannel, voiceChannel);
             message.guild?.queue.songs.addSong(song);
             if (!playlist) {
                 message.channel.send({
@@ -210,7 +210,7 @@ export class PlayCommand extends BaseCommand {
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return undefined;
             }
-            message.guild?.queue.play(message.guild).catch(err => {
+            message.guild?.queue.play(song).catch(err => {
                 message.channel.send({ embeds: [createEmbed("error", `Error while trying to play music\nReason: \`${err.message}\``)] })
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return this.client.logger.error("PLAY_CMD_ERR:", err);
