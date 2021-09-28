@@ -2,7 +2,7 @@ import { BaseCommand } from "../structures/BaseCommand";
 import { ServerQueue } from "../structures/ServerQueue";
 import { Util, VoiceChannel, Message, TextChannel, Collection, Snowflake, StageChannel } from "discord.js";
 import { decodeHTML } from "entities";
-import { ISong } from "../typings";
+import { ITrack } from "../typings";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isSameVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
@@ -19,7 +19,7 @@ import { joinVoiceChannel } from "@discordjs/voice";
 })
 export class PlayCommand extends BaseCommand {
     private readonly youtube = new Client();
-    private readonly playlistAlreadyQueued: Collection<Snowflake, ISong[]> = new Collection();
+    private readonly playlistAlreadyQueued: Collection<Snowflake, ITrack[]> = new Collection();
 
     @isUserInTheVoiceChannel()
     @isValidVoiceChannel()
@@ -69,7 +69,7 @@ export class PlayCommand extends BaseCommand {
                 const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id);
                 if (!this.client.config.allowDuplicate && Number(playlistAlreadyQueued?.length) > 0) {
                     let num = 1;
-                    const songs = playlistAlreadyQueued!.map(s => `**${num++}.** **[${s.metadata.title}](${s.metadata.url})**`);
+                    const tracks = playlistAlreadyQueued!.map(s => `**${num++}.** **[${s.metadata.title}](${s.metadata.url})**`);
                     message.channel.send({
                         embeds: [
                             createEmbed("warn", `Over ${playlistAlreadyQueued!.length} track${playlistAlreadyQueued!.length >= 2 ? "s" : ""} are skipped because it was a duplicate` +
@@ -77,7 +77,7 @@ export class PlayCommand extends BaseCommand {
                                 .setTitle("Already queued / duplicate")
                         ]
                     }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
-                    const pages = this.client.util.paginate(songs.join("\n"));
+                    const pages = this.client.util.paginate(tracks.join("\n"));
                     let howManyMessage = 0;
                     for (const page of pages) {
                         howManyMessage++;
@@ -107,7 +107,7 @@ export class PlayCommand extends BaseCommand {
             try {
                 const videos = await this.youtube.search(searchString, { type: "video" });
                 if (videos.length === 0) return message.channel.send({ embeds: [createEmbed("warn", "I could not obtain any search results!")] });
-                if (videos.length === 1 || this.client.config.disableSongSelection) {
+                if (videos.length === 1 || this.client.config.disableTrackSelection) {
                     video = await this.youtube.getVideo(videos[0].id);
                     if (video === undefined) throw new Error("Video not found");
                 } else {
@@ -157,41 +157,41 @@ export class PlayCommand extends BaseCommand {
     }
 
     private async handleVideo(video: Video | LiveVideo, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false): Promise<any> {
-        const song = await createYouTubeResource({
+        const track = await createYouTubeResource({
             id: video.id,
             thumbnail: video.thumbnails.best!,
             title: this.cleanTitle(video.title),
             url: generateYouTubeVidURL(video.id)
         });
         if (message.guild?.queue) {
-            if (!this.client.config.allowDuplicate && message.guild.queue.songs.find(s => s.metadata.id === song.metadata.id)) {
+            if (!this.client.config.allowDuplicate && message.guild.queue.tracks.find(s => s.metadata.id === track.metadata.id)) {
                 if (playlist) {
                     const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id) ?? [];
-                    playlistAlreadyQueued.push(song);
+                    playlistAlreadyQueued.push(track);
                     this.playlistAlreadyQueued.set(message.guild.id, playlistAlreadyQueued);
                     return undefined;
                 }
                 return message.channel.send({
                     embeds: [
-                        createEmbed("warn", `Track **[${song.metadata.title}](${song.metadata.url})** is already queued, and this bot configuration disallow duplicated tracks in queue, ` +
+                        createEmbed("warn", `Track **[${track.metadata.title}](${track.metadata.url})** is already queued, and this bot configuration disallow duplicated tracks in queue, ` +
                         `please use \`${this.client.config.prefix}repeat\` instead`)
                             .setTitle("Already queued / duplicate")
-                            .setThumbnail(song.metadata.thumbnail)
+                            .setThumbnail(track.metadata.thumbnail)
                     ]
                 });
             }
-            message.guild.queue.songs.addSong(song);
+            message.guild.queue.tracks.add(track);
             if (!playlist) {
                 message.channel.send({
-                    embeds: [createEmbed("info", `✅ Track **[${song.metadata.title}](${song.metadata.url})** has been added to the queue`).setThumbnail(song.metadata.thumbnail)]
+                    embeds: [createEmbed("info", `✅ Track **[${track.metadata.title}](${track.metadata.url})** has been added to the queue`).setThumbnail(track.metadata.thumbnail)]
                 }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
         } else {
             message.guild!.queue = new ServerQueue(this.client, message.guild!, message.channel as TextChannel, voiceChannel);
-            message.guild?.queue.songs.addSong(song);
+            message.guild?.queue.tracks.add(track);
             if (!playlist) {
                 message.channel.send({
-                    embeds: [createEmbed("info", `✅ Track **[${song.metadata.title}](${song.metadata.url})** has been added to the queue`).setThumbnail(song.metadata.thumbnail)]
+                    embeds: [createEmbed("info", `✅ Track **[${track.metadata.title}](${track.metadata.url})** has been added to the queue`).setThumbnail(track.metadata.thumbnail)]
                 }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             }
             try {
@@ -203,14 +203,14 @@ export class PlayCommand extends BaseCommand {
                 });
                 message.guild!.queue.connection = connection;
             } catch (error: any) {
-                message.guild?.queue.songs.clear();
+                message.guild?.queue.tracks.clear();
                 message.guild!.queue = null;
                 this.client.logger.error("PLAY_CMD_ERR:", error);
                 message.channel.send({ embeds: [createEmbed("error", `Error: Could not join the voice channel!\nReason: \`${error.message}\``)] })
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return undefined;
             }
-            message.guild?.queue.play(song).catch(err => {
+            message.guild?.queue.play(track).catch(err => {
                 message.channel.send({ embeds: [createEmbed("error", `Error while trying to play music\nReason: \`${err.message}\``)] })
                     .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 return this.client.logger.error("PLAY_CMD_ERR:", err);

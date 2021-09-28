@@ -1,16 +1,16 @@
 import { createAudioResource, demuxProbe } from "@discordjs/voice";
 import { raw as ytdl } from "youtube-dl-exec";
-import { ISong, ISongMetadata } from "../typings";
+import { ITrack, ITrackMetadata } from "../typings";
 
 // TODO: Recreate YTDL Caching
-export function createYouTubeResource(metadata: ISongMetadata): Promise<ISong> {
+export function createYouTubeResource(metadata: ITrackMetadata): Promise<ITrack> {
     return new Promise((resolve, reject) => {
         const process = ytdl(
             metadata.url,
             {
                 o: "-",
                 q: "",
-                f: "bestaudio",
+                f: "bestaudio/best",
                 r: "100K"
             },
             { stdio: ["ignore", "pipe", "ignore"] }

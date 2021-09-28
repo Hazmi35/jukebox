@@ -15,7 +15,7 @@ export const deleteQueueTimeout = Number(process.env.CONFIG_DELETE_QUEUE_TIMEOUT
 
 // Play command config
 export const selectTimeout = Number(process.env.CONFIG_SELECT_TIMEOUT) * 1000 || 20 * 1000;
-export const disableSongSelection = process.env.CONFIG_DISABLE_SONG_SELECTION?.toLowerCase() === "yes";
+export const disableTrackSelection = process.env.CONFIG_DISABLE_TRACK_SELECTION?.toLowerCase() === "yes";
 export const searchMaxResults = Number(process.env.CONFIG_SEARCH_MAX_RESULTS) || 10;
 
 if (searchMaxResults < 1) throw new Error("CONFIG_SEARCH_MAX_RESULTS cannot be smaller than 1");

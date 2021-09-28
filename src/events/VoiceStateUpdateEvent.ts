@@ -90,11 +90,11 @@ export class VoiceStateUpdateEvent extends BaseEvent {
             try {
                 clearTimeout(queue.timeout!);
                 newState.guild.queue!.timeout = null;
-                const song = queue.songs.first();
+                const tracks = queue.tracks.first();
                 queue.textChannel?.send({
                     embeds: [
-                        createEmbed("info", `Someone joins the voice channel. Enjoy the music 🎶\nNow Playing: **[${song!.metadata.title}](${song!.metadata.url})**`)
-                            .setThumbnail(song!.metadata.thumbnail)
+                        createEmbed("info", `Someone joins the voice channel. Enjoy the music 🎶\nNow Playing: **[${tracks!.metadata.title}](${tracks!.metadata.url})**`)
+                            .setThumbnail(tracks!.metadata.thumbnail)
                             .setTitle("▶ Queue resumed")
                     ]
                 }).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));

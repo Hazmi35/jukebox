@@ -15,7 +15,7 @@ export class StopCommand extends BaseCommand {
     @isMusicQueueExists()
     @isSameVoiceChannel()
     public execute(message: Message): any {
-        message.guild?.queue?.songs.clear();
+        message.guild?.queue?.tracks.clear();
         message.guild?.queue?.player.stop(true);
         message.guild!.queue!.oldMusicMessage = null; message.guild!.queue!.oldVoiceStateUpdateMessage = null;
 

@@ -13,12 +13,12 @@ import { Message } from "discord.js";
 export class NowPlayingCommand extends BaseCommand {
     @isMusicQueueExists()
     public execute(message: Message): any {
-        const song = message.guild?.queue?.songs.first();
+        const track = message.guild?.queue?.tracks.first();
         return message.channel.send({
             embeds: [
                 createEmbed("info", `${message.guild?.queue?.playing ? "▶ Now playing:" : "⏸ Now playing (paused):"} ` +
-                    `**[${song?.metadata.title as string}](${song?.metadata.url as string})**`)
-                    .setThumbnail(song?.metadata.thumbnail as string)
+                    `**[${track?.metadata.title as string}](${track?.metadata.url as string})**`)
+                    .setThumbnail(track?.metadata.thumbnail as string)
             ]
         });
     }

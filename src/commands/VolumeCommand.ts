@@ -28,7 +28,7 @@ export class VolumeCommand extends BaseCommand {
         }
 
         message.guild!.queue!.volume = Number(args[0]);
-        message.guild!.queue!.songs.first()!.volume?.setVolumeLogarithmic(Number(args[0]) / this.client.config.maxVolume);
+        message.guild!.queue!.tracks.first()!.volume?.setVolumeLogarithmic(Number(args[0]) / this.client.config.maxVolume);
         message.channel.send({ embeds: [createEmbed("info", `📶 Volume set to \`${args[0]}\``)] }).catch(e => this.client.logger.error("VOLUME_CMD_ERR:", e));
     }
 }

@@ -18,12 +18,12 @@ export class SkipCommand extends BaseCommand {
         if (message.guild?.queue?.playing === false) message.guild.queue.player.unpause();
         message.guild!.queue?.player!.stop();
 
-        const song = message.guild?.queue?.songs.first();
+        const track = message.guild?.queue?.tracks.first();
 
         message.channel.send({
             embeds: [
-                createEmbed("info", `⏭ Skipped **[${song!.metadata.title}](${song!.metadata.url}})**`)
-                    .setThumbnail(song?.metadata.thumbnail as string)
+                createEmbed("info", `⏭ Skipped **[${track!.metadata.title}](${track!.metadata.url}})**`)
+                    .setThumbnail(track?.metadata.thumbnail as string)
             ]
         }).catch(e => this.client.logger.error("SKIP_CMD_ERR:", e));
     }

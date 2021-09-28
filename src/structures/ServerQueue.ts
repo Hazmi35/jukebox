@@ -1,9 +1,9 @@
-import { SongManager } from "../utils/SongManager";
+import { TrackManager } from "../utils/TrackManager";
 import { Guild, Snowflake, StageChannel, TextChannel, Util, VoiceChannel } from "discord.js";
 import { AudioPlayer, AudioPlayerError, AudioPlayerStatus, createAudioPlayer, entersState, VoiceConnection, VoiceConnectionStatus } from "@discordjs/voice";
 import { createEmbed } from "../utils/createEmbed";
 import { Jukebox } from "./Jukebox";
-import { ISong } from "../typings";
+import { ITrack } from "../typings";
 
 export enum loopMode {
     off = 0,
@@ -24,7 +24,7 @@ export enum loopMode {
 export class ServerQueue {
     public connection: VoiceConnection | null = null;
     public readonly player: AudioPlayer = createAudioPlayer();
-    public readonly songs = new SongManager();
+    public readonly tracks = new TrackManager();
     public volume = 0;
     public loopMode = loopMode.disable;
     public timeout: NodeJS.Timeout | null = null;
@@ -50,33 +50,33 @@ export class ServerQueue {
         });
 
         this.player.on("stateChange", (oldState, newState) => {
-            const currentSong = this.songs.first();
+            const currentTrack = this.tracks.first();
             // This usually happens when stop command is being used
-            if (!currentSong) {
+            if (!currentTrack) {
                 this.guild.queue = null;
                 return;
             }
             if (newState.status === AudioPlayerStatus.Playing) {
                 if (oldState.status === AudioPlayerStatus.Paused) return undefined;
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${currentSong.metadata.title}" on ${this.guild.name} started`);
-                this.textChannel?.send({ embeds: [createEmbed("info", `▶ Start playing: **[${currentSong.metadata.title}](${currentSong.metadata.url})**`).setThumbnail(currentSong.metadata.thumbnail)] })
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${currentTrack.metadata.title}" on ${this.guild.name} started`);
+                this.textChannel?.send({ embeds: [createEmbed("info", `▶ Start playing: **[${currentTrack.metadata.title}](${currentTrack.metadata.url})**`).setThumbnail(currentTrack.metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
                     .catch(e => this.client.logger.error("PLAY_ERR:", e));
                 return undefined;
             }
             if (newState.status === AudioPlayerStatus.Idle) {
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${currentSong.metadata.title}" on ${this.guild.name} ended`);
+                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${currentTrack.metadata.title}" on ${this.guild.name} ended`);
                 if (this.loopMode === loopMode.off) {
-                    this.songs.deleteFirst();
+                    this.tracks.deleteFirst();
                 } else if (this.loopMode === loopMode.all) {
-                    this.songs.deleteFirst(); this.songs.addSong(currentSong);
+                    this.tracks.deleteFirst(); this.tracks.add(currentTrack);
                 }
-                this.textChannel?.send({ embeds: [createEmbed("info", `⏹ Stop playing: **[${currentSong.metadata.title}](${currentSong.metadata.url})**`).setThumbnail(currentSong.metadata.thumbnail)] })
+                this.textChannel?.send({ embeds: [createEmbed("info", `⏹ Stop playing: **[${currentTrack.metadata.title}](${currentTrack.metadata.url})**`).setThumbnail(currentTrack.metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
                     .catch(e => this.client.logger.error("PLAY_ERR:", e))
                     .finally(() => {
-                        const nextSong = this.songs.first();
-                        if (!nextSong) {
+                        const nextTrack = this.tracks.first();
+                        if (!nextTrack) {
                             this.oldMusicMessage = null; this.oldVoiceStateUpdateMessage = null;
                             this.textChannel?.send({
                                 embeds: [createEmbed("info", `⏹ Queue is finished! Use "${this.guild.client.config.prefix}play" to play more music`)]
@@ -84,7 +84,7 @@ export class ServerQueue {
                             this.connection?.disconnect();
                             return this.guild.queue = null;
                         }
-                        this.play(nextSong).catch(e => {
+                        this.play(nextTrack).catch(e => {
                             this.textChannel?.send({ embeds: [createEmbed("error", `Error while trying to play music\nReason: \`${e}\``)] })
                                 .catch(e => this.client.logger.error("PLAY_ERR:", e));
                             this.connection?.disconnect();
@@ -104,15 +104,15 @@ export class ServerQueue {
         });
     }
 
-    public async play(song: ISong): Promise<any> {
+    public async play(track: ITrack): Promise<any> {
         this.connection?.subscribe(this.player);
 
         // Wait for 15 seconds for the connection to be ready.
         entersState(this.connection!, VoiceConnectionStatus.Ready, 15 * 1000)
-            .then(() => this.player.play(song))
+            .then(() => this.player.play(track))
             .catch(e => {
                 if (e.message === "The operation was aborted") e.message = "Could not establish a voice connection within 15 seconds.";
-                this.player.emit("error", new AudioPlayerError(e, song));
+                this.player.emit("error", new AudioPlayerError(e, track));
             });
     }
 

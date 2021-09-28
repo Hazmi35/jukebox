@@ -39,7 +39,7 @@
             "description": "Select track timeout when searching tracks (in seconds) (default: 20)",
             "required": false
         },
-        "CONFIG_DISABLE_SONG_SELECTION": {
+        "CONFIG_DISABLE_TRACK_SELECTION": {
             "description": "Whether to disable selecting tracks on play command, this will automatically selects the first track from search results (yes or no) (default: no)",
             "required": false
         },

@@ -36,10 +36,10 @@ declare module "discord.js" {
         queue: ServerQueue | null;
     }
 }
-export interface ISongMetadata {
+export interface ITrackMetadata {
     id: string;
     title: string;
     url: string;
     thumbnail: string;
 }
-export type ISong = AudioResource<ISongMetadata>;
+export type ITrack = AudioResource<ITrackMetadata>;
