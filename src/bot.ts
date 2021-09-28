@@ -1,6 +1,6 @@
 import "./utils/initializeDotEnv";
 import { Jukebox } from "./structures/Jukebox";
-import { CacheWithLimitsOptions, Intents, LimitedCollection, Options } from "discord.js";
+import { CacheWithLimitsOptions, ClientOptions, Intents, LimitedCollection, Options } from "discord.js";
 import { cacheUsers } from "./config";
 
 const cacheOptions: CacheWithLimitsOptions = {
@@ -22,11 +22,16 @@ const cacheOptions: CacheWithLimitsOptions = {
     }
 };
 
-const client = new Jukebox({
+const clientOptions: ClientOptions = {
     allowedMentions: { parse: ["users"] },
     makeCache: Options.cacheWithLimits(cacheUsers ? cacheOptions : Object.assign(cacheOptions, { UserManager: { maxSize: 0 } })),
+    partials: [],
     intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS]
-});
+};
+
+if (!cacheUsers) clientOptions.partials?.push("USER");
+
+const client = new Jukebox(clientOptions);
 
 process.on("unhandledRejection", e => {
     client.logger.error("UNHANDLED_REJECTION: ", e);
