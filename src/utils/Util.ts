@@ -151,12 +151,12 @@ export class Util {
         return pages;
     }
 
-    public chunk(array: Array<any> | string, chunkSize: number): Array<any> {
+    public chunk<T extends any>(array: T[] | string, chunkSize: number): T[][] {
         const temp = [];
         for (let i = 0; i < array.length; i += chunkSize) {
             temp.push(array.slice(i, i + chunkSize));
         }
-        return temp;
+        return temp as T[][];
     }
 
     public getUserFromMention(mention: string): Promise<User | undefined> {
