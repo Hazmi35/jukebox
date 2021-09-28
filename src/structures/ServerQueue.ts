@@ -61,6 +61,7 @@ export class ServerQueue {
             const { metadata } = this._currentTrack;
             if (newState.status === AudioPlayerStatus.Playing) {
                 if (oldState.status === AudioPlayerStatus.Paused) return undefined;
+                this._currentTrack.setVolume(this.client.config.defaultVolume / this.client.config.maxVolume);
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${metadata.title}" on ${this.guild.name} started`);
                 this.textChannel?.send({ embeds: [createEmbed("info", `▶ Start playing: **[${metadata.title}](${metadata.url})**`).setThumbnail(metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
