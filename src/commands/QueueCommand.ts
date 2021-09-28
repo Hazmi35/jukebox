@@ -34,24 +34,25 @@ export class QueueCommand extends BaseCommand {
                         filter: (reaction, user) => reactions.includes(reaction.emoji.name!) && user.id === message.author.id,
                         time: 80 * 1000
                     });
-                    collector.on("collect", (reaction, user) => {
-                        if (isMessageManageable) reaction.users.remove(user).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
-                        switch (reaction.emoji.name!) {
-                            case "◀️":
-                                if (index === 0) return undefined;
-                                index--;
-                                break;
+                    collector
+                        .on("collect", (reaction, user) => {
+                            if (isMessageManageable) reaction.users.remove(user).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
+                            switch (reaction.emoji.name!) {
+                                case "◀️":
+                                    if (index === 0) return undefined;
+                                    index--;
+                                    break;
 
-                            case "▶️":
-                                if (index + 1 === indexes.length) return undefined;
-                                index++;
-                                break;
-                        }
-                        embed
-                            .setDescription(indexes[index].join("\n"))
-                            .setFooter(`Page ${index + 1} of ${indexes.length}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png");
-                        msg.edit({ embeds: [embed] }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
-                    })
+                                case "▶️":
+                                    if (index + 1 === indexes.length) return undefined;
+                                    index++;
+                                    break;
+                            }
+                            embed
+                                .setDescription(indexes[index].join("\n"))
+                                .setFooter(`Page ${index + 1} of ${indexes.length}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png");
+                            msg.edit({ embeds: [embed] }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
+                        })
                         .on("end", () => {
                             if (isMessageManageable) msg.reactions.removeAll().catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
                         });
