@@ -26,7 +26,8 @@ export class InviteCommand extends BaseCommand {
                 Permissions.FLAGS.CONNECT,
                 Permissions.FLAGS.SPEAK,
                 Permissions.FLAGS.USE_VAD,
-                Permissions.FLAGS.PRIORITY_SPEAKER
+                Permissions.FLAGS.PRIORITY_SPEAKER,
+                Permissions.FLAGS.READ_MESSAGE_HISTORY
             ],
             scopes: ["bot", "applications.commands"]
         });
