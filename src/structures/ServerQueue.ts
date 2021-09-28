@@ -51,7 +51,11 @@ export class ServerQueue {
 
         this.player.on("stateChange", (oldState, newState) => {
             const currentSong = this.songs.first();
-            if (!currentSong) return undefined;
+            // This usually happens when stop command is being used
+            if (!currentSong) {
+                this.guild.queue = null;
+                return;
+            }
             if (newState.status === AudioPlayerStatus.Playing) {
                 if (oldState.status === AudioPlayerStatus.Paused) return undefined;
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${currentSong.metadata.title}" on ${this.guild.name} started`);
