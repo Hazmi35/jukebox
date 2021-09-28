@@ -26,8 +26,8 @@ export class RemoveCommand extends BaseCommand {
         const song = songs[Number(args[0]) - 1];
 
         if (currentSong.id === song.id) {
-            if (message.guild?.queue?.playing === false) message.guild.queue.currentPlayer?.unpause();
-            message.guild!.queue?.currentPlayer!.stop();
+            if (message.guild?.queue?.playing === false) message.guild.queue.player?.unpause();
+            message.guild!.queue?.player!.stop();
         } else {
             message.guild?.queue?.songs.delete(message.guild.queue.songs.findKey(x => x.id === song.id)!);
         }

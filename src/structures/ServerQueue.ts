@@ -22,7 +22,7 @@ export enum loopMode {
 
 export class ServerQueue {
     public connection: VoiceConnection | null = null;
-    public currentPlayer: AudioPlayer | null = null;
+    public readonly player: AudioPlayer = createAudioPlayer();
     public currentResource: AudioResource | null = null;
     public readonly songs = new SongManager();
     public volume = 0;
@@ -48,7 +48,6 @@ export class ServerQueue {
     public async play(guild: Guild): Promise<any> {
         const serverQueue = guild.queue;
         if (!serverQueue) return undefined;
-        if (serverQueue.currentPlayer === null) serverQueue.currentPlayer = createAudioPlayer(); // TODO: Consider reusing AudioPlayer in the refactored Queue System
         const song = serverQueue.songs.first();
         if (!song) {
             serverQueue.oldMusicMessage = null; serverQueue.oldVoiceStateUpdateMessage = null;
@@ -67,17 +66,17 @@ export class ServerQueue {
 
         songData.on("error", err => { err.message = `YTDLError: ${err.message}`; });
 
-        serverQueue.connection?.subscribe(serverQueue.currentPlayer);
+        serverQueue.connection?.subscribe(serverQueue.player);
 
         // Wait for 15 seconds for the connection to be ready.
         entersState(serverQueue.connection!, VoiceConnectionStatus.Ready, 15 * 1000)
-            .then(() => serverQueue.currentPlayer!.play(serverQueue.currentResource!))
+            .then(() => serverQueue.player.play(serverQueue.currentResource!))
             .catch(e => {
                 if (e.message === "The operation was aborted") e.message = "Could not establish a voice connection within 15 seconds.";
-                serverQueue.currentPlayer!.emit("error", new AudioPlayerError(e, serverQueue.currentResource!));
+                serverQueue.player.emit("error", new AudioPlayerError(e, serverQueue.currentResource!));
             });
 
-        serverQueue.currentPlayer.on("stateChange", (oldState, newState) => {
+        serverQueue.player.on("stateChange", (oldState, newState) => {
             if (newState.status === AudioPlayerStatus.Playing) {
                 if (oldState.status === AudioPlayerStatus.Paused) return undefined;
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${song.title}" on ${guild.name} started`);
@@ -97,7 +96,6 @@ export class ServerQueue {
                     .then(m => serverQueue.oldMusicMessage = m.id)
                     .catch(e => this.client.logger.error("PLAY_ERR:", e))
                     .finally(() => {
-                        serverQueue.currentPlayer = null;
                         this.play(guild).catch(e => {
                             serverQueue.textChannel?.send({ embeds: [createEmbed("error", `Error while trying to play music\nReason: \`${e}\``)] })
                                 .catch(e => this.client.logger.error("PLAY_ERR:", e));
@@ -109,7 +107,7 @@ export class ServerQueue {
             }
         });
 
-        serverQueue.currentPlayer.on("error", err => {
+        serverQueue.player.on("error", err => {
             serverQueue.textChannel?.send({ embeds: [createEmbed("error", `Error while playing music\nReason: \`${err.message}\``)] })
                 .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
             serverQueue.connection?.disconnect();
@@ -123,7 +121,7 @@ export class ServerQueue {
     }
 
     public get playing(): boolean {
-        return this.currentPlayer!.state.status === AudioPlayerStatus.Playing;
+        return this.player.state.status === AudioPlayerStatus.Playing;
     }
 
     public get oldMusicMessage(): Snowflake | null {
