@@ -128,7 +128,7 @@ export class PlayCommand extends BaseCommand {
                             filter: (msg2: Message) => {
                                 if (message.author.id !== msg2.author.id) return false;
                                 if (msg2.content === "cancel" || msg2.content === "c") return true;
-                                return Number(msg2.content) > 0 && Number(msg2.content) < 13;
+                                return Number(msg2.content) > 0 && Number(msg2.content) < (this.client.config.searchMaxResults + 1);
                             },
                             max: 1,
                             time: this.client.config.selectTimeout,
