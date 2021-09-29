@@ -1,5 +1,5 @@
 import { joinVoiceChannel } from "@discordjs/voice";
-import { Message, StageChannel, TextChannel, Util, VoiceChannel } from "discord.js";
+import { Message, StageChannel, TextChannel, Util, VoiceChannel, Collection, Snowflake } from "discord.js";
 import { decodeHTML } from "entities";
 import { URL } from "url";
 import { Client, LiveVideo, MixPlaylist, Playlist, Video } from "youtubei";
@@ -19,6 +19,7 @@ import { isSameVoiceChannel, isUserInTheVoiceChannel, isValidVoiceChannel } from
 export class PlayCommand extends BaseCommand {
     private readonly youtubeHostnames = ["youtu.be", "youtube.com", "www.youtube.com", "music.youtube.com"];
     private readonly youtube = new Client();
+    private readonly playlistAlreadyQueued: Collection<Snowflake, ITrackMetadata[]> = new Collection();
 
     @isUserInTheVoiceChannel()
     @isValidVoiceChannel()
@@ -85,10 +86,17 @@ export class PlayCommand extends BaseCommand {
         };
         if (message.guild!.queue) {
             if (!this.client.config.allowDuplicate && message.guild!.queue.tracks.find(s => s.metadata.id === metadata.id)) {
+                if (playlist) {
+                    const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild!.id) ?? [];
+                    playlistAlreadyQueued.push(metadata);
+                    this.playlistAlreadyQueued.set(message.guild!.id, playlistAlreadyQueued);
+                    return undefined;
+                }
                 return message.channel.send({
                     embeds: [
-                        createEmbed("warn", `Track **[${metadata.title}](${metadata.url})** is already queued, and this bot configuration disallow duplicated tracks in queue, ` +
-                        `please use \`${this.client.config.prefix}repeat\` instead`)
+                        createEmbed("warn",
+                            `Track **[${metadata.title}](${metadata.url})** is already queued, and this bot configuration disallow duplicated tracks in queue, ` +
+                            `please use \`${this.client.config.prefix}repeat\` instead`)
                             .setTitle("Already queued / duplicate")
                             .setThumbnail(metadata.thumbnail)
                     ]
@@ -182,6 +190,28 @@ export class PlayCommand extends BaseCommand {
         for (const video of videos) {
             if (message.guild?.queue === null) return addingPlaylistVideoMessage.delete();
             await this.handleVideo(video, message, voiceChannel, true, true);
+        }
+        const alradyQueued = this.playlistAlreadyQueued.get(message.guild!.id) ?? [];
+        if (alradyQueued.length !== 0) {
+            let num = 1;
+            const tracks = alradyQueued.map(t => `**${num++}.** **[${t.title}](${this.generateYouTubeURL(t.id, "video")})**`);
+            message.channel.send({
+                embeds: [
+                    createEmbed("warn",
+                        `Over ${alradyQueued.length} track${alradyQueued.length >= 2 ? "s" : ""} are skipped because it was a duplicate` +
+                            ` and this bot configuration disallow duplicated tracks in queue, please use \`${this.client.config.prefix}repeat\` instead`)
+                        .setTitle("Already queued / duplicate")
+                ]
+            }).catch(e => this.client.logger.error("PLAYLIST_LOAD_ERR:", e));
+            const pages = this.client.util.paginate(tracks.join("\n"));
+            let howManyMessage = 0;
+            for (const page of pages) {
+                howManyMessage++;
+                const embed = createEmbed(`warn`, page);
+                if (howManyMessage === 1) embed.setTitle("Duplicated tracks");
+                await message.channel.send({ embeds: [embed] });
+            }
+            this.playlistAlreadyQueued.delete(message.guild!.id);
         }
         message.channel.send({
             embeds: [
