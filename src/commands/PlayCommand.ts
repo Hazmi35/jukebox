@@ -120,7 +120,7 @@ export class PlayCommand extends BaseCommand {
                                 "*Type `cancel` or `c` to cancel tracks selection*"
                                 )
                                 .setThumbnail(message.client.user?.displayAvatarURL() as string)
-                                .setFooter("Please select one of the results ranging from 1-12")
+                                .setFooter(`Please select one of the results ranging from 1-${this.client.config.searchMaxResults}`)
                         ]
                     });
                     try {
