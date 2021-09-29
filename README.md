@@ -13,10 +13,16 @@
 **[⚠] Requires [Node.JS](https://nodejs.org) version 16.6.0 or above.**
 
 1. Install [Node.JS](https://nodejs.org)
-2. Rename `.env.schema` to `.env` and fill out the values (example on .env.example)
-3. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
-4. Run `npm run build`
-5. (Optional) Prune dev dependencies (This is good to save disk spaces):
+2. Install requirements for yt-dlp
+
+   For Linux/Mac OS/Unix-like system, install [Python 3](https://www.python.org/downloads/), and add them to the PATH environment variable
+
+   For Windows, you don't need to install Python, but you need to install [Microsoft Visual C++ 2010 Service Pack 1 Redistributable Package (x86)](https://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe)
+
+3. Rename `.env.schema` to `.env` and fill out the values (example on .env.example)
+4. Install dependencies as stated [here](https://github.com/Hazmi35/jukebox#install)
+5. Run `npm run build`
+6. (Optional) Prune dev dependencies (This is good to save disk spaces):
 ```sh
 $ npm prune --production
 ```
