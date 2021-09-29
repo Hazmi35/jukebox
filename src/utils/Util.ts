@@ -173,7 +173,7 @@ export class Util {
 
     public async getOpusEncoderName(): Promise<string> {
         if (this.client.util.doesFFmpegHasLibOpus() && !this.client.config.enableInlineVolume) {
-            return `ffmpeg libopus v${this.client.util.getFFmpegVersion().trim()}`;
+            return `ffmpeg libopus`;
         }
 
         const list = ["@discordjs/opus", "opusscript"];
