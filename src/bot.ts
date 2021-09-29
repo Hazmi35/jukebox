@@ -4,6 +4,7 @@ import { CacheWithLimitsOptions, ClientOptions, Intents, LimitedCollection, Opti
 import { cacheUsers } from "./config";
 
 const cacheOptions: CacheWithLimitsOptions = {
+    ...Options.defaultMakeCacheSettings,
     MessageManager: { // Sweep messages every 5 minutes, removing messages that have not been edited or created in the last 3 hours
         maxSize: Infinity,
         sweepInterval: 300, // 5 Minutes
