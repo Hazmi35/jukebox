@@ -46,8 +46,10 @@ export class PlayCommand extends BaseCommand {
         if (url) {
             if (url.pathname === "/watch" && url.searchParams.has("v")) {
                 video = await this.youtube.getVideo(url.searchParams.get("v")!);
-                if (url.searchParams.get("list") !== null) {
-                    // TODO: Handle &list parameter on /watch url (handle the &index params too?)
+                if (url.searchParams.has("list")) {
+                    const index = Number(url.searchParams.get("index") ?? 1);
+                    this.loadPlaylist(url.searchParams.get("list")!, message, voiceChannel, true, index)
+                        .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                 }
             } else if (url.pathname === "/playlist" && url.searchParams.has("list")) {
                 return this.loadPlaylist(url.searchParams.get("list")!, message, voiceChannel);
@@ -123,7 +125,7 @@ export class PlayCommand extends BaseCommand {
         }
     }
 
-    private async loadPlaylist(id: string, message: Message, voiceChannel: VoiceChannel | StageChannel): Promise<any> {
+    private async loadPlaylist(id: string, message: Message, voiceChannel: VoiceChannel | StageChannel, watchEndpoint = false, index = 1): Promise<any> {
         const playlist = await this.youtube.getPlaylist(id);
         if (playlist === undefined) throw new Error("Playlist not found");
         if (playlist instanceof MixPlaylist) {
@@ -133,28 +135,41 @@ export class PlayCommand extends BaseCommand {
                 ]
             });
         }
-        const addingPlaylistVideoMessage = await message.channel.send({
-            embeds: [
-                createEmbed("info", `Adding all tracks in playlist: **[${playlist.title}](${this.generateYouTubeURL(playlist.id, "playlist")})**, hang on...`)
-                    .setThumbnail(playlist.videos[0].thumbnails.best!)
-            ]
-        });
+
+        let addingPlaylistVideoMessage;
+        const playlistTitle = `**[${playlist.title}](${this.generateYouTubeURL(playlist.id, "playlist")})**`;
 
         // Add the first video first.
-        const firstVideo = await this.youtube.getVideo(playlist.videos[0].id);
-        if (!firstVideo) {
-            await message.channel.send({
+        if (watchEndpoint) {
+            addingPlaylistVideoMessage = await message.channel.send({
                 embeds: [
-                    createEmbed("error", `⚠️ Could not add the first video of the playlist`)
+                    createEmbed("info", `Adding all tracks starting from number ${index + 1} video in playlist: ${playlistTitle}, hang on...`)
+                        .setThumbnail(playlist.videos[0].thumbnails.best!)
+
+                ]
+            });
+        } else {
+            addingPlaylistVideoMessage = await message.channel.send({
+                embeds: [
+                    createEmbed("info", `Adding all tracks in playlist: ${playlistTitle}, hang on...`)
                         .setThumbnail(playlist.videos[0].thumbnails.best!)
                 ]
             });
-            return addingPlaylistVideoMessage.delete();
+            const firstVideo = await this.youtube.getVideo(playlist.videos[0].id);
+            if (!firstVideo) {
+                await message.channel.send({
+                    embeds: [
+                        createEmbed("error", `⚠️ Could not add the first video of the playlist`)
+                            .setThumbnail(playlist.videos[0].thumbnails.best!)
+                    ]
+                });
+                return addingPlaylistVideoMessage.delete();
+            }
+            await this.handleVideo(firstVideo, message, voiceChannel, true, false);
         }
-        await this.handleVideo(firstVideo, message, voiceChannel, true, false);
 
         // Add the rest of the videos.
-        const videos = await this.loadRestVideosFromPlaylist(playlist, message);
+        const videos = await this.loadRestVideosFromPlaylist(playlist, message, index);
         if (!videos) {
             await message.channel.send({
                 embeds: [
@@ -177,7 +192,7 @@ export class PlayCommand extends BaseCommand {
         return addingPlaylistVideoMessage.delete();
     }
 
-    private async loadRestVideosFromPlaylist(playlist: Playlist, message: Message): Promise<loadPlaylistReturn | undefined> {
+    private async loadRestVideosFromPlaylist(playlist: Playlist, message: Message, startIndex: number): Promise<loadPlaylistReturn | undefined> {
         const results: loadPlaylistReturn = [];
         try {
             await playlist.next(0);
@@ -186,8 +201,7 @@ export class PlayCommand extends BaseCommand {
                 const video = await this.youtube.getVideo(videoCompact.id);
                 await results.push(video!);
             }
-            results.shift();
-            return results;
+            return results.slice(startIndex, results.length);
         } catch (e: any) {
             this.client.logger.error("LOAD_PLAYLIST_ERR:", new Error(e.stack));
             message.channel.send({ embeds: [createEmbed("error", `I could not load the playlist!\nError: \`${e.message}\``)] })
