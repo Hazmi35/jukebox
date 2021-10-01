@@ -2,8 +2,8 @@ import { BaseCommand } from "../structures/BaseCommand";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isMusicQueueExists, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
-import { loopMode } from "../structures/ServerQueue";
 import { Message } from "discord.js";
+import { loopMode } from "../constants/loopMode";
 
 @DefineCommand({
     aliases: ["loop", "music-loop", "music-repeat"],

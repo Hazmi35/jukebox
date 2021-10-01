@@ -3,6 +3,7 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isMusicQueueExists } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
 import { Message, TextChannel } from "discord.js";
+import { images } from "../constants/images";
 
 @DefineCommand({
     aliases: ["q"],
@@ -66,6 +67,6 @@ export class QueueCommand extends BaseCommand {
     }
 
     private generateFooter(message: Message, multiple: boolean, index = 0, pages: string[][] = []): [string, string] {
-        return [`Now playing: ${message.guild!.queue!.tracks.first()!.metadata.title} ${multiple ? `| Page ${index + 1} of ${pages.length}` : ""}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png"];
+        return [`Now playing: ${message.guild!.queue!.tracks.first()!.metadata.title} ${multiple ? `| Page ${index + 1} of ${pages.length}` : ""}`, images.info];
     }
 }
