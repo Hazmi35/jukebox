@@ -3,8 +3,9 @@ FROM hazmi35/node:16-dev-alpine as build-stage
 LABEL name "Jukebox (build stage)"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy package.json, lockfile and .npmrc
+COPY package*.json ./ 
+COPY .npmrc .
 
 # Install dependencies
 RUN npm install
