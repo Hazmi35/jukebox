@@ -15,7 +15,8 @@ export class QueueCommand extends BaseCommand {
     public async execute(message: Message): Promise<any> {
         const embed = createEmbed("info")
             .setTitle("Music Queue")
-            .setThumbnail(message.client.user?.avatarURL() as string);
+            .setThumbnail(message.client.user?.avatarURL() as string)
+            .setFooter(...this.generateFooter(message, false));
 
         let num = 1;
         const tracks = message.guild!.queue!.tracks.map(s => `**${num++}.** **[${s.metadata.title}](${s.metadata.url})**`)!;
@@ -27,7 +28,7 @@ export class QueueCommand extends BaseCommand {
         const msg = await message.channel.send({ embeds: [embed] });
 
         if (Number(pages.length > 1)) {
-            embed.setFooter(`Page ${index + 1} of ${pages.length}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png");
+            embed.setFooter(...this.generateFooter(message, true, index, pages));
 
             const reactions = ["◀️", "▶️"];
             await reactions.forEach(r => msg.react(r));
@@ -55,12 +56,16 @@ export class QueueCommand extends BaseCommand {
                     }
                     embed
                         .setDescription(pages[index].join("\n"))
-                        .setFooter(`Page ${index + 1} of ${pages.length}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png");
+                        .setFooter(...this.generateFooter(message, true, index, pages));
                     msg.edit({ content: " ", embeds: [embed] }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
                 })
                 .on("end", () => {
                     if (isMessageManageable) msg.reactions.removeAll().catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
                 });
         }
+    }
+
+    private generateFooter(message: Message, multiple: boolean, index = 0, pages: string[][] = []): [string, string] {
+        return [`Now playing: ${message.guild!.queue!.tracks.first()!.metadata.title} ${multiple ? `| Page ${index + 1} of ${pages.length}` : ""}`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png"];
     }
 }
