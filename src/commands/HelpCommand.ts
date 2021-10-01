@@ -2,6 +2,7 @@ import { BaseCommand } from "../structures/BaseCommand";
 import { Message } from "discord.js";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
+import { images } from "../constants/images";
 
 @DefineCommand({
     aliases: ["commands", "cmds"],
@@ -18,7 +19,7 @@ export class HelpCommand extends BaseCommand {
                 embeds: [
                     createEmbed("info")
                         .setTitle(`Information for the ${command.meta.name} command`)
-                        .setThumbnail("https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/question_mark.png")
+                        .setThumbnail(images.questionMark)
                         .addFields([
                             { name: "Name", value: `\`${command.meta.name}\``, inline: true },
                             { name: "Description", value: command.meta.description!, inline: true },
@@ -33,7 +34,7 @@ export class HelpCommand extends BaseCommand {
                     createEmbed("info", message.client.commands.filter(cmd => !cmd.meta.disable && cmd.meta.name !== "eval").map(c => `\`${c.meta.name}\``).join(" "))
                         .setTitle("Help Menu")
                         .setThumbnail(message.client.user?.displayAvatarURL() as string)
-                        .setFooter(`Use ${message.client.config.prefix}help <command> to get more info on a specific command!`, "https://raw.githubusercontent.com/Hazmi35/jukebox/main/.github/images/info.png")
+                        .setFooter(`Use ${message.client.config.prefix}help <command> to get more info on a specific command!`, images.info)
                 ]
             }).catch(e => this.client.logger.error("HELP_CMD_ERR:", e));
         }

@@ -4,22 +4,7 @@ import { AudioPlayer, AudioPlayerError, AudioPlayerStatus, createAudioPlayer, en
 import { createEmbed } from "../utils/createEmbed";
 import { Jukebox } from "./Jukebox";
 import { Track } from "../structures/Track";
-
-export enum loopMode {
-    off = 0,
-    one = 1,
-    all = 2,
-
-    // ALIASES
-    queue = all,
-    "*" = all,
-
-    current = one,
-    trackonly = one,
-
-    none = off,
-    disable = off
-}
+import { loopMode } from "../constants/loopMode";
 
 const nonEnum = { enumerable: false };
 
