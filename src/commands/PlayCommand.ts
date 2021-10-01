@@ -258,16 +258,17 @@ export class PlayCommand extends BaseCommand {
         if (videos.length === 1 || this.client.config.disableTrackSelection) return this.youtube.getVideo(videos[0].id);
 
         let index = 0;
+        const videosSliced = videos.slice(0, this.client.config.searchMaxResults);
         const msg = await message.channel.send({
             embeds: [
                 createEmbed("info")
                     .setAuthor("Tracks Selection")
                     .setDescription(
-                        `${videos.slice(0, this.client.config.searchMaxResults).map(video => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
+                        `${videosSliced.map(video => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
                     "*Type `cancel` or `c` to cancel tracks selection*"
                     )
                     .setThumbnail(message.client.user?.displayAvatarURL() as string)
-                    .setFooter(`Please select one of the results ranging from 1-${this.client.config.searchMaxResults}`)
+                    .setFooter(`Please select one of the results ranging from 1-${videosSliced.length}`)
             ]
         });
 
