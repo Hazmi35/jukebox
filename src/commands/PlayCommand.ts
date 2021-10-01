@@ -222,7 +222,7 @@ export class PlayCommand extends BaseCommand {
         }
         message.channel.send({
             embeds: [
-                createEmbed("info", `All tracks in playlist: **[${playlist.title}](${this.generateYouTubeURL(playlist.id, "playlist")})**, has been added to the queue!`)
+                createEmbed("info", `All tracks in playlist: ${playlistTitle}, has been added to the queue!`)
                     .setThumbnail(playlist.videos[0].thumbnails.best!)
             ]
         }).catch(e => this.client.logger.error("PLAYLIST_LOAD_ERR:", e));
