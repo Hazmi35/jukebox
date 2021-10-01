@@ -42,7 +42,9 @@ jobs:
           images: |
             hazmi35/jukebox
             ghcr.io/Hazmi35/jukebox
-          tags: ${{ steps.tags.outputs.name }}
+          tags: |
+            ${{ steps.tags.outputs.name }}
+            latest
 
       - name: Build and push
         id: docker_build
