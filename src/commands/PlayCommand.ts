@@ -60,7 +60,9 @@ export class PlayCommand extends BaseCommand {
                 });
             }
         } else {
-            video = await this.createSearchPrompt(searchString, message);
+            const searchResults = await this.createSearchPrompt(searchString, message);
+            if (searchResults === "canceled") return undefined;
+            video = searchResults;
         }
 
         if (video === undefined) {
@@ -247,7 +249,7 @@ export class PlayCommand extends BaseCommand {
         }
     }
 
-    private async createSearchPrompt(searchString: string, message: Message): Promise<Video | undefined> {
+    private async createSearchPrompt(searchString: string, message: Message): Promise<Video | LiveVideo | "canceled" | undefined> {
         const videos = await this.youtube.search(searchString, { type: "video" });
         if (videos.length === 0) {
             await message.channel.send({ embeds: [createEmbed("warn", "I could not obtain any search results!")] });
@@ -285,7 +287,7 @@ export class PlayCommand extends BaseCommand {
 
             if (response.first()?.content === "c" || response.first()?.content === "cancel") {
                 await message.channel.send({ embeds: [createEmbed("info", "Tracks selection canceled.")] });
-                return undefined;
+                return "canceled";
             }
 
             const videoIndex = parseInt(response.first()!.content);
