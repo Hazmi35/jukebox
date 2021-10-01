@@ -137,14 +137,8 @@ export class PlayCommand extends BaseCommand {
 
     private async loadPlaylist(id: string, message: Message, voiceChannel: VoiceChannel | StageChannel, watchEndpoint = false, index = 1): Promise<any> {
         const playlist = await this.youtube.getPlaylist(id);
-        if (playlist === undefined) throw new Error("Playlist not found");
-        if (playlist.videos.length === 0) {
-            return message.channel.send({
-                embeds: [
-                    createEmbed("error", "⚠️ The specified playlist is empty.")
-                ]
-            });
-        }
+        if (playlist === undefined) return message.channel.send({ embeds: [createEmbed("error", "⚠️ Playlist not found")] });
+        if (playlist.videos.length === 0) return message.channel.send({ embeds: [createEmbed("error", "⚠️ The specified playlist is empty.")] });
         if (playlist instanceof MixPlaylist) {
             return message.channel.send({
                 embeds: [
