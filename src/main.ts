@@ -16,19 +16,24 @@ process.on("uncaughtException", e => {
     process.exit(1);
 });
 
-const manager = new ShardingManager(resolve(__dirname, "bot.js"), {
-    totalShards,
-    mode: "worker",
-    respawn: true,
-    token: process.env.SECRET_DISCORD_TOKEN
-});
-
-manager.on("shardCreate", shard => {
-    log.info(`[ShardManager] Shard #${shard.id} Spawned.`);
-    shard.on("disconnect", () => {
-        log.warn("SHARD_DISCONNECTED: ", { stack: `[ShardManager] Shard #${shard.id} Disconnected` });
-    }).on("reconnecting", () => {
-        log.info(`[ShardManager] Shard #${shard.id} Reconnected.`);
+if (process.env._?.endsWith("ts-node") === true) {
+    log.warn("ts-node detected, sharding is disabled. Please only use ts-node for development purposes.");
+    require("./bot");
+} else {
+    const manager = new ShardingManager(resolve(__dirname, "bot.js"), {
+        totalShards,
+        mode: "worker",
+        respawn: true,
+        token: process.env.SECRET_DISCORD_TOKEN
     });
-    if (manager.shards.size === manager.totalShards) log.info("[ShardManager] All shards spawned successfully.");
-}).spawn().catch(e => log.error("SHARD_SPAWN_ERR:", e.status ? `Error while fetching recommended shards: ${e.status}, ${e.statusText}` : e));
+
+    manager.on("shardCreate", shard => {
+        log.info(`[ShardManager] Shard #${shard.id} Spawned.`);
+        shard.on("disconnect", () => {
+            log.warn("SHARD_DISCONNECTED: ", { stack: `[ShardManager] Shard #${shard.id} Disconnected` });
+        }).on("reconnecting", () => {
+            log.info(`[ShardManager] Shard #${shard.id} Reconnected.`);
+        });
+        if (manager.shards.size === manager.totalShards) log.info("[ShardManager] All shards spawned successfully.");
+    }).spawn().catch(e => log.error("SHARD_SPAWN_ERR:", e.status ? `Error while fetching recommended shards: ${e.status}, ${e.statusText}` : e));
+}
