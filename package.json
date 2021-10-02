@@ -20,7 +20,7 @@
     "lint": "eslint . --ignore-path .gitignore --ext .ts",
     "lint:fix": "eslint . --ignore-path .gitignore --ext .ts --fix",
     "start": "node dist/main",
-    "start:dev": "echo [INFO] Sharding disabled when using ts-node && ts-node src/bot"
+    "start:dev": "ts-node src/bot"
   },
   "eslintConfig": {
     "extends": "@hazmi35/eslint-config/typescript",
