@@ -24,7 +24,7 @@ export class Track {
                     o: "-",
                     q: "",
                     f: this.resourceFormat,
-                    r: "100K" // TODO: Make so user can configure this?
+                    r: "800K"
                 },
                 { stdio: ["ignore", "pipe", "ignore"] }
             );
