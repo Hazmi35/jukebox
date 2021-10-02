@@ -59,7 +59,7 @@ export class Util {
             users: (client: Client) => client.users.cache,
             channels: (client: Client) => client.channels.cache,
             guilds: (client: Client) => client.guilds.cache,
-            queues: (client: Client) => client.queue.mapValues(v => v.toJSON())
+            queues: (client: Client) => client.queue.mapValues(v => v.flatten())
         };
 
         /*

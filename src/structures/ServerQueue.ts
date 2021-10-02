@@ -117,8 +117,8 @@ export class ServerQueue {
             });
     }
 
-    public toJSON(): any {
-        return Util.flatten(this);
+    public flatten(): any {
+        return Object.assign(Util.flatten(this), { playing: this.playing });
     }
 
     public get volume(): number {
