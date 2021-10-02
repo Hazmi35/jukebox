@@ -40,6 +40,5 @@ export interface ITrackMetadata {
     title: string;
     url: string;
     thumbnail: string;
-    inlineVolume: boolean;
 }
 

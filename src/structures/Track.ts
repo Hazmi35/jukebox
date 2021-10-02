@@ -11,7 +11,7 @@ export class Track {
     public type = TrackType.unknown;
     public readonly resourceFormat: string = "bestaudio";
     private _resource: AudioResource<ITrackMetadata> | null = null;
-    public constructor(public metadata: ITrackMetadata) {
+    public constructor(public readonly metadata: ITrackMetadata, public readonly inlineVolume: boolean = false) {
         Object.defineProperty(this, "_resource", { enumerable: false });
     }
 
@@ -45,7 +45,7 @@ export class Track {
                             this._resource = createAudioResource(probe.stream, {
                                 metadata: this.metadata,
                                 inputType: probe.type,
-                                inlineVolume: this.metadata.inlineVolume
+                                inlineVolume: this.inlineVolume
                             });
                             resolve(this._resource);
                         })
