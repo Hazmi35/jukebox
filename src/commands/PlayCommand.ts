@@ -36,7 +36,7 @@ export class PlayCommand extends BaseCommand {
 
         const searchString = args.join(" ");
         const parsedUrl = this.getURL(searchString);
-        const url = this.youtubeHostnames.includes(parsedUrl?.hostname as string) ? parsedUrl : undefined;
+        const youtubeURL = this.youtubeHostnames.includes(parsedUrl?.hostname as string) ? parsedUrl : undefined;
 
         if (message.guild!.queue !== null && voiceChannel.id !== message.guild!.queue.voiceChannel?.id) {
             return message.channel.send({
@@ -45,19 +45,25 @@ export class PlayCommand extends BaseCommand {
         }
 
         let video: Video | LiveVideo | undefined = undefined;
-        if (url) {
-            if (url.pathname === "/watch" && url.searchParams.has("v")) {
-                video = await this.youtube.getVideo(url.searchParams.get("v")!);
-                if (url.searchParams.has("list")) {
-                    const index = Number(url.searchParams.get("index") ?? 1);
-                    this.loadPlaylist(url.searchParams.get("list")!, message, voiceChannel, true, index)
-                        .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+        if (parsedUrl) {
+            if (youtubeURL) {
+                if (youtubeURL.pathname === "/watch" && youtubeURL.searchParams.has("v")) {
+                    video = await this.youtube.getVideo(youtubeURL.searchParams.get("v")!);
+                    if (youtubeURL.searchParams.has("list")) {
+                        const index = Number(youtubeURL.searchParams.get("index") ?? 1);
+                        this.loadPlaylist(youtubeURL.searchParams.get("list")!, message, voiceChannel, true, index)
+                            .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                    }
+                } else if (youtubeURL.pathname === "/playlist" && youtubeURL.searchParams.has("list")) {
+                    return this.loadPlaylist(youtubeURL.searchParams.get("list")!, message, voiceChannel);
+                } else {
+                    return message.channel.send({
+                        embeds: [createEmbed("error", `⚠️ Invalid YouTube URL`)]
+                    });
                 }
-            } else if (url.pathname === "/playlist" && url.searchParams.has("list")) {
-                return this.loadPlaylist(url.searchParams.get("list")!, message, voiceChannel);
             } else {
                 return message.channel.send({
-                    embeds: [createEmbed("error", `⚠️ Invalid YouTube URL`)]
+                    embeds: [createEmbed("error", "⚠️ Jukebox currently only supports YouTube as a source.")]
                 });
             }
         } else {
@@ -65,7 +71,6 @@ export class PlayCommand extends BaseCommand {
             if (searchResults === "canceled") return undefined;
             video = searchResults;
         }
-
         if (video === undefined) {
             return message.channel.send({
                 embeds: [createEmbed("error", `⚠️ Could not resolve the video`)]
