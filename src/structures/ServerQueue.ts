@@ -3,8 +3,9 @@ import { Guild, Snowflake, StageChannel, TextChannel, Util, VoiceChannel } from 
 import { AudioPlayer, AudioPlayerError, AudioPlayerStatus, createAudioPlayer, entersState, VoiceConnection, VoiceConnectionStatus } from "@discordjs/voice";
 import { createEmbed } from "../utils/createEmbed";
 import { Jukebox } from "./Jukebox";
-import { Track } from "../structures/Track";
+import { Track, TrackType } from "../structures/Track";
 import { loopMode } from "../constants/loopMode";
+import { YouTubeTrack } from "./YouTubeTrack";
 
 const nonEnum = { enumerable: false };
 
@@ -44,7 +45,7 @@ export class ServerQueue {
                 return;
             }
 
-            const { metadata } = this._currentTrack;
+            const { metadata, type } = this._currentTrack;
             if (newState.status === AudioPlayerStatus.Playing) {
                 if (oldState.status === AudioPlayerStatus.Paused) return undefined;
                 this._currentTrack.setVolume(this.client.config.defaultVolume / this.client.config.maxVolume);
@@ -58,7 +59,14 @@ export class ServerQueue {
                 // Handle loop/repeat feature
                 if (this.loopMode !== loopMode.one) { // If the loopMode is not one, then
                     this.tracks.deleteFirst(); // Delete the first track
-                    if (this.loopMode === loopMode.all) this.tracks.add(metadata); // If the loopMode is all, then add the track back to the end of queue
+
+                    if (this.loopMode === loopMode.all) {
+                        let track;
+                        if (type === TrackType.youtube) track = new YouTubeTrack(metadata);
+                        else track = new Track(metadata);
+
+                        this.tracks.add(track);
+                    }
                 }
                 const nextTrack = this.tracks.first();
 

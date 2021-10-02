@@ -5,6 +5,7 @@ import { URL } from "url";
 import { Client, LiveVideo, MixPlaylist, Playlist, Video } from "youtubei";
 import { BaseCommand } from "../structures/BaseCommand";
 import { ServerQueue } from "../structures/ServerQueue";
+import { YouTubeTrack } from "../structures/YouTubeTrack";
 import { ITrackMetadata } from "../typings";
 import { createEmbed } from "../utils/createEmbed";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
@@ -74,13 +75,15 @@ export class PlayCommand extends BaseCommand {
     }
 
     private async handleVideo(video: Video | LiveVideo, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false, restPlaylist = false): Promise<any> {
-        const metadata = {
+        // NOTE: handleVideo function can only add YouTube videos, for now.
+        const track = new YouTubeTrack({
             id: video.id,
             inlineVolume: this.client.config.enableInlineVolume,
             thumbnail: video.thumbnails.best!,
             title: this.cleanTitle(video.title),
             url: this.generateYouTubeURL(video.id, "video")
-        };
+        });
+        const { metadata } = track;
         const addedTrackMsg = (metadata: ITrackMetadata): void => {
             message.channel.send({
                 embeds: [createEmbed("info", `✅ Track **[${metadata.title}](${metadata.url})** has been added to the queue`).setThumbnail(metadata.thumbnail)]
@@ -104,12 +107,12 @@ export class PlayCommand extends BaseCommand {
                     ]
                 });
             }
-            message.guild!.queue.tracks.add(metadata);
+            message.guild!.queue.tracks.add(track);
             if (!playlist) addedTrackMsg(metadata);
         } else {
             if (restPlaylist) return undefined;
             message.guild!.queue = new ServerQueue(this.client, message.guild!, message.channel as TextChannel, voiceChannel);
-            const track = message.guild!.queue.tracks.add(metadata);
+            message.guild!.queue.tracks.add(track);
             if (!playlist) addedTrackMsg(metadata);
             try {
                 const connection = await joinVoiceChannel({
