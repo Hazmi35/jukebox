@@ -83,11 +83,10 @@ export class PlayCommand extends BaseCommand {
         // NOTE: handleVideo function can only add YouTube videos, for now.
         const track = new YouTubeTrack({
             id: video.id,
-            inlineVolume: this.client.config.enableInlineVolume,
             thumbnail: video.thumbnails.best!,
             title: this.cleanTitle(video.title),
             url: this.generateYouTubeURL(video.id, "video")
-        });
+        }, this.client.config.enableInlineVolume);
         const { metadata } = track;
         const addedTrackMsg = (metadata: ITrackMetadata): void => {
             message.channel.send({

@@ -62,8 +62,8 @@ export class ServerQueue {
 
                     if (this.loopMode === loopMode.all) {
                         let track;
-                        if (type === TrackType.youtube) track = new YouTubeTrack(metadata);
-                        else track = new Track(metadata);
+                        if (type === TrackType.youtube) track = new YouTubeTrack(metadata, this.client.config.enableInlineVolume);
+                        else track = new Track(metadata, this.client.config.enableInlineVolume);
 
                         this.tracks.add(track);
                     }
