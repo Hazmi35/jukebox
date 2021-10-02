@@ -1,6 +1,8 @@
 import { AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice";
 import { raw as ytdl } from "youtube-dl-exec";
 import { ITrackMetadata } from "../typings";
+// @ts-expect-error No typings for ffmpeg-static
+import ffmpegStatic from "ffmpeg-static";
 
 export enum TrackType {
     unknown,
@@ -21,9 +23,10 @@ export class Track {
             const process = ytdl(
                 this.metadata.url,
                 {
+                    f: this.resourceFormat,
+                    ffmpegLocation: `"${ffmpegStatic}`,
                     o: "-",
                     q: "",
-                    f: this.resourceFormat,
                     r: "800K"
                 },
                 { stdio: ["ignore", "pipe", "ignore"] }
