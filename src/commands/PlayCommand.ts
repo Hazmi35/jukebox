@@ -47,7 +47,9 @@ export class PlayCommand extends BaseCommand {
         let video: Video | LiveVideo | undefined = undefined;
         if (parsedUrl) {
             if (youtubeURL) {
-                if (youtubeURL.pathname === "/watch" && youtubeURL.searchParams.has("v")) {
+                if (youtubeURL.hostname === "youtu.be") {
+                    video = await this.youtube.getVideo(youtubeURL.pathname.slice(1));
+                } else if (youtubeURL.pathname === "/watch" && youtubeURL.searchParams.has("v")) {
                     video = await this.youtube.getVideo(youtubeURL.searchParams.get("v")!);
                     if (youtubeURL.searchParams.has("list")) {
                         const index = Number(youtubeURL.searchParams.get("index") ?? 1);
