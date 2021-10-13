@@ -28,11 +28,14 @@ export class Util {
         });
     }
 
-    public async getPackageJSON(pkgName?: string): Promise<any> {
+    public getPackagePath(pkgName?: string): string {
         if (process.platform === "win32") pkgName = pkgName?.replace("/", "\\");
-        const resolvedPath = path.resolve(pkgName ? require.resolve(pkgName) : process.cwd());
+        return path.resolve(pkgName ? require.resolve(pkgName) : process.cwd());
+    }
+
+    public async getPackageJSON(pkgName?: string): Promise<any> {
         const resolvedPkgName = pkgName ?? path.parse(process.cwd()).name;
-        const resolvedPackageJSONPath = path.resolve(resolvedPath.split(resolvedPkgName)[0], resolvedPkgName, "package.json");
+        const resolvedPackageJSONPath = path.resolve(this.getPackagePath(pkgName).split(resolvedPkgName)[0], resolvedPkgName, "package.json");
         return JSON.parse((await fs.readFile(resolvedPackageJSONPath)).toString());
     }
 
