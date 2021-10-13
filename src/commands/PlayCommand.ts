@@ -2,7 +2,7 @@ import { joinVoiceChannel } from "@discordjs/voice";
 import { Message, StageChannel, TextChannel, Util, VoiceChannel, Collection, Snowflake } from "discord.js";
 import { decodeHTML } from "entities";
 import { URL } from "url";
-import { Client, LiveVideo, MixPlaylist, Playlist, Video } from "youtubei";
+import { Client, LiveVideo, MixPlaylist, Playlist, Video, VideoCompact } from "youtubei";
 import { BaseCommand } from "../structures/BaseCommand";
 import { ServerQueue } from "../structures/ServerQueue";
 import { YouTubeTrack } from "../structures/YouTubeTrack";
@@ -254,7 +254,7 @@ export class PlayCommand extends BaseCommand {
     }
 
     private async createSearchPrompt(searchString: string, message: Message): Promise<Video | LiveVideo | "canceled" | undefined> {
-        const videos = await this.youtube.search(searchString, { type: "video" });
+        const videos = await this.youtube.search(searchString, { type: "video" }) as unknown as VideoCompact[];
         if (videos.length === 0) {
             await message.channel.send({ embeds: [createEmbed("warn", "I could not obtain any search results!")] });
             return undefined;
