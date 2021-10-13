@@ -1,8 +1,8 @@
 import { AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice";
-import { raw as ytdl } from "youtube-dl-exec";
 import { ITrackMetadata } from "../typings";
 // @ts-expect-error No typings for ffmpeg-static
 import ffmpegStatic from "ffmpeg-static";
+import { ServerQueue } from "./ServerQueue";
 
 export enum TrackType {
     unknown,
@@ -13,14 +13,14 @@ export class Track {
     public type = TrackType.unknown;
     public readonly resourceFormat: string = "bestaudio";
     private _resource: AudioResource<ITrackMetadata> | null = null;
-    public constructor(public readonly metadata: ITrackMetadata, public readonly inlineVolume: boolean = false) {
+    public constructor(public readonly queue: ServerQueue, public readonly metadata: ITrackMetadata, public readonly inlineVolume: boolean = false) {
         Object.defineProperty(this, "_resource", { enumerable: false });
     }
 
     // TODO: Recreate Resource Caching
     public createAudioResource(): Promise<AudioResource<ITrackMetadata>> {
         return new Promise((resolve, reject) => {
-            const process = ytdl(
+            const process = this.queue.client.ytdl.raw(
                 this.metadata.url,
                 {
                     f: this.resourceFormat,

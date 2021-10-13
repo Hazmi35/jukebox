@@ -1,4 +1,4 @@
-import "./utils/initializeDotEnv";
+import "dotenv/config";
 import { Jukebox } from "./structures/Jukebox";
 import { CacheWithLimitsOptions, ClientOptions, Intents, LimitedCollection, Options } from "discord.js";
 import { cacheUsers } from "./config";

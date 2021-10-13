@@ -26,6 +26,7 @@ declare module "discord.js" {
         readonly commands: Jukebox["commands"];
         readonly events: Jukebox["events"];
         readonly util: Jukebox["util"];
+        readonly ytdl: Jukebox["ytdl"];
         readonly queue: Jukebox["queue"];
 
         build(token: string): Promise<this>;
