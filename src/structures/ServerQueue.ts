@@ -106,15 +106,20 @@ export class ServerQueue {
     public async play(track: Track): Promise<any> {
         this.connection?.subscribe(this.player);
 
-        const resource = await track.createAudioResource();
+        try {
+            const resource = await track.createAudioResource();
 
-        // Wait for 15 seconds for the connection to be ready.
-        entersState(this.connection!, VoiceConnectionStatus.Ready, 15 * 1000)
-            .then(() => this.player.play(resource))
-            .catch(e => {
-                if (e.message === "The operation was aborted") e.message = "Could not establish a voice connection within 15 seconds.";
-                this.player.emit("error", new AudioPlayerError(e, resource));
-            });
+            try {
+                // Wait for 15 seconds for the connection to be ready.
+                await entersState(this.connection!, VoiceConnectionStatus.Ready, 15 * 1000);
+                this.player.play(resource);
+            } catch (err: any) {
+                if (err.message === "The operation was aborted") err.message = "Could not establish a voice connection within 15 seconds.";
+                this.player.emit("error", new AudioPlayerError(err, resource));
+            }
+        } catch (e: unknown) {
+            this.player.emit("error", e as AudioPlayerError);
+        }
     }
 
     public flatten(): any {
