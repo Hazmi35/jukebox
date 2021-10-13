@@ -125,6 +125,7 @@ export class PlayCommand extends BaseCommand {
                 const connection = await joinVoiceChannel({
                     channelId: voiceChannel.id,
                     guildId: message.guild!.id,
+                    // @ts-expect-error Discord.js problem, not mine.
                     adapterCreator: message.guild!.voiceAdapterCreator,
                     selfDeaf: true
                 });
