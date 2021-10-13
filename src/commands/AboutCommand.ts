@@ -35,7 +35,7 @@ Bot Uptime          :: ${this.client.util.formatMS(this.client.uptime!)}
 Node.js version     :: ${process.version}
 Discord.js version  :: v${version}
 FFmpeg version      :: v${this.client.util.getFFmpegVersion().replaceAll("_", "-")}
-youtube-dl          :: ${process.env.YOUTUBE_DL_FILENAME!} ${(await youtube("--version") as any).toString()}
+yt-dlp version      :: ${(await youtube("--version") as any).toString()}
 Opus Encoder        :: ${(await this.client.util.getOpusEncoderName()).replaceAll("_", "-")}
 Bot Version         :: v${(await this.client.util.getPackageJSON()).version}
 
