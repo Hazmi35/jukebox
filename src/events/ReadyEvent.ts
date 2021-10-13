@@ -1,4 +1,4 @@
-import { ActivitiesOptions, Presence } from "discord.js";
+import { Presence } from "discord.js";
 import { BaseEvent } from "../structures/BaseEvent";
 import { DefineEvent } from "../utils/decorators/DefineEvent";
 
@@ -30,7 +30,7 @@ export class ReadyEvent extends BaseEvent {
             .replace(/{usersCount}/g, (await this.client.util.getUsersCount()).toString())
             .replace(/{botPrefix}/g, this.client.config.prefix);
         return this.client.user!.setPresence({
-            activities: [{ name: activityName, type: this.client.config.status.type as ActivitiesOptions["type"] }]
+            activities: [{ name: activityName, type: this.client.config.status.type }]
         });
     }
 }

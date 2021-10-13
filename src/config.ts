@@ -34,6 +34,6 @@ export const cacheMaxLengthAllowed = Number(process.env.CONFIG_CACHE_MAX_LENGTH)
 // Miscellaneous config
 export const disableInviteCmd = process.env.CONFIG_DISABLE_INVITE_CMD?.toLowerCase() === "yes";
 export const status = {
-    type: process.env.CONFIG_STATUS_TYPE?.toUpperCase() as ActivitiesOptions["type"] | null ?? "LISTENING",
+    type: (process.env.CONFIG_STATUS_TYPE?.toUpperCase() ?? "LISTENING") as ActivitiesOptions["type"] | undefined,
     activity: process.env.CONFIG_STATUS_ACTIVITY ?? "music on {guildsCount} guilds"
 };
