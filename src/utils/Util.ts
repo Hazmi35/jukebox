@@ -154,7 +154,7 @@ export class Util {
         return pages;
     }
 
-    public chunk<T extends any>(array: T[] | string, chunkSize: number): T[][] {
+    public chunk<T>(array: T[] | string, chunkSize: number): T[][] {
         const temp = [];
         for (let i = 0; i < array.length; i += chunkSize) {
             temp.push(array.slice(i, i + chunkSize));

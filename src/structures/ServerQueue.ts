@@ -115,7 +115,7 @@ export class ServerQueue {
             } catch (err: any) {
                 ytdlProcess.kill();
                 if (err.message === "The operation was aborted") err.message = "Could not establish a voice connection within 15 seconds.";
-                this.player.emit("error", new AudioPlayerError(err, resource));
+                this.player.emit("error", new AudioPlayerError(err as Error, resource));
             }
         } catch (e: unknown) {
             this.player.emit("error", e as AudioPlayerError);

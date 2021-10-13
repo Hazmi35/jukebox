@@ -9,6 +9,7 @@ export class CommandManager extends Collection<string, ICommandComponent> {
     public readonly aliases: Collection<string, string> = new Collection();
     public readonly cooldowns: Collection<string, Collection<Snowflake, number>> = new Collection();
     public constructor(public client: Jukebox, public readonly path: string) { super(); }
+
     public load(): void {
         fs.readdir(resolve(this.path))
             .then(async files => {
