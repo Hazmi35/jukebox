@@ -1,4 +1,4 @@
-import { ActivityType } from "discord.js";
+import { ActivitiesOptions } from "discord.js";
 
 // Base config
 export const prefix = process.env.CONFIG_PREFIX?.replace(/"/g, "") ?? "jukebox "; // Temporary workaround for https://github.com/docker/compose/issues/6951
@@ -34,6 +34,6 @@ export const cacheMaxLengthAllowed = Number(process.env.CONFIG_CACHE_MAX_LENGTH)
 // Miscellaneous config
 export const disableInviteCmd = process.env.CONFIG_DISABLE_INVITE_CMD?.toLowerCase() === "yes";
 export const status = {
-    type: process.env.CONFIG_STATUS_TYPE?.toUpperCase() as ActivityType | null ?? "LISTENING",
+    type: process.env.CONFIG_STATUS_TYPE?.toUpperCase() as ActivitiesOptions["type"] | null ?? "LISTENING",
     activity: process.env.CONFIG_STATUS_ACTIVITY ?? "music on {guildsCount} guilds"
 };
