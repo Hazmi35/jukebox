@@ -31,7 +31,7 @@ export class Util {
     public getPackagePath(pkgName?: string): string {
         if (process.platform === "win32") pkgName = pkgName?.replace("/", "\\");
         const mainPath = path.resolve(pkgName ? require.resolve(pkgName) : process.cwd());
-        pkgName = pkgName ?? path.parse(process.cwd()).name;
+        pkgName = pkgName ?? path.parse(process.cwd()).base;
         return path.resolve(mainPath.split(pkgName)[0], pkgName);
     }
 
