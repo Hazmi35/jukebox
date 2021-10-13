@@ -3,6 +3,7 @@ import { ITrackMetadata } from "../typings";
 // @ts-expect-error No typings for ffmpeg-static
 import ffmpegStatic from "ffmpeg-static";
 import { ServerQueue } from "./ServerQueue";
+import execa from "execa";
 
 export enum TrackType {
     unknown,
@@ -18,7 +19,7 @@ export class Track {
     }
 
     // TODO: Recreate Resource Caching
-    public createAudioResource(): Promise<AudioResource<ITrackMetadata>> {
+    public createAudioResource(): Promise<{ resource: AudioResource<ITrackMetadata>; process: execa.ExecaChildProcess }> {
         return new Promise((resolve, reject) => {
             const process = this.queue.client.ytdl.raw(
                 this.metadata.url,
@@ -51,7 +52,7 @@ export class Track {
                                 inputType: probe.type,
                                 inlineVolume: this.inlineVolume
                             });
-                            resolve(this._resource);
+                            resolve({ resource: this._resource, process });
                         })
                         .catch(onError);
                 })

@@ -107,13 +107,13 @@ export class ServerQueue {
         this.connection?.subscribe(this.player);
 
         try {
-            const resource = await track.createAudioResource();
-
+            const { resource, process: ytdlProcess } = await track.createAudioResource();
             try {
                 // Wait for 15 seconds for the connection to be ready.
                 await entersState(this.connection!, VoiceConnectionStatus.Ready, 15 * 1000);
                 this.player.play(resource);
             } catch (err: any) {
+                ytdlProcess.kill();
                 if (err.message === "The operation was aborted") err.message = "Could not establish a voice connection within 15 seconds.";
                 this.player.emit("error", new AudioPlayerError(err, resource));
             }
