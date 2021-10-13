@@ -30,13 +30,13 @@ export class Util {
 
     public getPackagePath(pkgName?: string): string {
         if (process.platform === "win32") pkgName = pkgName?.replace("/", "\\");
-        return path.resolve(pkgName ? require.resolve(pkgName) : process.cwd());
+        const mainPath = path.resolve(pkgName ? require.resolve(pkgName) : process.cwd());
+        pkgName = pkgName ?? path.parse(process.cwd()).name;
+        return path.resolve(mainPath.split(pkgName)[0], pkgName);
     }
 
     public async getPackageJSON(pkgName?: string): Promise<any> {
-        const resolvedPkgName = pkgName ?? path.parse(process.cwd()).name;
-        const resolvedPackageJSONPath = path.resolve(this.getPackagePath(pkgName).split(resolvedPkgName)[0], resolvedPkgName, "package.json");
-        return JSON.parse((await fs.readFile(resolvedPackageJSONPath)).toString());
+        return JSON.parse((await fs.readFile(path.resolve(this.getPackagePath(pkgName), "package.json"))).toString());
     }
 
     public getFFmpegInfo(): FFmpegInfo {
