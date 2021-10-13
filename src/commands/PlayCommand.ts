@@ -138,11 +138,7 @@ export class PlayCommand extends BaseCommand {
                     .catch(e => this.client.logger.error("HANDLE_VIDEO_ERR:", e));
                 return undefined;
             }
-            message.guild?.queue.play(track).catch(err => {
-                message.channel.send({ embeds: [createEmbed("error", `Error while trying to play music\nReason: \`${err.message}\``)] })
-                    .catch(e => this.client.logger.error("HANDLE_VIDEO_ERR:", e));
-                return this.client.logger.error("HANDLE_VIDEO_ERR:", err);
-            });
+            message.guild?.queue.play(track);
         }
     }
 

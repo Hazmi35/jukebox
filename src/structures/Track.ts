@@ -36,9 +36,10 @@ export class Track {
                 return;
             }
             const stream = process.stdout;
-            const onError = (error: Error): void => {
+            const onError = (error: any): void => {
                 if (!process.killed) process.kill();
                 stream.resume();
+                error.resource = this._resource;
                 reject(error);
             };
             process
