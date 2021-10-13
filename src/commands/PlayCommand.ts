@@ -217,7 +217,7 @@ export class PlayCommand extends BaseCommand {
             let howManyMessage = 0;
             for (const page of pages) {
                 howManyMessage++;
-                const embed = createEmbed(`warn`, page);
+                const embed = createEmbed(`warn`, page as string);
                 if (howManyMessage === 1) embed.setTitle("Duplicated tracks");
                 await message.channel.send({ embeds: [embed] });
             }
@@ -243,9 +243,9 @@ export class PlayCommand extends BaseCommand {
             }
             return results.slice(startIndex, results.length);
         } catch (e: any) {
-            this.client.logger.error("LOAD_PLAYLIST_ERR:", new Error(e.stack));
+            this.client.logger.error("LOAD_PLAYLIST_ERR:", new Error(e.stack as string));
             message.channel.send({ embeds: [createEmbed("error", `I could not load the playlist!\nError: \`${e.message}\``)] })
-                .catch(e => this.client.logger.error("LOAD_PLAYLIST_ERR:", new Error(e)));
+                .catch(e => this.client.logger.error("LOAD_PLAYLIST_ERR:", new Error(e as string)));
             return undefined;
         }
     }

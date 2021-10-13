@@ -24,7 +24,44 @@
   },
   "eslintConfig": {
     "extends": "@hazmi35/eslint-config/typescript",
-    "ignorePatterns": "dist/*"
+    "ignorePatterns": "dist/*",
+    "rules": {
+      "@typescript-eslint/member-ordering": ["warn", {
+        "default": [
+            "signature",
+
+            "public-static-field",
+            "protected-static-field",
+            "private-static-field",
+            "public-decorated-field",
+            "protected-decorated-field",
+            "private-decorated-field",
+            "public-instance-field",
+            "protected-instance-field",
+            "private-instance-field",
+            "public-abstract-field",
+            "protected-abstract-field",
+            "private-abstract-field",
+
+            "public-constructor",
+            "protected-constructor",
+            "private-constructor",
+
+            "public-static-method",
+            "protected-static-method",
+            "private-static-method",
+            "public-decorated-method",
+            "protected-decorated-method",
+            "private-decorated-method",
+            "public-instance-method",
+            "protected-instance-method",
+            "private-instance-method",
+            "public-abstract-method",
+            "protected-abstract-method",
+            "private-abstract-method"
+        ]
+    }]
+    }
   },
   "dependencies": {
     "@discordjs/voice": "^0.6.0",
@@ -43,7 +80,7 @@
   "devDependencies": {
     "@hazmi35/eslint-config": "^7.0.1",
     "@types/node": "^16.10.4",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^7.32.0",
     "ts-node": "^10.3.0",

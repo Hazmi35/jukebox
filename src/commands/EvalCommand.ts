@@ -35,14 +35,14 @@ export class EvalCommand extends BaseCommand {
                 });
             }
 
-            const output = this.clean(evaled);
+            const output = this.clean(evaled as string);
             if (output.length > 1024) {
                 const hastebin = await client.util.hastebin(output);
                 embed.addField("Output", `${hastebin}.js`);
             } else { embed.addField("Output", `\`\`\`js\n${output}\`\`\``); }
             void message.channel.send({ embeds: [embed] });
         } catch (e: any) {
-            const error = this.clean(e);
+            const error = this.clean(e as string);
             if (error.length > 1024) {
                 const hastebin = await client.util.hastebin(error);
                 embed.addField("Error", `${hastebin}.js`);

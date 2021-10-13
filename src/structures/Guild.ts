@@ -3,7 +3,7 @@ import { Guild } from "discord.js";
 Reflect.defineProperty(Guild.prototype, "queue", {
     get() {
         // @ts-expect-error-next-line
-        return (this as Guild).client.queue.get(this.id) ?? null;
+        return (this as Guild).client.queue.get(this.id as string) ?? null;
     },
 
     set(v: any) {
