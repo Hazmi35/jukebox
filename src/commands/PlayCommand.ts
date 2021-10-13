@@ -83,24 +83,24 @@ export class PlayCommand extends BaseCommand {
 
     private async handleVideo(video: Video | LiveVideo, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false, restPlaylist = false): Promise<any> {
         // NOTE: handleVideo function can only add YouTube videos, for now.
-        const track = new YouTubeTrack({
+        const metadata = {
             id: video.id,
             thumbnail: video.thumbnails.best!,
             title: this.cleanTitle(video.title),
             url: this.generateYouTubeURL(video.id, "video")
-        }, this.client.config.enableInlineVolume);
-        const { metadata } = track;
+        };
         const addedTrackMsg = (metadata: ITrackMetadata): void => {
             message.channel.send({
                 embeds: [createEmbed("info", `✅ Track **[${metadata.title}](${metadata.url})** has been added to the queue`).setThumbnail(metadata.thumbnail)]
             }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
         };
-        if (message.guild!.queue) {
-            if (!this.client.config.allowDuplicate && message.guild!.queue.tracks.find(s => s.metadata.id === metadata.id)) {
+        if (message.guild?.queue) {
+            const track = new YouTubeTrack(message.guild.queue, metadata, this.client.config.enableInlineVolume);
+            if (!this.client.config.allowDuplicate && message.guild.queue.tracks.find(s => s.metadata.id === metadata.id)) {
                 if (playlist) {
-                    const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild!.id) ?? [];
+                    const playlistAlreadyQueued = this.playlistAlreadyQueued.get(message.guild.id) ?? [];
                     playlistAlreadyQueued.push(metadata);
-                    this.playlistAlreadyQueued.set(message.guild!.id, playlistAlreadyQueued);
+                    this.playlistAlreadyQueued.set(message.guild.id, playlistAlreadyQueued);
                     return undefined;
                 }
                 return message.channel.send({
@@ -113,11 +113,12 @@ export class PlayCommand extends BaseCommand {
                     ]
                 });
             }
-            message.guild!.queue.tracks.add(track);
+            message.guild.queue.tracks.add(track);
             if (!playlist) addedTrackMsg(metadata);
         } else {
             if (restPlaylist) return undefined;
             message.guild!.queue = new ServerQueue(this.client, message.guild!, message.channel as TextChannel, voiceChannel);
+            const track = new YouTubeTrack(message.guild!.queue, metadata, this.client.config.enableInlineVolume);
             message.guild!.queue.tracks.add(track);
             if (!playlist) addedTrackMsg(metadata);
             try {

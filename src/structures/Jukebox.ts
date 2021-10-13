@@ -6,6 +6,7 @@ import { CommandManager } from "../utils/CommandManager";
 import { EventsLoader } from "../utils/EventsLoader";
 import { Util } from "../utils/Util";
 import { ServerQueue } from "./ServerQueue";
+import { create } from "youtube-dl-exec";
 
 
 // Extends DiscordJS Structures
@@ -17,6 +18,7 @@ export class Jukebox extends BotClient {
     public readonly commands = new CommandManager(this, resolve(__dirname, "..", "commands"));
     public readonly events = new EventsLoader(this, resolve(__dirname, "..", "events"));
     public readonly util: Util = new Util(this);
+    public readonly ytdl = create(resolve(this.util.getPackagePath("youtube-dl-exec"), "bin", "yt-dlp"));
     public readonly queue: Collection<Snowflake, ServerQueue> = new Collection();
     public constructor(opt: ClientOptions) { super(opt); }
 

@@ -1,4 +1,4 @@
-import "./utils/initializeDotEnv";
+import "dotenv/config";
 import { resolve } from "path";
 import { ShardingManager } from "discord.js";
 import { createLogger } from "./utils/Logger";
