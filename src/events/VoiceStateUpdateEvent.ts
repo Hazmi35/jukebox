@@ -35,6 +35,7 @@ export class VoiceStateUpdateEvent extends BaseEvent {
             } catch (e) {
                 this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e);
             }
+            return undefined;
         }
 
         if (newState.mute !== oldState.mute || newState.deaf !== oldState.deaf) return undefined; // TODO: Handle all listeners deaf & bot muted event?
@@ -48,7 +49,9 @@ export class VoiceStateUpdateEvent extends BaseEvent {
         }
 
         // Handle when user leaves voice channel
-        if (oldID === queueVC.id && newID !== queueVC.id && !member?.user.bot && queue.timeout === null) this.doTimeout(queueVCMembers, queue, newState);
+        if (oldID === queueVC.id && newID !== queueVC.id && !member?.user.bot && queue.timeout === null) {
+            if (newID !== undefined) this.doTimeout(queueVCMembers, queue, newState);
+        }
 
         // Handle when user joins voice channel or bot gets moved
         if (newID === queueVC.id && !member?.user.bot) this.resumeTimeout(queueVCMembers, queue, newState);

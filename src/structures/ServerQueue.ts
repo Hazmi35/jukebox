@@ -41,6 +41,7 @@ export class ServerQueue {
             if (!this._currentTrack) {
                 this.oldMusicMessage = null; this.oldVoiceStateUpdateMessage = null;
                 this.connection?.disconnect();
+                clearTimeout(this.timeout!);
                 this.guild.queue = null;
                 return;
             }
@@ -81,6 +82,7 @@ export class ServerQueue {
                                 embeds: [createEmbed("info", `⏹ Queue is finished! Use "${this.guild.client.config.prefix}play" to play more music`)]
                             }).catch(e => this.client.logger.error("QUEUE_FINISHED_MSG_ERR:", e));
                             this.connection?.disconnect();
+                            clearTimeout(this.timeout!);
                             return this.guild.queue = null;
                         }
                         this.play(nextTrack).catch(e => {
@@ -98,6 +100,7 @@ export class ServerQueue {
             this.textChannel?.send({ embeds: [createEmbed("error", `Error while playing music\nReason: \`${err.message}\``)] })
                 .catch(e => this.client.logger.error("AUDIO_PLAYER_ERR:", e));
             this.connection?.disconnect();
+            clearTimeout(this.timeout!);
             this.guild.queue = null;
             this.client.logger.error("AUDIO_PLAYER_ERR:", err);
         });
