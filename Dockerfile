@@ -4,7 +4,7 @@ LABEL name "Jukebox (build stage)"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
 # Copy package.json, lockfile and .npmrc
-COPY package*.json ./ 
+COPY package*.json ./
 COPY .npmrc .
 
 # Install dependencies
@@ -18,6 +18,9 @@ RUN npm run build
 
 # Prune devDependencies
 RUN npm prune --production
+
+# Check if important dependencies is healthy
+RUN YOUTUBE_DL_FILENAME="yt-dlp" node -p "console.log((require('prism-media').FFmpeg).getInfo());(require('youtube-dl-exec'))('--version').then(console.log)"
 
 # Get ready for production
 FROM hazmi35/node:16-alpine
