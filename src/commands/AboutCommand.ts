@@ -3,7 +3,6 @@ import { Message, version } from "discord.js";
 import { uptime as osUptime } from "os";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
-import youtube from "youtube-dl-exec";
 
 @DefineCommand({
     aliases: ["botinfo", "info", "stats"],
@@ -26,7 +25,7 @@ Playing Music on    :: ${await this.client.util.getTotalPlaying()} guilds
 Platform            :: ${process.platform}
 Arch                :: ${process.arch}
 OS Uptime           :: ${this.client.util.formatMS(osUptime() * 1000)}
-Memory (RSS)        :: ${this.client.util.bytesToSize(process.memoryUsage().rss)} 
+Memory (RSS)        :: ${this.client.util.bytesToSize(process.memoryUsage().rss)}
 Memory (Heap Total) :: ${this.client.util.bytesToSize(process.memoryUsage().heapTotal)}
 Memory (Heap Used)  :: ${this.client.util.bytesToSize(process.memoryUsage().heapUsed)}
 Process Uptime      :: ${this.client.util.formatMS(process.uptime() * 1000)}
@@ -35,7 +34,7 @@ Bot Uptime          :: ${this.client.util.formatMS(this.client.uptime!)}
 Node.js version     :: ${process.version}
 Discord.js version  :: v${version}
 FFmpeg version      :: v${this.client.util.getFFmpegVersion().replaceAll("_", "-")}
-yt-dlp version      :: ${(await youtube("--version") as any).toString()}
+yt-dlp version      :: ${(await this.client.ytdl("--version") as any).toString()}
 Opus Encoder        :: ${(await this.client.util.getOpusEncoderName()).replaceAll("_", "-")}
 Bot Version         :: v${(await this.client.util.getPackageJSON()).version}
 
