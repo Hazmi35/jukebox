@@ -73,19 +73,19 @@ export class ServerQueue {
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${metadata.title}" on ${this.guild.name} ended`);
                 this.textChannel?.send({ embeds: [createEmbed("info", `⏹ Stop playing: **[${metadata.title}](${metadata.url})**`).setThumbnail(metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
-                    .catch(e => this.client.logger.error("PLAY_ERR:", e))
+                    .catch(e => this.client.logger.error("STOP_PLAYING_MSG_ERR:", e))
                     .finally(() => {
                         if (!nextTrack) {
                             this.oldMusicMessage = null; this.oldVoiceStateUpdateMessage = null;
                             this.textChannel?.send({
                                 embeds: [createEmbed("info", `⏹ Queue is finished! Use "${this.guild.client.config.prefix}play" to play more music`)]
-                            }).catch(e => this.client.logger.error("PLAY_ERR:", e));
+                            }).catch(e => this.client.logger.error("QUEUE_FINISHED_MSG_ERR:", e));
                             this.connection?.disconnect();
                             return this.guild.queue = null;
                         }
                         this.play(nextTrack).catch(e => {
                             this.textChannel?.send({ embeds: [createEmbed("error", `Error while trying to play music\nReason: \`${e}\``)] })
-                                .catch(e => this.client.logger.error("PLAY_ERR:", e));
+                                .catch(e => this.client.logger.error("PLAY_ERR_MSG_ERR:", e));
                             this.connection?.disconnect();
                             return this.client.logger.error("PLAY_ERR:", e);
                         });
@@ -96,10 +96,10 @@ export class ServerQueue {
 
         this.player.on("error", err => {
             this.textChannel?.send({ embeds: [createEmbed("error", `Error while playing music\nReason: \`${err.message}\``)] })
-                .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                .catch(e => this.client.logger.error("AUDIO_PLAYER_ERR:", e));
             this.connection?.disconnect();
             this.guild.queue = null;
-            this.client.logger.error("PLAY_ERR:", err);
+            this.client.logger.error("AUDIO_PLAYER_ERR:", err);
         });
     }
 
