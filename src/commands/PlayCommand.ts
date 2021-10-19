@@ -44,50 +44,59 @@ export class PlayCommand extends BaseCommand {
             });
         }
 
-        let video: Video | LiveVideo | undefined = undefined;
-        if (parsedUrl) {
-            if (youtubeURL) {
-                if (youtubeURL.hostname === "youtu.be") {
-                    video = await this.youtube.getVideo(youtubeURL.pathname.slice(1));
-                } else if (youtubeURL.pathname === "/watch" && youtubeURL.searchParams.has("v")) {
-                    video = await this.youtube.getVideo(youtubeURL.searchParams.get("v")!);
-                    if (youtubeURL.searchParams.has("list")) {
-                        const index = Number(youtubeURL.searchParams.get("index") ?? 1);
-                        this.loadPlaylist(youtubeURL.searchParams.get("list")!, message, voiceChannel, true, index)
-                            .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+        try {
+            let trackResource: Video | LiveVideo | undefined = undefined;
+            if (parsedUrl) {
+                if (youtubeURL) {
+                    if (youtubeURL.hostname === "youtu.be") {
+                        trackResource = await this.youtube.getVideo(youtubeURL.pathname.slice(1));
+                    } else if (youtubeURL.pathname === "/watch" && youtubeURL.searchParams.has("v")) {
+                        trackResource = await this.youtube.getVideo(youtubeURL.searchParams.get("v")!);
+                        if (youtubeURL.searchParams.has("list")) {
+                            const index = Number(youtubeURL.searchParams.get("index") ?? 1);
+                            this.loadPlaylist(youtubeURL.searchParams.get("list")!, message, voiceChannel, true, index)
+                                .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                        }
+                    } else if (youtubeURL.pathname === "/playlist" && youtubeURL.searchParams.has("list")) {
+                        return this.loadPlaylist(youtubeURL.searchParams.get("list")!, message, voiceChannel);
+                    } else {
+                        return message.channel.send({
+                            embeds: [createEmbed("error", `⚠️ Invalid YouTube URL`)]
+                        });
                     }
-                } else if (youtubeURL.pathname === "/playlist" && youtubeURL.searchParams.has("list")) {
-                    return this.loadPlaylist(youtubeURL.searchParams.get("list")!, message, voiceChannel);
                 } else {
                     return message.channel.send({
-                        embeds: [createEmbed("error", `⚠️ Invalid YouTube URL`)]
+                        embeds: [createEmbed("error", "⚠️ Jukebox currently only supports YouTube as a source.")]
                     });
                 }
             } else {
+                const searchResults = await this.createSearchPrompt(searchString, message);
+                if (searchResults === "canceled") return undefined;
+                trackResource = searchResults;
+            }
+            if (trackResource === undefined) {
                 return message.channel.send({
-                    embeds: [createEmbed("error", "⚠️ Jukebox currently only supports YouTube as a source.")]
+                    embeds: [createEmbed("error", `⚠️ Could not resolve the track resource`)]
                 });
             }
-        } else {
-            const searchResults = await this.createSearchPrompt(searchString, message);
-            if (searchResults === "canceled") return undefined;
-            video = searchResults;
+            await this.handleVideo(trackResource, message, voiceChannel);
+        } catch (error: any) {
+            // TODO: Remove this next line if https://github.com/SuspiciousLookingOwl/youtubei/issues/37 is resolved.
+            if (error.message === "Cannot read properties of undefined (reading 'find')") error = new Error("404 YouTube Item not found.");
+            else this.client.logger.error("PLAY_ERR:", error);
+
+            message.channel.send({ embeds: [createEmbed("error", `Error while processing track resource\nReason: \`${error.message}\``)] })
+                .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
         }
-        if (video === undefined) {
-            return message.channel.send({
-                embeds: [createEmbed("error", `⚠️ Could not resolve the video`)]
-            });
-        }
-        await this.handleVideo(video, message, voiceChannel);
     }
 
-    private async handleVideo(video: Video | LiveVideo, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false, restPlaylist = false): Promise<any> {
+    private async handleVideo(resource: Video | LiveVideo, message: Message, voiceChannel: VoiceChannel | StageChannel, playlist = false, restPlaylist = false): Promise<any> {
         // NOTE: handleVideo function can only add YouTube videos, for now.
         const metadata = {
-            id: video.id,
-            thumbnail: video.thumbnails.best!,
-            title: this.cleanTitle(video.title),
-            url: this.generateYouTubeURL(video.id, "video")
+            id: resource.id,
+            thumbnail: resource.thumbnails.best!,
+            title: this.cleanTitle(resource.title),
+            url: this.generateYouTubeURL(resource.id, "video")
         };
         const addedTrackMsg = (metadata: ITrackMetadata): void => {
             message.channel.send({
