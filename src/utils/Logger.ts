@@ -1,19 +1,18 @@
 import winston from "winston";
 
-const dateFormat = Intl.DateTimeFormat("en", { dateStyle: "short", timeStyle: "medium", hour12: false });
+export function createLogger(serviceName: string, lang: string, debug = false): winston.Logger {
+    const dateFormat = Intl.DateTimeFormat(lang, { dateStyle: "short", timeStyle: "medium", hour12: false });
 
-function formatDateForLogFile(date?: number | Date): string {
-    const data = dateFormat.formatToParts(date);
-    return `<year>-<month>-<day>-<hour>-<minute>-<second>`
-        .replace(/<year>/g, data.find(({ type }) => type === "year")!.value)
-        .replace(/<month>/g, data.find(({ type }) => type === "month")!.value)
-        .replace(/<day>/g, data.find(({ type }) => type === "day")!.value)
-        .replace(/<hour>/g, data.find(({ type }) => type === "hour")!.value)
-        .replace(/<minute>/g, data.find(({ type }) => type === "minute")!.value)
-        .replace(/<second>/g, data.find(({ type }) => type === "second")!.value);
-}
-
-export function createLogger(serviceName: string, debug = false): winston.Logger {
+    function formatDateForLogFile(date?: number | Date): string {
+        const data = dateFormat.formatToParts(date);
+        return `<year>-<month>-<day>-<hour>-<minute>-<second>`
+            .replace(/<year>/g, data.find(({ type }) => type === "year")!.value)
+            .replace(/<month>/g, data.find(({ type }) => type === "month")!.value)
+            .replace(/<day>/g, data.find(({ type }) => type === "day")!.value)
+            .replace(/<hour>/g, data.find(({ type }) => type === "hour")!.value)
+            .replace(/<minute>/g, data.find(({ type }) => type === "minute")!.value)
+            .replace(/<second>/g, data.find(({ type }) => type === "second")!.value);
+    }
     const logger = winston.createLogger({
         defaultMeta: {
             serviceName
@@ -46,6 +45,7 @@ export function createLogger(serviceName: string, debug = false): winston.Logger
             winston.format.printf(info => {
                 const { level, message, stack } = info;
                 const prefix = `[${dateFormat.format(Date.now())}] [${level}]`;
+                // TODO: You should store shard ID here instead of typing "${this.shard ? `[Shard #${this.shard.ids[0]}]` : ""}" on everything.
                 if (["error", "alert"].includes(level)) return `${prefix}: ${stack}`;
                 return `${prefix}: ${message}`;
             }),
