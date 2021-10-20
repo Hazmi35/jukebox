@@ -6,8 +6,8 @@ import { Message } from "discord.js";
 
 @DefineCommand({
     name: "resume",
-    description: "Resume the music player",
-    usage: "{prefix}resume",
+    description: lang => lang.COMMAND_RESUME_META_DESCRIPTION(),
+    usage: () => "{prefix}resume",
     aliases: ["unpause"]
 })
 export class ResumeCommand extends BaseCommand {

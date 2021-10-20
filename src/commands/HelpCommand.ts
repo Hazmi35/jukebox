@@ -7,8 +7,8 @@ import { images } from "../constants/images";
 @DefineCommand({
     aliases: ["commands", "cmds"],
     name: "help",
-    description: "Shows the help menu",
-    usage: "{prefix}help [command]"
+    description: lang => lang.COMMAND_HELP_META_DESCRIPTION(),
+    usage: lang => `{prefix}help [${lang.COMMAND_HELP_META_ARGS()[0]}]`
 })
 export class HelpCommand extends BaseCommand {
     public execute(message: Message, args: string[]): void {
@@ -22,9 +22,9 @@ export class HelpCommand extends BaseCommand {
                         .setThumbnail(images.questionMark)
                         .addFields([
                             { name: "Name", value: `\`${command.meta.name}\``, inline: true },
-                            { name: "Description", value: command.meta.description!, inline: true },
+                            { name: "Description", value: command.meta.description!(this.client.lang), inline: true },
                             { name: "Aliases", value: `${Number(command.meta.aliases?.length) > 0 ? command.meta.aliases?.map(c => `\`${c}\``).join(", ") as string : "None."}`, inline: true },
-                            { name: "Usage", value: `\`${command.meta.usage?.replace(/{prefix}/g, message.client.config.prefix) as string}\``, inline: false }
+                            { name: "Usage", value: `\`${command.meta.usage!(this.client.lang).replace(/{prefix}/g, message.client.config.prefix)}\``, inline: false }
                         ])
                 ]
             }).catch(e => this.client.logger.error("HELP_CMD_ERR:", e));

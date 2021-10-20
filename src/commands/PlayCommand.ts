@@ -14,8 +14,8 @@ import { isSameVoiceChannel, isUserInTheVoiceChannel, isValidVoiceChannel } from
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
     name: "play",
-    description: "Play some music",
-    usage: "{prefix}play <yt video or playlist link / yt video name>"
+    description: lang => lang.COMMAND_PLAY_META_DESCRIPTION(),
+    usage: lang => `{prefix}play <${lang.COMMAND_PLAY_META_ARGS()[0]}>`
 })
 export class PlayCommand extends BaseCommand {
     private readonly youtubeHostnames = ["youtu.be", "youtube.com", "www.youtube.com", "music.youtube.com"];

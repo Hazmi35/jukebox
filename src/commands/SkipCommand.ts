@@ -7,8 +7,8 @@ import { Message } from "discord.js";
 @DefineCommand({
     aliases: ["s"],
     name: "skip",
-    description: "Skip the current music",
-    usage: "{prefix}skip"
+    description: lang => lang.COMMAND_SKIP_META_DESCRIPTION(),
+    usage: () => "{prefix}skip"
 })
 export class SkipCommand extends BaseCommand {
     @isUserInTheVoiceChannel()

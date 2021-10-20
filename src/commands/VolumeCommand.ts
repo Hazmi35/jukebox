@@ -7,8 +7,8 @@ import { Message } from "discord.js";
 @DefineCommand({
     aliases: ["vol"],
     name: "volume",
-    description: "Show or change the music player's volume",
-    usage: "{prefix}volume [new volume]"
+    description: lang => lang.COMMAND_VOLUME_META_DESCRIPTION(),
+    usage: lang => `{prefix}volume [${lang.COMMAND_VOLUME_META_ARGS()[0]}]`
 })
 export class VolumeCommand extends BaseCommand {
     @isUserInTheVoiceChannel()

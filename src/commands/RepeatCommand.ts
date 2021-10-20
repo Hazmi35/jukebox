@@ -8,8 +8,8 @@ import { loopMode } from "../constants/loopMode";
 @DefineCommand({
     aliases: ["loop", "music-loop", "music-repeat"],
     name: "repeat",
-    description: "Repeat current music or the queue",
-    usage: "{prefix}repeat [all | one | off]"
+    description: lang => lang.COMMAND_REPEAT_META_DESCRIPTION(),
+    usage: () => "{prefix}repeat [all | one | off]" // TODO: Also localize "all | one | off" using enums?
 })
 export class RepeatCommand extends BaseCommand {
     @isUserInTheVoiceChannel()

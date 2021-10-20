@@ -1,6 +1,7 @@
 import { Client as OClient, ClientEvents, Guild as OGuild, Message } from "discord.js";
 import { Jukebox } from "../structures/Jukebox";
 import { ServerQueue } from "../structures/ServerQueue";
+import { DefaultLang } from "../utils/Localization";
 
 export interface ICommandComponent {
     meta: {
@@ -9,8 +10,8 @@ export interface ICommandComponent {
         disable?: boolean;
         path?: string;
         name: string;
-        description?: string;
-        usage?: string;
+        description?: (lang: DefaultLang) => string;
+        usage?: (lang: DefaultLang) => string;
     };
     execute(message: Message, args: string[]): any;
 }

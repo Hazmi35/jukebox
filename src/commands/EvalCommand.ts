@@ -8,9 +8,9 @@ import { createEmbed } from "../utils/createEmbed";
 @DefineCommand({
     aliases: ["ev", "js-exec", "e", "evaluate"],
     cooldown: 0,
-    description: "Only the bot owner can use this command",
+    description: lang => lang.COMMAND_EVAL_META_DESCRIPTION(),
     name: "eval",
-    usage: "{prefix}eval <some js code>"
+    usage: lang => `{prefix}eval <${lang.COMMAND_EVAL_META_ARGS()[0]}>`
 })
 export class EvalCommand extends BaseCommand {
     public async execute(message: Message, args: string[]): Promise<any> {
