@@ -37,3 +37,6 @@ export const status = {
     type: (process.env.CONFIG_STATUS_TYPE?.toUpperCase() ?? "LISTENING") as ActivitiesOptions["type"] | undefined,
     activity: process.env.CONFIG_STATUS_ACTIVITY ?? "music on {guildsCount} guilds"
 };
+
+// i18n Config
+export const lang = process.env.CONFIG_LANGUAGE ?? "en-US";

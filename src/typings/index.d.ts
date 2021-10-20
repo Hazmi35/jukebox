@@ -28,6 +28,8 @@ declare module "discord.js" {
         readonly util: Jukebox["util"];
         readonly ytdl: Jukebox["ytdl"];
         readonly queue: Jukebox["queue"];
+        readonly localization: Jukebox["localization"];
+        readonly lang: Jukebox["lang"];
 
         build(token: string): Promise<this>;
     }
