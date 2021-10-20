@@ -25,7 +25,7 @@ export class Track {
                 this.metadata.url,
                 {
                     f: this.resourceFormat,
-                    ffmpegLocation: `"${ffmpegStatic}`,
+                    ffmpegLocation: `"${ffmpegStatic}"`,
                     o: "-",
                     q: "",
                     r: "800K"
