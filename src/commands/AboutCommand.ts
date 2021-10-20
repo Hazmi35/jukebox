@@ -14,33 +14,28 @@ export class AboutCommand extends BaseCommand {
     public async execute(message: Message): Promise<void> {
         message.channel.send({
             embeds: [
-                createEmbed("info", `
-\`\`\`asciidoc
-Channels count      :: ${await this.client.util.getChannelsCount()}
-Guilds count        :: ${await this.client.util.getGuildsCount()}
-Shards count        :: ${this.client.shard ? `${this.client.shard.count}` : "N/A"}
-Shard ID            :: ${this.client.shard ? `${this.client.shard.ids[0]}` : "N/A"}
-Playing Music on    :: ${await this.client.util.getTotalPlaying()} guilds
-
-Platform            :: ${process.platform}
-Arch                :: ${process.arch}
-OS Uptime           :: ${this.client.util.formatMS(osUptime() * 1000)}
-Memory (RSS)        :: ${this.client.util.bytesToSize(process.memoryUsage().rss)}
-Memory (Heap Total) :: ${this.client.util.bytesToSize(process.memoryUsage().heapTotal)}
-Memory (Heap Used)  :: ${this.client.util.bytesToSize(process.memoryUsage().heapUsed)}
-Process Uptime      :: ${this.client.util.formatMS(process.uptime() * 1000)}
-Bot Uptime          :: ${this.client.util.formatMS(this.client.uptime!)}
-
-Node.js version     :: ${process.version}
-Discord.js version  :: v${version}
-FFmpeg version      :: v${this.client.util.getFFmpegVersion().replaceAll("_", "-")}
-yt-dlp version      :: ${(await this.client.ytdl("--version") as any).toString()}
-Opus Encoder        :: ${(await this.client.util.getOpusEncoderName()).replaceAll("_", "-")}
-Bot Version         :: v${(await this.client.util.getPackageJSON()).version}
-
-Source code         :: https://sh.hzmi.xyz/jukebox
-\`\`\`
-                        `).setAuthor(`${this.client.user?.username as string} - Just a simple Discord music bot.`)
+                createEmbed("info",
+                    this.client.lang.COMMAND_ABOUT_EMBED_DESCRIPTION(
+                        await this.client.util.getChannelsCount(),
+                        await this.client.util.getGuildsCount(),
+                        this.client.shard ? `${this.client.shard.count}` : this.client.lang.NOT_AVAILABLE(),
+                        this.client.shard ? `${this.client.shard.ids[0]}` : this.client.lang.NOT_AVAILABLE(),
+                        await this.client.util.getTotalPlaying(),
+                        process.platform,
+                        process.arch,
+                        this.client.util.formatMS(osUptime() * 1000),
+                        this.client.util.bytesToSize(process.memoryUsage().rss),
+                        this.client.util.bytesToSize(process.memoryUsage().heapTotal),
+                        this.client.util.bytesToSize(process.memoryUsage().heapUsed),
+                        this.client.util.formatMS(process.uptime() * 1000),
+                        this.client.util.formatMS(this.client.uptime!),
+                        process.version,
+                        `v${version}`,
+                        `v${this.client.util.getFFmpegVersion().replaceAll("_", "-")}`,
+                        (await this.client.ytdl("--version") as any).toString() as string,
+                        (await this.client.util.getOpusEncoderName()).replaceAll("_", "-"),
+                        (await this.client.util.getPackageJSON()).version as string
+                    )).setAuthor(this.client.lang.COMMAND_ABOUT_EMBED_AUTHOR(this.client.user!.username))
             ]
         }).catch(e => this.client.logger.error("ABOUT_CMD_ERR:", e));
     }
