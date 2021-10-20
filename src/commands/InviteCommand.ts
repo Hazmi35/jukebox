@@ -6,8 +6,8 @@ import { Message, Permissions } from "discord.js";
 
 @DefineCommand({
     name: "invite",
-    description: "Send the bot's invite link",
-    usage: "{prefix}invite",
+    description: lang => lang.COMMAND_INVITE_META_DESCRIPTION(),
+    usage: () => "{prefix}invite",
     disable: disableInviteCmd
 })
 export class InviteCommand extends BaseCommand {

@@ -6,8 +6,8 @@ import { Message } from "discord.js";
 
 @DefineCommand({
     name: "pause",
-    description: "Pause the music player",
-    usage: "{prefix}pause"
+    description: lang => lang.COMMAND_PAUSE_META_DESCRIPTION(),
+    usage: () => "{prefix}pause"
 })
 export class PauseCommand extends BaseCommand {
     @isUserInTheVoiceChannel()

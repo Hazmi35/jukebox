@@ -9,8 +9,8 @@ import { images } from "../constants/images";
 @DefineCommand({
     aliases: ["np", "now-playing"],
     name: "nowplaying",
-    description: "Send info about the current music player",
-    usage: "{prefix}nowplaying"
+    description: lang => lang.COMMAND_NOWPLAYING_META_DESCRIPTION(),
+    usage: () => "{prefix}nowplaying"
 })
 export class NowPlayingCommand extends BaseCommand {
     @isMusicQueueExists()

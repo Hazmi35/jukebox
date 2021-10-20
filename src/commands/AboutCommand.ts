@@ -7,8 +7,8 @@ import { createEmbed } from "../utils/createEmbed";
 @DefineCommand({
     aliases: ["botinfo", "info", "stats"],
     name: "about",
-    description: "Send the bot's info",
-    usage: "{prefix}about"
+    description: lang => lang.COMMAND_ABOUT_META_DESCRIPTION(),
+    usage: () => "{prefix}about"
 })
 export class AboutCommand extends BaseCommand {
     public async execute(message: Message): Promise<void> {

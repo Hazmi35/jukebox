@@ -8,8 +8,8 @@ import { images } from "../constants/images";
 @DefineCommand({
     aliases: ["q"],
     name: "queue",
-    description: "Show the current queue",
-    usage: "{prefix}queue"
+    description: lang => lang.COMMAND_QUEUE_META_DESCRIPTION(),
+    usage: () => "{prefix}queue"
 })
 export class QueueCommand extends BaseCommand {
     @isMusicQueueExists()

@@ -7,8 +7,8 @@ import { Message } from "discord.js";
 @DefineCommand({
     aliases: ["st"],
     name: "stop",
-    description: "Stop the queue",
-    usage: "{prefix}stop"
+    description: lang => lang.COMMAND_STOP_META_DESCRIPTION(),
+    usage: () => "{prefix}stop"
 })
 export class StopCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
