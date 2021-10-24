@@ -79,6 +79,11 @@ export const lang = {
 
     // Ping command
     COMMAND_PING_META_DESCRIPTION: () => "Shows the current ping of the bot.",
+    COMMAND_PING_INITIAL_MESSAGE: () => "🏓 PING...",
+    COMMAND_PING_RESULT_MESSAGE: () => "🏓 PONG!",
+    COMMAND_PING_API_LATENCY: () => "📶 API Latency",
+    COMMAND_PING_WS_LATENCY: () => "🌐 WebSocket Latency",
+    COMMAND_PING_EMBED_FOOTER: (userTag: string) => `Requested by: ${userTag}`,
 
     // Play command
     COMMAND_PLAY_META_DESCRIPTION: () => "Play some music",
