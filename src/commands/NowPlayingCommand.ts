@@ -17,7 +17,7 @@ export class NowPlayingCommand extends BaseCommand {
     public execute(message: Message): any {
         const track = message.guild?.queue?.tracks.first();
         const embed = createEmbed("info",
-            `${message.guild?.queue?.playing ? "▶ Now playing:" : "⏸ Now playing (paused):"} ` +
+            `${message.guild?.queue?.playing ? this.client.lang.COMMAND_NOWPLAYING_MESSAGE() : this.client.lang.COMMAND_NOWPLAYING_MESSAGE_PAUSED()} ` +
             `**[${track?.metadata.title as string}](${track?.metadata.url as string})**`)
             .setThumbnail(track?.metadata.thumbnail as string);
 
