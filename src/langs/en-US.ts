@@ -64,6 +64,8 @@ export const lang = {
 
     // Invite Command
     COMMAND_INVITE_META_DESCRIPTION: () => "Send the bot's invite link",
+    COMMAND_INVITE_EMBED_FIELD_NAME: () => "Discord bot invite link",
+    COMMAND_INVITE_EMBED_FIELD_VALUE: () => "Click here",
 
     // Now playing command
     COMMAND_NOWPLAYING_META_DESCRIPTION: () => "Send info about the current music player",

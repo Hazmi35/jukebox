@@ -34,7 +34,7 @@ export class InviteCommand extends BaseCommand {
         message.channel.send({
             embeds: [
                 createEmbed("info")
-                    .addField("Discord bot invite link", `[Click here](${invite})`)
+                    .addField(this.client.lang.COMMAND_INVITE_EMBED_FIELD_NAME(), `[${this.client.lang.COMMAND_INVITE_EMBED_FIELD_VALUE()}](${invite})`)
             ]
         }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
     }
