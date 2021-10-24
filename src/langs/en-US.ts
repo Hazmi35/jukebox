@@ -1,6 +1,8 @@
 /* eslint-disable sort-keys */
 import stripIndent from "strip-indent";
 
+// TODO: Make this more readable by adding spaces
+
 export const lang = {
     // Language Metadata
     META_ID: () => "en-US",
@@ -88,6 +90,41 @@ export const lang = {
     // Play command
     COMMAND_PLAY_META_DESCRIPTION: () => "Play some music",
     COMMAND_PLAY_META_ARGS: () => ["YouTube video or playlist URL / YouTube video name"],
+    COMMAND_PLAY_INVALID_ARGS: (prefix: string) => `⚠️ Invalid argument, type \`${prefix}help play\` for more info`,
+    COMMAND_PLAY_ALREADY_PLAYING: (vcName: string) => `⚠️ The music player is already playing to **${vcName}** voice channel`,
+    COMMAND_PLAY_INVALID_YOUTUBE_URL: () => "⚠️ Invalid YouTube URL",
+    COMMAND_PLAY_INVALID_SOURCE: () => "⚠️ Jukebox currently only supports YouTube as a source.",
+    COMMAND_PLAY_COULD_NOT_RESOLVE_RESOURCE: () => "⚠️ Could not resolve the track resource",
+    COMMAND_PLAY_RESOURCE_PROCESSING_ERR: (message: string) => `Error while processing track resource\nReason: \`${message}\``,
+    COMMAND_PLAY_RESOURCE_NOT_FOUND: () => "[404] YouTube Item not found.",
+    COMMAND_PLAY_TRACK_ADDED: (title: string, url: string) => `✅ Track **[${title}](${url})** has been added to the queue`,
+    COMMAND_PLAY_ALREADY_QUEUED_TITLE: () => "Already queued / duplicate",
+    COMMAND_PLAY_ALREADY_QUEUED_TITLE2: () => "Duplicated tracks",
+    COMMAND_PLAY_ALREADY_QUEUED_MSG: (title: string, url: string, prefix: string) => stripIndent(
+        `Track **[${title}](${url})** is already queued, and this bot configuration disallow duplicated tracks in queue.
+        Please use \`${prefix}repeat\` instead`
+    ),
+    COMMAND_PLAY_ALREADY_QUEUED_MSG2: (count: number, prefix: string) => stripIndent(
+        `Over ${count} track${count >= 2 ? "s" : ""} are skipped because it was a duplicate, and this bot configuration disallow duplicated tracks in queue.
+        Please use \`${prefix}repeat\` instead`
+    ),
+    COMMAND_PLAY_COULD_NOT_JOIN_VC: (message: string) => `Error: Could not join the voice channel!\nReason: \`${message}\``,
+    // TODO: Rename PLAYLIST to YOUTUBE_PLAYLIST to be more verbose.
+    COMMAND_PLAY_PLAYLIST_NOT_FOUND: () => "⚠️ Playlist not found",
+    COMMAND_PLAY_PLAYLIST_EMPTY: () => "⚠️ The specified playlist is empty.",
+    COMMAND_PLAY_RD_PLAYLIST_NOT_SUPPORTED: () => "⚠️ RD / YouTube mix playlist is not supported yet. Please see [this issue](https://github.com/Hazmi35/jukebox/issues/594)",
+    COMMAND_PLAY_PLAYLIST_ADDING_VIDEOS: (index: number, playlistTitle: string) => `Adding all tracks starting from number ${index} video in playlist: ${playlistTitle}, hang on...`,
+    COMMAND_PLAY_PLAYLIST_ALL_ADDING_VIDEOS: (playlistTitle: string) => `Adding all tracks in playlist: ${playlistTitle}, hang on...`,
+    COMMAND_PLAY_PLAYLIST_ADDING_FIRST_VIDEOS_ERR: () => "⚠️ Could not add the first video of the playlist",
+    COMMAND_PLAY_PLAYLIST_ADDING_REST_VIDEOS_ERR: () => "⚠️ Could not add the rest videos of the playlist",
+    COMMAND_PLAY_PLAYLIST_SUCCESS: (playlistTitle: string) => `All tracks in playlist: ${playlistTitle}, has been added to the queue!`,
+    COMMAND_PLAY_PLAYLIST_LOAD_ERR: (message: string) => `I could not load the playlist!\nError: \`${message}\``,
+    COMMAND_PLAY_YOUTUBE_SEARCH_NO_RESULTS: () => "⚠️ I could not obtain any search results!",
+    COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_TITLE: () => "Tracks Selection",
+    COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_CANCEL_MSG: () => "Type `cancel` or `c` to cancel tracks selection", // TODO: Make that so it's possible to localize "cancel" and "c" just like RepeatCommand
+    COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_FOOTER: (count: number) => `Please select one of the results ranging from 1-${count}`,
+    COMMAND_PLAY_YOUTUBE_SEARCH_CANCELED: () => "Tracks selection canceled.",
+    COMMAND_PLAY_YOUTUBE_SEARCH_INVALID_INPUT: () => "No or invalid value entered, tracks selection canceled.",
 
     // Queue command
     COMMAND_QUEUE_META_DESCRIPTION: () => "Show the current queue",
