@@ -16,7 +16,20 @@ export class Track {
     public type = TrackType.unknown;
     public readonly resourceFormat: string = "bestaudio";
     private _resource: AudioResource<ITrackMetadata> | null = null;
-    public constructor(public readonly queue: ServerQueue, public readonly metadata: ITrackMetadata, public readonly inlineVolume: boolean = false) {
+    public constructor(
+        public readonly queue: ServerQueue,
+        public readonly metadata: ITrackMetadata,
+        public readonly inlineVolume: boolean = false,
+        public ytdlArgs = {}
+    ) {
+        const defaultYtdlArgs = {
+            ffmpegLocation: `"${ffmpegStatic}"`,
+            format: this.resourceFormat,
+            limitRate: "800K",
+            output: "-",
+            quiet: true
+        };
+        this.ytdlArgs = { ...defaultYtdlArgs, ...ytdlArgs };
         Object.defineProperty(this, "_resource", { enumerable: false });
     }
 
@@ -24,15 +37,7 @@ export class Track {
     public createAudioResource(): Promise<{ resource: AudioResource<ITrackMetadata>; process: execa.ExecaChildProcess }> {
         return new Promise((resolve, reject) => {
             const process = this.queue.client.ytdl.raw(
-                this.metadata.url,
-                {
-                    format: this.resourceFormat,
-                    ffmpegLocation: `"${ffmpegStatic}"`,
-                    output: "-",
-                    quiet: true,
-                    limitRate: "800K"
-                },
-                { stdio: ["ignore", "pipe", "ignore"] }
+                this.metadata.url, this.ytdlArgs, { stdio: ["ignore", "pipe", "ignore"] }
             );
             if (!process.stdout) {
                 reject(new Error("No stdout"));
