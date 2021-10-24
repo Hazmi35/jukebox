@@ -74,6 +74,8 @@ export const lang = {
 
     // Pause command
     COMMAND_PAUSE_META_DESCRIPTION: () => "Pause the music player",
+    COMMAND_PAUSE_SUCCESS: () => "⏸ The music player paused",
+    COMMAND_PAUSE_ALREADY_PAUSED: () => "⚠️ The music player is already paused!",
 
     // Ping command
     COMMAND_PING_META_DESCRIPTION: () => "Shows the current ping of the bot.",
