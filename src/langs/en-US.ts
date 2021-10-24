@@ -45,6 +45,11 @@ export const lang = {
     // Eval command
     COMMAND_EVAL_META_DESCRIPTION: () => "Only the bot owner can use this command",
     COMMAND_EVAL_META_ARGS: () => ["Some js code"],
+    COMMAND_EVAL_NO_PERM: () => "⚠️ This command is limited to the bot owner only",
+    COMMAND_EVAL_NO_INPUT: () => "⚠️ No js code was provided",
+    COMMAND_EVAL_INPUT_FIELD_NAME: () => "Input",
+    COMMAND_EVAL_OUTPUT_FIELD_NAME: () => "Output",
+    COMMAND_EVAL_ERROR_FIELD_NAME: () => "Error",
 
     // Help Command
     COMMAND_HELP_META_DESCRIPTION: () => "Shows the help menu",

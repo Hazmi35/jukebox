@@ -18,15 +18,15 @@ export class EvalCommand extends BaseCommand {
         const client = this.client;
 
         if (!client.config.owners.includes(msg.author.id)) {
-            return message.channel.send({ embeds: [createEmbed("error", "❗ This command is limited to the bot owner only")] });
+            return message.channel.send({ embeds: [createEmbed("error", client.lang.COMMAND_EVAL_NO_PERM())] });
         }
 
         const embed = createEmbed("info")
-            .addField("Input", `\`\`\`js\n${args.join(" ")}\`\`\``);
+            .addField(client.lang.COMMAND_EVAL_INPUT_FIELD_NAME(), `\`\`\`js\n${args.join(" ")}\`\`\``);
 
         try {
             const code = args.slice(0).join(" ");
-            if (!code) return message.channel.send({ embeds: [createEmbed("error", "No js code was provided")] });
+            if (!code) return message.channel.send({ embeds: [createEmbed("error", client.lang.COMMAND_EVAL_NO_INPUT())] });
             let evaled = await eval(code);
 
             if (typeof evaled !== "string") {
@@ -38,15 +38,15 @@ export class EvalCommand extends BaseCommand {
             const output = this.clean(evaled as string);
             if (output.length > 1024) {
                 const hastebin = await client.util.hastebin(output);
-                embed.addField("Output", `${hastebin}.js`);
-            } else { embed.addField("Output", `\`\`\`js\n${output}\`\`\``); }
+                embed.addField(client.lang.COMMAND_EVAL_OUTPUT_FIELD_NAME(), `${hastebin}.js`);
+            } else { embed.addField(client.lang.COMMAND_EVAL_OUTPUT_FIELD_NAME(), `\`\`\`js\n${output}\`\`\``); }
             void message.channel.send({ embeds: [embed] });
         } catch (e: any) {
             const error = this.clean(e as string);
             if (error.length > 1024) {
                 const hastebin = await client.util.hastebin(error);
-                embed.addField("Error", `${hastebin}.js`);
-            } else { embed.setColor("#FF0000").addField("Error", `\`\`\`js\n${error}\`\`\``); }
+                embed.addField(client.lang.COMMAND_EVAL_ERROR_FIELD_NAME(), `${hastebin}.js`);
+            } else { embed.setColor("#FF0000").addField(client.lang.COMMAND_EVAL_ERROR_FIELD_NAME(), `\`\`\`js\n${error}\`\`\``); }
             message.channel.send({ embeds: [embed] }).catch(e => client.logger.error("EVAL_CMD_MSG_ERR:", e));
             client.logger.error("EVAL_CMD_ERR:", e);
         }
