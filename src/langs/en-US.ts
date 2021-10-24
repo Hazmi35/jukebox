@@ -54,6 +54,13 @@ export const lang = {
     // Help Command
     COMMAND_HELP_META_DESCRIPTION: () => "Shows the help menu",
     COMMAND_HELP_META_ARGS: () => ["Command name"],
+    COMMAND_HELP_EMBED_TITLE: () => "Help menu",
+    COMMAND_HELP_EMBED_FOOTER: (prefix: string) => `Use ${prefix}help <command> to get more info on a specific command!`,
+    COMMAND_HELP_EXTENDED_EMBED_TITLE: (name: string) => `Information for the ${name} command`,
+    COMMAND_HELP_EXTENDED_EMBED_CMD_NAME: () => "Name",
+    COMMAND_HELP_EXTENDED_EMBED_CMD_DESC: () => "Description",
+    COMMAND_HELP_EXTENDED_EMBED_CMD_ALIASES: () => "Aliases",
+    COMMAND_HELP_EXTENDED_EMBED_CMD_USAGE: () => "Usage",
 
     // Invite Command
     COMMAND_INVITE_META_DESCRIPTION: () => "Send the bot's invite link",
