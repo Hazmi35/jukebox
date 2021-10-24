@@ -37,9 +37,6 @@ export class VoiceStateUpdateEvent extends BaseEvent {
             }
         }
 
-        // Don't do anything if voice channel is deleted.
-        if (newVC === null) return undefined;
-
         if (newState.mute !== oldState.mute || newState.deaf !== oldState.deaf) return undefined; // TODO: Handle all listeners deaf & bot muted event?
 
         // Handle when the bot is moved to another voice channel
