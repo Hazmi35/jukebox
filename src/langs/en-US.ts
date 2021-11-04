@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys */
 import stripIndent from "strip-indent";
+import pluralize from "plur";
 
 // TODO: Make this more readable by adding spaces
 
@@ -105,7 +106,7 @@ export const lang = {
         Please use \`${prefix}repeat\` instead`
     ),
     COMMAND_PLAY_ALREADY_QUEUED_MSG2: (count: number, prefix: string) => stripIndent(
-        `Over ${count} track${count >= 2 ? "s" : ""} are skipped because it was a duplicate, and this bot configuration disallow duplicated tracks in queue.
+        `Over ${count} ${pluralize("track", count)} are skipped because it was a duplicate, and this bot configuration disallow duplicated tracks in queue.
         Please use \`${prefix}repeat\` instead`
     ),
     COMMAND_PLAY_COULD_NOT_JOIN_VC: (message: string) => `Error: Could not join the voice channel!\nReason: \`${message}\``,
