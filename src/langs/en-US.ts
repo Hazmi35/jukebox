@@ -72,6 +72,7 @@ export const lang = {
     COMMAND_NOWPLAYING_META_DESCRIPTION: () => "Send info about the current music player",
     COMMAND_NOWPLAYING_MESSAGE: () => "▶ Now playing:",
     COMMAND_NOWPLAYING_MESSAGE_PAUSED: () => "⏸ Now playing (paused):",
+    COMMAND_NOWPLAYING_EMBED_FOOTER: (mode: string) => `Repeating mode: ${mode}`,
 
     // Pause command
     COMMAND_PAUSE_META_DESCRIPTION: () => "Pause the music player",
