@@ -91,7 +91,6 @@ export const lang = {
     // Play command
     COMMAND_PLAY_META_DESCRIPTION: () => "Play some music",
     COMMAND_PLAY_META_ARGS: () => ["YouTube video or playlist URL / YouTube video name"],
-    COMMAND_PLAY_INVALID_ARGS: (prefix: string) => `⚠️ Invalid argument, type \`${prefix}help play\` for more info`,
     COMMAND_PLAY_ALREADY_PLAYING: (vcName: string) => `⚠️ The music player is already playing to **${vcName}** voice channel`,
     COMMAND_PLAY_INVALID_YOUTUBE_URL: () => "⚠️ Invalid YouTube URL",
     COMMAND_PLAY_INVALID_SOURCE: () => "⚠️ Jukebox currently only supports YouTube as a source.",
@@ -154,5 +153,6 @@ export const lang = {
     COMMAND_VOLUME_META_ARGS: () => ["New volume"],
 
     // Misc
+    COMMAND_INVALID_ARGS: (prefix: string, cmd: string) => `⚠️ Invalid argument, type \`${prefix}help ${cmd}\` for more info`,
     NOT_AVAILABLE: () => "N/A"
 };
