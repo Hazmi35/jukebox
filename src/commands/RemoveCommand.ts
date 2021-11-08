@@ -22,17 +22,19 @@ export class RemoveCommand extends BaseCommand {
             });
         }
 
-        const tracks = message.guild!.queue!.tracks.map(s => s);
+        // Convert to normal array
+        const { store: tracks } = message.guild!.queue!.tracks;
+
         const currentTrack = message.guild!.queue!.tracks.first()!;
-        const track = tracks[Number(args[0]) - 1] as Track | undefined;
+        const track = tracks[(Number(args[0]) - 1)] as Track | undefined;
 
         if (track === undefined) return message.channel.send({ embeds: [createEmbed("error", message.client.lang.COMMAND_REMOVE_NOT_FOUND(Number(args[0])))] });
 
-        if (currentTrack.metadata.id === track.metadata.id) {
+        if (currentTrack.id === track.id) {
             if (message.guild?.queue?.playing === false) message.guild.queue.player.unpause();
             message.guild!.queue?.player!.stop();
         } else {
-            message.guild?.queue?.tracks.delete(message.guild.queue.tracks.findKey(x => x.metadata.id === track.metadata.id)!);
+            message.guild?.queue?.tracks.delete(track);
         }
 
         message.channel.send({
