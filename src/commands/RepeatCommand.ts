@@ -3,31 +3,38 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isMusicQueueExists, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
 import { Message } from "discord.js";
-import { baseLoopModes, loopMode, loopModeEmojis, loopModeTypes } from "../constants/loopMode";
+import { repeatMode } from "../constants/repeatMode";
 
 @DefineCommand({
     aliases: ["loop", "music-loop", "music-repeat"],
     name: "repeat",
     description: lang => lang.COMMAND_REPEAT_META_DESCRIPTION(),
-    usage: () => "{prefix}repeat [all | one | off]" // TODO: Also localize "all | one | off" using enums?
+    usage: lang => `{prefix}repeat [${lang.COMMAND_REPEAT_META_ARGS()[0]}]`
 })
 export class RepeatCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
     @isMusicQueueExists()
     @isSameVoiceChannel()
     public execute(message: Message, args: string[]): any {
-        if (!args[0]) args[0] = baseLoopModes[message.guild?.queue?.loopMode === 2 ? 0 : Number(message.guild?.queue?.loopMode) + 1];
+        const baseRepeatModes = ["off", "one", "all"];
+        if (!args[0]) args[0] = baseRepeatModes[message.guild?.queue?.repeatMode === 2 ? 0 : Number(message.guild?.queue?.repeatMode) + 1];
 
-        const mode = args[0] as keyof typeof loopMode;
+        const mode = args[0] as keyof typeof repeatMode;
 
-        if (loopMode[mode] as any === undefined) {
+        if (repeatMode[mode] as any === undefined) {
             message.channel.send({
-                embeds: [createEmbed("error", `Invalid value, see \`${this.client.config.prefix}help ${this.meta.name}\` for more info!`)]
+                embeds: [createEmbed("error", message.client.lang.COMMAND_INVALID_ARGS(message.client.config.prefix, this.meta.name))]
             }).catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
         } else {
-            message.guild!.queue!.loopMode = loopMode[mode];
+            message.guild!.queue!.repeatMode = repeatMode[mode];
             message.channel.send({
-                embeds: [createEmbed("info", `${loopModeEmojis[message.guild!.queue!.loopMode]} Repeating **${loopModeTypes[message.guild!.queue!.loopMode]}**`)]
+                embeds: [
+                    createEmbed("info",
+                        message.client.lang.COMMAND_REPEAT_SUCCESS(
+                            message.client.lang.MUSIC_REPEAT_MODE_EMOJIS(message.guild!.queue!.repeatMode),
+                            message.client.lang.MUSIC_REPEAT_MODE_TYPES(message.guild!.queue!.repeatMode)
+                        ))
+                ]
             }).catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
         }
     }

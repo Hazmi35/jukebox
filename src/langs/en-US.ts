@@ -2,8 +2,6 @@
 import stripIndent from "strip-indent";
 import pluralize from "plur";
 
-// TODO: Make this more readable by adding spaces
-
 export const lang = {
     // Language Metadata
     META_ID: () => "en-US",
@@ -140,6 +138,8 @@ export const lang = {
 
     // Repeat command
     COMMAND_REPEAT_META_DESCRIPTION: () => "Repeat current music or the queue",
+    COMMAND_REPEAT_META_ARGS: () => ["[all | one | off]"],
+    COMMAND_REPEAT_SUCCESS: (emoji: string, type: string) => `${emoji} Repeating **${type}**`,
 
     // Resume command
     COMMAND_RESUME_META_DESCRIPTION: () => "Resume the music player",
@@ -164,6 +164,8 @@ export const lang = {
     COMMAND_VOLUME_SET: (volume: number) => `📶 Volume set to \`${volume}\``,
 
     // Misc
+    MUSIC_REPEAT_MODE_TYPES: (index: number) => ["disabled", "current track", "all tracks in the queue"][index],
+    MUSIC_REPEAT_MODE_EMOJIS: (index: number) => ["▶", "🔂", "🔁"][index],
     COMMAND_INVALID_ARGS: (prefix: string, cmd: string) => `⚠️ Invalid argument, type \`${prefix}help ${cmd}\` for more info`,
     NOT_AVAILABLE: () => "N/A"
 };

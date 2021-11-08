@@ -3,7 +3,7 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isMusicQueueExists } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
 import { Message } from "discord.js";
-import { loopMode, loopModeTypes } from "../constants/loopMode";
+import { repeatMode } from "../constants/repeatMode";
 import { images } from "../constants/images";
 
 @DefineCommand({
@@ -21,7 +21,7 @@ export class NowPlayingCommand extends BaseCommand {
             `**[${track?.metadata.title as string}](${track?.metadata.url as string})**`)
             .setThumbnail(track?.metadata.thumbnail as string);
 
-        if (message.guild?.queue?.loopMode !== loopMode.disable) embed.setFooter(`Repeating mode: ${loopModeTypes[message.guild!.queue!.loopMode]}`, images.info);
+        if (message.guild?.queue?.repeatMode !== repeatMode.disable) embed.setFooter(`Repeating mode: ${message.client.lang.MUSIC_REPEAT_MODE_TYPES(message.guild!.queue!.repeatMode)}`, images.info);
         return message.channel.send({ embeds: [embed] });
     }
 }

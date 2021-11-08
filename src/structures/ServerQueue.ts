@@ -4,7 +4,7 @@ import { AudioPlayer, AudioPlayerError, AudioPlayerStatus, createAudioPlayer, en
 import { createEmbed } from "../utils/createEmbed";
 import { Jukebox } from "./Jukebox";
 import { Track, TrackType } from "../structures/Track";
-import { loopMode } from "../constants/loopMode";
+import { repeatMode } from "../constants/repeatMode";
 import { YouTubeTrack } from "./YouTubeTrack";
 
 const nonEnum = { enumerable: false };
@@ -13,7 +13,7 @@ export class ServerQueue {
     public connection: VoiceConnection | null = null;
     public readonly player: AudioPlayer = createAudioPlayer();
     public readonly tracks = new TrackManager();
-    public loopMode = loopMode.disable;
+    public repeatMode = repeatMode.disable;
     public timeout: NodeJS.Timeout | null = null;
     private _currentTrack: Track | undefined = undefined;
     private _volume = 0;
@@ -58,10 +58,10 @@ export class ServerQueue {
             }
             if (newState.status === AudioPlayerStatus.Idle) {
                 // Handle loop/repeat feature
-                if (this.loopMode !== loopMode.one) { // If the loopMode is not one, then
+                if (this.repeatMode !== repeatMode.one) { // If the repeatMode is not one, then
                     this.tracks.deleteFirst(); // Delete the first track
 
-                    if (this.loopMode === loopMode.all) {
+                    if (this.repeatMode === repeatMode.all) {
                         let track;
                         if (type === TrackType.youtube) track = new YouTubeTrack(this, metadata, this.client.config.enableInlineVolume);
                         else track = new Track(this, metadata, this.client.config.enableInlineVolume);
