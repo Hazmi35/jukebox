@@ -165,6 +165,18 @@ export const lang = {
     // MessageEvent
     MESSAGE_EVENT_ON_MENTION: (prefix: string) => `Hi, I'm a simple music bot, see my commands with \`${prefix}help\``,
 
+    // VoiceStateUpdateEvent
+    BOT_DISCONNECTED_FROM_VOICE: () => "I was disconnected from the voice channel, the queue will be deleted",
+    MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED: (duration: number) => `**${duration}** have passed and there is no one who joins my voice channel, the queue was deleted.`,
+    MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE: () => `⏹ Queue deleted.`,
+    MUSIC_DELETEQUEUETIMEOUT_PAUSED: (duration: number) => stripIndent(`
+        Everyone has left from my voice channel, to save resources, the queue was paused.
+        If there's no one who joins my voice channel in the next **${duration}**, the queue will be deleted.
+    `),
+    MUSIC_DELETEQUEUETIMEOUT_PAUSED_EMBED_TITLE: () => "⏸ Queue paused.",
+    MUSIC_DELETEQUEUETIMEOUT_RESUMED: (title: string, url: string) => `Someone joins the voice channel. Enjoy the music 🎶\nNow Playing: **[${title}](${url})**`,
+    MUSIC_DELETEQUEUETIMEOUT_RESUMED_EMBED_TITLE: () => "▶ Queue resumed",
+
     // Command Handler
     COMMAND_TIMEOUT: (username: string, timeLeft: string) => `**${username}**, please wait **${timeLeft}** cooldown time!`,
 
