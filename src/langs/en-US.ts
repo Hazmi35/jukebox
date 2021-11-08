@@ -188,6 +188,14 @@ export const lang = {
     MUSIC_QUEUE_ERROR_WHILE_PLAYING: (message: string) => `Error while trying to play music\nReason: \`${message}\``,
     MUSIC_VOICE_HANDLER_COULDNT_ESTABLISH: () => "Could not establish a voice connection within 15 seconds.",
 
+    // Decorators
+    // Music helpers
+    MUSIC_HELPER_QUEUE_DOES_NOT_EXISTS: () => "There is nothing playing.",
+    MUSIC_HELPER_NEED_TO_BE_ON_THE_SAME_VC: () => "You need to be in the same voice channel as mine",
+    MUSIC_HELPER_USER_NOT_IN_VC: () => "I'm sorry, but you need to be in a voice channel to do that",
+    MUSIC_HELPER_BOT_CANT_CONNECT: () => "I'm sorry, but I can't connect to your voice channel, make sure I have the proper permissions!",
+    MUSIC_HELPER_BOT_CANT_SPEAK: () => "I'm sorry, but I can't speak in that voice channel. make sure I have the proper permissions!",
+
     // Misc
     MUSIC_REPEAT_MODE_TYPES: (index: number) => ["disabled", "current track", "all tracks in the queue"][index],
     MUSIC_REPEAT_MODE_EMOJIS: (index: number) => ["▶", "🔂", "🔁"][index],
