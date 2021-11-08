@@ -162,6 +162,12 @@ export const lang = {
     COMMAND_VOLUME_OVER_LIMIT: (max: number) => `❗ I can't set the volume above \`${max}\``,
     COMMAND_VOLUME_SET: (volume: number) => `📶 Volume set to \`${volume}\``,
 
+    // MessageEvent
+    MESSAGE_EVENT_ON_MENTION: (prefix: string) => `Hi, I'm a simple music bot, see my commands with \`${prefix}help\``,
+
+    // Command Handler
+    COMMAND_TIMEOUT: (username: string, timeLeft: string) => `**${username}**, please wait **${timeLeft}** cooldown time!`,
+
     // Misc
     MUSIC_REPEAT_MODE_TYPES: (index: number) => ["disabled", "current track", "all tracks in the queue"][index],
     MUSIC_REPEAT_MODE_EMOJIS: (index: number) => ["▶", "🔂", "🔁"][index],

@@ -12,7 +12,7 @@ export class MessageCreateEvent extends BaseEvent {
 
         if ((await this.client.util.getUserFromMention(message.content))?.id === message.client.user?.id) {
             return message.channel.send({
-                embeds: [createEmbed("info", `Hi, I'm a simple music bot, see my commands with \`${this.client.config.prefix}help\``)]
+                embeds: [createEmbed("info", message.client.lang.MESSAGE_EVENT_ON_MENTION(message.client.config.prefix))]
             });
         }
     }
