@@ -181,6 +181,13 @@ export const lang = {
     // Command Handler
     COMMAND_TIMEOUT: (username: string, timeLeft: string) => `**${username}**, please wait **${timeLeft}** cooldown time!`,
 
+    // Music Queue System
+    MUSIC_QUEUE_START_PLAYING: (title: string, url: string) => `▶ Start playing: **[${title}](${url})**`,
+    MUSIC_QUEUE_STOP_PLAYING: (title: string, url: string) => `⏹ Stop playing: **[${title}](${url})**`,
+    MUSIC_QUEUE_FINISHED: (prefix: string) => `⏹ Queue is finished! Use "${prefix}play" to play more music`,
+    MUSIC_QUEUE_ERROR_WHILE_PLAYING: (message: string) => `Error while trying to play music\nReason: \`${message}\``,
+    MUSIC_VOICE_HANDLER_COULDNT_ESTABLISH: () => "Could not establish a voice connection within 15 seconds.",
+
     // Misc
     MUSIC_REPEAT_MODE_TYPES: (index: number) => ["disabled", "current track", "all tracks in the queue"][index],
     MUSIC_REPEAT_MODE_EMOJIS: (index: number) => ["▶", "🔂", "🔁"][index],
