@@ -18,7 +18,7 @@ export class StopCommand extends BaseCommand {
         message.guild?.queue?.tracks.clear();
         message.guild?.queue?.player.stop(true);
 
-        message.channel.send({ embeds: [createEmbed("info", "⏹ Queue stopped.")] })
+        message.channel.send({ embeds: [createEmbed("info", message.client.lang.COMMAND_STOP_SUCCESS())] })
             .catch(e => this.client.logger.error("STOP_CMD_ERR:", e));
     }
 }

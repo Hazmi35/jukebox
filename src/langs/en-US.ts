@@ -152,6 +152,7 @@ export const lang = {
 
     // Stop command
     COMMAND_STOP_META_DESCRIPTION: () => "Stop the queue",
+    COMMAND_STOP_SUCCESS: () => "⏹ Queue stopped.",
 
     // Volume command
     COMMAND_VOLUME_META_DESCRIPTION: () => "Show or change the music player's volume",
