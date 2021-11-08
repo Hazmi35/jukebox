@@ -7,8 +7,8 @@ import { images } from "../constants/images";
 @DefineCommand({
     aliases: ["commands", "cmds"],
     name: "help",
-    description: "Shows the help menu",
-    usage: "{prefix}help [command]"
+    description: lang => lang.COMMAND_HELP_META_DESCRIPTION(),
+    usage: lang => `{prefix}help [${lang.COMMAND_HELP_META_ARGS(0)}]`
 })
 export class HelpCommand extends BaseCommand {
     public execute(message: Message, args: string[]): void {
@@ -18,13 +18,22 @@ export class HelpCommand extends BaseCommand {
             message.channel.send({
                 embeds: [
                     createEmbed("info")
-                        .setTitle(`Information for the ${command.meta.name} command`)
+                        .setTitle(this.client.lang.COMMAND_HELP_EXTENDED_EMBED_TITLE(command.meta.name))
                         .setThumbnail(images.questionMark)
                         .addFields([
-                            { name: "Name", value: `\`${command.meta.name}\``, inline: true },
-                            { name: "Description", value: command.meta.description!, inline: true },
-                            { name: "Aliases", value: `${Number(command.meta.aliases?.length) > 0 ? command.meta.aliases?.map(c => `\`${c}\``).join(", ") as string : "None."}`, inline: true },
-                            { name: "Usage", value: `\`${command.meta.usage?.replace(/{prefix}/g, message.client.config.prefix) as string}\``, inline: false }
+                            { name: this.client.lang.COMMAND_HELP_EXTENDED_EMBED_CMD_NAME(), value: `\`${command.meta.name}\``, inline: true },
+                            { name: this.client.lang.COMMAND_HELP_EXTENDED_EMBED_CMD_DESC(), value: command.meta.description!(this.client.lang), inline: true },
+                            {
+                                name: this.client.lang.COMMAND_HELP_EXTENDED_EMBED_CMD_ALIASES(),
+                                value: `${Number(command.meta.aliases?.length) > 0
+                                    ? command.meta.aliases?.map(c => `\`${c}\``).join(", ") as string
+                                    : this.client.lang.NOT_AVAILABLE()}`,
+                                inline: true
+                            },
+                            {
+                                name: this.client.lang.COMMAND_HELP_EXTENDED_EMBED_CMD_USAGE(),
+                                value: `\`${command.meta.usage!(this.client.lang).replace(/{prefix}/g, message.client.config.prefix)}\``, inline: false
+                            }
                         ])
                 ]
             }).catch(e => this.client.logger.error("HELP_CMD_ERR:", e));
@@ -32,9 +41,9 @@ export class HelpCommand extends BaseCommand {
             message.channel.send({
                 embeds: [
                     createEmbed("info", message.client.commands.filter(cmd => !cmd.meta.disable && cmd.meta.name !== "eval").map(c => `\`${c.meta.name}\``).join(" "))
-                        .setTitle("Help Menu")
+                        .setTitle(this.client.lang.COMMAND_HELP_EMBED_TITLE())
                         .setThumbnail(message.client.user?.displayAvatarURL() as string)
-                        .setFooter(`Use ${message.client.config.prefix}help <command> to get more info on a specific command!`, images.info)
+                        .setFooter(this.client.lang.COMMAND_HELP_EMBED_FOOTER(message.client.config.prefix), images.info)
                 ]
             }).catch(e => this.client.logger.error("HELP_CMD_ERR:", e));
         }

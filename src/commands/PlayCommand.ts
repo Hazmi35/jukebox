@@ -11,11 +11,12 @@ import { createEmbed } from "../utils/createEmbed";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isSameVoiceChannel, isUserInTheVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 
+// TODO: Rename "Playlist" to YouTubePlaylist for example: loadPlaylist() -> loadYouTubePlaylist()
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
     name: "play",
-    description: "Play some music",
-    usage: "{prefix}play <yt video or playlist link / yt video name>"
+    description: lang => lang.COMMAND_PLAY_META_DESCRIPTION(),
+    usage: lang => `{prefix}play <${lang.COMMAND_PLAY_META_ARGS(0)}>`
 })
 export class PlayCommand extends BaseCommand {
     private readonly youtubeHostnames = ["youtu.be", "youtube.com", "www.youtube.com", "music.youtube.com"];
@@ -30,7 +31,7 @@ export class PlayCommand extends BaseCommand {
 
         if (!args[0]) {
             return message.channel.send({
-                embeds: [createEmbed("warn", `Invalid argument, type \`${this.client.config.prefix}help play\` for more info`)]
+                embeds: [createEmbed("error", this.client.lang.COMMAND_INVALID_ARGS(message.client.config.prefix, this.meta.name))]
             });
         }
 
@@ -40,7 +41,7 @@ export class PlayCommand extends BaseCommand {
 
         if (message.guild!.queue !== null && voiceChannel.id !== message.guild!.queue.voiceChannel?.id) {
             return message.channel.send({
-                embeds: [createEmbed("warn", `The music player is already playing to **${message.guild!.queue.voiceChannel!.name}** voice channel`)]
+                embeds: [createEmbed("warn", this.client.lang.COMMAND_PLAY_ALREADY_PLAYING(message.guild!.queue.voiceChannel!.name))]
             });
         }
 
@@ -61,12 +62,12 @@ export class PlayCommand extends BaseCommand {
                         return this.loadPlaylist(youtubeURL.searchParams.get("list")!, message, voiceChannel);
                     } else {
                         return message.channel.send({
-                            embeds: [createEmbed("error", `⚠️ Invalid YouTube URL`)]
+                            embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_INVALID_YOUTUBE_URL())]
                         });
                     }
                 } else {
                     return message.channel.send({
-                        embeds: [createEmbed("error", "⚠️ Jukebox currently only supports YouTube as a source.")]
+                        embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_INVALID_SOURCE())]
                     });
                 }
             } else {
@@ -76,16 +77,16 @@ export class PlayCommand extends BaseCommand {
             }
             if (trackResource === undefined) {
                 return message.channel.send({
-                    embeds: [createEmbed("error", `⚠️ Could not resolve the track resource`)]
+                    embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_COULD_NOT_RESOLVE_RESOURCE())]
                 });
             }
             await this.handleVideo(trackResource, message, voiceChannel);
         } catch (error: any) {
             // TODO: Remove this next line if https://github.com/SuspiciousLookingOwl/youtubei/issues/37 is resolved.
-            if (error.message === "Cannot read properties of undefined (reading 'find')") error = new Error("404 YouTube Item not found.");
+            if (error.message === "Cannot read properties of undefined (reading 'find')") error = new Error(this.client.lang.COMMAND_PLAY_RESOURCE_NOT_FOUND());
             else this.client.logger.error("PLAY_ERR:", error);
 
-            message.channel.send({ embeds: [createEmbed("error", `Error while processing track resource\nReason: \`${error.message}\``)] })
+            message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_RESOURCE_PROCESSING_ERR(error.message as string))] })
                 .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
         }
     }
@@ -100,7 +101,7 @@ export class PlayCommand extends BaseCommand {
         };
         const addedTrackMsg = (metadata: ITrackMetadata): void => {
             message.channel.send({
-                embeds: [createEmbed("info", `✅ Track **[${metadata.title}](${metadata.url})** has been added to the queue`).setThumbnail(metadata.thumbnail)]
+                embeds: [createEmbed("info", this.client.lang.COMMAND_PLAY_TRACK_ADDED(metadata.title, metadata.url)).setThumbnail(metadata.thumbnail)]
             }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
         };
         if (message.guild?.queue) {
@@ -114,10 +115,8 @@ export class PlayCommand extends BaseCommand {
                 }
                 return message.channel.send({
                     embeds: [
-                        createEmbed("warn",
-                            `Track **[${metadata.title}](${metadata.url})** is already queued, and this bot configuration disallow duplicated tracks in queue, ` +
-                            `please use \`${this.client.config.prefix}repeat\` instead`)
-                            .setTitle("Already queued / duplicate")
+                        createEmbed("warn", this.client.lang.COMMAND_PLAY_ALREADY_QUEUED_MSG(metadata.title, metadata.url, message.client.config.prefix))
+                            .setTitle(this.client.lang.COMMAND_PLAY_ALREADY_QUEUED_TITLE())
                             .setThumbnail(metadata.thumbnail)
                     ]
                 });
@@ -142,7 +141,7 @@ export class PlayCommand extends BaseCommand {
                 message.guild?.queue.tracks.clear();
                 message.guild!.queue = null;
                 this.client.logger.error("HANDLE_VIDEO_ERR:", error);
-                message.channel.send({ embeds: [createEmbed("error", `Error: Could not join the voice channel!\nReason: \`${error.message}\``)] })
+                message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_COULD_NOT_JOIN_VC(error.message as string))] })
                     .catch(e => this.client.logger.error("HANDLE_VIDEO_ERR:", e));
                 return undefined;
             }
@@ -152,12 +151,12 @@ export class PlayCommand extends BaseCommand {
 
     private async loadPlaylist(id: string, message: Message, voiceChannel: VoiceChannel | StageChannel, watchEndpoint = false, index = 1): Promise<any> {
         const playlist = await this.youtube.getPlaylist(id);
-        if (playlist === undefined) return message.channel.send({ embeds: [createEmbed("error", "⚠️ Playlist not found")] });
-        if (playlist.videos.length === 0) return message.channel.send({ embeds: [createEmbed("error", "⚠️ The specified playlist is empty.")] });
+        if (playlist === undefined) return message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_NOT_FOUND())] });
+        if (playlist.videos.length === 0) return message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_EMPTY())] });
         if (playlist instanceof MixPlaylist) {
             return message.channel.send({
                 embeds: [
-                    createEmbed("error", "RD / YouTube mix playlist is not supported yet. Please see [this issue](https://github.com/Hazmi35/jukebox/issues/594)")
+                    createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_RD_PLAYLIST_NOT_SUPPORTED())
                 ]
             });
         }
@@ -169,7 +168,7 @@ export class PlayCommand extends BaseCommand {
         if (watchEndpoint) {
             addingPlaylistVideoMessage = await message.channel.send({
                 embeds: [
-                    createEmbed("info", `Adding all tracks starting from number ${index + 1} video in playlist: ${playlistTitle}, hang on...`)
+                    createEmbed("info", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_VIDEOS(index + 1, playlistTitle))
                         .setThumbnail(playlist.videos[0].thumbnails.best!)
 
                 ]
@@ -177,7 +176,7 @@ export class PlayCommand extends BaseCommand {
         } else {
             addingPlaylistVideoMessage = await message.channel.send({
                 embeds: [
-                    createEmbed("info", `Adding all tracks in playlist: ${playlistTitle}, hang on...`)
+                    createEmbed("info", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ALL_ADDING_VIDEOS(playlistTitle))
                         .setThumbnail(playlist.videos[0].thumbnails.best!)
                 ]
             });
@@ -185,7 +184,7 @@ export class PlayCommand extends BaseCommand {
             if (!firstVideo) {
                 await message.channel.send({
                     embeds: [
-                        createEmbed("error", `⚠️ Could not add the first video of the playlist`)
+                        createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_FIRST_VIDEOS_ERR())
                             .setThumbnail(playlist.videos[0].thumbnails.best!)
                     ]
                 });
@@ -199,7 +198,7 @@ export class PlayCommand extends BaseCommand {
         if (!videos) {
             await message.channel.send({
                 embeds: [
-                    createEmbed("error", `⚠️ Could not add the rest videos of the playlist`)
+                    createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_REST_VIDEOS_ERR())
                         .setThumbnail(playlist.videos[0].thumbnails.best!)
                 ]
             });
@@ -215,10 +214,8 @@ export class PlayCommand extends BaseCommand {
             const tracks = alradyQueued.map(t => `**${num++}.** **[${t.title}](${this.generateYouTubeURL(t.id, "video")})**`);
             message.channel.send({
                 embeds: [
-                    createEmbed("warn",
-                        `Over ${alradyQueued.length} track${alradyQueued.length >= 2 ? "s" : ""} are skipped because it was a duplicate` +
-                            ` and this bot configuration disallow duplicated tracks in queue, please use \`${this.client.config.prefix}repeat\` instead`)
-                        .setTitle("Already queued / duplicate")
+                    createEmbed("warn", this.client.lang.COMMAND_PLAY_ALREADY_QUEUED_MSG2(alradyQueued.length, message.client.config.prefix))
+                        .setTitle(this.client.lang.COMMAND_PLAY_ALREADY_QUEUED_TITLE())
                 ]
             }).catch(e => this.client.logger.error("PLAYLIST_LOAD_ERR:", e));
             const pages = this.client.util.paginate(tracks.join("\n"));
@@ -226,14 +223,14 @@ export class PlayCommand extends BaseCommand {
             for (const page of pages) {
                 howManyMessage++;
                 const embed = createEmbed(`warn`, page as string);
-                if (howManyMessage === 1) embed.setTitle("Duplicated tracks");
+                if (howManyMessage === 1) embed.setTitle(this.client.lang.COMMAND_PLAY_ALREADY_QUEUED_TITLE2());
                 await message.channel.send({ embeds: [embed] });
             }
             this.playlistAlreadyQueued.delete(message.guild!.id);
         }
         message.channel.send({
             embeds: [
-                createEmbed("info", `All tracks in playlist: ${playlistTitle}, has been added to the queue!`)
+                createEmbed("info", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_SUCCESS(playlistTitle))
                     .setThumbnail(playlist.videos[0].thumbnails.best!)
             ]
         }).catch(e => this.client.logger.error("PLAYLIST_LOAD_ERR:", e));
@@ -252,7 +249,7 @@ export class PlayCommand extends BaseCommand {
             return results.slice(startIndex, results.length);
         } catch (e: any) {
             this.client.logger.error("LOAD_PLAYLIST_ERR:", new Error(e.stack as string));
-            message.channel.send({ embeds: [createEmbed("error", `I could not load the playlist!\nError: \`${e.message}\``)] })
+            message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_LOAD_ERR(e.message as string))] })
                 .catch(e => this.client.logger.error("LOAD_PLAYLIST_ERR:", new Error(e as string)));
             return undefined;
         }
@@ -261,7 +258,7 @@ export class PlayCommand extends BaseCommand {
     private async createSearchPrompt(searchString: string, message: Message): Promise<Video | LiveVideo | "canceled" | undefined> {
         const videos = await this.youtube.search(searchString, { type: "video" }) as unknown as VideoCompact[];
         if (videos.length === 0) {
-            await message.channel.send({ embeds: [createEmbed("warn", "I could not obtain any search results!")] });
+            await message.channel.send({ embeds: [createEmbed("warn", this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_NO_RESULTS())] });
             return undefined;
         }
         if (videos.length === 1 || this.client.config.disableTrackSelection) return this.youtube.getVideo(videos[0].id);
@@ -271,13 +268,13 @@ export class PlayCommand extends BaseCommand {
         const msg = await message.channel.send({
             embeds: [
                 createEmbed("info")
-                    .setAuthor("Tracks Selection")
+                    .setAuthor(this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_TITLE())
                     .setDescription(
                         `${videosSliced.map(video => `**${++index} -** ${this.cleanTitle(video.title)}`).join("\n")}\n` +
-                    "*Type `cancel` or `c` to cancel tracks selection*"
+                    `*${this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_CANCEL_MSG()}*`
                     )
                     .setThumbnail(message.client.user?.displayAvatarURL() as string)
-                    .setFooter(`Please select one of the results ranging from 1-${videosSliced.length}`)
+                    .setFooter(this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_FOOTER(videosSliced.length))
             ]
         });
 
@@ -296,7 +293,7 @@ export class PlayCommand extends BaseCommand {
             response.first()?.delete().catch(e => e); // do nothing
 
             if (response.first()?.content === "c" || response.first()?.content === "cancel") {
-                await message.channel.send({ embeds: [createEmbed("info", "Tracks selection canceled.")] });
+                await message.channel.send({ embeds: [createEmbed("info", this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_CANCELED())] });
                 return "canceled";
             }
 
@@ -304,7 +301,7 @@ export class PlayCommand extends BaseCommand {
             return this.youtube.getVideo(videos[videoIndex - 1].id);
         } catch (error) {
             msg.delete().catch(e => this.client.logger.error("CREATE_SEARCH_PROMPT_ERR:", e));
-            message.channel.send({ embeds: [createEmbed("error", "No or invalid value entered, tracks selection canceled.")] })
+            message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_INVALID_INPUT())] })
                 .catch(e => this.client.logger.error("CREATE_SEARCH_PROMPT_ERR:", e));
             return undefined;
         }

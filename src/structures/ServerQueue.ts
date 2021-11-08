@@ -4,7 +4,7 @@ import { AudioPlayer, AudioPlayerError, AudioPlayerStatus, createAudioPlayer, en
 import { createEmbed } from "../utils/createEmbed";
 import { Jukebox } from "./Jukebox";
 import { Track, TrackType } from "../structures/Track";
-import { loopMode } from "../constants/loopMode";
+import { repeatMode } from "../constants/repeatMode";
 import { YouTubeTrack } from "./YouTubeTrack";
 
 const nonEnum = { enumerable: false };
@@ -13,7 +13,7 @@ export class ServerQueue {
     public connection: VoiceConnection | null = null;
     public readonly player: AudioPlayer = createAudioPlayer();
     public readonly tracks = new TrackManager();
-    public loopMode = loopMode.disable;
+    public repeatMode = repeatMode.disable;
     public timeout: NodeJS.Timeout | null = null;
     private _currentTrack: Track | undefined = undefined;
     private _volume = 0;
@@ -51,17 +51,17 @@ export class ServerQueue {
                 if (oldState.status === AudioPlayerStatus.Paused) return undefined;
                 this._currentTrack.setVolume(this.client.config.defaultVolume / this.client.config.maxVolume);
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${metadata.title}" on ${this.guild.name} started`);
-                this.textChannel?.send({ embeds: [createEmbed("info", `▶ Start playing: **[${metadata.title}](${metadata.url})**`).setThumbnail(metadata.thumbnail)] })
+                this.textChannel?.send({ embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_START_PLAYING(metadata.title, metadata.url)).setThumbnail(metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
                     .catch(e => this.client.logger.error("PLAY_ERR:", e));
                 return undefined;
             }
             if (newState.status === AudioPlayerStatus.Idle) {
                 // Handle loop/repeat feature
-                if (this.loopMode !== loopMode.one) { // If the loopMode is not one, then
+                if (this.repeatMode !== repeatMode.one) { // If the repeatMode is not one, then
                     this.tracks.deleteFirst(); // Delete the first track
 
-                    if (this.loopMode === loopMode.all) {
+                    if (this.repeatMode === repeatMode.all) {
                         let track;
                         if (type === TrackType.youtube) track = new YouTubeTrack(this, metadata, this.client.config.enableInlineVolume);
                         else track = new Track(this, metadata, this.client.config.enableInlineVolume);
@@ -72,21 +72,21 @@ export class ServerQueue {
                 const nextTrack = this.tracks.first();
 
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${metadata.title}" on ${this.guild.name} ended`);
-                this.textChannel?.send({ embeds: [createEmbed("info", `⏹ Stop playing: **[${metadata.title}](${metadata.url})**`).setThumbnail(metadata.thumbnail)] })
+                this.textChannel?.send({ embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_STOP_PLAYING(metadata.title, metadata.url)).setThumbnail(metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
                     .catch(e => this.client.logger.error("STOP_PLAYING_MSG_ERR:", e))
                     .finally(() => {
                         if (!nextTrack) {
                             this.oldMusicMessage = null; this.oldVoiceStateUpdateMessage = null;
                             this.textChannel?.send({
-                                embeds: [createEmbed("info", `⏹ Queue is finished! Use "${this.guild.client.config.prefix}play" to play more music`)]
+                                embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_FINISHED(this.guild.client.config.prefix))]
                             }).catch(e => this.client.logger.error("QUEUE_FINISHED_MSG_ERR:", e));
                             this.connection?.disconnect();
                             clearTimeout(this.timeout!);
                             return this.guild.queue = null;
                         }
-                        this.play(nextTrack).catch(e => {
-                            this.textChannel?.send({ embeds: [createEmbed("error", `Error while trying to play music\nReason: \`${e}\``)] })
+                        this.play(nextTrack).catch((e: any) => {
+                            this.textChannel?.send({ embeds: [createEmbed("error", this.client.lang.MUSIC_QUEUE_ERROR_WHILE_PLAYING(e.message as string))] })
                                 .catch(e => this.client.logger.error("PLAY_ERR_MSG_ERR:", e));
                             this.connection?.disconnect();
                             return this.client.logger.error("PLAY_ERR:", e);
@@ -97,7 +97,7 @@ export class ServerQueue {
         });
 
         this.player.on("error", err => {
-            this.textChannel?.send({ embeds: [createEmbed("error", `Error while playing music\nReason: \`${err.message}\``)] })
+            this.textChannel?.send({ embeds: [createEmbed("error", this.client.lang.MUSIC_QUEUE_ERROR_WHILE_PLAYING(err.message))] })
                 .catch(e => this.client.logger.error("AUDIO_PLAYER_ERR:", e));
             this.connection?.disconnect();
             clearTimeout(this.timeout!);
@@ -117,7 +117,7 @@ export class ServerQueue {
                 this.player.play(resource);
             } catch (err: any) {
                 ytdlProcess.kill();
-                if (err.message === "The operation was aborted") err.message = "Could not establish a voice connection within 15 seconds.";
+                if (err.message === "The operation was aborted") err.message = this.client.lang.MUSIC_VOICE_HANDLER_COULDNT_ESTABLISH();
                 this.player.emit("error", new AudioPlayerError(err as Error, resource));
             }
         } catch (e: unknown) {

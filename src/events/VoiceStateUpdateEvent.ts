@@ -29,7 +29,7 @@ export class VoiceStateUpdateEvent extends BaseEvent {
                 clearTimeout(queue.timeout!);
                 newState.guild.queue = null;
                 this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Disconnected from the voice channel at ${newState.guild.name}, the queue was deleted.`);
-                queue.textChannel?.send({ embeds: [createEmbed("warn", "I was disconnected from the voice channel, the queue will be deleted")] })
+                queue.textChannel?.send({ embeds: [createEmbed("warn", this.client.lang.BOT_DISCONNECTED_FROM_VOICE())] })
                     .then(() => { queue.oldMusicMessage = null; queue.oldVoiceStateUpdateMessage = null; })
                     .catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
             } catch (e) {
@@ -69,16 +69,15 @@ export class VoiceStateUpdateEvent extends BaseEvent {
                 queue.oldMusicMessage = null; queue.oldVoiceStateUpdateMessage = null;
                 queue.textChannel?.send({
                     embeds: [
-                        createEmbed("error", `**${duration}** have passed and there is no one who joins my voice channel, the queue was deleted.`)
-                            .setTitle("⏹ Queue deleted.")
+                        createEmbed("error", this.client.lang.MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED(Number(duration)))
+                            .setTitle(this.client.lang.MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE())
                     ]
                 }).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
             }, timeout);
             queue.textChannel?.send({
                 embeds: [
-                    createEmbed("warn", "Everyone has left from my voice channel, to save resources, the queue was paused. " +
-                    `If there's no one who joins my voice channel in the next **${duration}**, the queue will be deleted.`)
-                        .setTitle("⏸ Queue paused.")
+                    createEmbed("warn", this.client.lang.MUSIC_DELETEQUEUETIMEOUT_PAUSED(Number(duration)))
+                        .setTitle(this.client.lang.MUSIC_DELETEQUEUETIMEOUT_PAUSED_EMBED_TITLE())
                 ]
             }).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
         } catch (e) { this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e); }
@@ -93,9 +92,9 @@ export class VoiceStateUpdateEvent extends BaseEvent {
                 const tracks = queue.tracks.first();
                 queue.textChannel?.send({
                     embeds: [
-                        createEmbed("info", `Someone joins the voice channel. Enjoy the music 🎶\nNow Playing: **[${tracks!.metadata.title}](${tracks!.metadata.url})**`)
+                        createEmbed("info", this.client.lang.MUSIC_DELETEQUEUETIMEOUT_RESUMED(tracks!.metadata.title, tracks!.metadata.url))
                             .setThumbnail(tracks!.metadata.thumbnail)
-                            .setTitle("▶ Queue resumed")
+                            .setTitle(this.client.lang.MUSIC_DELETEQUEUETIMEOUT_RESUMED_EMBED_TITLE())
                     ]
                 }).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
                 newState.guild.queue?.player.unpause();

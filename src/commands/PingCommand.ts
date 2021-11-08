@@ -5,27 +5,27 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
 @DefineCommand({
     aliases: ["pong", "peng", "p", "pingpong"],
     name: "ping",
-    description: "Shows the current ping of the bot.",
-    usage: "{prefix}ping"
+    description: lang => lang.COMMAND_PING_META_DESCRIPTION(),
+    usage: () => "{prefix}ping"
 })
 export class PingCommand extends BaseCommand {
     public execute(message: Message): Message {
-        message.channel.send("🏓 Pong!").then((msg: Message) => {
+        message.channel.send(this.client.lang.COMMAND_PING_INITIAL_MESSAGE()).then((msg: Message) => {
             const latency = msg.createdTimestamp - message.createdTimestamp;
             const wsLatency = this.client.ws.ping.toFixed(0);
             const embed = new MessageEmbed()
-                .setAuthor("🏓 PONG!", message.client.user?.displayAvatarURL())
+                .setAuthor(this.client.lang.COMMAND_PING_RESULT_MESSAGE(), message.client.user?.displayAvatarURL())
                 .setColor(this.searchHex(wsLatency))
                 .addFields({
-                    name: "📶 API Latency",
+                    name: this.client.lang.COMMAND_PING_API_LATENCY(),
                     value: `**\`${latency}\`** ms`,
                     inline: true
                 }, {
-                    name: "🌐 WebSocket Latency",
+                    name: this.client.lang.COMMAND_PING_WS_LATENCY(),
                     value: `**\`${wsLatency}\`** ms`,
                     inline: true
                 })
-                .setFooter(`Requested by: ${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true }))
+                .setFooter(this.client.lang.COMMAND_PING_EMBED_FOOTER(message.author.tag), message.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp();
 
             msg.edit({ content: " ", embeds: [embed] }).catch(e => this.client.logger.error("PROMISE_ERR:", e));

@@ -8,8 +8,8 @@ import { isMusicQueueExists, isSameVoiceChannel, isUserInTheVoiceChannel } from 
 @DefineCommand({
     aliases: ["rm"],
     name: "remove",
-    description: "Remove a track from the current queue",
-    usage: "{prefix}remove <Track number>"
+    description: lang => lang.COMMAND_REMOVE_META_DESCRIPTION(),
+    usage: lang => `{prefix}remove <${lang.COMMAND_REMOVE_META_ARGS(0)}>`
 })
 export class RemoveCommand extends BaseCommand {
     @isMusicQueueExists()
@@ -18,7 +18,7 @@ export class RemoveCommand extends BaseCommand {
     public execute(message: Message, args: string[]): any {
         if (isNaN(Number(args[0]))) {
             return message.channel.send({
-                embeds: [createEmbed("error", `Invalid value, please see \`${this.client.config.prefix}help ${this.meta.name}\` for more info!`)]
+                embeds: [createEmbed("error", this.client.lang.COMMAND_INVALID_ARGS(message.client.config.prefix, this.meta.name))]
             });
         }
 
@@ -26,7 +26,7 @@ export class RemoveCommand extends BaseCommand {
         const currentTrack = message.guild!.queue!.tracks.first()!;
         const track = tracks[Number(args[0]) - 1] as Track | undefined;
 
-        if (track === undefined) return message.channel.send({ embeds: [createEmbed("error", `⚠️ Track number ${Number(args[0])} not found.`)] });
+        if (track === undefined) return message.channel.send({ embeds: [createEmbed("error", message.client.lang.COMMAND_REMOVE_NOT_FOUND(Number(args[0])))] });
 
         if (currentTrack.metadata.id === track.metadata.id) {
             if (message.guild?.queue?.playing === false) message.guild.queue.player.unpause();
@@ -37,7 +37,7 @@ export class RemoveCommand extends BaseCommand {
 
         message.channel.send({
             embeds: [
-                createEmbed("info", `✅ Removed **[${track.metadata.title}](${track.metadata.url}})**`)
+                createEmbed("info", message.client.lang.COMMAND_REMOVE_SUCCESS(track.metadata.id, track.metadata.url))
                     .setThumbnail(track.metadata.thumbnail)
             ]
         }).catch(e => this.client.logger.error("REMOVE_COMMAND_ERR:", e));

@@ -7,8 +7,8 @@ import { Message } from "discord.js";
 @DefineCommand({
     aliases: ["st"],
     name: "stop",
-    description: "Stop the queue",
-    usage: "{prefix}stop"
+    description: lang => lang.COMMAND_STOP_META_DESCRIPTION(),
+    usage: () => "{prefix}stop"
 })
 export class StopCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
@@ -18,7 +18,7 @@ export class StopCommand extends BaseCommand {
         message.guild?.queue?.tracks.clear();
         message.guild?.queue?.player.stop(true);
 
-        message.channel.send({ embeds: [createEmbed("info", "⏹ Queue stopped.")] })
+        message.channel.send({ embeds: [createEmbed("info", message.client.lang.COMMAND_STOP_SUCCESS())] })
             .catch(e => this.client.logger.error("STOP_CMD_ERR:", e));
     }
 }

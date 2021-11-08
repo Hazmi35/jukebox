@@ -6,8 +6,8 @@ import { Message } from "discord.js";
 
 @DefineCommand({
     name: "resume",
-    description: "Resume the music player",
-    usage: "{prefix}resume",
+    description: lang => lang.COMMAND_RESUME_META_DESCRIPTION(),
+    usage: () => "{prefix}resume",
     aliases: ["unpause"]
 })
 export class ResumeCommand extends BaseCommand {
@@ -16,10 +16,10 @@ export class ResumeCommand extends BaseCommand {
     @isSameVoiceChannel()
     public execute(message: Message): any {
         if (message.guild?.queue?.playing) {
-            message.channel.send({ embeds: [createEmbed("warn", "❗ The music player is not paused!")] }).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
+            message.channel.send({ embeds: [createEmbed("warn", message.client.lang.COMMAND_RESUME_FAILED())] }).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
         } else {
             message.guild?.queue?.player!.unpause();
-            message.channel.send({ embeds: [createEmbed("info", "▶ The music player resumed")] }).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
+            message.channel.send({ embeds: [createEmbed("info", message.client.lang.COMMAND_RESUME_SUCCESS())] }).catch(e => this.client.logger.error("RESUME_CMD_ERR:", e));
         }
     }
 }

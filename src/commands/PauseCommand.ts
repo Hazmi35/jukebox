@@ -6,8 +6,8 @@ import { Message } from "discord.js";
 
 @DefineCommand({
     name: "pause",
-    description: "Pause the music player",
-    usage: "{prefix}pause"
+    description: lang => lang.COMMAND_PAUSE_META_DESCRIPTION(),
+    usage: () => "{prefix}pause"
 })
 export class PauseCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
@@ -16,9 +16,9 @@ export class PauseCommand extends BaseCommand {
     public execute(message: Message): any {
         if (message.guild?.queue?.playing) {
             message.guild.queue.player.pause();
-            return message.channel.send({ embeds: [createEmbed("info", "⏸ The music player paused")] });
+            return message.channel.send({ embeds: [createEmbed("info", this.client.lang.COMMAND_PAUSE_SUCCESS())] });
         }
-        message.channel.send({ embeds: [createEmbed("warn", "❗ The music player is already paused!")] })
+        message.channel.send({ embeds: [createEmbed("warn", this.client.lang.COMMAND_PAUSE_ALREADY_PAUSED())] })
             .catch(e => this.client.logger.error("PAUSE_CMD_ERR:", e));
     }
 }

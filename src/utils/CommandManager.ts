@@ -47,7 +47,7 @@ export class CommandManager extends Collection<string, ICommandComponent> {
             const expirationTime = timestamps.get(message.author.id)! + cooldownAmount;
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
-                message.channel.send({ embeds: [createEmbed("warn", `**${message.author.username}**, please wait **${timeLeft.toFixed(1)}** cooldown time!`)] })
+                message.channel.send({ embeds: [createEmbed("warn", message.client.lang.COMMAND_TIMEOUT(message.author.username, timeLeft.toFixed(1)))] })
                     .then(msg => {
                         setTimeout(() => msg.delete().catch(e => this.client.logger.error("CMD_HANDLER_ERR:", e)), 3500);
                     }).catch(e => this.client.logger.error("CMD_HANDLER_ERR:", e));

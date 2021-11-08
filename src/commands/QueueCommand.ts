@@ -8,14 +8,14 @@ import { images } from "../constants/images";
 @DefineCommand({
     aliases: ["q"],
     name: "queue",
-    description: "Show the current queue",
-    usage: "{prefix}queue"
+    description: lang => lang.COMMAND_QUEUE_META_DESCRIPTION(),
+    usage: () => "{prefix}queue"
 })
 export class QueueCommand extends BaseCommand {
     @isMusicQueueExists()
     public async execute(message: Message): Promise<any> {
         const embed = createEmbed("info")
-            .setTitle("Music Queue")
+            .setTitle(message.client.lang.COMMAND_QUEUE_EMBED_TITLE())
             .setThumbnail(message.client.user?.avatarURL() as string)
             .setFooter(...this.generateFooter(message, false));
 
@@ -68,6 +68,10 @@ export class QueueCommand extends BaseCommand {
 
     // TODO: Add repeat mode info here too.
     private generateFooter(message: Message, multiple: boolean, index = 0, pages: string[][] = []): [string, string] {
-        return [`Now playing: ${message.guild!.queue!.tracks.first()!.metadata.title} ${multiple ? `| Page ${index + 1} of ${pages.length}` : ""}`, images.info];
+        return [
+            `${message.client.lang.COMMAND_QUEUE_EMBED_FOOTER(message.guild!.queue!.tracks.first()!.metadata.title)}` +
+            `${multiple ? `| ${message.client.lang.COMMAND_QUEUE_EMBED_PAGES_MSG(index + 1, pages.length)}` : ""}`,
+            images.info
+        ];
     }
 }
