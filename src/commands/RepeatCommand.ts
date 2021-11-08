@@ -18,15 +18,12 @@ export class RepeatCommand extends BaseCommand {
     public execute(message: Message, args: string[]): any {
         const modeTypes = ["disabled", "current track", "all tracks in the queue"];
         const modeEmoji = ["▶", "🔂", "🔁"];
-        if (!args[0]) {
-            return message.channel.send({
-                embeds: [createEmbed("info", `Current mode: "${modeEmoji[message.guild!.queue!.loopMode]} Repeating **${modeTypes[message.guild!.queue!.loopMode]}**"`)]
-            });
-        }
+        const baseModes = ["off", "one", "all"];
+        if (!args[0]) args[0] = baseModes[message.guild?.queue?.loopMode === 2 ? 0 : Number(message.guild?.queue?.loopMode) + 1];
 
         const mode = args[0] as keyof typeof loopMode;
 
-        if (loopMode[mode] as any === undefined || !isNaN(Number(mode))) {
+        if (loopMode[mode] as any === undefined) {
             message.channel.send({
                 embeds: [createEmbed("error", `Invalid value, see \`${this.client.config.prefix}help ${this.meta.name}\` for more info!`)]
             }).catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
