@@ -39,7 +39,7 @@ export class RemoveCommand extends BaseCommand {
 
         message.channel.send({
             embeds: [
-                createEmbed("info", message.client.lang.COMMAND_REMOVE_SUCCESS(track.metadata.id, track.metadata.url))
+                createEmbed("info", message.client.lang.COMMAND_REMOVE_SUCCESS(track.metadata.title, track.metadata.url))
                     .setThumbnail(track.metadata.thumbnail)
             ]
         }).catch(e => this.client.logger.error("REMOVE_COMMAND_ERR:", e));
