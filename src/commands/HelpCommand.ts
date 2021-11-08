@@ -8,7 +8,7 @@ import { images } from "../constants/images";
     aliases: ["commands", "cmds"],
     name: "help",
     description: lang => lang.COMMAND_HELP_META_DESCRIPTION(),
-    usage: lang => `{prefix}help [${lang.COMMAND_HELP_META_ARGS()[0]}]`
+    usage: lang => `{prefix}help [${lang.COMMAND_HELP_META_ARGS(0)}]`
 })
 export class HelpCommand extends BaseCommand {
     public execute(message: Message, args: string[]): void {

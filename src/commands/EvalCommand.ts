@@ -10,7 +10,7 @@ import { createEmbed } from "../utils/createEmbed";
     cooldown: 0,
     description: lang => lang.COMMAND_EVAL_META_DESCRIPTION(),
     name: "eval",
-    usage: lang => `{prefix}eval <${lang.COMMAND_EVAL_META_ARGS()[0]}>`
+    usage: lang => `{prefix}eval <${lang.COMMAND_EVAL_META_ARGS(0)}>`
 })
 export class EvalCommand extends BaseCommand {
     public async execute(message: Message, args: string[]): Promise<any> {

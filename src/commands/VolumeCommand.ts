@@ -8,7 +8,7 @@ import { Message } from "discord.js";
     aliases: ["vol"],
     name: "volume",
     description: lang => lang.COMMAND_VOLUME_META_DESCRIPTION(),
-    usage: lang => `{prefix}volume [${lang.COMMAND_VOLUME_META_ARGS()[0]}]`
+    usage: lang => `{prefix}volume [${lang.COMMAND_VOLUME_META_ARGS(0)}]`
 })
 export class VolumeCommand extends BaseCommand {
     @isUserInTheVoiceChannel()

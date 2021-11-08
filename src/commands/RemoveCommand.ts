@@ -9,7 +9,7 @@ import { isMusicQueueExists, isSameVoiceChannel, isUserInTheVoiceChannel } from 
     aliases: ["rm"],
     name: "remove",
     description: lang => lang.COMMAND_REMOVE_META_DESCRIPTION(),
-    usage: lang => `{prefix}remove <${lang.COMMAND_REMOVE_META_ARGS()[0]}>`
+    usage: lang => `{prefix}remove <${lang.COMMAND_REMOVE_META_ARGS(0)}>`
 })
 export class RemoveCommand extends BaseCommand {
     @isMusicQueueExists()

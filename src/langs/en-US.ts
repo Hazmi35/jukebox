@@ -45,7 +45,7 @@ export const lang = {
 
     // Eval command
     COMMAND_EVAL_META_DESCRIPTION: () => "Only the bot owner can use this command",
-    COMMAND_EVAL_META_ARGS: () => ["Some js code"],
+    COMMAND_EVAL_META_ARGS: (index: number) => ["Some js code"][index],
     COMMAND_EVAL_NO_PERM: () => "⚠️ This command is limited to the bot owner only",
     COMMAND_EVAL_NO_INPUT: () => "⚠️ No js code was provided",
     COMMAND_EVAL_INPUT_FIELD_NAME: () => "Input",
@@ -54,7 +54,7 @@ export const lang = {
 
     // Help Command
     COMMAND_HELP_META_DESCRIPTION: () => "Shows the help menu",
-    COMMAND_HELP_META_ARGS: () => ["Command name"],
+    COMMAND_HELP_META_ARGS: (index: number) => ["Command name"][index],
     COMMAND_HELP_EMBED_TITLE: () => "Help menu",
     COMMAND_HELP_EMBED_FOOTER: (prefix: string) => `Use ${prefix}help <command> to get more info on a specific command!`,
     COMMAND_HELP_EXTENDED_EMBED_TITLE: (name: string) => `Information for the ${name} command`,
@@ -88,7 +88,7 @@ export const lang = {
 
     // Play command
     COMMAND_PLAY_META_DESCRIPTION: () => "Play some music",
-    COMMAND_PLAY_META_ARGS: () => ["YouTube video or playlist URL / YouTube video name"],
+    COMMAND_PLAY_META_ARGS: (index: number) => ["YouTube video or playlist URL / YouTube video name"][index],
     COMMAND_PLAY_ALREADY_PLAYING: (vcName: string) => `⚠️ The music player is already playing to **${vcName}** voice channel`,
     COMMAND_PLAY_INVALID_YOUTUBE_URL: () => "⚠️ Invalid YouTube URL",
     COMMAND_PLAY_INVALID_SOURCE: () => "⚠️ Jukebox currently only supports YouTube as a source.",
@@ -132,13 +132,12 @@ export const lang = {
 
     // Remove command
     COMMAND_REMOVE_META_DESCRIPTION: () => "Remove a track from the current queue",
-    COMMAND_REMOVE_META_ARGS: () => ["Track number"],
+    COMMAND_REMOVE_META_ARGS: (index: number) => ["Track number"][index],
     COMMAND_REMOVE_NOT_FOUND: (number: number) => `⚠️ Track number ${number} not found.`,
     COMMAND_REMOVE_SUCCESS: (title: string, url: string) => `✅ Removed **[${title}](${url}})**`,
 
     // Repeat command
     COMMAND_REPEAT_META_DESCRIPTION: () => "Repeat current music or the queue",
-    COMMAND_REPEAT_META_ARGS: () => ["[all | one | off]"],
     COMMAND_REPEAT_SUCCESS: (emoji: string, type: string) => `${emoji} Repeating **${type}**`,
 
     // Resume command
@@ -156,7 +155,7 @@ export const lang = {
 
     // Volume command
     COMMAND_VOLUME_META_DESCRIPTION: () => "Show or change the music player's volume",
-    COMMAND_VOLUME_META_ARGS: () => ["New volume"],
+    COMMAND_VOLUME_META_ARGS: (index: number) => ["New volume"][index],
     COMMAND_VOLUME_DISABLED: () => "⚠ Volume command is disabled within this bot configuration. Please use the volume functionality in Discord client directly",
     COMMAND_VOLUME_CURRENT: (volume: number) => `📶 The current volume is \`${volume}\``,
     COMMAND_VOLUME_USE_PAUSE_INSTEAD: () => "❗ Please pause the music player instead of setting the volume to \`0\`",
