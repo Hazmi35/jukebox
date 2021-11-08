@@ -66,6 +66,7 @@ export class QueueCommand extends BaseCommand {
         }
     }
 
+    // TODO: Add repeat mode info here too.
     private generateFooter(message: Message, multiple: boolean, index = 0, pages: string[][] = []): [string, string] {
         return [`Now playing: ${message.guild!.queue!.tracks.first()!.metadata.title} ${multiple ? `| Page ${index + 1} of ${pages.length}` : ""}`, images.info];
     }
