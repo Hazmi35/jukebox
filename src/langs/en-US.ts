@@ -149,6 +149,13 @@ export const lang = {
     COMMAND_SKIP_META_DESCRIPTION: () => "Skip the current music",
     COMMAND_SKIP_SUCCESS: (title: string, url: string) => `⏭ Skipped **[${title}](${url}})**`,
 
+    // Skip To Command
+    COMMAND_SKIPTO_META_DESCRIPTION: () => "Skip the current track into specified track",
+    COMMAND_SKIPTO_META_ARGS: (index: number) => ["Track number"][index],
+    COMMAND_SKIPTO_NOT_FOUND: (number: number) => `⚠️ Track number ${number} not found.`,
+    COMMAND_SKIPTO_FAIL: () => "⚠️ Could not skip to the current track",
+    COMMAND_SKIPTO_SUCCESS: (title: string, url: string, count: number) => `⏭ Skipped to **[${title}](${url}})**, there was ${count} ${pluralize("track", count)} skipped`,
+
     // Stop command
     COMMAND_STOP_META_DESCRIPTION: () => "Stop the queue",
     COMMAND_STOP_SUCCESS: () => "⏹ Queue stopped.",
