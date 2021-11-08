@@ -11,6 +11,7 @@ import { createEmbed } from "../utils/createEmbed";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isSameVoiceChannel, isUserInTheVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 
+// TODO: Rename "Playlist" to YouTubePlaylist for example: loadPlaylist() -> loadYouTubePlaylist()
 @DefineCommand({
     aliases: ["play-music", "add", "p"],
     name: "play",
@@ -150,12 +151,12 @@ export class PlayCommand extends BaseCommand {
 
     private async loadPlaylist(id: string, message: Message, voiceChannel: VoiceChannel | StageChannel, watchEndpoint = false, index = 1): Promise<any> {
         const playlist = await this.youtube.getPlaylist(id);
-        if (playlist === undefined) return message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_PLAYLIST_NOT_FOUND())] });
-        if (playlist.videos.length === 0) return message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_PLAYLIST_EMPTY())] });
+        if (playlist === undefined) return message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_NOT_FOUND())] });
+        if (playlist.videos.length === 0) return message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_EMPTY())] });
         if (playlist instanceof MixPlaylist) {
             return message.channel.send({
                 embeds: [
-                    createEmbed("error", this.client.lang.COMMAND_PLAY_RD_PLAYLIST_NOT_SUPPORTED())
+                    createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_RD_PLAYLIST_NOT_SUPPORTED())
                 ]
             });
         }
@@ -167,7 +168,7 @@ export class PlayCommand extends BaseCommand {
         if (watchEndpoint) {
             addingPlaylistVideoMessage = await message.channel.send({
                 embeds: [
-                    createEmbed("info", this.client.lang.COMMAND_PLAY_PLAYLIST_ADDING_VIDEOS(index + 1, playlistTitle))
+                    createEmbed("info", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_VIDEOS(index + 1, playlistTitle))
                         .setThumbnail(playlist.videos[0].thumbnails.best!)
 
                 ]
@@ -175,7 +176,7 @@ export class PlayCommand extends BaseCommand {
         } else {
             addingPlaylistVideoMessage = await message.channel.send({
                 embeds: [
-                    createEmbed("info", this.client.lang.COMMAND_PLAY_PLAYLIST_ALL_ADDING_VIDEOS(playlistTitle))
+                    createEmbed("info", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ALL_ADDING_VIDEOS(playlistTitle))
                         .setThumbnail(playlist.videos[0].thumbnails.best!)
                 ]
             });
@@ -183,7 +184,7 @@ export class PlayCommand extends BaseCommand {
             if (!firstVideo) {
                 await message.channel.send({
                     embeds: [
-                        createEmbed("error", this.client.lang.COMMAND_PLAY_PLAYLIST_ADDING_FIRST_VIDEOS_ERR())
+                        createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_FIRST_VIDEOS_ERR())
                             .setThumbnail(playlist.videos[0].thumbnails.best!)
                     ]
                 });
@@ -197,7 +198,7 @@ export class PlayCommand extends BaseCommand {
         if (!videos) {
             await message.channel.send({
                 embeds: [
-                    createEmbed("error", this.client.lang.COMMAND_PLAY_PLAYLIST_ADDING_REST_VIDEOS_ERR())
+                    createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_REST_VIDEOS_ERR())
                         .setThumbnail(playlist.videos[0].thumbnails.best!)
                 ]
             });
@@ -229,7 +230,7 @@ export class PlayCommand extends BaseCommand {
         }
         message.channel.send({
             embeds: [
-                createEmbed("info", this.client.lang.COMMAND_PLAY_PLAYLIST_SUCCESS(playlistTitle))
+                createEmbed("info", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_SUCCESS(playlistTitle))
                     .setThumbnail(playlist.videos[0].thumbnails.best!)
             ]
         }).catch(e => this.client.logger.error("PLAYLIST_LOAD_ERR:", e));
@@ -248,7 +249,7 @@ export class PlayCommand extends BaseCommand {
             return results.slice(startIndex, results.length);
         } catch (e: any) {
             this.client.logger.error("LOAD_PLAYLIST_ERR:", new Error(e.stack as string));
-            message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_PLAYLIST_LOAD_ERR(e.message as string))] })
+            message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_LOAD_ERR(e.message as string))] })
                 .catch(e => this.client.logger.error("LOAD_PLAYLIST_ERR:", new Error(e as string)));
             return undefined;
         }
