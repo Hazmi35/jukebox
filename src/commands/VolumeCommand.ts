@@ -15,19 +15,19 @@ export class VolumeCommand extends BaseCommand {
     @isMusicQueueExists()
     @isSameVoiceChannel()
     public execute(message: Message, args: string[]): any {
-        if (!this.client.config.enableInlineVolume) return message.channel.send({ embeds: [createEmbed("warn", "⚠ Volume command is disabled within this bot configuration. Please use the volume functionality in Discord client directly")] });
+        if (!this.client.config.enableInlineVolume) return message.channel.send({ embeds: [createEmbed("warn", message.client.lang.COMMAND_VOLUME_DISABLED())] });
 
         let volume = Number(args[0]);
-        if (isNaN(volume)) return message.channel.send({ embeds: [createEmbed("info", `📶 The current volume is \`${message.guild!.queue!.volume.toString()}\``)] });
+        if (isNaN(volume)) return message.channel.send({ embeds: [createEmbed("info", message.client.lang.COMMAND_VOLUME_CURRENT(Number(message.guild!.queue!.volume)))] });
         if (volume < 0) volume = 0;
-        if (volume === 0) return message.channel.send({ embeds: [createEmbed("warn", "❗ Please pause the music player instead of setting the volume to \`0\`")] });
-        if (Number(args[0]) > this.client.config.maxVolume) {
+        if (volume === 0) return message.channel.send({ embeds: [createEmbed("warn", message.client.lang.COMMAND_VOLUME_USE_PAUSE_INSTEAD())] });
+        if (volume > this.client.config.maxVolume) {
             return message.channel.send({
-                embeds: [createEmbed("warn", `❗ I can't set the volume above \`${this.client.config.maxVolume}\``)]
+                embeds: [createEmbed("warn", message.client.lang.COMMAND_VOLUME_OVER_LIMIT(this.client.config.maxVolume))]
             });
         }
 
-        message.guild!.queue!.volume = Number(args[0]);
-        message.channel.send({ embeds: [createEmbed("info", `📶 Volume set to \`${args[0]}\``)] }).catch(e => this.client.logger.error("VOLUME_CMD_ERR:", e));
+        message.guild!.queue!.volume = volume;
+        message.channel.send({ embeds: [createEmbed("info", message.client.lang.COMMAND_VOLUME_SET(volume))] }).catch(e => this.client.logger.error("VOLUME_CMD_ERR:", e));
     }
 }

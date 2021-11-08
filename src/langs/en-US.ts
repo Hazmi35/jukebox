@@ -157,6 +157,11 @@ export const lang = {
     // Volume command
     COMMAND_VOLUME_META_DESCRIPTION: () => "Show or change the music player's volume",
     COMMAND_VOLUME_META_ARGS: () => ["New volume"],
+    COMMAND_VOLUME_DISABLED: () => "⚠ Volume command is disabled within this bot configuration. Please use the volume functionality in Discord client directly",
+    COMMAND_VOLUME_CURRENT: (volume: number) => `📶 The current volume is \`${volume}\``,
+    COMMAND_VOLUME_USE_PAUSE_INSTEAD: () => "❗ Please pause the music player instead of setting the volume to \`0\`",
+    COMMAND_VOLUME_OVER_LIMIT: (max: number) => `❗ I can't set the volume above \`${max}\``,
+    COMMAND_VOLUME_SET: (volume: number) => `📶 Volume set to \`${volume}\``,
 
     // Misc
     COMMAND_INVALID_ARGS: (prefix: string, cmd: string) => `⚠️ Invalid argument, type \`${prefix}help ${cmd}\` for more info`,
