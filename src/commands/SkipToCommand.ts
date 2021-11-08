@@ -9,7 +9,7 @@ import { Track } from "../structures/Track";
     aliases: ["st", "skip-to", "s-t"],
     name: "skipto",
     description: lang => lang.COMMAND_SKIPTO_META_DESCRIPTION(),
-    usage: lang => `{prefix}skipto ${lang.COMMAND_SKIPTO_META_ARGS(0)}`
+    usage: lang => `{prefix}skipto <${lang.COMMAND_SKIPTO_META_ARGS(0)}>`
 })
 export class SkipToCommand extends BaseCommand {
     @isUserInTheVoiceChannel()
