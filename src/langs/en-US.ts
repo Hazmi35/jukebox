@@ -129,6 +129,9 @@ export const lang = {
 
     // Queue command
     COMMAND_QUEUE_META_DESCRIPTION: () => "Show the current queue",
+    COMMAND_QUEUE_EMBED_TITLE: () => "Music Queue",
+    COMMAND_QUEUE_EMBED_FOOTER: (title: string) => `Now playing: ${title}`,
+    COMMAND_QUEUE_EMBED_PAGES_MSG: (current: number, total: number) => `Page ${current} of ${total}`,
 
     // Remove command
     COMMAND_REMOVE_META_DESCRIPTION: () => "Remove a track from the current queue",
