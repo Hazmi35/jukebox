@@ -143,6 +143,8 @@ export const lang = {
 
     // Resume command
     COMMAND_RESUME_META_DESCRIPTION: () => "Resume the music player",
+    COMMAND_RESUME_FAILED: () => "❗ The music player is not paused!",
+    COMMAND_RESUME_SUCCESS: () => "▶ The music player resumed",
 
     // Skip Command
     COMMAND_SKIP_META_DESCRIPTION: () => "Skip the current music",
