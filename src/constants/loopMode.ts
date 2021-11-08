@@ -13,3 +13,7 @@ export enum loopMode {
     none = off,
     disable = off
 }
+
+export const loopModeTypes = ["disabled", "current track", "all tracks in the queue"];
+export const loopModeEmojis = ["▶", "🔂", "🔁"];
+export const baseLoopModes = ["off", "one", "all"];

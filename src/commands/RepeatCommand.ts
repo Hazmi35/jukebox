@@ -3,7 +3,7 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isMusicQueueExists, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
 import { Message } from "discord.js";
-import { loopMode } from "../constants/loopMode";
+import { baseLoopModes, loopMode, loopModeEmojis, loopModeTypes } from "../constants/loopMode";
 
 @DefineCommand({
     aliases: ["loop", "music-loop", "music-repeat"],
@@ -16,10 +16,7 @@ export class RepeatCommand extends BaseCommand {
     @isMusicQueueExists()
     @isSameVoiceChannel()
     public execute(message: Message, args: string[]): any {
-        const modeTypes = ["disabled", "current track", "all tracks in the queue"];
-        const modeEmoji = ["▶", "🔂", "🔁"];
-        const baseModes = ["off", "one", "all"];
-        if (!args[0]) args[0] = baseModes[message.guild?.queue?.loopMode === 2 ? 0 : Number(message.guild?.queue?.loopMode) + 1];
+        if (!args[0]) args[0] = baseLoopModes[message.guild?.queue?.loopMode === 2 ? 0 : Number(message.guild?.queue?.loopMode) + 1];
 
         const mode = args[0] as keyof typeof loopMode;
 
@@ -29,8 +26,9 @@ export class RepeatCommand extends BaseCommand {
             }).catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
         } else {
             message.guild!.queue!.loopMode = loopMode[mode];
-            message.channel.send({ embeds: [createEmbed("info", `${modeEmoji[message.guild!.queue!.loopMode]} Repeating **${modeTypes[message.guild!.queue!.loopMode]}**`)] })
-                .catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
+            message.channel.send({
+                embeds: [createEmbed("info", `${loopModeEmojis[message.guild!.queue!.loopMode]} Repeating **${loopModeTypes[message.guild!.queue!.loopMode]}**`)]
+            }).catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
         }
     }
 }
