@@ -148,6 +148,7 @@ export const lang = {
 
     // Skip Command
     COMMAND_SKIP_META_DESCRIPTION: () => "Skip the current music",
+    COMMAND_SKIP_SUCCESS: (title: string, url: string) => `⏭ Skipped **[${title}](${url}})**`,
 
     // Stop command
     COMMAND_STOP_META_DESCRIPTION: () => "Stop the queue",
