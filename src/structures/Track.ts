@@ -4,6 +4,7 @@ import { ITrackMetadata } from "../typings";
 import ffmpegStatic from "ffmpeg-static";
 import { ServerQueue } from "./ServerQueue";
 import execa from "execa";
+import { SnowflakeUtil } from "discord.js";
 
 export enum TrackType {
     unknown,
@@ -11,6 +12,7 @@ export enum TrackType {
 }
 
 export class Track {
+    public readonly id = SnowflakeUtil.generate();
     public type = TrackType.unknown;
     public readonly resourceFormat: string = "bestaudio";
     private _resource: AudioResource<ITrackMetadata> | null = null;
