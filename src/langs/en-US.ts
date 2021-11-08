@@ -135,6 +135,8 @@ export const lang = {
     // Remove command
     COMMAND_REMOVE_META_DESCRIPTION: () => "Remove a track from the current queue",
     COMMAND_REMOVE_META_ARGS: () => ["Track number"],
+    COMMAND_REMOVE_NOT_FOUND: (number: number) => `⚠️ Track number ${number} not found.`,
+    COMMAND_REMOVE_SUCCESS: (title: string, url: string) => `✅ Removed **[${title}](${url}})**`,
 
     // Repeat command
     COMMAND_REPEAT_META_DESCRIPTION: () => "Repeat current music or the queue",

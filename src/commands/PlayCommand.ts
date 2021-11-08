@@ -30,7 +30,7 @@ export class PlayCommand extends BaseCommand {
 
         if (!args[0]) {
             return message.channel.send({
-                embeds: [createEmbed("warn", this.client.lang.COMMAND_INVALID_ARGS(message.client.config.prefix, this.meta.name))]
+                embeds: [createEmbed("error", this.client.lang.COMMAND_INVALID_ARGS(message.client.config.prefix, this.meta.name))]
             });
         }
 
