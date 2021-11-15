@@ -8,8 +8,8 @@ on:
       - main
     paths:
       - ".github/workflows/docker.yml"
-      - "Dockerfile_debian"
-      - "Dockerfile_alpine"
+      - "debian.Dockerfile"
+      - "alpine.Dockerfile"
 
 jobs:
   build:
@@ -17,10 +17,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - dockerfile: Dockerfile_alpine
+          - dockerfile: alpine.Dockerfile
             identifier: ""
             platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6
-          - dockerfile: Dockerfile_debian
+          - dockerfile: debian.Dockerfile
             identifier: "-debian"
             platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
     steps:
