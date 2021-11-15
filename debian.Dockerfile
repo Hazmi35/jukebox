@@ -30,7 +30,7 @@ LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
 # Install python3 (required for youtube-dl/yt-dlp)
 RUN apt-get update \
-    && apt-get install -y python-is-python3 \
+    && apt-get install -y python-is-python3 locales \
     && apt-get autoremove -y \
     && apt-get autoclean -y \
     && rm -rf /var/lib/apt/lists/*
