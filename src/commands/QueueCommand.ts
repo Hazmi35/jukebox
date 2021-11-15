@@ -70,7 +70,7 @@ export class QueueCommand extends BaseCommand {
     private generateFooter(message: Message, multiple: boolean, index = 0, pages: string[][] = []): [string, string] {
         return [
             `${message.client.lang.COMMAND_QUEUE_EMBED_FOOTER(message.guild!.queue!.tracks.first()!.metadata.title)}` +
-            `${multiple ? `| ${message.client.lang.COMMAND_QUEUE_EMBED_PAGES_MSG(index + 1, pages.length)}` : ""}`,
+            `${multiple ? ` | ${message.client.lang.COMMAND_QUEUE_EMBED_PAGES_MSG(index + 1, pages.length)}` : ""}`,
             images.info
         ];
     }
