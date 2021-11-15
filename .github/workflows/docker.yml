@@ -3,10 +3,26 @@ name: Build & Push to Docker Image Registry (Docker Hub & GitHub Container Regis
 on:
   release:
     types: [created]
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/docker.yml"
+      - "Dockerfile_debian"
+      - "Dockerfile_alpine"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        type:
+          - dockerfile: Dockerfile_debian
+            identifier: "debian"
+            extra_tag: "debian"
+          - dockerfile: Dockerfile_alpine
+            identifier: ""
+            extra_tag: "latest"
     steps:
       - name: Check Out Repo
         uses: actions/checkout@v2.4.0
@@ -33,7 +49,7 @@ jobs:
 
       - name: Extract tag name
         id: tags
-        run: echo ::set-output name=name::${GITHUB_REF##*/}
+        run: echo ::set-output name=name::${GITHUB_REF##*/}${{ matrix.identifier }}
 
       - name: Generate Docker image metadata
         uses: docker/metadata-action@v3.6.0
@@ -44,17 +60,17 @@ jobs:
             ghcr.io/Hazmi35/jukebox
           tags: |
             ${{ steps.tags.outputs.name }}
-            latest
+            ${{ matrix.extra_tag }}
 
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2.7.0
         with:
           context: ./
-          file: ./Dockerfile
+          file: ${{ matrix.dockerfile }}
           # There are no 386 builds, please see https://github.com/nodejs/docker-node/issues/1344
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6
-          push: true
+          push: ${{ github.event_name == 'release' }}
           tags: ${{ steps.img_meta.outputs.tags }}
           labels: ${{ steps.img_meta.outputs.labels }}
           cache-from: type=gha,mode=max
