@@ -7,7 +7,7 @@ import { BaseCommand } from "../structures/BaseCommand";
 import { ServerQueue } from "../structures/ServerQueue";
 import { YouTubeTrack } from "../structures/YouTubeTrack";
 import { ITrackMetadata } from "../typings";
-import { createEmbed } from "../utils/createEmbed";
+import { createEmbed, hexColorsType } from "../utils/createEmbed";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isSameVoiceChannel, isUserInTheVoiceChannel, isValidVoiceChannel } from "../utils/decorators/MusicHelper";
 
@@ -53,7 +53,7 @@ export class PlayCommand extends BaseCommand {
                     } else if (youtubeURL.pathname === "/watch" && youtubeURL.searchParams.has("v")) {
                         trackResource = await this.youtube.getVideo(youtubeURL.searchParams.get("v")!);
                         if (youtubeURL.searchParams.has("list")) {
-                            const index = Number(youtubeURL.searchParams.get("index") ?? 1);
+                            const index = Number(youtubeURL.searchParams.get("index") ?? -1);
                             this.loadYouTubePlaylist(youtubeURL.searchParams.get("list")!, message, voiceChannel, true, index)
                                 .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
                         }
@@ -154,7 +154,7 @@ export class PlayCommand extends BaseCommand {
         }
     }
 
-    private async loadYouTubePlaylist(id: string, message: Message, voiceChannel: VoiceChannel | StageChannel, watchEndpoint = false, index = 0): Promise<any> {
+    private async loadYouTubePlaylist(id: string, message: Message, voiceChannel: VoiceChannel | StageChannel, watchEndpoint = false, index = 1): Promise<any> {
         const playlist = await this.youtube.getPlaylist(id);
         if (playlist === undefined) return message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_NOT_FOUND())] });
         if (playlist.videoCount === 0) return message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_EMPTY())] });
@@ -163,31 +163,44 @@ export class PlayCommand extends BaseCommand {
         }
 
         const playlistTitle = `**[${playlist.title}](${this.generateYouTubeURL(playlist.id, "playlist")})**`;
-        let msg = this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_ALL_VIDEOS(playlistTitle);
 
-        if (watchEndpoint) {
-            index += 1;
-            msg = this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_VIDEOS(index, playlistTitle);
-        }
-
-        const addingPlaylistVideoMessage = await message.channel.send({
-            embeds: [createEmbed("info", msg).setThumbnail(playlist.videos[0].thumbnails.best!)]
+        let addingPlaylistVideoMessage;
+        let successMsg = this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_SUCCESS(playlistTitle);
+        const sendMsg = async (msg: string, type: hexColorsType): Promise<Message> => message.channel.send({
+            embeds: [
+                createEmbed(type, msg)
+                    .setThumbnail(playlist.videos[0].thumbnails.best!)
+            ]
         });
 
-        const videos = await this.loadYouTubePlaylistVideos(playlist, message, index);
+        if (watchEndpoint) {
+            const { metadata } = message.guild!.queue!.tracks.first()!;
+            const videoTitle = `**[${metadata.title}](${this.generateYouTubeURL(metadata.id, "video")})**`;
+
+            addingPlaylistVideoMessage = await sendMsg(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_VIDEOS_FROM(videoTitle, playlistTitle), "info");
+            successMsg = this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_SUCCESS2(playlistTitle, videoTitle);
+        } else {
+            addingPlaylistVideoMessage = await sendMsg(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_ALL_VIDEOS(playlistTitle), "info");
+
+            // Add the first video first.
+            const firstVideo = await this.youtube.getVideo(playlist.videos[0].id);
+            if (!firstVideo) {
+                await sendMsg(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_FIRST_VIDEOS_ERR(playlistTitle), "error");
+                return addingPlaylistVideoMessage.delete();
+            }
+            await this.handleVideo(firstVideo, message, voiceChannel, true, false);
+        }
+
+        const videos = await this.loadYouTubePlaylistVideos(playlist, message, index, message.guild!.queue!.tracks.first()!.metadata.id);
         if (!videos) {
-            await message.channel.send({
-                embeds: [
-                    createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_VIDEOS_ERR(playlistTitle))
-                        .setThumbnail(playlist.videos[0].thumbnails.best!)
-                ]
-            });
+            await sendMsg(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_REST_VIDEOS_ERR(playlistTitle), "error");
             return addingPlaylistVideoMessage.delete();
         }
         for (const video of videos) {
             if (message.guild?.queue === null) return addingPlaylistVideoMessage.delete();
             await this.handleVideo(video, message, voiceChannel, true, true);
         }
+
         const alreadyQueued = this.playlistAlreadyQueued.get(message.guild!.id) ?? [];
         if (alreadyQueued.length !== 0) {
             let num = 1;
@@ -205,16 +218,16 @@ export class PlayCommand extends BaseCommand {
             }
             this.playlistAlreadyQueued.delete(message.guild!.id);
         }
-        message.channel.send({
-            embeds: [createEmbed("info", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_SUCCESS(playlistTitle)).setThumbnail(playlist.videos[0].thumbnails.best!)]
-        }).catch(e => this.client.logger.error("PLAYLIST_LOAD_ERR:", e));
+
+        await sendMsg(successMsg, "info");
         return addingPlaylistVideoMessage.delete();
     }
 
-    private async loadYouTubePlaylistVideos(playlist: Playlist, message: Message, startIndex: number): Promise<VideoCompact[] | undefined> {
+    private async loadYouTubePlaylistVideos(playlist: Playlist, message: Message, startIndex: number, currentId: string): Promise<VideoCompact[] | undefined> {
         try {
             await playlist.next(0);
             const { videos } = playlist;
+            if (startIndex === -1) startIndex = videos.findIndex(s => s.id === currentId) + 1;
             return videos.slice(startIndex, videos.length);
         } catch (e: any) {
             this.client.logger.error("LOAD_PLAYLIST_ERR:", new Error(e.stack as string));
