@@ -16,7 +16,8 @@ process.on("uncaughtException", e => {
     process.exit(1);
 });
 
-if (process.env._?.endsWith("ts-node") === true) {
+// @ts-expect-error Ignore next line
+if (process[Symbol.for("ts-node.register.instance")]) {
     log.warn("ts-node detected, sharding is disabled. Please only use ts-node for development purposes.");
     require("./bot");
 } else {
