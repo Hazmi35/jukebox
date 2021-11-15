@@ -1,14 +1,14 @@
-name: Push to Docker Image Registry (Docker Hub & GitHub Container Registry)
+name: Build & Push to Docker Image Registry (Docker Hub & GitHub Container Registry)
 
 on:
   release:
     types: [created]
 
-jobs: 
+jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check Out Repo 
+      - name: Check Out Repo
         uses: actions/checkout@v2.4.0
 
       - name: Set up QEMU
