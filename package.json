@@ -27,7 +27,7 @@
     "ignorePatterns": "dist/*"
   },
   "dependencies": {
-    "@discordjs/voice": "^0.7.2",
+    "@discordjs/voice": "^0.7.5",
     "discord.js": "^13.3.1",
     "dotenv": "^10.0.0",
     "entities": "^3.0.1",
