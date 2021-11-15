@@ -17,12 +17,14 @@ jobs:
     strategy:
       matrix:
         type:
+          - type: debian
           - dockerfile: Dockerfile_debian
             identifier: "debian"
-            extra_tag: "debian"
-          - dockerfile: Dockerfile_alpine
+            extra_tag: debian
+          - type: alpine
+            dockerfile: Dockerfile_alpine
             identifier: ""
-            extra_tag: "latest"
+            extra_tag: latest
     steps:
       - name: Check Out Repo
         uses: actions/checkout@v2.4.0
@@ -67,7 +69,7 @@ jobs:
         uses: docker/build-push-action@v2.7.0
         with:
           context: ./
-          file: ./${{ matrix.dockerfile }}
+          file: ${{ matrix.dockerfile }}
           # There are no 386 builds, please see https://github.com/nodejs/docker-node/issues/1344
           platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6
           push: ${{ github.event_name == 'release' }}
