@@ -56,9 +56,9 @@ jobs:
         run: |
          if [ -z "${{ matrix.identifier }}" ]
          then
-             echo ::set-output name=name::-${{ matrix.identifier }}
-         else
              echo ::set-output name=name::${{ matrix.identifier }}
+         else
+             echo ::set-output name=name::-${{ matrix.identifier }}
          fi
 
       - name: Generate Docker image metadata
