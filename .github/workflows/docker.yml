@@ -17,11 +17,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - dockerfile: alpine.Dockerfile
-            identifier: ""
+          - identifier: "alpine"
+            dockerfile: alpine.Dockerfile
             platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6
-          - dockerfile: debian.Dockerfile
-            identifier: "debian"
+          - identifier: "debian"
+            dockerfile: debian.Dockerfile
             platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
     steps:
       - name: Check Out Repo
@@ -39,6 +39,8 @@ jobs:
         with:
           username: hazmi35
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
+
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1.10.0
@@ -46,6 +48,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
 
       - name: Extract tag name
         id: tags
@@ -53,13 +56,7 @@ jobs:
 
       - name: Extract flavor
         id: flavor
-        run: |
-         if [ -z "${{ matrix.identifier }}" ]
-         then
-             echo ::set-output name=name::${{ matrix.identifier }}
-         else
-             echo ::set-output name=name::-${{ matrix.identifier }}
-         fi
+        run: if [ "${{ matrix.identifier }}" = "alpine" ]; then echo ::set-output name=name::; else echo ::set-output name=name::-${{ matrix.identifier }}; fi
 
       - name: Generate Docker image metadata
         uses: docker/metadata-action@v3.6.0
