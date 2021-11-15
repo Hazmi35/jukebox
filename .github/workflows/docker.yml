@@ -17,14 +17,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - type: debian
-            dockerfile: Dockerfile_debian
-            identifier: "debian"
-            extra_tag: debian
-          - type: alpine
-            dockerfile: Dockerfile_alpine
+          - dockerfile: Dockerfile_alpine
             identifier: ""
             extra_tag: latest
+            platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6
+          - dockerfile: Dockerfile_debian
+            identifier: "debian"
+            extra_tag: debian
+            platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
     steps:
       - name: Check Out Repo
         uses: actions/checkout@v2.4.0
@@ -73,8 +73,7 @@ jobs:
         with:
           context: ./
           file: ./${{ matrix.dockerfile }}
-          # There are no 386 builds, please see https://github.com/nodejs/docker-node/issues/1344
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6
+          platforms: ${{ matrix.platforms }}
           push: ${{ github.event_name == 'release' }}
           tags: ${{ steps.img_meta.outputs.tags }}
           labels: ${{ steps.img_meta.outputs.labels }}
