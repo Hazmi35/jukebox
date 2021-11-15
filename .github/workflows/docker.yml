@@ -19,11 +19,9 @@ jobs:
         include:
           - dockerfile: Dockerfile_alpine
             identifier: ""
-            extra_tag: latest
             platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6
           - dockerfile: Dockerfile_debian
             identifier: "debian"
-            extra_tag: debian
             platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
     steps:
       - name: Check Out Repo
@@ -51,7 +49,7 @@ jobs:
 
       - name: Extract tag name
         id: tags
-        run: echo ::set-output name=name::${GITHUB_REF##*/}${{ matrix.identifier }}
+        run: echo ::set-output name=name::${GITHUB_REF##*/}-${{ matrix.identifier }}
 
       - name: Generate Docker image metadata
         uses: docker/metadata-action@v3.6.0
@@ -62,10 +60,7 @@ jobs:
             ghcr.io/Hazmi35/jukebox
           tags: |
             ${{ steps.tags.outputs.name }}
-            ${{ matrix.extra_tag }}
-
-      - name: test
-        run: echo ${{ matrix.dockerfile }} ${{ matrix.extra_tag }} ${{ matrix.identifier }}
+            latest-${{ matrix.identifier }}
 
       - name: Build and push
         id: docker_build
