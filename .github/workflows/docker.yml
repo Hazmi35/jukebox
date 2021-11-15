@@ -55,7 +55,7 @@ jobs:
         uses: docker/metadata-action@v3.6.0
         id: img_meta
         with:
-          flavor: /
+          flavor: |
             latest=auto
             suffix=${{ matrix.identifier }}
           images: |
