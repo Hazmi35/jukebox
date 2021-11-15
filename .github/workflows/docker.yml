@@ -21,7 +21,7 @@ jobs:
             identifier: ""
             platforms: linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6
           - dockerfile: debian.Dockerfile
-            identifier: "-debian"
+            identifier: "debian"
             platforms: linux/amd64,linux/arm64/v8,linux/arm/v7
     steps:
       - name: Check Out Repo
@@ -51,13 +51,22 @@ jobs:
         id: tags
         run: echo ::set-output name=name::${GITHUB_REF##*/}
 
+      - name: Extract flavor
+        id: flavor
+        run: |
+         if [ -z "${{ matrix.identifier }}" ]
+         then
+             echo ::set-output name=name::-${{ matrix.identifier }}
+         else
+             echo ::set-output name=name::${{ matrix.identifier }}
+
       - name: Generate Docker image metadata
         uses: docker/metadata-action@v3.6.0
         id: img_meta
         with:
           flavor: |
             latest=auto
-            suffix=${{ matrix.identifier }}
+            suffix=${{ steps.flavor.outputs.name }}
           images: |
             hazmi35/jukebox
             ghcr.io/Hazmi35/jukebox
