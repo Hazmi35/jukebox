@@ -7,6 +7,8 @@ LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 COPY package*.json ./
 COPY .npmrc .
 
+ENV FFMPEG_BIN=/usr/bin/ffmpeg
+
 # Install dependencies
 RUN npm install
 
@@ -29,7 +31,9 @@ LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
 # Install python3 (required for youtube-dl/yt-dlp)
-RUN apk add --no-cache python3 && ln -s /usr/bin/python3 /usr/local/bin/python
+RUN apk add --no-cache python3 ffmpeg && ln -s /usr/bin/python3 /usr/local/bin/python
+
+ENV FFMPEG_BIN=/usr/bin/ffmpeg
 
 # Copy needed files
 COPY --from=build-stage /tmp/build/package.json .
