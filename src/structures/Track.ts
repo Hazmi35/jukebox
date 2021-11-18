@@ -28,7 +28,7 @@ export class Track {
         public readonly queue: ServerQueue,
         public readonly metadata: ITrackMetadata,
         public readonly inlineVolume: boolean = false,
-        public readonly ytdlFlags: YtFlags = defaultYtFlags
+        public readonly ytdlFlags: YtDlpFlags = defaultYtFlags
     ) {
         this.ytdlFlags = { ...defaultYtFlags, ...ytdlFlags };
         Object.defineProperty(this, "_resource", { enumerable: false });
@@ -69,4 +69,9 @@ export class Track {
     public setVolume(newVolume: number): void {
         this._resource?.volume?.setVolumeLogarithmic(newVolume);
     }
+}
+
+export interface YtDlpFlags extends YtFlags {
+    downloaderArgs?: string;
+    extractorArgs?: string;
 }
