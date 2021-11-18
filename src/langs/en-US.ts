@@ -146,6 +146,10 @@ export const lang = {
     COMMAND_RESUME_FAILED: () => "❗ The music player is not paused!",
     COMMAND_RESUME_SUCCESS: () => "▶ The music player resumed",
 
+    // Shuffle command
+    COMMAND_SHUFFLE_META_DESCRIPTION: () => "Shuffle the music queue",
+    COMMAND_SHUFFLE_SUCCESS: () => "🔀 Queue shuffled!",
+
     // Skip Command
     COMMAND_SKIP_META_DESCRIPTION: () => "Skip the current music",
     COMMAND_SKIP_SUCCESS: (title: string, url: string) => `⏭ Skipped **[${title}](${url}})**`,

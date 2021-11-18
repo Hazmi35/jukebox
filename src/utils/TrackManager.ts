@@ -1,8 +1,9 @@
 import { Snowflake } from "discord-api-types";
+import { ServerQueue } from "../structures/ServerQueue";
 import { Track } from "../structures/Track";
 
 export class TrackManager {
-    public constructor(private store: Track[] = []) {}
+    public constructor(public queue: ServerQueue, private store: Track[] = []) {}
 
     public add(track: Track): Track {
         this.store.push(track);
@@ -62,5 +63,9 @@ export class TrackManager {
 
     public slice(start?: number, end?: number): Track[] {
         return this.store.slice(start, end);
+    }
+
+    public shuffle(): Track[] {
+        return this.store = [...this.store.slice(0, 1), ...this.queue.client.util.shuffleArray<Track>(this.store.slice(1))];
     }
 }
