@@ -1,6 +1,8 @@
 services:
   bot:
-    build: "."
+    build:
+      context: ./
+      dockerfile: alpine.Dockerfile
     env_file:
       - .env
     restart: unless-stopped
