@@ -3,7 +3,6 @@ import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isUserInTheVoiceChannel, isMusicQueueExists, isSameVoiceChannel } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
 import { Message } from "discord.js";
-import { Track } from "../structures/Track";
 
 @DefineCommand({
     aliases: ["st", "skip-to", "s-t"],
@@ -22,17 +21,17 @@ export class SkipToCommand extends BaseCommand {
             });
         }
 
-        const { store: tracks } = message.guild!.queue!.tracks;
+        const tracks = message.guild!.queue!.tracks;
 
-        const currentTrack = message.guild!.queue!.tracks.first()!;
-        const track = tracks[(Number(args[0]) - 1)] as Track | undefined;
+        const currentTrack = tracks.first()!;
+        const track = tracks.getByIndex((Number(args[0]) - 1));
 
         if (track === undefined) return message.channel.send({ embeds: [createEmbed("error", message.client.lang.COMMAND_SKIPTO_NOT_FOUND(Number(args[0])))] });
 
         if (currentTrack.id === track.id) return message.channel.send({ embeds: [createEmbed("error", message.client.lang.COMMAND_SKIPTO_FAIL())] });
 
         const index = tracks.findIndex(t => t.id === track.id);
-        const newTracks = tracks.slice(index, tracks.length);
+        const newTracks = tracks.slice(index, tracks.size);
         const diff = tracks.filter(f => !newTracks.includes(f));
 
         diff.shift();
