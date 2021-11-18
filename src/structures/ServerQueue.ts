@@ -12,7 +12,7 @@ const nonEnum = { enumerable: false };
 export class ServerQueue {
     public connection: VoiceConnection | null = null;
     public readonly player: AudioPlayer = createAudioPlayer();
-    public readonly tracks = new TrackManager();
+    public readonly tracks = new TrackManager(this);
     public repeatMode = repeatMode.disable;
     public timeout: NodeJS.Timeout | null = null;
     private _currentTrack: Track | undefined = undefined;
