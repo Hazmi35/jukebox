@@ -29,7 +29,7 @@ export class Track {
                     format: this.resourceFormat,
                     ffmpegLocation: `"${ffmpegStatic}"`,
                     output: "-",
-                    quiet: "",
+                    quiet: true,
                     limitRate: "800K"
                 },
                 { stdio: ["ignore", "pipe", "ignore"] }
