@@ -7,6 +7,10 @@ LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 COPY package*.json ./
 COPY .npmrc .
 
+# Install FFmpeg to for testing
+RUN apk add --no-cache ffmpeg
+
+# Tell ffmpeg-static to use system ffmpeg
 ENV FFMPEG_BIN=/usr/bin/ffmpeg
 
 # Install dependencies
@@ -33,6 +37,7 @@ LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 # Install python3 (required for youtube-dl/yt-dlp)
 RUN apk add --no-cache python3 ffmpeg && ln -s /usr/bin/python3 /usr/local/bin/python
 
+# Tell ffmpeg-static to use system ffmpeg
 ENV FFMPEG_BIN=/usr/bin/ffmpeg
 
 # Copy needed files
