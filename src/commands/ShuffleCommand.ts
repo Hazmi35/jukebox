@@ -5,9 +5,9 @@ import { createEmbed } from "../utils/createEmbed";
 import { Message } from "discord.js";
 
 @DefineCommand({
-    aliases: ["randomize"],
+    aliases: ["randomize", "shuffle-queue"],
     name: "shuffle",
-    description: lang => lang.COMMAND_SKIP_META_DESCRIPTION(),
+    description: lang => lang.COMMAND_SHUFFLE_META_DESCRIPTION(),
     usage: () => "{prefix}shuffle"
 })
 export class ShuffleCommand extends BaseCommand {
@@ -18,7 +18,7 @@ export class ShuffleCommand extends BaseCommand {
         message.guild!.queue?.tracks.shuffle();
 
         message.channel.send({
-            embeds: [createEmbed("info", `🔀 Queue shuffled.`)]
+            embeds: [createEmbed("info", message.client.lang.COMMAND_SHUFFLE_SUCCESS())]
         }).catch(e => this.client.logger.error("SHUFFLE_COMMAND_ERR:", e));
     }
 }
