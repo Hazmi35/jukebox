@@ -11,22 +11,22 @@ export class TrackManager {
     }
 
     public clear(): void {
-        this.store.splice(0, this.store.length);
+        this.splice(0, this.size);
     }
 
     public delete(track: Track): Track {
-        this.store = this.store.filter(t => t.id !== track.id);
+        this.store = this.filter(t => t.id !== track.id);
         return track;
     }
 
     public deleteByID(id: Snowflake): Track | undefined {
-        const track = this.store.find(t => t.id === id);
+        const track = this.get(id);
         if (track === undefined) return undefined;
         return this.delete(track);
     }
 
     public deleteFirst(): Track | undefined {
-        return this.store.shift();
+        return this.delete(this.first()!);
     }
 
     public filter(predicate: (value: Track) => boolean): (Track)[] {
@@ -42,11 +42,11 @@ export class TrackManager {
     }
 
     public first(): Track | undefined {
-        return this.store.at(0);
+        return this.getByIndex(0);
     }
 
     public get(id: Snowflake): Track | undefined {
-        return this.store.find(t => t.id === id);
+        return this.find(t => t.id === id);
     }
 
     public getByIndex(index: number): Track | undefined {
@@ -65,7 +65,11 @@ export class TrackManager {
         return this.store.slice(start, end);
     }
 
+    public splice(start: number, end?: number): Track[] {
+        return this.store.splice(start, end);
+    }
+
     public shuffle(): Track[] {
-        return this.store = [...this.store.slice(0, 1), ...this.queue.client.util.shuffleArray<Track>(this.store.slice(1))];
+        return this.store = [...this.slice(0, 1), ...this.queue.client.util.shuffleArray<Track>(this.slice(1))];
     }
 }
