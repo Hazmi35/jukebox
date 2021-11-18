@@ -26,11 +26,11 @@ export class Track {
             const process = this.queue.client.ytdl.raw(
                 this.metadata.url,
                 {
-                    f: this.resourceFormat,
+                    format: this.resourceFormat,
                     ffmpegLocation: `"${ffmpegStatic}"`,
-                    o: "-",
-                    q: "",
-                    r: "800K"
+                    output: "-",
+                    quiet: "",
+                    limitRate: "800K"
                 },
                 { stdio: ["ignore", "pipe", "ignore"] }
             );
