@@ -1,6 +1,5 @@
 import { Message } from "discord.js";
 import { BaseCommand } from "../structures/BaseCommand";
-import { Track } from "../structures/Track";
 import { createEmbed } from "../utils/createEmbed";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isMusicQueueExists, isSameVoiceChannel, isUserInTheVoiceChannel } from "../utils/decorators/MusicHelper";
@@ -23,10 +22,10 @@ export class RemoveCommand extends BaseCommand {
         }
 
         // Convert to normal array
-        const { store: tracks } = message.guild!.queue!.tracks;
+        const tracks = message.guild!.queue!.tracks;
 
-        const currentTrack = message.guild!.queue!.tracks.first()!;
-        const track = tracks[(Number(args[0]) - 1)] as Track | undefined;
+        const currentTrack = tracks.first()!;
+        const track = message.guild?.queue?.tracks.getByIndex(Number(args[0]) - 1);
 
         if (track === undefined) return message.channel.send({ embeds: [createEmbed("error", message.client.lang.COMMAND_REMOVE_NOT_FOUND(Number(args[0])))] });
 
