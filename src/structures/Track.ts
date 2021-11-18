@@ -5,35 +5,39 @@ import ffmpegStatic from "ffmpeg-static";
 import { ServerQueue } from "./ServerQueue";
 import execa from "execa";
 import { SnowflakeUtil } from "discord.js";
+import { YtFlags } from "youtube-dl-exec";
 
 export enum TrackType {
     unknown,
     youtube
 }
 
+export const defaultYtFlags = {
+    ffmpegLocation: `${ffmpegStatic}`,
+    format: "bestaudio[acodec=opus]/bestaudio",
+    limitRate: "800K",
+    output: "-",
+    quiet: true
+};
+
 export class Track {
     public readonly id = SnowflakeUtil.generate();
     public type = TrackType.unknown;
-    public readonly resourceFormat: string = "bestaudio";
     private _resource: AudioResource<ITrackMetadata> | null = null;
-    public constructor(public readonly queue: ServerQueue, public readonly metadata: ITrackMetadata, public readonly inlineVolume: boolean = false) {
+    public constructor(
+        public readonly queue: ServerQueue,
+        public readonly metadata: ITrackMetadata,
+        public readonly inlineVolume: boolean = false,
+        public readonly ytdlFlags: YtFlags = defaultYtFlags
+    ) {
+        this.ytdlFlags = { ...defaultYtFlags, ...ytdlFlags };
         Object.defineProperty(this, "_resource", { enumerable: false });
     }
 
     // TODO: Recreate Resource Caching
     public createAudioResource(): Promise<{ resource: AudioResource<ITrackMetadata>; process: execa.ExecaChildProcess }> {
         return new Promise((resolve, reject) => {
-            const process = this.queue.client.ytdl.raw(
-                this.metadata.url,
-                {
-                    ffmpegLocation: `${ffmpegStatic}`,
-                    format: this.resourceFormat,
-                    limitRate: "800K",
-                    output: "-",
-                    quiet: true
-                },
-                { stdio: ["ignore", "pipe", "ignore"] }
-            );
+            const process = this.queue.client.ytdl.raw(this.metadata.url, this.ytdlFlags, { stdio: ["ignore", "pipe", "ignore"] });
             if (!process.stdout) {
                 reject(new Error("No stdout"));
                 return;

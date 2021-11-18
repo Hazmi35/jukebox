@@ -1,12 +1,13 @@
 import { ITrackMetadata } from "../typings";
 import { ServerQueue } from "./ServerQueue";
-import { Track, TrackType } from "./Track";
+import { Track, TrackType, defaultYtFlags } from "./Track";
 
 
 export class YouTubeTrack extends Track {
     public type = TrackType.youtube;
-    public readonly resourceFormat: string = "bestaudio/93";
     public constructor(public readonly queue: ServerQueue, public readonly metadata: ITrackMetadata, public readonly inlineVolume: boolean = false) {
-        super(queue, metadata, inlineVolume);
+        super(queue, metadata, inlineVolume, {
+            format: `${defaultYtFlags.format}/95`
+        });
     }
 }
