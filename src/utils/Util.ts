@@ -162,6 +162,15 @@ export class Util {
         return temp as T[][];
     }
 
+    // Uses https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
+    public shuffleArray<T>(array: T[]): T[] {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
     public getUserFromMention(mention: string): Promise<User | undefined> {
         const matches = /^<@!?(\d+)>$/.exec(mention);
         if (!matches) return Promise.resolve(undefined);
