@@ -56,7 +56,9 @@ Want to use Dockerized version of jukebox? sure! we provide them on the [Docker 
 ```sh
 $ docker run --env-file .env --volume cache:/app/cache --volume logs:/app/logs --restart unless-stopped hazmi35/jukebox
 ```
-We also provide [docker-compose.yml](docker-compose.yml) if you want to go that way
+We also provide [docker-compose.yml](docker-compose.yml) and [docker-compose.debian.yml](docker-compose.debian.yml) if you want to go that way.
+
+There is also a [docker-compose.pull.yml](docker-compose.pull.yml) version, which pulls the image from Docker Hub (latest tag, alpine)
 
 ### Compose Example
 ```sh
