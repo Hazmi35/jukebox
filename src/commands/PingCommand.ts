@@ -28,8 +28,8 @@ export class PingCommand extends BaseCommand {
                 .setFooter(this.client.lang.COMMAND_PING_EMBED_FOOTER(message.author.tag), message.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp();
 
-            msg.edit({ content: " ", embeds: [embed] }).catch(e => this.client.logger.error("PROMISE_ERR:", e));
-        }).catch(e => this.client.logger.error("PROMISE_ERR:", e));
+            msg.edit({ content: " ", embeds: [embed] }).catch(e => this.client.logger.error(e));
+        }).catch(e => this.client.logger.error(e));
         return message;
     }
 

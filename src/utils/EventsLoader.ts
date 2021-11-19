@@ -12,9 +12,9 @@ export class EventsLoader {
             const event = await this.import(resolve(this.path, file), this.client);
             if (event === undefined) throw new Error(`File ${file} is not a valid event file`);
             this.client.on(event.name, (...args) => event.execute(...args));
-            this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Event for listener ${event.name} has been loaded!`);
+            this.client.logger.info(`Event for listener ${event.name} has been loaded!`);
         }
-        this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} A total of ${files.length} of events has been loaded!`);
+        this.client.logger.info(`A total of ${files.length} of events has been loaded!`);
         return this.client;
     }
 

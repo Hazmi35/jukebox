@@ -19,6 +19,6 @@ export class PauseCommand extends BaseCommand {
             return message.channel.send({ embeds: [createEmbed("info", this.client.lang.COMMAND_PAUSE_SUCCESS())] });
         }
         message.channel.send({ embeds: [createEmbed("warn", this.client.lang.COMMAND_PAUSE_ALREADY_PAUSED())] })
-            .catch(e => this.client.logger.error("PAUSE_CMD_ERR:", e));
+            .catch(e => this.client.logger.error(e));
     }
 }

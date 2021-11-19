@@ -37,6 +37,6 @@ export class AboutCommand extends BaseCommand {
                         (await this.client.util.getPackageJSON()).version as string
                     )).setAuthor(this.client.lang.COMMAND_ABOUT_EMBED_AUTHOR(this.client.user!.username))
             ]
-        }).catch(e => this.client.logger.error("ABOUT_CMD_ERR:", e));
+        }).catch(e => this.client.logger.error(e));
     }
 }

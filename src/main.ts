@@ -3,16 +3,12 @@ import { resolve } from "path";
 import { ShardingManager } from "discord.js";
 import { createLogger } from "./utils/Logger";
 import { totalShards as configTotalShards, debug, lang } from "./config";
-const log = createLogger(`shardingmanager`, lang, debug);
+const log = createLogger(`shardingmanager`, lang, "manager", undefined, debug);
 
 const totalShards: number | "auto" = configTotalShards === "auto" ? configTotalShards : Number(configTotalShards);
 
-process.on("unhandledRejection", e => {
-    log.error("UNHANDLED_REJECTION: ", e);
-});
 process.on("uncaughtException", e => {
-    log.error("UNCAUGHT_EXCEPTION: ", e);
-    log.warn("Uncaught Exception detected. Restarting...");
+    log.fatal(e);
     process.exit(1);
 });
 
@@ -36,5 +32,5 @@ if (process[Symbol.for("ts-node.register.instance")]) {
             log.info(`[ShardManager] Shard #${shard.id} Reconnected.`);
         });
         if (manager.shards.size === manager.totalShards) log.info("[ShardManager] All shards spawned successfully.");
-    }).spawn().catch(e => log.error("SHARD_SPAWN_ERR:", e.status ? `Error while fetching recommended shards: ${e.status}, ${e.statusText}` : e));
+    }).spawn().catch(e => log.error(e.status ? `Error while fetching recommended shards: ${e.status}, ${e.statusText}` : e));
 }

@@ -55,7 +55,7 @@ export class PlayCommand extends BaseCommand {
                         if (youtubeURL.searchParams.has("list")) {
                             const index = Number(youtubeURL.searchParams.get("index") ?? -1);
                             this.loadYouTubePlaylist(youtubeURL.searchParams.get("list")!, message, voiceChannel, true, index)
-                                .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                                .catch(e => this.client.logger.error(e));
                         }
                     } else if (youtubeURL.pathname === "/playlist" && youtubeURL.searchParams.has("list")) {
                         return this.loadYouTubePlaylist(youtubeURL.searchParams.get("list")!, message, voiceChannel);
@@ -83,10 +83,10 @@ export class PlayCommand extends BaseCommand {
         } catch (error: any) {
             // TODO: Remove this next line if https://github.com/SuspiciousLookingOwl/youtubei/issues/37 is resolved.
             if (error.message === "Cannot read properties of undefined (reading 'find')") error = new Error(this.client.lang.COMMAND_PLAY_RESOURCE_NOT_FOUND());
-            else this.client.logger.error("PLAY_ERR:", error);
+            else this.client.logger.error(error);
 
             message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_RESOURCE_PROCESSING_ERR(error.message as string))] })
-                .catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+                .catch(e => this.client.logger.error(e));
         }
     }
 
@@ -107,7 +107,7 @@ export class PlayCommand extends BaseCommand {
         const addedTrackMsg = (metadata: ITrackMetadata): void => {
             message.channel.send({
                 embeds: [createEmbed("info", this.client.lang.COMMAND_PLAY_TRACK_ADDED(metadata.title, metadata.url)).setThumbnail(metadata.thumbnail)]
-            }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+            }).catch(e => this.client.logger.error(e));
         };
         if (message.guild?.queue) {
             const track = new YouTubeTrack(message.guild.queue, metadata, this.client.config.enableInlineVolume);
@@ -145,9 +145,9 @@ export class PlayCommand extends BaseCommand {
             } catch (error: any) {
                 message.guild?.queue.tracks.clear();
                 message.guild!.queue = null;
-                this.client.logger.error("HANDLE_VIDEO_ERR:", error);
+                this.client.logger.error(error);
                 message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_COULD_NOT_JOIN_VC(error.message as string))] })
-                    .catch(e => this.client.logger.error("HANDLE_VIDEO_ERR:", e));
+                    .catch(e => this.client.logger.error(e));
                 return undefined;
             }
             message.guild?.queue.play(track);
@@ -207,7 +207,7 @@ export class PlayCommand extends BaseCommand {
             const tracks = alreadyQueued.map(t => `**${num++}.** **[${t.title}](${this.generateYouTubeURL(t.id, "video")})**`);
             message.channel.send({
                 embeds: [createEmbed("warn", this.client.lang.COMMAND_PLAY_ALREADY_QUEUED_MSG2(alreadyQueued.length, message.client.config.prefix))]
-            }).catch(e => this.client.logger.error("PLAYLIST_LOAD_ERR:", e));
+            }).catch(e => this.client.logger.error(e));
             const pages = this.client.util.paginate(tracks.join("\n"));
             let howManyMessage = 0;
             for (const page of pages) {
@@ -230,9 +230,9 @@ export class PlayCommand extends BaseCommand {
             if (startIndex === -1) startIndex = videos.findIndex(s => s.id === currentId) + 1;
             return videos.slice(startIndex, videos.length);
         } catch (e: any) {
-            this.client.logger.error("LOAD_PLAYLIST_ERR:", new Error(e.stack as string));
+            this.client.logger.error(e);
             message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_LOAD_ERR(e.message as string))] })
-                .catch(e => this.client.logger.error("LOAD_PLAYLIST_ERR:", new Error(e as string)));
+                .catch(e => this.client.logger.error(e));
             return undefined;
         }
     }
@@ -271,7 +271,7 @@ export class PlayCommand extends BaseCommand {
                 time: this.client.config.selectTimeout,
                 errors: ["time"]
             });
-            msg.delete().catch(e => this.client.logger.error("CREATE_SEARCH_PROMPT_ERR:", e));
+            msg.delete().catch(e => this.client.logger.error(e));
             response.first()?.delete().catch(e => e); // do nothing
 
             if (response.first()?.content === "c" || response.first()?.content === "cancel") {
@@ -282,9 +282,9 @@ export class PlayCommand extends BaseCommand {
             const videoIndex = parseInt(response.first()!.content);
             return this.youtube.getVideo(videos[videoIndex - 1].id);
         } catch (error) {
-            msg.delete().catch(e => this.client.logger.error("CREATE_SEARCH_PROMPT_ERR:", e));
+            msg.delete().catch(e => this.client.logger.error(e));
             message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_INVALID_INPUT())] })
-                .catch(e => this.client.logger.error("CREATE_SEARCH_PROMPT_ERR:", e));
+                .catch(e => this.client.logger.error(e));
             return undefined;
         }
     }

@@ -36,6 +36,6 @@ export class InviteCommand extends BaseCommand {
                 createEmbed("info")
                     .addField(this.client.lang.COMMAND_INVITE_EMBED_FIELD_NAME(), `[${this.client.lang.COMMAND_INVITE_EMBED_FIELD_VALUE()}](${invite})`)
             ]
-        }).catch(e => this.client.logger.error("PLAY_CMD_ERR:", e));
+        }).catch(e => this.client.logger.error(e));
     }
 }

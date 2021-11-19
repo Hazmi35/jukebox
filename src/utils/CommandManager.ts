@@ -27,10 +27,10 @@ export class CommandManager extends Collection<string, ICommandComponent> {
                     this.set(command.meta.name, command);
                     if (command.meta.disable === true) disabledCount++;
                 }
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} A total of ${files.length} commands has been loaded!`);
-                if (disabledCount !== 0) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${disabledCount} out of ${files.length} commands is disabled.`);
+                this.client.logger.info(`A total of ${files.length} commands has been loaded!`);
+                if (disabledCount !== 0) this.client.logger.info(`${disabledCount} out of ${files.length} commands is disabled.`);
             })
-            .catch(err => this.client.logger.error("CMD_LOADER_ERR:", err));
+            .catch(err => this.client.logger.error(err));
         return undefined;
     }
 
@@ -49,8 +49,8 @@ export class CommandManager extends Collection<string, ICommandComponent> {
                 const timeLeft = (expirationTime - now) / 1000;
                 message.channel.send({ embeds: [createEmbed("warn", message.client.lang.COMMAND_TIMEOUT(message.author.username, timeLeft.toFixed(1)))] })
                     .then(msg => {
-                        setTimeout(() => msg.delete().catch(e => this.client.logger.error("CMD_HANDLER_ERR:", e)), 3500);
-                    }).catch(e => this.client.logger.error("CMD_HANDLER_ERR:", e));
+                        setTimeout(() => msg.delete().catch(e => this.client.logger.error(e)), 3500);
+                    }).catch(e => this.client.logger.error(e));
                 return undefined;
             }
 
@@ -63,9 +63,9 @@ export class CommandManager extends Collection<string, ICommandComponent> {
         try {
             return command.execute(message, args);
         } catch (e) {
-            this.client.logger.error("CMD_HANDLER_ERR:", e);
+            this.client.logger.error(e);
         } finally {
-            this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${message.author.tag} is using ` +
+            this.client.logger.info(`${message.author.tag} is using ` +
             `${command.meta.name} command on ${message.guild ? `${message.guild.name} in #${(message.channel as TextChannel).name} channel` : "DM Channel"}`);
         }
     }

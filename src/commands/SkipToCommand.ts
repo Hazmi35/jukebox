@@ -44,6 +44,6 @@ export class SkipToCommand extends BaseCommand {
                 createEmbed("info", message.client.lang.COMMAND_SKIPTO_SUCCESS(track.metadata.title, track.metadata.url, diff.length + 1))
                     .setThumbnail(track.metadata.thumbnail)
             ]
-        }).catch(e => this.client.logger.error("SKIPTO_CMD_ERR:", e));
+        }).catch(e => this.client.logger.error(e));
     }
 }
