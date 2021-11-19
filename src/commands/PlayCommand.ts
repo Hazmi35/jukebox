@@ -150,7 +150,7 @@ export class PlayCommand extends BaseCommand {
                     .catch(e => this.client.logger.error(e));
                 return undefined;
             }
-            message.guild?.queue.play(track);
+            await message.guild?.queue.play(track);
         }
     }
 
