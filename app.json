@@ -12,7 +12,7 @@
             "required": true
         },
         "CONFIG_OWNERS": {
-            "description": "A Discord ID(s), use comma if you want to add more than 1 owner<br>NOTE: DO NOT ADD SOMEONE ELSE ID THAT YOU DON'T TRUST",
+            "description": "A Discord ID(s), use comma if you want to add more than 1 owner (DO NOT ADD SOMEONE ELSE ID THAT YOU DON'T TRUST)",
             "required": false
         },
         "CONFIG_TOTALSHARDS": {
@@ -77,6 +77,10 @@
         },
         "CONFIG_STATUS_ACTIVITY": {
             "description": "What status does the bot display (default: 'music on {guildsCount} guilds!') (available variables: guildsCount, usersCount, playingCount, and botPrefix). NOTE ON {usersCount} VARIABLE: The value will be 0 if CONFIG_CACHE_USERS is not set to yes",
+            "required": false
+        },
+        "CONFIG_LANGUAGE": {
+            "description": "Language to be used in Jukebox, uses IETF language tags, for example: en-US, en-GB, id-ID (default: en-US) (Available languages: Please see the file list in folder src/langs, you can submit your language by contributing to Jukebox project at GitHub.)",
             "required": false
         }
     },
