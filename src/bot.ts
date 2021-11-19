@@ -49,4 +49,4 @@ process.on("uncaughtException", e => {
 });
 
 client.build(process.env.SECRET_DISCORD_TOKEN!)
-    .catch(e => client.logger.error("CLIENT_BUILD_ERR: ", e));
+    .catch(e => client.logger.error(e));
