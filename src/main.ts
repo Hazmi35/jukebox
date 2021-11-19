@@ -32,5 +32,5 @@ if (process[Symbol.for("ts-node.register.instance")]) {
             log.info(`[ShardManager] Shard #${shard.id} Reconnected.`);
         });
         if (manager.shards.size === manager.totalShards) log.info("[ShardManager] All shards spawned successfully.");
-    }).spawn().catch(e => log.error("SHARD_SPAWN_ERR:", e.status ? `Error while fetching recommended shards: ${e.status}, ${e.statusText}` : e));
+    }).spawn().catch(e => log.error(e.status ? `Error while fetching recommended shards: ${e.status}, ${e.statusText}` : e));
 }
