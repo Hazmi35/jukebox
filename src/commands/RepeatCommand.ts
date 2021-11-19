@@ -24,7 +24,7 @@ export class RepeatCommand extends BaseCommand {
         if (repeatMode[mode] as any === undefined) {
             message.channel.send({
                 embeds: [createEmbed("error", message.client.lang.COMMAND_INVALID_ARGS(message.client.config.prefix, this.meta.name))]
-            }).catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
+            }).catch(e => this.client.logger.error(e));
         } else {
             message.guild!.queue!.repeatMode = repeatMode[mode];
             message.channel.send({
@@ -35,7 +35,7 @@ export class RepeatCommand extends BaseCommand {
                             message.client.lang.MUSIC_REPEAT_MODE_TYPES(message.guild!.queue!.repeatMode)
                         ))
                 ]
-            }).catch(e => this.client.logger.error("REPEAT_CMD_ERR:", e));
+            }).catch(e => this.client.logger.error(e));
         }
     }
 }

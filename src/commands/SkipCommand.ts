@@ -25,6 +25,6 @@ export class SkipCommand extends BaseCommand {
                 createEmbed("info", message.client.lang.COMMAND_SKIP_SUCCESS(metadata.title, metadata.url))
                     .setThumbnail(metadata.thumbnail)
             ]
-        }).catch(e => this.client.logger.error("SKIP_CMD_ERR:", e));
+        }).catch(e => this.client.logger.error(e));
     }
 }

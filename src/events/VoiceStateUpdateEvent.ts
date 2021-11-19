@@ -31,9 +31,9 @@ export class VoiceStateUpdateEvent extends BaseEvent {
                 this.client.logger.info(`Disconnected from the voice channel at ${newState.guild.name}, the queue was deleted.`);
                 queue.textChannel?.send({ embeds: [createEmbed("warn", this.client.lang.BOT_DISCONNECTED_FROM_VOICE())] })
                     .then(() => { queue.oldMusicMessage = null; queue.oldVoiceStateUpdateMessage = null; })
-                    .catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
+                    .catch(e => this.client.logger.error(e));
             } catch (e) {
-                this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e);
+                this.client.logger.error(e);
             }
         }
 
@@ -72,15 +72,15 @@ export class VoiceStateUpdateEvent extends BaseEvent {
                         createEmbed("error", this.client.lang.MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED(Number(duration)))
                             .setTitle(this.client.lang.MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE())
                     ]
-                }).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
+                }).catch(e => this.client.logger.error(e));
             }, timeout);
             queue.textChannel?.send({
                 embeds: [
                     createEmbed("warn", this.client.lang.MUSIC_DELETEQUEUETIMEOUT_PAUSED(Number(duration)))
                         .setTitle(this.client.lang.MUSIC_DELETEQUEUETIMEOUT_PAUSED_EMBED_TITLE())
                 ]
-            }).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
-        } catch (e) { this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e); }
+            }).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error(e));
+        } catch (e) { this.client.logger.error(e); }
     }
 
     private resumeTimeout(vcMembers: Collection<Snowflake, GuildMember>, queue: ServerQueue, newState: VoiceState): any {
@@ -96,9 +96,9 @@ export class VoiceStateUpdateEvent extends BaseEvent {
                             .setThumbnail(tracks!.metadata.thumbnail)
                             .setTitle(this.client.lang.MUSIC_DELETEQUEUETIMEOUT_RESUMED_EMBED_TITLE())
                     ]
-                }).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));
+                }).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error(e));
                 newState.guild.queue?.player.unpause();
-            } catch (e) { this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e); }
+            } catch (e) { this.client.logger.error(e); }
         }
     }
 }

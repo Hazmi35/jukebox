@@ -12,6 +12,7 @@ import { Localization } from "../utils/Localization";
 
 // Extends DiscordJS Structures
 import "./Guild";
+import { CustomError } from "../utils/CustomError";
 
 export class Jukebox extends BotClient {
     public readonly config = config;
@@ -32,10 +33,10 @@ export class Jukebox extends BotClient {
             this.logger.warn(`Lang "${config.lang}" does not exists, using "${this.lang.META_ID()} as a fallback."`);
         }
         this.on("ready", () => this.commands.load());
-        this.events.load().catch(e => this.logger.error("EVENTS_LOADER_ERR:", e));
+        this.events.load().catch(e => this.logger.error(e));
         this.util.getOpusEncoderName()
             .then(name => this.logger.info(`Using "${name}" as the preferred opus encoder.`))
-            .catch(e => { this.logger.error("JUKEBOX_INIT_ERR:", new Error(`Could not load any opus encoder\n${e.message}`)); process.exit(1); });
+            .catch(e => { this.logger.error(CustomError("JukeboxInitError", `Could not load any opus encoder\n${e.message}`)); process.exit(1); });
         await this.login(token);
         return this;
     }

@@ -19,6 +19,6 @@ export class ShuffleCommand extends BaseCommand {
 
         message.channel.send({
             embeds: [createEmbed("info", message.client.lang.COMMAND_SHUFFLE_SUCCESS())]
-        }).catch(e => this.client.logger.error("SHUFFLE_COMMAND_ERR:", e));
+        }).catch(e => this.client.logger.error(e));
     }
 }

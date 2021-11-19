@@ -36,7 +36,7 @@ export class HelpCommand extends BaseCommand {
                             }
                         ])
                 ]
-            }).catch(e => this.client.logger.error("HELP_CMD_ERR:", e));
+            }).catch(e => this.client.logger.error(e));
         } else {
             message.channel.send({
                 embeds: [
@@ -45,7 +45,7 @@ export class HelpCommand extends BaseCommand {
                         .setThumbnail(message.client.user?.displayAvatarURL() as string)
                         .setFooter(this.client.lang.COMMAND_HELP_EMBED_FOOTER(message.client.config.prefix), images.info)
                 ]
-            }).catch(e => this.client.logger.error("HELP_CMD_ERR:", e));
+            }).catch(e => this.client.logger.error(e));
         }
     }
 }

@@ -28,6 +28,6 @@ export class VolumeCommand extends BaseCommand {
         }
 
         message.guild!.queue!.volume = volume;
-        message.channel.send({ embeds: [createEmbed("info", message.client.lang.COMMAND_VOLUME_SET(volume))] }).catch(e => this.client.logger.error("VOLUME_CMD_ERR:", e));
+        message.channel.send({ embeds: [createEmbed("info", message.client.lang.COMMAND_VOLUME_SET(volume))] }).catch(e => this.client.logger.error(e));
     }
 }

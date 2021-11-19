@@ -43,7 +43,7 @@ export class QueueCommand extends BaseCommand {
             });
             collector
                 .on("collect", (reaction, user) => {
-                    if (isMessageManageable) reaction.users.remove(user).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
+                    if (isMessageManageable) reaction.users.remove(user).catch(e => this.client.logger.error(e));
                     switch (reaction.emoji.name!) {
                         case "◀️":
                             if (index === 0) return undefined;
@@ -58,10 +58,10 @@ export class QueueCommand extends BaseCommand {
                     embed
                         .setDescription(pages[index].join("\n"))
                         .setFooter(...this.generateFooter(message, true, index, pages));
-                    msg.edit({ content: " ", embeds: [embed] }).catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
+                    msg.edit({ content: " ", embeds: [embed] }).catch(e => this.client.logger.error(e));
                 })
                 .on("end", () => {
-                    if (isMessageManageable) msg.reactions.removeAll().catch(e => this.client.logger.error("QUEUE_CMD_ERR:", e));
+                    if (isMessageManageable) msg.reactions.removeAll().catch(e => this.client.logger.error(e));
                 });
         }
     }

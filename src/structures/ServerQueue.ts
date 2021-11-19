@@ -53,7 +53,7 @@ export class ServerQueue {
                 this.client.logger.info(`Track: "${metadata.title}" on ${this.guild.name} started`);
                 this.textChannel?.send({ embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_START_PLAYING(metadata.title, metadata.url)).setThumbnail(metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
-                    .catch(e => this.client.logger.error("PLAY_ERR:", e));
+                    .catch(e => this.client.logger.error(e));
                 return undefined;
             }
             if (newState.status === AudioPlayerStatus.Idle) {
@@ -74,22 +74,22 @@ export class ServerQueue {
                 this.client.logger.info(`Track: "${metadata.title}" on ${this.guild.name} ended`);
                 this.textChannel?.send({ embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_STOP_PLAYING(metadata.title, metadata.url)).setThumbnail(metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
-                    .catch(e => this.client.logger.error("STOP_PLAYING_MSG_ERR:", e))
+                    .catch(e => this.client.logger.error(e))
                     .finally(() => {
                         if (!nextTrack) {
                             this.oldMusicMessage = null; this.oldVoiceStateUpdateMessage = null;
                             this.textChannel?.send({
                                 embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_FINISHED(this.guild.client.config.prefix))]
-                            }).catch(e => this.client.logger.error("QUEUE_FINISHED_MSG_ERR:", e));
+                            }).catch(e => this.client.logger.error(e));
                             this.connection?.disconnect();
                             clearTimeout(this.timeout!);
                             return this.guild.queue = null;
                         }
                         this.play(nextTrack).catch((e: any) => {
                             this.textChannel?.send({ embeds: [createEmbed("error", this.client.lang.MUSIC_QUEUE_ERROR_WHILE_PLAYING(e.message as string))] })
-                                .catch(e => this.client.logger.error("PLAY_ERR_MSG_ERR:", e));
+                                .catch(e => this.client.logger.error(e));
                             this.connection?.disconnect();
-                            return this.client.logger.error("PLAY_ERR:", e);
+                            return this.client.logger.error(e);
                         });
                     });
                 return undefined;
@@ -98,11 +98,11 @@ export class ServerQueue {
 
         this.player.on("error", err => {
             this.textChannel?.send({ embeds: [createEmbed("error", this.client.lang.MUSIC_QUEUE_ERROR_WHILE_PLAYING(err.message))] })
-                .catch(e => this.client.logger.error("AUDIO_PLAYER_ERR:", e));
+                .catch(e => this.client.logger.error(e));
             this.connection?.disconnect();
             clearTimeout(this.timeout!);
             this.guild.queue = null;
-            this.client.logger.error("AUDIO_PLAYER_ERR:", err);
+            this.client.logger.error(err);
         });
     }
 
@@ -150,7 +150,7 @@ export class ServerQueue {
         if (this._lastMusicMessageID !== null) {
             this.textChannel?.messages.fetch(this._lastMusicMessageID, { cache: false })
                 .then(m => m.delete())
-                .catch(e => this.textChannel?.client.logger.error("DELETE_OLD_MUSIC_MESSAGE_ERR:", e));
+                .catch(e => this.textChannel?.client.logger.error(e));
         }
         this._lastMusicMessageID = id;
     }
@@ -163,7 +163,7 @@ export class ServerQueue {
         if (this._lastVoiceStateUpdateMessageID !== null) {
             this.textChannel?.messages.fetch(this._lastVoiceStateUpdateMessageID, { cache: false })
                 .then(m => m.delete())
-                .catch(e => this.textChannel?.client.logger.error("DELETE_OLD_VOICE_STATE_UPDATE_MESSAGE_ERR:", e));
+                .catch(e => this.textChannel?.client.logger.error(e));
         }
         this._lastVoiceStateUpdateMessageID = id;
     }
