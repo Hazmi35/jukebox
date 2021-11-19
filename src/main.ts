@@ -3,16 +3,21 @@ import { resolve } from "path";
 import { ShardingManager } from "discord.js";
 import { createLogger } from "./utils/Logger";
 import { totalShards as configTotalShards, debug, lang } from "./config";
+import { CustomError } from "./utils/CustomError";
 const log = createLogger(`shardingmanager`, lang, "manager", undefined, debug);
 
 const totalShards: number | "auto" = configTotalShards === "auto" ? configTotalShards : Number(configTotalShards);
 
 process.on("unhandledRejection", e => {
-    log.error("UNHANDLED_REJECTION: ", e);
+    if (e instanceof Error) {
+        log.error(e.stack);
+    } else {
+        if ((e as any).stack !== undefined) return log.error((e as any).stack);
+        log.error(CustomError("PromiseError", e as string).stack);
+    }
 });
 process.on("uncaughtException", e => {
-    log.error("UNCAUGHT_EXCEPTION: ", e);
-    log.warn("Uncaught Exception detected. Restarting...");
+    log.fatal(e.stack);
     process.exit(1);
 });
 

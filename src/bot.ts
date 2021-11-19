@@ -2,6 +2,7 @@ import "dotenv/config";
 import { Jukebox } from "./structures/Jukebox";
 import { CacheWithLimitsOptions, ClientOptions, Intents, LimitedCollection, Options } from "discord.js";
 import { cacheUsers } from "./config";
+import { CustomError } from "./utils/CustomError";
 
 const cacheOptions: CacheWithLimitsOptions = {
     ...Options.defaultMakeCacheSettings,
@@ -35,12 +36,15 @@ if (!cacheUsers) clientOptions.partials?.push("USER");
 const client = new Jukebox(clientOptions);
 
 process.on("unhandledRejection", e => {
-    client.logger.error("UNHANDLED_REJECTION: ", e);
+    if (e instanceof Error) {
+        client.logger.error(e.stack);
+    } else {
+        if ((e as any).stack !== undefined) return client.logger.error((e as any).stack);
+        client.logger.error(CustomError("PromiseError", e as string).stack);
+    }
 });
-
 process.on("uncaughtException", e => {
-    client.logger.error("UNCAUGHT_EXCEPTION: ", e);
-    client.logger.warn("Uncaught Exception detected. Restarting...");
+    client.logger.fatal(e.stack);
     process.exit(1);
 });
 

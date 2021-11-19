@@ -16,7 +16,7 @@ export function createLogger(name: string, lang: string, type: "manager" | "shar
         level: debug ? "debug" : "info",
         formatters: {
             bindings: () => ({
-                pid: type === "shard" ? shardID ? `Shard #${shardID}` : null : `ShardManager`
+                pid: type === "shard" ? shardID === undefined ? null : `Shard #${shardID}` : `ShardManager`
             })
         },
         transport: {
