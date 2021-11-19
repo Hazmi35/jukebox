@@ -12,7 +12,7 @@
             "required": true
         },
         "CONFIG_OWNERS": {
-            "description": "A Discord ID(s), use comma if you want to add more than 1 owner (DO NOT ADD SOMEONE ELSE ID THAT YOU DON'T TRUST)",
+            "description": "A Discord ID(s), use comma if you want to add more than 1 owner\nNOTE: DO NOT ADD SOMEONE ELSE ID THAT YOU DON'T TRUST",
             "required": false
         },
         "CONFIG_TOTALSHARDS": {
