@@ -4,6 +4,7 @@ import { Message } from "discord.js";
 import { inspect } from "util";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { createEmbed } from "../utils/createEmbed";
+import { CustomError } from "../utils/CustomError";
 
 @DefineCommand({
     aliases: ["ev", "js-exec", "e", "evaluate"],
@@ -40,7 +41,7 @@ export class EvalCommand extends BaseCommand {
                 const hastebin = await client.util.hastebin(output);
                 embed.addField(client.lang.COMMAND_EVAL_OUTPUT_FIELD_NAME(), `${hastebin}.js`);
             } else { embed.addField(client.lang.COMMAND_EVAL_OUTPUT_FIELD_NAME(), `\`\`\`js\n${output}\`\`\``); }
-            void message.channel.send({ embeds: [embed] });
+            message.channel.send({ embeds: [embed] }).catch(e => client.logger.error(e));
         } catch (e: any) {
             const error = this.clean(e as string);
             if (error.length > 1024) {
@@ -48,7 +49,7 @@ export class EvalCommand extends BaseCommand {
                 embed.addField(client.lang.COMMAND_EVAL_ERROR_FIELD_NAME(), `${hastebin}.js`);
             } else { embed.setColor("#FF0000").addField(client.lang.COMMAND_EVAL_ERROR_FIELD_NAME(), `\`\`\`js\n${error}\`\`\``); }
             message.channel.send({ embeds: [embed] }).catch(e => client.logger.error(e));
-            client.logger.error(e);
+            client.logger.error(CustomError("EvalCommandError", e as string).stack);
         }
 
         return message;

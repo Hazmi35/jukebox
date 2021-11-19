@@ -37,14 +37,13 @@ const client = new Jukebox(clientOptions);
 
 process.on("unhandledRejection", e => {
     if (e instanceof Error) {
-        client.logger.error(e.stack);
+        client.logger.error(e);
     } else {
-        if ((e as any).stack !== undefined) return client.logger.error((e as any).stack);
-        client.logger.error(CustomError("PromiseError", e as string).stack);
+        client.logger.error(CustomError("PromiseError", e as string));
     }
 });
 process.on("uncaughtException", e => {
-    client.logger.fatal(e.stack);
+    client.logger.fatal(e);
     process.exit(1);
 });
 

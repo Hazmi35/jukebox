@@ -8,7 +8,7 @@ const log = createLogger(`shardingmanager`, lang, "manager", undefined, debug);
 const totalShards: number | "auto" = configTotalShards === "auto" ? configTotalShards : Number(configTotalShards);
 
 process.on("uncaughtException", e => {
-    log.fatal(e.stack);
+    log.fatal(e);
     process.exit(1);
 });
 
