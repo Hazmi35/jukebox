@@ -28,7 +28,7 @@ export class VoiceStateUpdateEvent extends BaseEvent {
                 newState.guild.queue?.player.stop(true);
                 clearTimeout(queue.timeout!);
                 newState.guild.queue = null;
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Disconnected from the voice channel at ${newState.guild.name}, the queue was deleted.`);
+                this.client.logger.info(`Disconnected from the voice channel at ${newState.guild.name}, the queue was deleted.`);
                 queue.textChannel?.send({ embeds: [createEmbed("warn", this.client.lang.BOT_DISCONNECTED_FROM_VOICE())] })
                     .then(() => { queue.oldMusicMessage = null; queue.oldVoiceStateUpdateMessage = null; })
                     .catch(e => this.client.logger.error("VOICE_STATE_UPDATE_EVENT_ERR:", e));

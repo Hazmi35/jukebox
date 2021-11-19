@@ -3,7 +3,7 @@ import { resolve } from "path";
 import { ShardingManager } from "discord.js";
 import { createLogger } from "./utils/Logger";
 import { totalShards as configTotalShards, debug, lang } from "./config";
-const log = createLogger(`shardingmanager`, lang, debug);
+const log = createLogger(`shardingmanager`, lang, "manager", undefined, debug);
 
 const totalShards: number | "auto" = configTotalShards === "auto" ? configTotalShards : Number(configTotalShards);
 

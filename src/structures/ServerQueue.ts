@@ -50,7 +50,7 @@ export class ServerQueue {
             if (newState.status === AudioPlayerStatus.Playing) {
                 if (oldState.status === AudioPlayerStatus.Paused) return undefined;
                 this._currentTrack.setVolume(this.client.config.defaultVolume / this.client.config.maxVolume);
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${metadata.title}" on ${this.guild.name} started`);
+                this.client.logger.info(`Track: "${metadata.title}" on ${this.guild.name} started`);
                 this.textChannel?.send({ embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_START_PLAYING(metadata.title, metadata.url)).setThumbnail(metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
                     .catch(e => this.client.logger.error("PLAY_ERR:", e));
@@ -71,7 +71,7 @@ export class ServerQueue {
                 }
                 const nextTrack = this.tracks.first();
 
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} Track: "${metadata.title}" on ${this.guild.name} ended`);
+                this.client.logger.info(`Track: "${metadata.title}" on ${this.guild.name} ended`);
                 this.textChannel?.send({ embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_STOP_PLAYING(metadata.title, metadata.url)).setThumbnail(metadata.thumbnail)] })
                     .then(m => this.oldMusicMessage = m.id)
                     .catch(e => this.client.logger.error("STOP_PLAYING_MSG_ERR:", e))

@@ -27,8 +27,8 @@ export class CommandManager extends Collection<string, ICommandComponent> {
                     this.set(command.meta.name, command);
                     if (command.meta.disable === true) disabledCount++;
                 }
-                this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} A total of ${files.length} commands has been loaded!`);
-                if (disabledCount !== 0) this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${disabledCount} out of ${files.length} commands is disabled.`);
+                this.client.logger.info(`A total of ${files.length} commands has been loaded!`);
+                if (disabledCount !== 0) this.client.logger.info(`${disabledCount} out of ${files.length} commands is disabled.`);
             })
             .catch(err => this.client.logger.error("CMD_LOADER_ERR:", err));
         return undefined;
@@ -65,7 +65,7 @@ export class CommandManager extends Collection<string, ICommandComponent> {
         } catch (e) {
             this.client.logger.error("CMD_HANDLER_ERR:", e);
         } finally {
-            this.client.logger.info(`${this.client.shard ? `[Shard #${this.client.shard.ids[0]}]` : ""} ${message.author.tag} is using ` +
+            this.client.logger.info(`${message.author.tag} is using ` +
             `${command.meta.name} command on ${message.guild ? `${message.guild.name} in #${(message.channel as TextChannel).name} channel` : "DM Channel"}`);
         }
     }
