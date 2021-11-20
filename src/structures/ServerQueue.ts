@@ -15,7 +15,7 @@ export class ServerQueue {
     public readonly player: AudioPlayer = createAudioPlayer();
     public readonly tracks = new TrackManager(this);
     public repeatMode = repeatMode.disable;
-    public shuffleMode = shuffleMode.no;
+    public shuffleMode = shuffleMode.disable;
     public timeout: NodeJS.Timeout | null = null;
     private _currentTrack: Track | undefined = undefined;
     private _volume = 0;
