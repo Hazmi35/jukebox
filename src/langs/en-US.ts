@@ -117,6 +117,7 @@ export const lang = {
     COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_REST_VIDEOS_ERR: (playlistTitle: string) => `⚠️ Could not add the rest of videos of the playlist: ${playlistTitle}`,
     COMMAND_PLAY_YOUTUBE_PLAYLIST_SUCCESS: (playlistTitle: string) => `All tracks in playlist: ${playlistTitle} has been added to the queue!`,
     COMMAND_PLAY_YOUTUBE_PLAYLIST_SUCCESS2: (playlistTitle: string, videoTitle: string) => `All tracks starting from track: ${videoTitle} in playlist: ${playlistTitle} has been added to the queue!`,
+    COMMAND_PLAY_YOUTUBE_PLAYLIST_SUCCESS_FOOTER: (prefix: string) => `Playlist Shuffle mode is enabled. Use "${prefix}shuffle disable" to turn it off`,
     COMMAND_PLAY_YOUTUBE_PLAYLIST_LOAD_ERR: (message: string) => `I could not load the playlist!\nError: \`${message}\``,
     COMMAND_PLAY_YOUTUBE_SEARCH_NO_RESULTS: () => "⚠️ I could not obtain any search results!",
     COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_TITLE: () => "Tracks Selection",
@@ -147,8 +148,10 @@ export const lang = {
     COMMAND_RESUME_SUCCESS: () => "▶ The music player resumed",
 
     // Shuffle command
-    COMMAND_SHUFFLE_META_DESCRIPTION: () => "Shuffle the music queue",
+    COMMAND_SHUFFLE_META_DESCRIPTION: () => "Shuffle the music queue or toggle shuffle mode for playlists",
     COMMAND_SHUFFLE_SUCCESS: () => "🔀 Queue shuffled!",
+    COMMAND_SHUFFLE_MODE_SUCCESS: (state: boolean) => `🔀 Playlist shuffle mode: **${state ? "ENABLED" : "DISABLED"}**`,
+    COMMAND_SHUFFLE_MODE_SUCCESS_FOOTER: () => `When Playlist shuffle mode is enabled, new added playlists will be shuffled.`,
 
     // Skip Command
     COMMAND_SKIP_META_DESCRIPTION: () => "Skip the current music",
