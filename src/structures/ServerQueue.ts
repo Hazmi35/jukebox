@@ -6,6 +6,7 @@ import { Jukebox } from "./Jukebox";
 import { Track, TrackType } from "../structures/Track";
 import { repeatMode } from "../constants/repeatMode";
 import { YouTubeTrack } from "./YouTubeTrack";
+import { shuffleMode } from "../constants/shuffleMode";
 
 const nonEnum = { enumerable: false };
 
@@ -14,6 +15,7 @@ export class ServerQueue {
     public readonly player: AudioPlayer = createAudioPlayer();
     public readonly tracks = new TrackManager(this);
     public repeatMode = repeatMode.disable;
+    public shuffleMode = shuffleMode.no;
     public timeout: NodeJS.Timeout | null = null;
     private _currentTrack: Track | undefined = undefined;
     private _volume = 0;

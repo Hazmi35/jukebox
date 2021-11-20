@@ -1,8 +1,10 @@
 import { joinVoiceChannel } from "@discordjs/voice";
-import { Message, StageChannel, TextChannel, Util, VoiceChannel, Collection, Snowflake } from "discord.js";
+import { Message, StageChannel, TextChannel, Util, VoiceChannel, Collection, Snowflake, MessageOptions } from "discord.js";
 import { decodeHTML } from "entities";
 import { URL } from "url";
 import { Client, LiveVideo, MixPlaylist, Playlist, Video, VideoCompact } from "youtubei";
+import { images } from "../constants/images";
+import { shuffleMode } from "../constants/shuffleMode";
 import { BaseCommand } from "../structures/BaseCommand";
 import { ServerQueue } from "../structures/ServerQueue";
 import { YouTubeTrack } from "../structures/YouTubeTrack";
@@ -166,36 +168,50 @@ export class PlayCommand extends BaseCommand {
 
         let addingPlaylistVideoMessage;
         let successMsg = this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_SUCCESS(playlistTitle);
-        const sendMsg = async (msg: string, type: hexColorsType): Promise<Message> => message.channel.send({
-            embeds: [
-                createEmbed(type, msg)
-                    .setThumbnail(playlist.videos[0].thumbnails.best!)
-            ]
-        });
+        const generateMessage = (msg: string, type: hexColorsType, footer?: string): MessageOptions => {
+            const embed = createEmbed(type, msg)
+                .setThumbnail(playlist.videos[0].thumbnails.best!);
+
+            if (footer) embed.setFooter(footer, images.info);
+            return { embeds: [embed] };
+        };
 
         if (watchEndpoint) {
             const { metadata } = message.guild!.queue!.tracks.first()!;
             const videoTitle = `**[${metadata.title}](${this.generateYouTubeURL(metadata.id, "video")})**`;
 
-            addingPlaylistVideoMessage = await sendMsg(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_VIDEOS_FROM(videoTitle, playlistTitle), "info");
+            addingPlaylistVideoMessage = await message.channel.send(
+                generateMessage(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_VIDEOS_FROM(videoTitle, playlistTitle), "info")
+            );
             successMsg = this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_SUCCESS2(playlistTitle, videoTitle);
         } else {
-            addingPlaylistVideoMessage = await sendMsg(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_ALL_VIDEOS(playlistTitle), "info");
+            addingPlaylistVideoMessage = await message.channel.send(
+                generateMessage(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_ALL_VIDEOS(playlistTitle), "info")
+            );
 
             // Add the first video first.
             const firstVideo = await this.youtube.getVideo(playlist.videos[0].id);
             if (!firstVideo) {
-                await sendMsg(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_FIRST_VIDEOS_ERR(playlistTitle), "error");
+                await message.channel.send(
+                    generateMessage(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_FIRST_VIDEOS_ERR(playlistTitle), "error")
+                );
                 return addingPlaylistVideoMessage.delete();
             }
             await this.handleVideo(firstVideo, message, voiceChannel, true, false);
         }
 
         const videos = await this.loadYouTubePlaylistVideos(playlist, message, index, message.guild!.queue!.tracks.first()!.metadata.id);
+
         if (!videos) {
-            await sendMsg(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_REST_VIDEOS_ERR(playlistTitle), "error");
+            await message.channel.send(
+                generateMessage(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_REST_VIDEOS_ERR(playlistTitle), "error")
+            );
             return addingPlaylistVideoMessage.delete();
         }
+
+        const isShuffleMode = message.guild?.queue?.shuffleMode === shuffleMode.on;
+        if (isShuffleMode) message.client.util.shuffleArray(videos);
+
         for (const video of videos) {
             if (message.guild?.queue === null) return addingPlaylistVideoMessage.delete();
             await this.handleVideo(video, message, voiceChannel, true, true);
@@ -219,7 +235,13 @@ export class PlayCommand extends BaseCommand {
             this.playlistAlreadyQueued.delete(message.guild!.id);
         }
 
-        await sendMsg(successMsg, "info");
+        await message.channel.send(
+            generateMessage(
+                successMsg,
+                "info",
+                isShuffleMode ? this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_SUCCESS_FOOTER(this.client.config.prefix) : undefined
+            )
+        );
         return addingPlaylistVideoMessage.delete();
     }
 
