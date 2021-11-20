@@ -1,6 +1,6 @@
 import { TrackManager } from "../utils/TrackManager";
 import { Guild, Snowflake, StageChannel, TextChannel, Util, VoiceChannel } from "discord.js";
-import { AudioPlayer, AudioPlayerError, AudioPlayerStatus, createAudioPlayer, entersState, VoiceConnection, VoiceConnectionStatus } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerError, AudioPlayerState, AudioPlayerStatus, createAudioPlayer, entersState, VoiceConnection, VoiceConnectionStatus } from "@discordjs/voice";
 import { createEmbed } from "../utils/createEmbed";
 import { Jukebox } from "./Jukebox";
 import { Track, TrackType } from "../structures/Track";
@@ -37,67 +37,7 @@ export class ServerQueue {
 
         this._volume = textChannel!.client.config.defaultVolume;
 
-        this.player.on("stateChange", async (oldState, newState) => {
-            this._currentTrack = this.tracks.first();
-            // This usually happens when stop command is being used
-            if (!this._currentTrack) {
-                this.oldMusicMessage = null; this.oldVoiceStateUpdateMessage = null;
-                this.connection?.disconnect();
-                clearTimeout(this.timeout!);
-                this.guild.queue = null;
-                return;
-            }
-
-            const { metadata, type } = this._currentTrack;
-            if (newState.status === AudioPlayerStatus.Playing) {
-                if (oldState.status === AudioPlayerStatus.Paused) return undefined;
-                this._currentTrack.setVolume(this.client.config.defaultVolume / this.client.config.maxVolume);
-                this.client.logger.info(`Track: "${metadata.title}" on ${this.guild.name} started`);
-                this.textChannel?.send({ embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_START_PLAYING(metadata.title, metadata.url)).setThumbnail(metadata.thumbnail)] })
-                    .then(m => this.oldMusicMessage = m.id)
-                    .catch(e => this.client.logger.error(e));
-                return undefined;
-            }
-            if (newState.status === AudioPlayerStatus.Idle) {
-                // Handle loop/repeat feature
-                if (this.repeatMode !== repeatMode.one) { // If the repeatMode is not one, then
-                    this.tracks.deleteFirst(); // Delete the first track
-
-                    if (this.repeatMode === repeatMode.all) {
-                        let track;
-                        if (type === TrackType.youtube) track = new YouTubeTrack(this, metadata, this.client.config.enableInlineVolume);
-                        else track = new Track(this, metadata, this.client.config.enableInlineVolume);
-
-                        this.tracks.add(track);
-                    }
-                }
-                const nextTrack = this.tracks.first();
-
-                this.client.logger.info(`Track: "${metadata.title}" on ${this.guild.name} ended`);
-                this.textChannel?.send({ embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_STOP_PLAYING(metadata.title, metadata.url)).setThumbnail(metadata.thumbnail)] })
-                    .then(m => this.oldMusicMessage = m.id)
-                    .catch(e => this.client.logger.error(e))
-                    .finally(() => {
-                        if (!nextTrack) {
-                            this.oldMusicMessage = null; this.oldVoiceStateUpdateMessage = null;
-                            this.textChannel?.send({
-                                embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_FINISHED(this.guild.client.config.prefix))]
-                            }).catch(e => this.client.logger.error(e));
-                            this.connection?.disconnect();
-                            clearTimeout(this.timeout!);
-                            return this.guild.queue = null;
-                        }
-                        this.play(nextTrack).catch((e: any) => {
-                            this.textChannel?.send({ embeds: [createEmbed("error", this.client.lang.MUSIC_QUEUE_ERROR_WHILE_PLAYING(e.message as string))] })
-                                .catch(e => this.client.logger.error(e));
-                            this.connection?.disconnect();
-                            return this.client.logger.error(e);
-                        });
-                    });
-                return undefined;
-            }
-        });
-
+        this.player.on("stateChange", (oldState, newState) => this.stateChange(oldState, newState));
         this.player.on("error", err => {
             this.textChannel?.send({ embeds: [createEmbed("error", this.client.lang.MUSIC_QUEUE_ERROR_WHILE_PLAYING(err.message))] })
                 .catch(e => this.client.logger.error(e));
@@ -168,5 +108,72 @@ export class ServerQueue {
                 .catch(e => this.textChannel?.client.logger.error(e));
         }
         this._lastVoiceStateUpdateMessageID = id;
+    }
+
+    private stateChange(oldState: AudioPlayerState, newState: AudioPlayerState): any {
+        this._currentTrack = this.tracks.first();
+
+        // This usually happens when stop command is being used
+        if (!this._currentTrack) {
+            this.oldMusicMessage = null; this.oldVoiceStateUpdateMessage = null;
+            this.connection?.disconnect();
+            clearTimeout(this.timeout!);
+            this.guild.queue = null;
+            return;
+        }
+
+        const { metadata, type } = this._currentTrack;
+        if (newState.status === AudioPlayerStatus.Playing) {
+            if (oldState.status === AudioPlayerStatus.Paused) return undefined;
+
+            this._currentTrack.setVolume(this.client.config.defaultVolume / this.client.config.maxVolume);
+
+            this.client.logger.info(`Track: "${metadata.title}" on ${this.guild.name} started`);
+            this.textChannel?.send({
+                embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_START_PLAYING(metadata.title, metadata.url)).setThumbnail(metadata.thumbnail)]
+            }).then(m => this.oldMusicMessage = m.id).catch(e => this.client.logger.error(e));
+            return undefined;
+        }
+        if (newState.status === AudioPlayerStatus.Idle) {
+            // Handle loop/repeat feature
+            if (this.repeatMode !== repeatMode.one) { // If the repeatMode is not one, then
+                this.tracks.deleteFirst(); // Delete the first track
+
+                if (this.repeatMode === repeatMode.all) {
+                    let track;
+                    if (type === TrackType.youtube) track = new YouTubeTrack(this, metadata, this.client.config.enableInlineVolume);
+                    else track = new Track(this, metadata, this.client.config.enableInlineVolume);
+
+                    this.tracks.add(track);
+                }
+            }
+
+            const nextTrack = this.tracks.first();
+
+            this.client.logger.info(`Track: "${metadata.title}" on ${this.guild.name} ended`);
+            this.textChannel?.send({
+                embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_STOP_PLAYING(metadata.title, metadata.url)).setThumbnail(metadata.thumbnail)]
+            }).then(m => this.oldMusicMessage = m.id)
+                .catch(e => this.client.logger.error(e))
+                .finally(() => {
+                    if (!nextTrack) {
+                        this.oldMusicMessage = null; this.oldVoiceStateUpdateMessage = null;
+                        this.textChannel?.send({
+                            embeds: [createEmbed("info", this.client.lang.MUSIC_QUEUE_FINISHED(this.guild.client.config.prefix))]
+                        }).catch(e => this.client.logger.error(e));
+                        this.connection?.disconnect();
+                        clearTimeout(this.timeout!);
+                        return this.guild.queue = null;
+                    }
+
+                    this.play(nextTrack).catch((e: any) => {
+                        this.textChannel?.send({ embeds: [createEmbed("error", this.client.lang.MUSIC_QUEUE_ERROR_WHILE_PLAYING(e.message as string))] })
+                            .catch(e => this.client.logger.error(e));
+                        this.connection?.disconnect();
+                        return this.client.logger.error(e);
+                    });
+                });
+            return undefined;
+        }
     }
 }
