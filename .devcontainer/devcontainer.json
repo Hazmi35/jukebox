@@ -1,0 +1,55 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.203.0/containers/ubuntu
+{
+	"name": "Ubuntu",
+	"runArgs": ["--init"],
+	"build": {
+		"dockerfile": "Dockerfile",
+		// Update 'VARIANT' to pick an Ubuntu version: hirsute, focal, bionic
+		// Use hirsute or bionic on local arm64/Apple Silicon.
+		"args": { "VARIANT": "focal" }
+	},
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": {},
+
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"aaron-bond.better-comments",
+		"alefragnani.bookmarks",
+		"mikestead.dotenv",
+		"github.github-vscode-theme",
+		"ms-azuretools.vscode-docker",
+		"dbaeumer.vscode-eslint",
+		"sleistner.vscode-fileutils",
+		"mkxml.vscode-filesize",
+		"bierner.github-markdown-preview",
+		"github.vscode-pull-request-github",
+		"eamodio.gitlens",
+		"ms-vsliveshare.vsliveshare-pack",
+		"eg2.vscode-npm-script",
+		"gruntfuggly.todo-tree",
+		"visualstudioexptteam.vscodeintellicode",
+		"github.codespaces",
+		"ms-vscode.github-issues-prs"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "uname -a",
+
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode",
+	"features": {
+		"docker-in-docker": "latest",
+		"git": "latest",
+		"git-lfs": "latest",
+		"github-cli": "latest",
+		"sshd": "latest",
+		"node": "16",
+		"python": "3.10"
+	}
+}
