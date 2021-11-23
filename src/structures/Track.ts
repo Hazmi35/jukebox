@@ -37,7 +37,7 @@ export class Track {
     // TODO: Recreate Resource Caching
     public createAudioResource(): Promise<{ resource: AudioResource<ITrackMetadata>; process: execa.ExecaChildProcess }> {
         return new Promise((resolve, reject) => {
-            const process = this.queue.client.ytdl.raw(this.metadata.url, this.ytdlFlags, { stdio: ["ignore", "pipe", "ignore"] });
+            const process = this.queue.client.ytdl.exec(this.metadata.url, this.ytdlFlags, { stdio: ["ignore", "pipe", "ignore"] });
             if (!process.stdout) {
                 reject(new Error("No stdout"));
                 return;
