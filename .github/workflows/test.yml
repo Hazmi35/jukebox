@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v2.4.0
 
     - name: Install Node.js
-      uses: actions/setup-node@v2.4.1
+      uses: actions/setup-node@v2.5.0
       with:
         node-version: ">=16.6.0 <17.x"
         check-latest: true
@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v2.4.0
 
       - name: Install Node.js
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v2.5.0
         with:
           node-version: ">=16.6.0 <17.x"
           check-latest: true
