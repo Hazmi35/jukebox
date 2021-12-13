@@ -5,7 +5,7 @@ import { createEmbed } from "../utils/createEmbed";
 import { Message } from "discord.js";
 
 @DefineCommand({
-    aliases: ["st"],
+    aliases: ["st", "disconnect", "dc", "leave"],
     name: "stop",
     description: lang => lang.COMMAND_STOP_META_DESCRIPTION(),
     usage: () => "{prefix}stop"
