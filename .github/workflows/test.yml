@@ -18,7 +18,7 @@ jobs:
     - name: Install Node.js
       uses: actions/setup-node@v2.5.0
       with:
-        node-version: ">=16.6.0 <17.x"
+        node-version-file: .nvmrc
         check-latest: true
 
     - name: Install dependencies
@@ -37,7 +37,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: ">=16.6.0 <17.x"
+          node-version-file: .nvmrc
           check-latest: true
 
       - name: Install dependencies
