@@ -25,12 +25,12 @@ if (process[Symbol.for("ts-node.register.instance")]) {
     });
 
     manager.on("shardCreate", shard => {
-        log.info(`[ShardManager] Shard #${shard.id} Spawned.`);
+        log.info(`Shard #${shard.id} Spawned.`);
         shard.on("disconnect", () => {
-            log.warn("SHARD_DISCONNECTED: ", { stack: `[ShardManager] Shard #${shard.id} Disconnected` });
+            log.warn("SHARD_DISCONNECTED: ", { stack: `Shard #${shard.id} Disconnected` });
         }).on("reconnecting", () => {
-            log.info(`[ShardManager] Shard #${shard.id} Reconnected.`);
+            log.info(`Shard #${shard.id} Reconnected.`);
         });
-        if (manager.shards.size === manager.totalShards) log.info("[ShardManager] All shards spawned successfully.");
+        if (manager.shards.size === manager.totalShards) log.info("All shards spawned successfully.");
     }).spawn().catch(e => log.error(e.status ? `Error while fetching recommended shards: ${e.status}, ${e.statusText}` : e));
 }
