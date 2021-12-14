@@ -64,12 +64,3 @@ There is also a [docker-compose.pull.yml](docker-compose.pull.yml) version, whic
 ```sh
 $ docker-compose up
 ```
-
-## Features
-- A production-ready music bot, suitable for you that dislike hassling with the code.
-- Basic Commands (Help, Ping, Invite & Eval [for advanced bot owners])
-- Basic Music Commands (Play, Skip, Stop, Pause & Resume, Now Playing, Queue, Repeat, Volume)
-- Caching! (cache youtube downloads)
-- Configurable
-- Docker-friendly
-- Lightweight (only around 120MB with dev dependencies pruned)
