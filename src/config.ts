@@ -13,7 +13,7 @@ function getBoolean(config: string): boolean {
 
 // Base config
 export const prefix = getValue("CONFIG_PREFIX", "jukebox ").replace(/"/g, ""); // Temporary workaround for https://github.com/docker/compose/issues/6951
-export const owners: string[] = getValue("CONFIG_OWNERS", []).replace(/  +/g, " ").split(/,[ ]?/);
+export const owners: string[] = getValue("CONFIG_OWNERS", "").replace(/  +/g, " ").split(/,[ ]?/);
 export const totalShards: string | number = getValue("CONFIG_TOTALSHARDS", "auto").toLowerCase();
 export const debug = getBoolean("CONFIG_DEBUG");
 export const cacheUsers = getBoolean("CONFIG_CACHE_USERS");
