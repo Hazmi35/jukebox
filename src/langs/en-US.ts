@@ -88,7 +88,7 @@ export const lang = {
     COMMAND_PING_EMBED_FOOTER: (userTag: string) => `Requested by: ${userTag}`,
 
     // Play command
-    COMMAND_PLAY_META_DESCRIPTION: () => "Play some music",
+    COMMAND_PLAY_META_DESCRIPTION: () => "Play some tracks",
     COMMAND_PLAY_META_ARGS: (index: number) => ["YouTube video or playlist URL / YouTube video name"][index],
     COMMAND_PLAY_ALREADY_PLAYING: (vcName: string) => `⚠️ The music player is already playing to **${vcName}** voice channel`,
     COMMAND_PLAY_INVALID_YOUTUBE_URL: () => "⚠️ Invalid YouTube URL",
@@ -139,7 +139,7 @@ export const lang = {
     COMMAND_REMOVE_SUCCESS: (title: string, url: string) => `✅ Removed **[${title}](${url}})**`,
 
     // Repeat command
-    COMMAND_REPEAT_META_DESCRIPTION: () => "Repeat current music or the queue",
+    COMMAND_REPEAT_META_DESCRIPTION: () => "Repeat current track or the queue",
     COMMAND_REPEAT_SUCCESS: (emoji: string, type: string) => `${emoji} Repeating **${type}**`,
 
     // Resume command
@@ -154,7 +154,7 @@ export const lang = {
     COMMAND_SHUFFLE_MODE_SUCCESS_FOOTER: () => `When Playlist shuffle mode is enabled, new added playlists will be shuffled.`,
 
     // Skip Command
-    COMMAND_SKIP_META_DESCRIPTION: () => "Skip the current music",
+    COMMAND_SKIP_META_DESCRIPTION: () => "Skip the current track",
     COMMAND_SKIP_SUCCESS: (title: string, url: string) => `⏭ Skipped **[${title}](${url}})**`,
 
     // Skip To Command
@@ -165,7 +165,7 @@ export const lang = {
     COMMAND_SKIPTO_SUCCESS: (title: string, url: string, count: number) => `⏭ Skipped to **[${title}](${url}})**, there was ${count} ${pluralize("track", count)} skipped`,
 
     // Stop command
-    COMMAND_STOP_META_DESCRIPTION: () => "Stop the queue",
+    COMMAND_STOP_META_DESCRIPTION: () => "Stop the music queue",
     COMMAND_STOP_SUCCESS: () => "⏹ Queue stopped.",
 
     // Volume command
