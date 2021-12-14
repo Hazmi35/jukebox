@@ -8,11 +8,11 @@ import { Util } from "../utils/Util";
 import { ServerQueue } from "./ServerQueue";
 import { create } from "youtube-dl-exec";
 import { Localization } from "../utils/Localization";
+import { CustomError } from "../utils/CustomError";
 
 
 // Extends DiscordJS Structures
 import "./Guild";
-import { CustomError } from "../utils/CustomError";
 
 export class Jukebox extends BotClient {
     public readonly config = config;
