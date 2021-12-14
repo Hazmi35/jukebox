@@ -28,12 +28,13 @@ FROM hazmi35/node:16
 LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
-# Install python3 (required for youtube-dl/yt-dlp)
+# Install python3 (required for youtube-dl/yt-dlp) and create cache and logs directory
 RUN apt-get update \
     && apt-get install -y python-is-python3 locales \
     && apt-get autoremove -y \
     && apt-get autoclean -y \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir cache && mkdir logs
 
 # Copy needed files
 COPY --from=build-stage /tmp/build/package.json .
