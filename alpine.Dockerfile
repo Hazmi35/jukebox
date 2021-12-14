@@ -35,7 +35,9 @@ LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
 # Install python3 (required for youtube-dl/yt-dlp) and create cache and logs directory
-RUN apk add --no-cache python3 ffmpeg && ln -s /usr/bin/python3 /usr/local/bin/python && mkdir cache && mkdir logs
+RUN apk add --no-cache python3 ffmpeg \
+    && ln -s /usr/bin/python3 /usr/local/bin/python \
+    && mkdir cache && mkdir logs
 
 # Tell ffmpeg-static to use system ffmpeg
 ENV FFMPEG_BIN /usr/bin/ffmpeg
