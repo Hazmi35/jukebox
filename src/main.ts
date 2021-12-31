@@ -28,7 +28,7 @@ if (process[Symbol.for("ts-node.register.instance")]) {
         log.info(`Shard #${shard.id} Spawned.`);
         shard.on("disconnect", () => {
             log.warn("SHARD_DISCONNECTED: ", { stack: `Shard #${shard.id} Disconnected` });
-        }).on("reconnecting", () => {
+        }).on("reconnection", () => {
             log.info(`Shard #${shard.id} Reconnected.`);
         });
         if (manager.shards.size === manager.totalShards) log.info("All shards spawned successfully.");
