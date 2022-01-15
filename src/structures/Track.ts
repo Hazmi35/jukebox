@@ -1,4 +1,4 @@
-import { AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice";
+import { AudioPlayerError, AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice";
 import { ITrackMetadata } from "../typings";
 // @ts-expect-error No typings for ffmpeg-static
 import ffmpegStatic from "ffmpeg-static";
@@ -8,12 +8,12 @@ import { SnowflakeUtil } from "discord.js";
 import { YtFlags } from "youtube-dl-exec";
 
 export enum TrackType {
-    unknown,
-    youtube
+    unknown = 0,
+    youtube = 1
 }
 
 export const defaultYtFlags = {
-    ffmpegLocation: `${ffmpegStatic}`,
+    ffmpegLocation: `"${ffmpegStatic as string}"`,
     format: "bestaudio[acodec=opus]/bestaudio",
     limitRate: "800K",
     output: "-",
@@ -43,9 +43,11 @@ export class Track {
                 return;
             }
             const stream = process.stdout;
-            const onError = (error: any): void => {
+            const onError = (err: any): void => {
                 if (!process.killed) process.kill();
                 stream.resume();
+                const error = err as AudioPlayerError; // TODO: Why do we need to assign resource on this error anyway?
+                // @ts-expect-error Error here is expected.
                 error.resource = this._resource;
                 reject(error);
             };

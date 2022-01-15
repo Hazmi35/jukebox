@@ -45,7 +45,7 @@
     "youtubei": "^0.0.1-rc.27"
   },
   "devDependencies": {
-    "@hazmi35/eslint-config": "^7.0.1",
+    "@hazmi35/eslint-config": "github:Hazmi35/eslint-config#feat/revamp",
     "@types/node": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.9.1",
     "@typescript-eslint/parser": "^5.9.1",

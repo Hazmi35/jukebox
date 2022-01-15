@@ -1,4 +1,4 @@
-/* eslint-disable sort-keys */
+/* eslint-disable max-len, @typescript-eslint/naming-convention */
 import stripIndent from "strip-indent";
 import pluralize from "plur";
 
@@ -151,7 +151,7 @@ export const lang = {
     COMMAND_SHUFFLE_META_DESCRIPTION: () => "Shuffle the music queue or toggle shuffle mode for playlists",
     COMMAND_SHUFFLE_SUCCESS: () => "🔀 Queue shuffled!",
     COMMAND_SHUFFLE_MODE_SUCCESS: (state: boolean) => `🔀 Playlist shuffle mode: **${state ? "ENABLED" : "DISABLED"}**`,
-    COMMAND_SHUFFLE_MODE_SUCCESS_FOOTER: () => `When Playlist shuffle mode is enabled, new added playlists will be shuffled.`,
+    COMMAND_SHUFFLE_MODE_SUCCESS_FOOTER: () => "When Playlist shuffle mode is enabled, new added playlists will be shuffled.",
 
     // Skip Command
     COMMAND_SKIP_META_DESCRIPTION: () => "Skip the current track",
@@ -173,7 +173,7 @@ export const lang = {
     COMMAND_VOLUME_META_ARGS: (index: number) => ["New volume"][index],
     COMMAND_VOLUME_DISABLED: () => "⚠ Volume command is disabled within this bot configuration. Please use the volume functionality in Discord client directly",
     COMMAND_VOLUME_CURRENT: (volume: number) => `📶 The current volume is \`${volume}\``,
-    COMMAND_VOLUME_USE_PAUSE_INSTEAD: () => "❗ Please pause the music player instead of setting the volume to \`0\`",
+    COMMAND_VOLUME_USE_PAUSE_INSTEAD: () => "❗ Please pause the music player instead of setting the volume to `0`",
     COMMAND_VOLUME_OVER_LIMIT: (max: number) => `❗ I can't set the volume above \`${max}\``,
     COMMAND_VOLUME_SET: (volume: number) => `📶 Volume set to \`${volume}\``,
 
@@ -183,7 +183,7 @@ export const lang = {
     // VoiceStateUpdateEvent
     BOT_DISCONNECTED_FROM_VOICE: () => "I was disconnected from the voice channel, the queue will be deleted",
     MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED: (duration: number) => `**${duration}** have passed and there is no one who joins my voice channel, the queue was deleted.`,
-    MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE: () => `⏹ Queue deleted.`,
+    MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE: () => "⏹ Queue deleted.",
     MUSIC_DELETEQUEUETIMEOUT_PAUSED: (duration: number) => stripIndent(`
         Everyone has left from my voice channel, to save resources, the queue was paused.
         If there's no one who joins my voice channel in the next **${duration}**, the queue will be deleted.
@@ -203,6 +203,7 @@ export const lang = {
     MUSIC_VOICE_HANDLER_COULDNT_ESTABLISH: () => "Could not establish a voice connection within 15 seconds.",
 
     // Decorators
+
     // Music helpers
     MUSIC_HELPER_QUEUE_DOES_NOT_EXISTS: () => "There is nothing playing.",
     MUSIC_HELPER_NEED_TO_BE_ON_THE_SAME_VC: () => "You need to be in the same voice channel as mine",

@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { Channel, Client, Collection, Guild, Snowflake, User } from "discord.js";
 import { request } from "https";
 import { promises as fs } from "fs";
@@ -66,11 +67,11 @@ export class Util {
         };
 
         /*
-            Why do we convert these functions to string? because we can't pass a function to a broadcastEval context, so we convert them to string.
-            Then in the broadcastEval context, we convert them again to function using eval, then execute that function
-        */
+         *  Why do we convert these functions to string? because we can't pass a function to a broadcastEval context, so we convert them to string.
+         *   Then in the broadcastEval context, we convert them again to function using eval, then execute that function
+         */
         const doBroadcastEval = (): any => this.client.shard?.broadcastEval(
-            // eslint-disable-next-line no-eval
+            // eslint-disable-next-line no-eval, @typescript-eslint/no-unsafe-call
             (client, ctx) => eval(ctx.resourcesFunctions[ctx.type])(client),
             { context: { type, resourcesFunctions: Object.fromEntries(Object.entries(resourcesFunctions).map(o => [o[0], o[1].toString()])) } }
         );
@@ -80,7 +81,7 @@ export class Util {
         let result: getResourceReturnType<T>;
         if (this.client.shard) {
             result = new Collection<Snowflake, getResourceResourceType[T]>(
-                await this.mergeBroadcastEval<getResourceResourceType[T]>(evalResult as (getResourceResourceType[T])[][])
+                this.mergeBroadcastEval<getResourceResourceType[T]>(evalResult as (getResourceResourceType[T])[][])
             );
         } else { result = evalResult as getResourceReturnType<T>; }
         return result;
@@ -114,8 +115,9 @@ export class Util {
                 let raw = "";
                 res.on("data", chunk => raw += chunk);
                 res.on("end", () => {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     if (res.statusCode! >= 200 && res.statusCode! < 300) return resolve(`https://bin.hzmi.xyz/${JSON.parse(raw).key as string}`);
-                    return reject(new Error(`[hastebin] Error while trying to send data to https://bin.hzmi.xyz/documents, ${res.statusCode as number} ${res.statusMessage as string}`));
+                    return reject(new Error(`[hastebin] Error while trying to send data to https://bin.hzmi.xyz/documents, ${res.statusCode!} ${res.statusMessage!}`));
                 });
             }).on("error", reject);
             req.write(typeof text === "object" ? JSON.stringify(text, null, 2) : text);
@@ -172,7 +174,7 @@ export class Util {
     }
 
     public getUserFromMention(mention: string): Promise<User | undefined> {
-        const matches = /^<@!?(\d+)>$/.exec(mention);
+        const matches = (/^<@!?(?<Snowflake>\d+)>$/).exec(mention);
         if (!matches) return Promise.resolve(undefined);
 
         const id = matches[1];
@@ -185,7 +187,7 @@ export class Util {
 
     public async getOpusEncoderName(): Promise<string> {
         if (this.client.util.doesFFmpegHasLibOpus() && !this.client.config.enableInlineVolume) {
-            return `ffmpeg libopus`;
+            return "ffmpeg libopus";
         }
 
         const list = ["@discordjs/opus", "opusscript"];
@@ -194,7 +196,8 @@ export class Util {
             try {
                 await import(name); // Tries to import the module, if fails then the next line of code won't run
                 const pkgMetadata = await this.client.util.getPackageJSON(name);
-                return `${pkgMetadata.name} v${pkgMetadata.version}`;
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                return `${pkgMetadata.name as string} v${pkgMetadata.version as string}`;
             } catch (e) {
                 errorLog.push(e);
             }

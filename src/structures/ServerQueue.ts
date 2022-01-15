@@ -25,7 +25,7 @@ export class ServerQueue {
         public client: Jukebox,
         public guild: Guild,
         public textChannel: TextChannel | null = null,
-        public voiceChannel: VoiceChannel | StageChannel | null = null
+        public voiceChannel: StageChannel | VoiceChannel | null = null
     ) {
         Object.defineProperties(this, {
             _currentTrack: nonEnum,
@@ -57,10 +57,11 @@ export class ServerQueue {
                 // Wait for 15 seconds for the connection to be ready.
                 await entersState(this.connection!, VoiceConnectionStatus.Ready, 15 * 1000);
                 this.player.play(resource);
-            } catch (err: any) {
+            } catch (e: any) {
                 ytdlProcess.kill();
+                const err = e as Error;
                 if (err.message === "The operation was aborted") err.message = this.client.lang.MUSIC_VOICE_HANDLER_COULDNT_ESTABLISH();
-                this.player.emit("error", new AudioPlayerError(err as Error, resource));
+                this.player.emit("error", new AudioPlayerError(err, resource));
             }
         } catch (e: unknown) {
             this.player.emit("error", e as AudioPlayerError);
@@ -167,8 +168,8 @@ export class ServerQueue {
                     }
 
                     this.play(nextTrack).catch((e: any) => {
-                        this.textChannel?.send({ embeds: [createEmbed("error", this.client.lang.MUSIC_QUEUE_ERROR_WHILE_PLAYING(e.message as string))] })
-                            .catch(e => this.client.logger.error(e));
+                        this.textChannel?.send({ embeds: [createEmbed("error", this.client.lang.MUSIC_QUEUE_ERROR_WHILE_PLAYING((e as Error).message))] })
+                            .catch(e2 => this.client.logger.error(e2));
                         this.connection?.disconnect();
                         return this.client.logger.error(e);
                     });

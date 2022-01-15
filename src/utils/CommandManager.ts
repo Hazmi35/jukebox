@@ -16,7 +16,7 @@ export class CommandManager extends Collection<string, ICommandComponent> {
                 let disabledCount = 0;
                 for (const file of files) {
                     const path = resolve(this.path, file);
-                    const command = await this.import(path, this.client, { path });
+                    const command = await CommandManager.import(path, this.client, { path });
                     if (command === undefined) throw new Error(`File ${file} is not a valid command file`);
                     command.meta = Object.assign(command.meta, { path });
                     if (Number(command.meta.aliases?.length) > 0) {
@@ -70,8 +70,10 @@ export class CommandManager extends Collection<string, ICommandComponent> {
         }
     }
 
-    private async import(path: string, ...args: any[]): Promise<ICommandComponent | undefined> {
-        const file = (await import(resolve(path)).then(m => m[parse(path).name]));
+    private static async import(path: string, ...args: any[]): Promise<ICommandComponent | undefined> {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        const file = await import(resolve(path)).then(m => m[parse(path).name]);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         return file ? new file(...args) : undefined;
     }
 }

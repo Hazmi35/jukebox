@@ -11,8 +11,8 @@ import { Message, Permissions } from "discord.js";
     disable: disableInviteCmd
 })
 export class InviteCommand extends BaseCommand {
-    public async execute(message: Message): Promise<void> {
-        const invite = await this.client.generateInvite({
+    public execute(message: Message): void {
+        const invite = this.client.generateInvite({
             permissions: [
                 Permissions.FLAGS.VIEW_CHANNEL,
                 Permissions.FLAGS.SEND_MESSAGES,

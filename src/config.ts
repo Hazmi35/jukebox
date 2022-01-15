@@ -14,7 +14,7 @@ function getBoolean(config: string): boolean {
 // Base config
 export const prefix = getValue("CONFIG_PREFIX", "jukebox ").replace(/"/g, ""); // Temporary workaround for https://github.com/docker/compose/issues/6951
 export const owners: string[] = getValue("CONFIG_OWNERS", "").replace(/  +/g, " ").split(/,[ ]?/);
-export const totalShards: string | number = getValue("CONFIG_TOTALSHARDS", "auto").toLowerCase();
+export const totalShards: number | string = getValue("CONFIG_TOTALSHARDS", "auto").toLowerCase();
 export const debug = getBoolean("CONFIG_DEBUG");
 export const cacheUsers = getBoolean("CONFIG_CACHE_USERS");
 
@@ -38,8 +38,7 @@ export const defaultVolume = Number(getValue("CONFIG_DEFAULT_VOLUME", 100));
 export const maxVolume = Number(getValue("CONFIG_MAX_VOLUME", 100));
 
 // Music cache config
-// TODO: Recreate cache system
-export const cacheYoutubeDownloads = getBoolean("CONFIG_CACHE_YOUTUBE_DOWNLOADS");
+export const cacheYoutubeDownloads = getBoolean("CONFIG_CACHE_YOUTUBE_DOWNLOADS"); // TODO: Recreate cache system
 export const cacheMaxLengthAllowed = Number(getValue("CONFIG_CACHE_MAX_LENGTH", 5400));
 
 // Miscellaneous config

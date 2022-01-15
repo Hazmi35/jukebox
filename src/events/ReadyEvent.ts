@@ -17,7 +17,7 @@ export class ReadyEvent extends BaseEvent {
         this.updatePresence()
             .then(() => setInterval(() => this.updatePresence(), 30 * 1000))
             .catch(e => {
-                if (e.message === "Shards are still being spawned.") return this.doPresence();
+                if ((e as Error).message === "Shards are still being spawned.") return this.doPresence();
                 this.client.logger.error(e);
             });
         return undefined;

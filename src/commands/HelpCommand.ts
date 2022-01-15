@@ -26,13 +26,15 @@ export class HelpCommand extends BaseCommand {
                             {
                                 name: this.client.lang.COMMAND_HELP_EXTENDED_EMBED_CMD_ALIASES(),
                                 value: `${Number(command.meta.aliases?.length) > 0
-                                    ? command.meta.aliases?.map(c => `\`${c}\``).join(", ") as string
+                                    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+                                    ? command.meta.aliases?.map(c => `\`${c}\``).join(", ")!
                                     : this.client.lang.NOT_AVAILABLE()}`,
                                 inline: true
                             },
                             {
                                 name: this.client.lang.COMMAND_HELP_EXTENDED_EMBED_CMD_USAGE(),
-                                value: `\`${command.meta.usage!(this.client.lang).replace(/{prefix}/g, message.client.config.prefix)}\``, inline: false
+                                value: `\`${command.meta.usage!(this.client.lang).replace(/{prefix}/g, message.client.config.prefix)}\``,
+                                inline: false
                             }
                         ])
                 ]
@@ -42,7 +44,7 @@ export class HelpCommand extends BaseCommand {
                 embeds: [
                     createEmbed("info", message.client.commands.filter(cmd => !cmd.meta.disable && cmd.meta.name !== "eval").map(c => `\`${c.meta.name}\``).join(" "))
                         .setTitle(this.client.lang.COMMAND_HELP_EMBED_TITLE())
-                        .setThumbnail(message.client.user?.displayAvatarURL() as string)
+                        .setThumbnail(message.client.user!.displayAvatarURL())
                         .setFooter(this.client.lang.COMMAND_HELP_EMBED_FOOTER(message.client.config.prefix), images.info)
                 ]
             }).catch(e => this.client.logger.error(e));

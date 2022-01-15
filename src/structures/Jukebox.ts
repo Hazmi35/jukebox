@@ -36,7 +36,7 @@ export class Jukebox extends BotClient {
         this.events.load().catch(e => this.logger.error(e));
         this.util.getOpusEncoderName()
             .then(name => this.logger.info(`Using "${name}" as the preferred opus encoder.`))
-            .catch(e => { this.logger.error(CustomError("JukeboxInitError", `Could not load any opus encoder\n${e.message}`)); process.exit(1); });
+            .catch(e => { this.logger.error(CustomError("JukeboxInitError", `Could not load any opus encoder\n${(e as Error).message}`)); process.exit(1); });
         await this.login(token);
         return this;
     }

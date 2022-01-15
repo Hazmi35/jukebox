@@ -15,7 +15,7 @@ export class PingCommand extends BaseCommand {
             const wsLatency = this.client.ws.ping.toFixed(0);
             const embed = new MessageEmbed()
                 .setAuthor(this.client.lang.COMMAND_PING_RESULT_MESSAGE(), message.client.user?.displayAvatarURL())
-                .setColor(this.searchHex(wsLatency))
+                .setColor(PingCommand.searchHex(wsLatency))
                 .addFields({
                     name: this.client.lang.COMMAND_PING_API_LATENCY(),
                     value: `**\`${latency}\`** ms`,
@@ -33,7 +33,7 @@ export class PingCommand extends BaseCommand {
         return message;
     }
 
-    private searchHex(ms: string | number): ColorResolvable {
+    private static searchHex(ms: number | string): ColorResolvable {
         const listColorHex = [
             [0, 20, "#0DFF00"],
             [21, 50, "#0BC700"],
@@ -47,7 +47,7 @@ export class PingCommand extends BaseCommand {
         const min = listColorHex.map(e => e[0]);
         const max = listColorHex.map(e => e[1]);
         const hex = listColorHex.map(e => e[2]);
-        let ret: string | number = "#000000";
+        let ret: number | string = "#000000";
 
         for (let i = 0; i < listColorHex.length; i++) {
             if (min[i] <= ms && ms <= max[i]) {

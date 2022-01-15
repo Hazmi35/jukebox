@@ -32,8 +32,10 @@ export class AboutCommand extends BaseCommand {
                         process.version,
                         `v${version}`,
                         `v${this.client.util.getFFmpegVersion().replaceAll("_", "-")}`,
-                        (await this.client.ytdl("--version") as any).toString() as string,
+                        // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                        (await this.client.ytdl("--version")).toString(),
                         (await this.client.util.getOpusEncoderName()).replaceAll("_", "-"),
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                         (await this.client.util.getPackageJSON()).version as string
                     )).setAuthor(this.client.lang.COMMAND_ABOUT_EMBED_AUTHOR(this.client.user!.username))
             ]

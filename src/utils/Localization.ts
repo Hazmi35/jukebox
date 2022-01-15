@@ -13,6 +13,7 @@ export class Localization extends Collection<LangID, DefaultLang> {
         const langsFolderPath = resolve(__dirname, "..", "langs");
         const langsFile = await readdir(langsFolderPath);
         for (const langFile of langsFile) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             const lang: DefaultLang = (await import(resolve(langsFolderPath, langFile))).lang;
             this.set(lang.META_ID(), lang);
         }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call */
 import { Guild } from "discord.js";
 
 Reflect.defineProperty(Guild.prototype, "queue", {

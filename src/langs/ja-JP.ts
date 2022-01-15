@@ -1,4 +1,4 @@
-/* eslint-disable sort-keys */
+/* eslint-disable max-len, @typescript-eslint/naming-convention */
 import stripIndent from "strip-indent";
 import pluralize from "plur";
 
@@ -148,7 +148,7 @@ export const lang = {
     COMMAND_SHUFFLE_META_DESCRIPTION: () => "音楽キューをシャッフルしたり、プレイリストシャッフルモードを切り替えたりできます。",
     COMMAND_SHUFFLE_SUCCESS: () => "🔀 キューをシャッフルしました！",
     COMMAND_SHUFFLE_MODE_SUCCESS: (state: boolean) => `🔀 プレイリストシャッフルモード:**${state ? "ENABLED" : "DISABLED"}**`,
-    COMMAND_SHUFFLE_MODE_SUCCESS_FOOTER: () => `プレイリストシャッフルモードが有効な場合、新しく追加されたプレイリストはシャッフルされます。`,
+    COMMAND_SHUFFLE_MODE_SUCCESS_FOOTER: () => "プレイリストシャッフルモードが有効な場合、新しく追加されたプレイリストはシャッフルされます。",
 
     // Skip Command
     COMMAND_SKIP_META_DESCRIPTION: () => "現在の曲をスキップします。",
@@ -170,7 +170,7 @@ export const lang = {
     COMMAND_VOLUME_META_ARGS: (index: number) => ["音量"][index],
     COMMAND_VOLUME_DISABLED: () => "⚠ このボット構成では、ボリュームコマンドは無効になっています。Discordクライアントのボリューム機能を各自で使用してください。",
     COMMAND_VOLUME_CURRENT: (volume: number) => `📶 現在のボリュームは\`${volume}\`です。`,
-    COMMAND_VOLUME_USE_PAUSE_INSTEAD: () => "❗ 音量を\`0\`に設定する代わりに、音楽プレーヤーを一時停止してください",
+    COMMAND_VOLUME_USE_PAUSE_INSTEAD: () => "❗ 音量を`0`に設定する代わりに、音楽プレーヤーを一時停止してください",
     COMMAND_VOLUME_OVER_LIMIT: (max: number) => `❗ \`${max}\`を超える音量を設定できません`,
     COMMAND_VOLUME_SET: (volume: number) => `📶 \`${volume}\`に音量を設定しました。`,
 
@@ -180,7 +180,7 @@ export const lang = {
     // VoiceStateUpdateEvent
     BOT_DISCONNECTED_FROM_VOICE: () => "音声チャンネルから切断されたため、キューを削除しました。",
     MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED: (duration: number) => `**${duration}** が経過し、私の音声チャネルに人がいなかったため、キューは削除されました。`,
-    MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE: () => `⏹ キューを削除しました。`,
+    MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE: () => "⏹ キューを削除しました。",
     MUSIC_DELETEQUEUETIMEOUT_PAUSED: (duration: number) => stripIndent(`
         私の音声チャネルから皆が去ってしまったので、リソースを節約するために、キューは一時停止されました。
         **${duration}**の間に私の音声チャンネルに参加する人がいなければ、キューは削除されます。
@@ -200,6 +200,7 @@ export const lang = {
     MUSIC_VOICE_HANDLER_COULDNT_ESTABLISH: () => "15秒以内に音声接続を確立できませんでした。",
 
     // Decorators
+
     // Music helpers
     MUSIC_HELPER_QUEUE_DOES_NOT_EXISTS: () => "何も再生されていません。",
     MUSIC_HELPER_NEED_TO_BE_ON_THE_SAME_VC: () => "私と同じ音声チャンネルに接続している必要があります！接続してからコマンドを実行してください！",

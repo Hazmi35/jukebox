@@ -13,11 +13,11 @@ export interface ICommandComponent {
         description?: (lang: DefaultLang) => string;
         usage?: (lang: DefaultLang) => string;
     };
-    execute(message: Message, args: string[]): any;
+    execute: (message: Message, args: string[]) => any;
 }
 export interface IEvent {
     name: keyof ClientEvents;
-    execute(...args: any): any;
+    execute: (...args: any) => any;
 }
 declare module "discord.js" {
     // @ts-expect-error Override
@@ -32,6 +32,7 @@ declare module "discord.js" {
         readonly localization: Jukebox["localization"];
         readonly lang: Jukebox["lang"];
 
+        // eslint-disable-next-line @typescript-eslint/method-signature-style
         build(token: string): Promise<this>;
     }
     // @ts-expect-error Override

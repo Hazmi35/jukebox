@@ -16,7 +16,7 @@ export function createLogger(name: string, lang: string, type: "manager" | "shar
         level: debug ? "debug" : "info",
         formatters: {
             bindings: () => ({
-                pid: type === "shard" ? shardID === undefined ? null : `Shard #${shardID}` : `ShardManager`
+                pid: type === "shard" && shardID !== undefined ? `Shard #${shardID}` : "ShardManager"
             })
         },
         transport: {
@@ -29,9 +29,9 @@ export function createLogger(name: string, lang: string, type: "manager" | "shar
     return logger;
 }
 
-function formatDate(dateFormat: Intl.DateTimeFormat, date: number | Date = new Date()): string {
+function formatDate(dateFormat: Intl.DateTimeFormat, date: Date | number = new Date()): string {
     const data = dateFormat.formatToParts(date);
-    return `<year>-<month>-<day>`
+    return "<year>-<month>-<day>"
         .replace(/<year>/g, data.find(d => d.type === "year")!.value)
         .replace(/<month>/g, data.find(d => d.type === "month")!.value)
         .replace(/<day>/g, data.find(d => d.type === "day")!.value);
