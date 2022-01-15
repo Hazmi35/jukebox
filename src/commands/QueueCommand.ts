@@ -2,7 +2,7 @@ import { BaseCommand } from "../structures/BaseCommand";
 import { DefineCommand } from "../utils/decorators/DefineCommand";
 import { isMusicQueueExists } from "../utils/decorators/MusicHelper";
 import { createEmbed } from "../utils/createEmbed";
-import { Message, TextChannel } from "discord.js";
+import { EmbedFooterData, Message, TextChannel } from "discord.js";
 import { images } from "../constants/images";
 
 @DefineCommand({
@@ -17,7 +17,7 @@ export class QueueCommand extends BaseCommand {
         const embed = createEmbed("info")
             .setTitle(message.client.lang.COMMAND_QUEUE_EMBED_TITLE())
             .setThumbnail(message.client.user!.displayAvatarURL())
-            .setFooter(...QueueCommand.generateFooter(message, false));
+            .setFooter(QueueCommand.generateFooter(message, false));
 
         let num = 1;
         const tracks = message.guild!.queue!.tracks.map(s => `**${num++}.** **[${s.metadata.title}](${s.metadata.url})**`)!;
@@ -29,7 +29,7 @@ export class QueueCommand extends BaseCommand {
         const msg = await message.channel.send({ embeds: [embed] });
 
         if (Number(pages.length > 1)) {
-            embed.setFooter(...QueueCommand.generateFooter(message, true, index, pages));
+            embed.setFooter(QueueCommand.generateFooter(message, true, index, pages));
 
             const reactions = ["◀️", "▶️"];
             reactions.forEach(r => msg.react(r));
@@ -57,7 +57,7 @@ export class QueueCommand extends BaseCommand {
                     }
                     embed
                         .setDescription(pages[index].join("\n"))
-                        .setFooter(...QueueCommand.generateFooter(message, true, index, pages));
+                        .setFooter(QueueCommand.generateFooter(message, true, index, pages));
                     msg.edit({ content: " ", embeds: [embed] }).catch(e => this.client.logger.error(e));
                 })
                 .on("end", () => {
@@ -67,11 +67,11 @@ export class QueueCommand extends BaseCommand {
     }
 
     // TODO: Add repeat mode info here too.
-    private static generateFooter(message: Message, multiple: boolean, index = 0, pages: string[][] = []): [string, string] {
-        return [
-            `${message.client.lang.COMMAND_QUEUE_EMBED_FOOTER(message.guild!.queue!.tracks.first()!.metadata.title)}` +
-            `${multiple ? ` | ${message.client.lang.COMMAND_QUEUE_EMBED_PAGES_MSG(index + 1, pages.length)}` : ""}`,
-            images.info
-        ];
+    private static generateFooter(message: Message, multiple: boolean, index = 0, pages: string[][] = []): EmbedFooterData {
+        return {
+            text: `${message.client.lang.COMMAND_QUEUE_EMBED_FOOTER(message.guild!.queue!.tracks.first()!.metadata.title)}` +
+                  `${multiple ? ` | ${message.client.lang.COMMAND_QUEUE_EMBED_PAGES_MSG(index + 1, pages.length)}` : ""}`,
+            iconURL: images.info
+        };
     }
 }

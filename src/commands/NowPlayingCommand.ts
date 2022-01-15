@@ -22,7 +22,10 @@ export class NowPlayingCommand extends BaseCommand {
             .setThumbnail(track.metadata.thumbnail);
 
         if (message.guild?.queue?.repeatMode !== repeatMode.disable) {
-            embed.setFooter(this.client.lang.COMMAND_NOWPLAYING_EMBED_FOOTER(message.client.lang.MUSIC_REPEAT_MODE_TYPES(message.guild!.queue!.repeatMode)), images.info);
+            embed.setFooter({
+                text: this.client.lang.COMMAND_NOWPLAYING_EMBED_FOOTER(message.client.lang.MUSIC_REPEAT_MODE_TYPES(message.guild!.queue!.repeatMode)),
+                iconURL: images.info
+            });
         }
         return message.channel.send({ embeds: [embed] });
     }

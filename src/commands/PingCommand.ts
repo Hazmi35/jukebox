@@ -14,7 +14,7 @@ export class PingCommand extends BaseCommand {
             const latency = msg.createdTimestamp - message.createdTimestamp;
             const wsLatency = this.client.ws.ping.toFixed(0);
             const embed = new MessageEmbed()
-                .setAuthor(this.client.lang.COMMAND_PING_RESULT_MESSAGE(), message.client.user?.displayAvatarURL())
+                .setAuthor({ name: this.client.lang.COMMAND_PING_RESULT_MESSAGE(), iconURL: message.client.user?.displayAvatarURL() })
                 .setColor(PingCommand.searchHex(wsLatency))
                 .addFields({
                     name: this.client.lang.COMMAND_PING_API_LATENCY(),
@@ -25,7 +25,7 @@ export class PingCommand extends BaseCommand {
                     value: `**\`${wsLatency}\`** ms`,
                     inline: true
                 })
-                .setFooter(this.client.lang.COMMAND_PING_EMBED_FOOTER(message.author.tag), message.author.displayAvatarURL({ dynamic: true }))
+                .setFooter({ text: this.client.lang.COMMAND_PING_EMBED_FOOTER(message.author.tag), iconURL: message.author.displayAvatarURL({ dynamic: true }) })
                 .setTimestamp();
 
             msg.edit({ content: " ", embeds: [embed] }).catch(e => this.client.logger.error(e));

@@ -23,7 +23,7 @@ export class ShuffleCommand extends BaseCommand {
             message.channel.send({
                 embeds: [
                     createEmbed("info", message.client.lang.COMMAND_SHUFFLE_MODE_SUCCESS(message.guild!.queue!.shuffleMode === 1))
-                        .setFooter(message.client.lang.COMMAND_SHUFFLE_MODE_SUCCESS_FOOTER())
+                        .setFooter({ text: message.client.lang.COMMAND_SHUFFLE_MODE_SUCCESS_FOOTER() })
                 ]
             }).catch(e => this.client.logger.error(e));
         } else {

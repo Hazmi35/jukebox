@@ -175,7 +175,7 @@ export class PlayCommand extends BaseCommand {
             const embed = createEmbed(type, msg)
                 .setThumbnail(playlist.videos[0].thumbnails.best!);
 
-            if (footer) embed.setFooter(footer, images.info);
+            if (footer) embed.setFooter({ text: footer, iconURL: images.info });
             return { embeds: [embed] };
         };
 
@@ -275,13 +275,13 @@ export class PlayCommand extends BaseCommand {
         const msg = await message.channel.send({
             embeds: [
                 createEmbed("info")
-                    .setAuthor(this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_TITLE())
+                    .setAuthor({ name: this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_TITLE() })
                     .setDescription(
                         `${videosSliced.map(video => `**${++index} -** ${PlayCommand.cleanTitle(video.title)}`).join("\n")}\n` +
                     `*${this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_CANCEL_MSG()}*`
                     )
                     .setThumbnail(message.client.user!.displayAvatarURL())
-                    .setFooter(this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_FOOTER(videosSliced.length))
+                    .setFooter({ text: this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_FOOTER(videosSliced.length) })
             ]
         });
 
