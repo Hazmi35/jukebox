@@ -69,14 +69,14 @@ export class VoiceStateUpdateEvent extends BaseEvent {
                 queue.oldMusicMessage = null; queue.oldVoiceStateUpdateMessage = null;
                 queue.textChannel?.send({
                     embeds: [
-                        createEmbed("error", this.client.lang.MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED(Number(duration)))
+                        createEmbed("error", this.client.lang.MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED(duration))
                             .setTitle(this.client.lang.MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE())
                     ]
                 }).catch(e => this.client.logger.error(e));
             }, timeout);
             queue.textChannel?.send({
                 embeds: [
-                    createEmbed("warn", this.client.lang.MUSIC_DELETEQUEUETIMEOUT_PAUSED(Number(duration)))
+                    createEmbed("warn", this.client.lang.MUSIC_DELETEQUEUETIMEOUT_PAUSED(duration))
                         .setTitle(this.client.lang.MUSIC_DELETEQUEUETIMEOUT_PAUSED_EMBED_TITLE())
                 ]
             }).then(m => queue.oldVoiceStateUpdateMessage = m.id).catch(e => this.client.logger.error(e));
