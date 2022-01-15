@@ -45,7 +45,7 @@ export class HelpCommand extends BaseCommand {
                     createEmbed("info", message.client.commands.filter(cmd => !cmd.meta.disable && cmd.meta.name !== "eval").map(c => `\`${c.meta.name}\``).join(" "))
                         .setTitle(this.client.lang.COMMAND_HELP_EMBED_TITLE())
                         .setThumbnail(message.client.user!.displayAvatarURL())
-                        .setFooter(this.client.lang.COMMAND_HELP_EMBED_FOOTER(message.client.config.prefix), images.info)
+                        .setFooter({ text: this.client.lang.COMMAND_HELP_EMBED_FOOTER(message.client.config.prefix), iconURL: images.info })
                 ]
             }).catch(e => this.client.logger.error(e));
         }

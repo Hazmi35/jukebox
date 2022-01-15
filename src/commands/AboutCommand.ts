@@ -49,7 +49,7 @@ export class AboutCommand extends BaseCommand {
         message.channel.send({
             embeds: [
                 createEmbed("info", this.client.lang.COMMAND_ABOUT_EMBED_DESCRIPTION(data))
-                    .setAuthor(this.client.lang.COMMAND_ABOUT_EMBED_AUTHOR(this.client.user!.username))
+                    .setAuthor({ name: this.client.lang.COMMAND_ABOUT_EMBED_AUTHOR(this.client.user!.username) })
             ]
         }).catch(e => this.client.logger.error(e));
     }
