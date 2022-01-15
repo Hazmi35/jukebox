@@ -9,7 +9,7 @@ import { repeatMode } from "../constants/repeatMode";
     aliases: ["loop", "music-loop", "music-repeat"],
     name: "repeat",
     description: lang => lang.COMMAND_REPEAT_META_DESCRIPTION(),
-    usage: () => `{prefix}repeat [all | one | off]`
+    usage: () => "{prefix}repeat [all | one | off]"
 })
 export class RepeatCommand extends BaseCommand {
     @isUserInTheVoiceChannel()

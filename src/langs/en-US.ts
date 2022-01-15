@@ -1,6 +1,7 @@
-/* eslint-disable sort-keys */
+/* eslint-disable max-len, @typescript-eslint/naming-convention */
 import stripIndent from "strip-indent";
 import pluralize from "plur";
+import { IAboutCommandData } from "../typings";
 
 export const lang = {
     // Language Metadata
@@ -11,33 +12,29 @@ export const lang = {
     // About Command
     COMMAND_ABOUT_META_DESCRIPTION: () => "Send the bot's info",
     COMMAND_ABOUT_EMBED_AUTHOR: (username: string) => `${username} - Just a simple music bot.`,
-    COMMAND_ABOUT_EMBED_DESCRIPTION: (
-        channelCount: number, guildsCount: number, shardsCount: string, shardID: string, queueCount: number,
-        platform: string, arch: string, osUptime: string, memoryRSS: string, memoryHeapTotal: string, memoryHeapUsed: string, processUptime: string, botUptime: string,
-        nodejsVersion: string, discordjsVersion: string, ffmpegVersion: string, ytDlpVersion: string, OpusEncoder: string, botVersion: string
-    ) => stripIndent(`
+    COMMAND_ABOUT_EMBED_DESCRIPTION: (data: IAboutCommandData) => stripIndent(`
     \`\`\`asciidoc
-    Channels count      :: ${channelCount}
-    Guilds count        :: ${guildsCount}
-    Shards count        :: ${shardsCount}
-    Shard ID            :: #${shardID}
-    Playing Music on    :: ${queueCount} guilds
+    Channels count      :: ${data.stats.channelCount}
+    Guilds count        :: ${data.stats.guildsCount}
+    Shards count        :: ${data.shard.count}
+    Shard ID            :: #${data.shard.id}
+    Playing Music on    :: ${data.stats.playersCount} guilds
 
-    Platform            :: ${platform}
-    OS Uptime           :: ${osUptime}
-    Arch                :: ${arch}
-    Memory (RSS)        :: ${memoryRSS}
-    Memory (Heap Total) :: ${memoryHeapTotal}
-    Memory (Heap Used)  :: ${memoryHeapUsed}
-    Process Uptime      :: ${processUptime}
-    Bot Uptime          :: ${botUptime}
+    Platform            :: ${data.bot.platform}
+    OS Uptime           :: ${data.stats.uptimes.os}
+    Arch                :: ${data.bot.arch}
+    Memory (RSS)        :: ${data.stats.memory.rss}
+    Memory (Heap Total) :: ${data.stats.memory.heapTotal}
+    Memory (Heap Used)  :: ${data.stats.memory.heapUsed}
+    Process Uptime      :: ${data.stats.uptimes.process}
+    Bot Uptime          :: ${data.stats.uptimes.bot}
 
-    Node.js version     :: ${nodejsVersion}
-    Discord.js version  :: ${discordjsVersion}
-    FFmpeg version      :: ${ffmpegVersion}
-    yt-dlp version      :: ${ytDlpVersion}
-    Opus Encoder        :: ${OpusEncoder}
-    Bot Version         :: ${botVersion}
+    Node.js version     :: ${data.bot.versions.nodejs}
+    Discord.js version  :: ${data.bot.versions.discordjs}
+    FFmpeg version      :: ${data.bot.versions.ffmpeg}
+    yt-dlp version      :: ${data.bot.versions.ytdlp}
+    Opus Encoder        :: ${data.bot.opusEncoder}
+    Bot Version         :: ${data.bot.versions.bot}
 
     Source code         :: https://sh.hzmi.xyz/jukebox
     \`\`\`
@@ -151,7 +148,7 @@ export const lang = {
     COMMAND_SHUFFLE_META_DESCRIPTION: () => "Shuffle the music queue or toggle shuffle mode for playlists",
     COMMAND_SHUFFLE_SUCCESS: () => "🔀 Queue shuffled!",
     COMMAND_SHUFFLE_MODE_SUCCESS: (state: boolean) => `🔀 Playlist shuffle mode: **${state ? "ENABLED" : "DISABLED"}**`,
-    COMMAND_SHUFFLE_MODE_SUCCESS_FOOTER: () => `When Playlist shuffle mode is enabled, new added playlists will be shuffled.`,
+    COMMAND_SHUFFLE_MODE_SUCCESS_FOOTER: () => "When Playlist shuffle mode is enabled, new added playlists will be shuffled.",
 
     // Skip Command
     COMMAND_SKIP_META_DESCRIPTION: () => "Skip the current track",
@@ -173,7 +170,7 @@ export const lang = {
     COMMAND_VOLUME_META_ARGS: (index: number) => ["New volume"][index],
     COMMAND_VOLUME_DISABLED: () => "⚠ Volume command is disabled within this bot configuration. Please use the volume functionality in Discord client directly",
     COMMAND_VOLUME_CURRENT: (volume: number) => `📶 The current volume is \`${volume}\``,
-    COMMAND_VOLUME_USE_PAUSE_INSTEAD: () => "❗ Please pause the music player instead of setting the volume to \`0\`",
+    COMMAND_VOLUME_USE_PAUSE_INSTEAD: () => "❗ Please pause the music player instead of setting the volume to `0`",
     COMMAND_VOLUME_OVER_LIMIT: (max: number) => `❗ I can't set the volume above \`${max}\``,
     COMMAND_VOLUME_SET: (volume: number) => `📶 Volume set to \`${volume}\``,
 
@@ -183,7 +180,7 @@ export const lang = {
     // VoiceStateUpdateEvent
     BOT_DISCONNECTED_FROM_VOICE: () => "I was disconnected from the voice channel, the queue will be deleted",
     MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED: (duration: number) => `**${duration}** have passed and there is no one who joins my voice channel, the queue was deleted.`,
-    MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE: () => `⏹ Queue deleted.`,
+    MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE: () => "⏹ Queue deleted.",
     MUSIC_DELETEQUEUETIMEOUT_PAUSED: (duration: number) => stripIndent(`
         Everyone has left from my voice channel, to save resources, the queue was paused.
         If there's no one who joins my voice channel in the next **${duration}**, the queue will be deleted.
@@ -203,6 +200,7 @@ export const lang = {
     MUSIC_VOICE_HANDLER_COULDNT_ESTABLISH: () => "Could not establish a voice connection within 15 seconds.",
 
     // Decorators
+
     // Music helpers
     MUSIC_HELPER_QUEUE_DOES_NOT_EXISTS: () => "There is nothing playing.",
     MUSIC_HELPER_NEED_TO_BE_ON_THE_SAME_VC: () => "You need to be in the same voice channel as mine",

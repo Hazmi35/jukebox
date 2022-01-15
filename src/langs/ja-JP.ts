@@ -1,6 +1,7 @@
-/* eslint-disable sort-keys */
+/* eslint-disable max-len, @typescript-eslint/naming-convention */
 import stripIndent from "strip-indent";
 import pluralize from "plur";
+import { IAboutCommandData } from "../typings";
 
 export const lang = {
     // Language Metadata
@@ -11,32 +12,30 @@ export const lang = {
     // About Command
     COMMAND_ABOUT_META_DESCRIPTION: () => "このBotの情報を送信します。",
     COMMAND_ABOUT_EMBED_AUTHOR: (username: string) => `${username} - このBotはシンプルな音楽Botです。`,
-    COMMAND_ABOUT_EMBED_DESCRIPTION: (
-        channelCount: number, guildsCount: number, shardsCount: string, shardID: string, queueCount: number,
-        platform: string, arch: string, osUptime: string, memoryRSS: string, memoryHeapTotal: string, memoryHeapUsed: string, processUptime: string, botUptime: string,
-        nodejsVersion: string, discordjsVersion: string, ffmpegVersion: string, ytDlpVersion: string, OpusEncoder: string, botVersion: string
-    ) => stripIndent(`
+    COMMAND_ABOUT_EMBED_DESCRIPTION: (data: IAboutCommandData) => stripIndent(`
     \`\`\`asciidoc
-    総チャンネル数       :: ${channelCount}
-    総サーバー数         :: ${guildsCount}
-    総シャード数         :: ${shardsCount}
-    シャード ID          :: #${shardID}
-    音楽再生中のサーバー  :: ${queueCount} サーバー
-    プラットフォーム      :: ${platform}
-    OSの稼働時間         :: ${osUptime}
-    アーキテクチャ        :: ${arch}
-    メモリ (RSS)         :: ${memoryRSS}
-    メモリ (Heap Total)  :: ${memoryHeapTotal}
-    メモリ (Heap Used)   :: ${memoryHeapUsed}
-    プロセス稼働時間      :: ${processUptime}
-    Botの稼働時間        :: ${botUptime}
-    Node.js version     :: ${nodejsVersion}
-    Discord.js version  :: ${discordjsVersion}
-    FFmpeg version      :: ${ffmpegVersion}
-    yt-dlp version      :: ${ytDlpVersion}
-    Opus Encoder        :: ${OpusEncoder}
-    Bot Version         :: ${botVersion}
-    Source code         :: https://sh.hzmi.xyz/jukebox
+    総チャンネル数       :: ${data.stats.channelCount}
+    総サーバー数         :: ${data.stats.guildsCount}
+    総シャード数         :: ${data.shard.count}
+    シャード ID         :: #${data.shard.id}
+    音楽再生中のサーバー   :: ${data.stats.playersCount} サーバー
+
+    プラットフォーム      :: ${data.bot.platform}
+    OSの稼働時間         :: ${data.stats.uptimes.os}
+    アーキテクチャ        :: ${data.bot.arch}
+    メモリ (RSS)        :: ${data.stats.memory.rss}
+    メモリ (Heap Total) :: ${data.stats.memory.heapTotal}
+    メモリ (Heap Used)  :: ${data.stats.memory.heapTotal}
+    プロセス稼働時間      :: ${data.stats.uptimes.process}
+    Botの稼働時間        :: ${data.stats.uptimes.bot}
+
+    Node.js version    :: ${data.bot.versions.discordjs}
+    Discord.js version :: ${data.bot.versions.ffmpeg}
+    FFmpeg version     :: ${data.bot.versions.ffmpeg}
+    yt-dlp version     :: ${data.bot.versions.ytdlp}
+    Opus Encoder       :: ${data.bot.opusEncoder}
+    Bot Version        :: ${data.bot.versions.bot}
+    Source code        :: https://sh.hzmi.xyz/jukebox
     \`\`\`
     `),
 
@@ -148,7 +147,7 @@ export const lang = {
     COMMAND_SHUFFLE_META_DESCRIPTION: () => "音楽キューをシャッフルしたり、プレイリストシャッフルモードを切り替えたりできます。",
     COMMAND_SHUFFLE_SUCCESS: () => "🔀 キューをシャッフルしました！",
     COMMAND_SHUFFLE_MODE_SUCCESS: (state: boolean) => `🔀 プレイリストシャッフルモード:**${state ? "ENABLED" : "DISABLED"}**`,
-    COMMAND_SHUFFLE_MODE_SUCCESS_FOOTER: () => `プレイリストシャッフルモードが有効な場合、新しく追加されたプレイリストはシャッフルされます。`,
+    COMMAND_SHUFFLE_MODE_SUCCESS_FOOTER: () => "プレイリストシャッフルモードが有効な場合、新しく追加されたプレイリストはシャッフルされます。",
 
     // Skip Command
     COMMAND_SKIP_META_DESCRIPTION: () => "現在の曲をスキップします。",
@@ -170,7 +169,7 @@ export const lang = {
     COMMAND_VOLUME_META_ARGS: (index: number) => ["音量"][index],
     COMMAND_VOLUME_DISABLED: () => "⚠ このボット構成では、ボリュームコマンドは無効になっています。Discordクライアントのボリューム機能を各自で使用してください。",
     COMMAND_VOLUME_CURRENT: (volume: number) => `📶 現在のボリュームは\`${volume}\`です。`,
-    COMMAND_VOLUME_USE_PAUSE_INSTEAD: () => "❗ 音量を\`0\`に設定する代わりに、音楽プレーヤーを一時停止してください",
+    COMMAND_VOLUME_USE_PAUSE_INSTEAD: () => "❗ 音量を`0`に設定する代わりに、音楽プレーヤーを一時停止してください",
     COMMAND_VOLUME_OVER_LIMIT: (max: number) => `❗ \`${max}\`を超える音量を設定できません`,
     COMMAND_VOLUME_SET: (volume: number) => `📶 \`${volume}\`に音量を設定しました。`,
 
@@ -180,7 +179,7 @@ export const lang = {
     // VoiceStateUpdateEvent
     BOT_DISCONNECTED_FROM_VOICE: () => "音声チャンネルから切断されたため、キューを削除しました。",
     MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED: (duration: number) => `**${duration}** が経過し、私の音声チャネルに人がいなかったため、キューは削除されました。`,
-    MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE: () => `⏹ キューを削除しました。`,
+    MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE: () => "⏹ キューを削除しました。",
     MUSIC_DELETEQUEUETIMEOUT_PAUSED: (duration: number) => stripIndent(`
         私の音声チャネルから皆が去ってしまったので、リソースを節約するために、キューは一時停止されました。
         **${duration}**の間に私の音声チャンネルに参加する人がいなければ、キューは削除されます。
@@ -200,6 +199,7 @@ export const lang = {
     MUSIC_VOICE_HANDLER_COULDNT_ESTABLISH: () => "15秒以内に音声接続を確立できませんでした。",
 
     // Decorators
+
     // Music helpers
     MUSIC_HELPER_QUEUE_DOES_NOT_EXISTS: () => "何も再生されていません。",
     MUSIC_HELPER_NEED_TO_BE_ON_THE_SAME_VC: () => "私と同じ音声チャンネルに接続している必要があります！接続してからコマンドを実行してください！",

@@ -24,7 +24,7 @@ export class SkipToCommand extends BaseCommand {
         const tracks = message.guild!.queue!.tracks;
 
         const currentTrack = tracks.first()!;
-        const track = tracks.getByIndex((Number(args[0]) - 1));
+        const track = tracks.getByIndex(Number(args[0]) - 1);
 
         if (track === undefined) return message.channel.send({ embeds: [createEmbed("error", message.client.lang.COMMAND_SKIPTO_NOT_FOUND(Number(args[0])))] });
 
@@ -35,7 +35,7 @@ export class SkipToCommand extends BaseCommand {
         const diff = tracks.filter(f => !newTracks.includes(f));
 
         diff.shift();
-        diff.forEach(track => message.guild?.queue?.tracks.delete(track));
+        diff.forEach(T => message.guild?.queue?.tracks.delete(T));
         if (message.guild?.queue?.playing === false) message.guild.queue.player.unpause();
         message.guild!.queue?.player!.stop();
 

@@ -13,11 +13,11 @@ export interface ICommandComponent {
         description?: (lang: DefaultLang) => string;
         usage?: (lang: DefaultLang) => string;
     };
-    execute(message: Message, args: string[]): any;
+    execute: (message: Message, args: string[]) => any;
 }
 export interface IEvent {
     name: keyof ClientEvents;
-    execute(...args: any): any;
+    execute: (...args: any) => any;
 }
 declare module "discord.js" {
     // @ts-expect-error Override
@@ -32,6 +32,7 @@ declare module "discord.js" {
         readonly localization: Jukebox["localization"];
         readonly lang: Jukebox["lang"];
 
+        // eslint-disable-next-line @typescript-eslint/method-signature-style
         build(token: string): Promise<this>;
     }
     // @ts-expect-error Override
@@ -46,3 +47,32 @@ export interface ITrackMetadata {
     thumbnail: string;
 }
 
+export interface IAboutCommandData {
+    stats: {
+        channelCount: number;
+        guildsCount: number;
+        playersCount: number;
+        uptimes: {
+            bot: string;
+            process: string;
+            os: string;
+        };
+        memory: NodeJS.MemoryUsage;
+    };
+    shard: {
+        count: number | string;
+        id: number | string;
+    };
+    bot: {
+        platform: string;
+        arch: string;
+        versions: {
+            bot: string;
+            discordjs: string;
+            nodejs: string;
+            ffmpeg: string;
+            ytdlp: string;
+        };
+        opusEncoder: string;
+    };
+}

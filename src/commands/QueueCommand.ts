@@ -16,8 +16,8 @@ export class QueueCommand extends BaseCommand {
     public async execute(message: Message): Promise<any> {
         const embed = createEmbed("info")
             .setTitle(message.client.lang.COMMAND_QUEUE_EMBED_TITLE())
-            .setThumbnail(message.client.user?.avatarURL() as string)
-            .setFooter(...this.generateFooter(message, false));
+            .setThumbnail(message.client.user!.displayAvatarURL())
+            .setFooter(...QueueCommand.generateFooter(message, false));
 
         let num = 1;
         const tracks = message.guild!.queue!.tracks.map(s => `**${num++}.** **[${s.metadata.title}](${s.metadata.url})**`)!;
@@ -29,10 +29,10 @@ export class QueueCommand extends BaseCommand {
         const msg = await message.channel.send({ embeds: [embed] });
 
         if (Number(pages.length > 1)) {
-            embed.setFooter(...this.generateFooter(message, true, index, pages));
+            embed.setFooter(...QueueCommand.generateFooter(message, true, index, pages));
 
             const reactions = ["◀️", "▶️"];
-            await reactions.forEach(r => msg.react(r));
+            reactions.forEach(r => msg.react(r));
             await msg.edit({ content: " ", embeds: [embed] });
 
             const isMessageManageable = (msg.channel as TextChannel).permissionsFor(msg.client.user!)?.has("MANAGE_MESSAGES");
@@ -57,7 +57,7 @@ export class QueueCommand extends BaseCommand {
                     }
                     embed
                         .setDescription(pages[index].join("\n"))
-                        .setFooter(...this.generateFooter(message, true, index, pages));
+                        .setFooter(...QueueCommand.generateFooter(message, true, index, pages));
                     msg.edit({ content: " ", embeds: [embed] }).catch(e => this.client.logger.error(e));
                 })
                 .on("end", () => {
@@ -67,7 +67,7 @@ export class QueueCommand extends BaseCommand {
     }
 
     // TODO: Add repeat mode info here too.
-    private generateFooter(message: Message, multiple: boolean, index = 0, pages: string[][] = []): [string, string] {
+    private static generateFooter(message: Message, multiple: boolean, index = 0, pages: string[][] = []): [string, string] {
         return [
             `${message.client.lang.COMMAND_QUEUE_EMBED_FOOTER(message.guild!.queue!.tracks.first()!.metadata.title)}` +
             `${multiple ? ` | ${message.client.lang.COMMAND_QUEUE_EMBED_PAGES_MSG(index + 1, pages.length)}` : ""}`,
