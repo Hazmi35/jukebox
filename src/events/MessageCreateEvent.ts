@@ -10,7 +10,7 @@ export class MessageCreateEvent extends BaseEvent {
 
         if (message.content.toLowerCase().startsWith(this.client.config.prefix)) return this.client.commands.handle(message);
 
-        if ((await this.client.util.getUserFromMention(message.content))?.id === message.client.user?.id) {
+        if (this.client.util.getUserIDFromMention(message.content) === message.client.user!.id) {
             return message.channel.send({
                 embeds: [createEmbed("info", message.client.lang.MESSAGE_EVENT_ON_MENTION(message.client.config.prefix))]
             });

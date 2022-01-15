@@ -173,11 +173,17 @@ export class Util {
         return array;
     }
 
-    public getUserFromMention(mention: string): Promise<User | undefined> {
+    public getUserIDFromMention(mention: string): Snowflake | undefined {
         const matches = (/^<@!?(?<Snowflake>\d+)>$/).exec(mention);
-        if (!matches) return Promise.resolve(undefined);
+        if (!matches) return undefined;
 
-        const id = matches[1];
+        return matches[1];
+    }
+
+    public fetchUserFromMention(mention: string): Promise<User | null> {
+        const id = this.getUserIDFromMention(mention);
+        if (!id) return Promise.resolve(null);
+
         return this.client.users.fetch(id);
     }
 
