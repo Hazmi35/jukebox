@@ -179,9 +179,9 @@ export const lang = {
 
     // VoiceStateUpdateEvent
     BOT_DISCONNECTED_FROM_VOICE: () => "I was disconnected from the voice channel, the queue will be deleted",
-    MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED: (duration: number) => `**${duration}** have passed and there is no one who joins my voice channel, the queue was deleted.`,
+    MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED: (duration: string) => `**${duration}** have passed and there is no one who joins my voice channel, the queue was deleted.`,
     MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE: () => "⏹ Queue deleted.",
-    MUSIC_DELETEQUEUETIMEOUT_PAUSED: (duration: number) => stripIndent(`
+    MUSIC_DELETEQUEUETIMEOUT_PAUSED: (duration: string) => stripIndent(`
         Everyone has left from my voice channel, to save resources, the queue was paused.
         If there's no one who joins my voice channel in the next **${duration}**, the queue will be deleted.
     `),

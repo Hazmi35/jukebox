@@ -178,9 +178,9 @@ export const lang = {
 
     // VoiceStateUpdateEvent
     BOT_DISCONNECTED_FROM_VOICE: () => "音声チャンネルから切断されたため、キューを削除しました。",
-    MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED: (duration: number) => `**${duration}** が経過し、私の音声チャネルに人がいなかったため、キューは削除されました。`,
+    MUSIC_DELETEQUEUETIMEOUT_WAS_DELETED: (duration: string) => `**${duration}** が経過し、私の音声チャネルに人がいなかったため、キューは削除されました。`,
     MUSIC_DELETEQUEUETIMEOUT_EMBED_TITLE: () => "⏹ キューを削除しました。",
-    MUSIC_DELETEQUEUETIMEOUT_PAUSED: (duration: number) => stripIndent(`
+    MUSIC_DELETEQUEUETIMEOUT_PAUSED: (duration: string) => stripIndent(`
         私の音声チャネルから皆が去ってしまったので、リソースを節約するために、キューは一時停止されました。
         **${duration}**の間に私の音声チャンネルに参加する人がいなければ、キューは削除されます。
     `),
