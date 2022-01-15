@@ -1,6 +1,7 @@
 /* eslint-disable max-len, @typescript-eslint/naming-convention */
 import stripIndent from "strip-indent";
 import pluralize from "plur";
+import { IAboutCommandData } from "../typings";
 
 export const lang = {
     // Language Metadata
@@ -11,33 +12,29 @@ export const lang = {
     // About Command
     COMMAND_ABOUT_META_DESCRIPTION: () => "Send the bot's info",
     COMMAND_ABOUT_EMBED_AUTHOR: (username: string) => `${username} - Just a simple music bot.`,
-    COMMAND_ABOUT_EMBED_DESCRIPTION: (
-        channelCount: number, guildsCount: number, shardsCount: string, shardID: string, queueCount: number,
-        platform: string, arch: string, osUptime: string, memoryRSS: string, memoryHeapTotal: string, memoryHeapUsed: string, processUptime: string, botUptime: string,
-        nodejsVersion: string, discordjsVersion: string, ffmpegVersion: string, ytDlpVersion: string, OpusEncoder: string, botVersion: string
-    ) => stripIndent(`
+    COMMAND_ABOUT_EMBED_DESCRIPTION: (data: IAboutCommandData) => stripIndent(`
     \`\`\`asciidoc
-    Channels count      :: ${channelCount}
-    Guilds count        :: ${guildsCount}
-    Shards count        :: ${shardsCount}
-    Shard ID            :: #${shardID}
-    Playing Music on    :: ${queueCount} guilds
+    Channels count      :: ${data.stats.channelCount}
+    Guilds count        :: ${data.stats.guildsCount}
+    Shards count        :: ${data.shard.count}
+    Shard ID            :: #${data.shard.id}
+    Playing Music on    :: ${data.stats.playersCount} guilds
 
-    Platform            :: ${platform}
-    OS Uptime           :: ${osUptime}
-    Arch                :: ${arch}
-    Memory (RSS)        :: ${memoryRSS}
-    Memory (Heap Total) :: ${memoryHeapTotal}
-    Memory (Heap Used)  :: ${memoryHeapUsed}
-    Process Uptime      :: ${processUptime}
-    Bot Uptime          :: ${botUptime}
+    Platform            :: ${data.bot.platform}
+    OS Uptime           :: ${data.stats.uptimes.os}
+    Arch                :: ${data.bot.arch}
+    Memory (RSS)        :: ${data.stats.memory.rss}
+    Memory (Heap Total) :: ${data.stats.memory.heapTotal}
+    Memory (Heap Used)  :: ${data.stats.memory.heapUsed}
+    Process Uptime      :: ${data.stats.uptimes.process}
+    Bot Uptime          :: ${data.stats.uptimes.bot}
 
-    Node.js version     :: ${nodejsVersion}
-    Discord.js version  :: ${discordjsVersion}
-    FFmpeg version      :: ${ffmpegVersion}
-    yt-dlp version      :: ${ytDlpVersion}
-    Opus Encoder        :: ${OpusEncoder}
-    Bot Version         :: ${botVersion}
+    Node.js version     :: ${data.bot.versions.nodejs}
+    Discord.js version  :: ${data.bot.versions.discordjs}
+    FFmpeg version      :: ${data.bot.versions.ffmpeg}
+    yt-dlp version      :: ${data.bot.versions.ytdlp}
+    Opus Encoder        :: ${data.bot.opusEncoder}
+    Bot Version         :: ${data.bot.versions.bot}
 
     Source code         :: https://sh.hzmi.xyz/jukebox
     \`\`\`

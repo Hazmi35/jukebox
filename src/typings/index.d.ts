@@ -47,3 +47,32 @@ export interface ITrackMetadata {
     thumbnail: string;
 }
 
+export interface IAboutCommandData {
+    stats: {
+        channelCount: number;
+        guildsCount: number;
+        playersCount: number;
+        uptimes: {
+            bot: string;
+            process: string;
+            os: string;
+        };
+        memory: NodeJS.MemoryUsage;
+    };
+    shard: {
+        count: number | string;
+        id: number | string;
+    };
+    bot: {
+        platform: string;
+        arch: string;
+        versions: {
+            bot: string;
+            discordjs: string;
+            nodejs: string;
+            ffmpeg: string;
+            ytdlp: string;
+        };
+        opusEncoder: string;
+    };
+}

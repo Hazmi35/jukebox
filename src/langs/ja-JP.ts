@@ -1,6 +1,7 @@
 /* eslint-disable max-len, @typescript-eslint/naming-convention */
 import stripIndent from "strip-indent";
 import pluralize from "plur";
+import { IAboutCommandData } from "../typings";
 
 export const lang = {
     // Language Metadata
@@ -11,32 +12,30 @@ export const lang = {
     // About Command
     COMMAND_ABOUT_META_DESCRIPTION: () => "このBotの情報を送信します。",
     COMMAND_ABOUT_EMBED_AUTHOR: (username: string) => `${username} - このBotはシンプルな音楽Botです。`,
-    COMMAND_ABOUT_EMBED_DESCRIPTION: (
-        channelCount: number, guildsCount: number, shardsCount: string, shardID: string, queueCount: number,
-        platform: string, arch: string, osUptime: string, memoryRSS: string, memoryHeapTotal: string, memoryHeapUsed: string, processUptime: string, botUptime: string,
-        nodejsVersion: string, discordjsVersion: string, ffmpegVersion: string, ytDlpVersion: string, OpusEncoder: string, botVersion: string
-    ) => stripIndent(`
+    COMMAND_ABOUT_EMBED_DESCRIPTION: (data: IAboutCommandData) => stripIndent(`
     \`\`\`asciidoc
-    総チャンネル数       :: ${channelCount}
-    総サーバー数         :: ${guildsCount}
-    総シャード数         :: ${shardsCount}
-    シャード ID          :: #${shardID}
-    音楽再生中のサーバー  :: ${queueCount} サーバー
-    プラットフォーム      :: ${platform}
-    OSの稼働時間         :: ${osUptime}
-    アーキテクチャ        :: ${arch}
-    メモリ (RSS)         :: ${memoryRSS}
-    メモリ (Heap Total)  :: ${memoryHeapTotal}
-    メモリ (Heap Used)   :: ${memoryHeapUsed}
-    プロセス稼働時間      :: ${processUptime}
-    Botの稼働時間        :: ${botUptime}
-    Node.js version     :: ${nodejsVersion}
-    Discord.js version  :: ${discordjsVersion}
-    FFmpeg version      :: ${ffmpegVersion}
-    yt-dlp version      :: ${ytDlpVersion}
-    Opus Encoder        :: ${OpusEncoder}
-    Bot Version         :: ${botVersion}
-    Source code         :: https://sh.hzmi.xyz/jukebox
+    総チャンネル数       :: ${data.stats.channelCount}
+    総サーバー数         :: ${data.stats.guildsCount}
+    総シャード数         :: ${data.shard.count}
+    シャード ID         :: #${data.shard.id}
+    音楽再生中のサーバー   :: ${data.stats.playersCount} サーバー
+
+    プラットフォーム      :: ${data.bot.platform}
+    OSの稼働時間         :: ${data.stats.uptimes.os}
+    アーキテクチャ        :: ${data.bot.arch}
+    メモリ (RSS)        :: ${data.stats.memory.rss}
+    メモリ (Heap Total) :: ${data.stats.memory.heapTotal}
+    メモリ (Heap Used)  :: ${data.stats.memory.heapTotal}
+    プロセス稼働時間      :: ${data.stats.uptimes.process}
+    Botの稼働時間        :: ${data.stats.uptimes.bot}
+
+    Node.js version    :: ${data.bot.versions.discordjs}
+    Discord.js version :: ${data.bot.versions.ffmpeg}
+    FFmpeg version     :: ${data.bot.versions.ffmpeg}
+    yt-dlp version     :: ${data.bot.versions.ytdlp}
+    Opus Encoder       :: ${data.bot.opusEncoder}
+    Bot Version        :: ${data.bot.versions.bot}
+    Source code        :: https://sh.hzmi.xyz/jukebox
     \`\`\`
     `),
 
