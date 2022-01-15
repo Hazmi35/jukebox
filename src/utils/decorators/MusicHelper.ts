@@ -8,6 +8,7 @@ export function isMusicQueueExists(): any {
     });
 }
 
+// TODO: Ignore if the queue voice channel is empty of User / Listener (Seems easy but we need to rewrite some logics in PlayCommand and VoiceStateUpdateEvent)
 export function isSameVoiceChannel(): any {
     return Inhibit(message => {
         if (!message.guild?.me?.voice.channel) return undefined;
