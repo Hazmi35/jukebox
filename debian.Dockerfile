@@ -28,27 +28,28 @@ FROM hazmi35/node:16
 LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
-# Install python3 (required for youtube-dl/yt-dlp) and create cache and logs directory
+# Install python3 (required for youtube-dl/yt-dlp) and sudo then create cache and logs directory
 # Plus delete user "node" and create user "jukebox"
 RUN apt-get update \
-    && apt-get install -y python-is-python3 locales \
+    && apt-get install -y python-is-python3 locales sudo \
     && apt-get autoremove -y \
     && apt-get autoclean -y \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir cache && mkdir logs \
     && userdel -r node && rm -rf /home/node && groupadd -g 1000 jukebox && useradd -u 1000 -g jukebox -m -s /usr/sbin/nologin jukebox
 
-# Use user "jukebox"
-USER jukebox
-
 # Copy needed files
 COPY --from=build-stage --chown=jukebox /tmp/build/package.json .
 COPY --from=build-stage --chown=jukebox /tmp/build/package-lock.json .
 COPY --from=build-stage --chown=jukebox /tmp/build/node_modules ./node_modules
 COPY --from=build-stage --chown=jukebox /tmp/build/dist ./dist
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 # Mark cache folder as docker volume
 VOLUME ["/app/cache", "/app/logs"]
+
+# Execute entrypoint
+ENTRYPOINT ["/bin/sh", "/docker-entrypoint.sh"]
 
 # Start the app with node
 CMD ["node", "dist/main.js"]
