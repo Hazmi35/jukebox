@@ -34,15 +34,12 @@ FROM hazmi35/node:16-alpine
 LABEL name "Jukebox"
 LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
 
-# Install python3 (required for youtube-dl/yt-dlp) and create cache and logs directory
+# Install python3 (required for youtube-dl/yt-dlp), ffmpeg and sudo then create cache and logs directory
 # Plus delete user "node" and create user "jukebox"
-RUN apk add --no-cache python3 ffmpeg \
+RUN apk add --no-cache python3 ffmpeg sudo \
     && ln -s /usr/bin/python3 /usr/local/bin/python \
     && mkdir cache && mkdir logs \
     && deluser --remove-home node && addgroup -S jukebox -g 1000 && adduser -S -G jukebox -u 1000 jukebox
-
-# Use user "jukebox"
-USER jukebox
 
 # Tell ffmpeg-static to use system ffmpeg
 ENV FFMPEG_BIN /usr/bin/ffmpeg
@@ -52,9 +49,13 @@ COPY --from=build-stage --chown=jukebox /tmp/build/package.json .
 COPY --from=build-stage --chown=jukebox /tmp/build/package-lock.json .
 COPY --from=build-stage --chown=jukebox /tmp/build/node_modules ./node_modules
 COPY --from=build-stage --chown=jukebox /tmp/build/dist ./dist
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 # Mark cache folder as docker volume
 VOLUME ["/app/cache", "/app/logs"]
+
+# Execute entrypoint
+ENTRYPOINT ["/bin/sh", "/docker-entrypoint.sh"]
 
 # Start the app with node
 CMD ["node", "dist/main.js"]
