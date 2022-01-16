@@ -38,10 +38,10 @@ RUN apt-get update \
     && mkdir cache && mkdir logs
 
 # Copy needed files
-COPY --from=build-stage --chown=jukebox /tmp/build/package.json .
-COPY --from=build-stage --chown=jukebox /tmp/build/package-lock.json .
-COPY --from=build-stage --chown=jukebox /tmp/build/node_modules ./node_modules
-COPY --from=build-stage --chown=jukebox /tmp/build/dist ./dist
+COPY --from=build-stage /tmp/build/package.json .
+COPY --from=build-stage /tmp/build/package-lock.json .
+COPY --from=build-stage /tmp/build/node_modules ./node_modules
+COPY --from=build-stage /tmp/build/dist ./dist
 
 # Start the app with node
 CMD ["node", "dist/main.js"]
