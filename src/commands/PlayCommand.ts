@@ -142,7 +142,6 @@ export class PlayCommand extends BaseCommand {
                 const connection = joinVoiceChannel({
                     channelId: voiceChannel.id,
                     guildId: message.guild!.id,
-                    // @ts-expect-error Ignore this for now.
                     adapterCreator: message.guild!.voiceAdapterCreator, // TODO: Fix this properly?
                     selfDeaf: true
                 });
