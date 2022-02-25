@@ -1,5 +1,5 @@
 import { Client as BotClient, ClientOptions, Collection, Snowflake } from "discord.js";
-import { resolve } from "path";
+import { resolve, dirname } from "path";
 import * as config from "../config";
 import { createLogger } from "../utils/Logger";
 import { CommandManager } from "../utils/CommandManager";
@@ -9,16 +9,18 @@ import { ServerQueue } from "./ServerQueue";
 import { create } from "youtube-dl-exec";
 import { Localization } from "../utils/Localization";
 import { CustomError } from "../utils/CustomError";
+import { fileURLToPath } from "url";
 
 
 // Extends DiscordJS Structures
 import "./Guild";
 
+const currentDirName = dirname(fileURLToPath(import.meta.url));
 export class Jukebox extends BotClient {
     public readonly config = config;
     public readonly logger = createLogger("main", config.lang, "shard", this.shard?.ids[0], config.debug);
-    public readonly commands = new CommandManager(this, resolve(__dirname, "..", "commands"));
-    public readonly events = new EventsLoader(this, resolve(__dirname, "..", "events"));
+    public readonly commands = new CommandManager(this, resolve(currentDirName, "..", "commands"));
+    public readonly events = new EventsLoader(this, resolve(currentDirName, "..", "events"));
     public readonly util: Util = new Util(this);
     public readonly ytdl = create(resolve(this.util.getPackagePath("youtube-dl-exec"), "bin", "yt-dlp"));
     public readonly queue: Collection<Snowflake, ServerQueue> = new Collection();

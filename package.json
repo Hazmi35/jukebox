@@ -11,6 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/Hazmi35/jukebox.git"
   },
+  "type": "module",
   "license": "AGPL-3.0",
   "author": "Hazmi35 <contact@hzmi.xyz> (https://github.com/Hazmi35)",
   "main": "dist/main.js",
@@ -19,8 +20,8 @@
     "compile": "tsc --build tsconfig.json",
     "lint": "eslint . --ignore-path .gitignore --ext .ts",
     "lint:fix": "eslint . --ignore-path .gitignore --ext .ts --fix",
-    "start": "node dist/main",
-    "start:dev": "ts-node src/main"
+    "start": "node --experimental-specifier-resolution=node dist/main",
+    "start:dev": "node --no-warnings --experimental-specifier-resolution=node --loader ts-node/esm src/main"
   },
   "eslintConfig": {
     "extends": "@hazmi35/eslint-config/typescript",
