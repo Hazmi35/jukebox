@@ -58,4 +58,4 @@ VOLUME ["/app/cache", "/app/logs"]
 ENTRYPOINT ["/bin/sh", "/docker-entrypoint.sh"]
 
 # Start the app with node
-CMD ["node", "dist/main.js"]
+CMD ["node", "--experimental-specifier-resolution=node", "dist/main.js"]

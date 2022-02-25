@@ -5,7 +5,8 @@ import { promises as fs } from "fs";
 import path from "path";
 import prettyMilliseconds from "pretty-ms";
 import { ServerQueue } from "../structures/ServerQueue";
-import { FFmpeg, FFmpegInfo } from "prism-media";
+import prism from "prism-media";
+import { createRequire } from "module";
 
 export class Util {
     public constructor(public client: Client) {}
@@ -31,6 +32,7 @@ export class Util {
 
     public getPackagePath(pkgName?: string): string {
         if (process.platform === "win32") pkgName = pkgName?.replace("/", "\\");
+        const require = createRequire(import.meta.url);
         const mainPath = path.resolve(pkgName ? require.resolve(pkgName) : process.cwd());
         pkgName = pkgName ?? path.parse(process.cwd()).base;
         return path.resolve(mainPath.split(pkgName)[0], pkgName);
@@ -40,8 +42,8 @@ export class Util {
         return JSON.parse((await fs.readFile(path.resolve(this.getPackagePath(pkgName), "package.json"))).toString());
     }
 
-    public getFFmpegInfo(): FFmpegInfo {
-        return FFmpeg.getInfo();
+    public getFFmpegInfo(): prism.FFmpegInfo {
+        return prism.FFmpeg.getInfo();
     }
 
     public getFFmpegVersion(): string {

@@ -3,6 +3,8 @@ import { resolve } from "path";
 import { ShardingManager } from "discord.js";
 import { createLogger } from "./utils/Logger";
 import { totalShards as configTotalShards, debug, lang } from "./config";
+import { fileURLToPath } from "url";
+import { dirname } from "path/posix";
 const log = createLogger("shardingmanager", lang, "manager", undefined, debug);
 
 const totalShards: number | "auto" = configTotalShards === "auto" ? configTotalShards : Number(configTotalShards);
@@ -15,10 +17,9 @@ process.on("uncaughtException", e => {
 // @ts-expect-error Ignore next line
 if (process[Symbol.for("ts-node.register.instance")]) {
     log.warn("ts-node detected, sharding is disabled. Please only use ts-node for development purposes.");
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    require("./bot");
+    await import("./bot");
 } else {
-    const manager = new ShardingManager(resolve(__dirname, "bot.js"), {
+    const manager = new ShardingManager(resolve(dirname(fileURLToPath(import.meta.url)), "bot.js"), {
         totalShards,
         mode: "worker",
         respawn: true,
