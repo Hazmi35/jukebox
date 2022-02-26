@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { Channel, Client, Collection, Guild, Snowflake, User } from "discord.js";
+import { Channel, Client, Collection, Guild, Snowflake, User, Util as DiscordJSUtil } from "discord.js";
 import { request } from "https";
 import { promises as fs } from "fs";
 import path from "path";
@@ -7,6 +7,7 @@ import prettyMilliseconds from "pretty-ms";
 import { ServerQueue } from "../structures/ServerQueue";
 import prism from "prism-media";
 import { createRequire } from "module";
+import { decodeHTML } from "entities";
 
 export class Util {
     public constructor(public client: Client) {}
@@ -211,6 +212,20 @@ export class Util {
             }
         }
         throw new Error(errorLog.join("\n"));
+    }
+
+    public cleanTitle(title: string): string {
+        return DiscordJSUtil.escapeMarkdown(decodeHTML(title));
+    }
+
+    public getURL(string: string): URL | undefined {
+        if (!string.startsWith("http://") && !string.startsWith("https://")) return undefined;
+
+        return new URL(string);
+    }
+
+    public generateYouTubeURL(id: string, type: "playlist" | "video"): string {
+        return type === "video" ? `https://youtube.com/watch?v=${id}` : `https://youtube.com/playlist?list=${id}`;
     }
 }
 
