@@ -1,7 +1,5 @@
 import { joinVoiceChannel } from "@discordjs/voice";
-import { Message, StageChannel, TextChannel, Util, VoiceChannel, Collection, Snowflake, MessageOptions } from "discord.js";
-import { decodeHTML } from "entities";
-import { URL } from "url";
+import { Message, StageChannel, TextChannel, VoiceChannel, Collection, Snowflake, MessageOptions } from "discord.js";
 import youtubei, { LiveVideo, Playlist, Video, VideoCompact } from "youtubei";
 const { Client, MixPlaylist } = youtubei;
 import { images } from "../constants/images";
@@ -38,7 +36,7 @@ export class PlayCommand extends BaseCommand {
         }
 
         const searchString = args.join(" ");
-        const parsedUrl = PlayCommand.getURL(searchString);
+        const parsedUrl = this.client.util.getURL(searchString);
         // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
         const youtubeURL = this.youtubeHostnames.includes(parsedUrl?.hostname!) ? parsedUrl : undefined;
 
@@ -106,8 +104,8 @@ export class PlayCommand extends BaseCommand {
         const metadata = {
             id: resource.id,
             thumbnail: resource.thumbnails.best!,
-            title: PlayCommand.cleanTitle(resource.title),
-            url: PlayCommand.generateYouTubeURL(resource.id, "video")
+            title: this.client.util.cleanTitle(resource.title),
+            url: this.client.util.generateYouTubeURL(resource.id, "video")
         };
         const addedTrackMsg = (): void => {
             message.channel.send({
@@ -167,7 +165,7 @@ export class PlayCommand extends BaseCommand {
             return message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_RD_PLAYLIST_NOT_SUPPORTED())] });
         }
 
-        const playlistTitle = `**[${playlist.title}](${PlayCommand.generateYouTubeURL(playlist.id, "playlist")})**`;
+        const playlistTitle = `**[${playlist.title}](${this.client.util.generateYouTubeURL(playlist.id, "playlist")})**`;
 
         let addingPlaylistVideoMessage;
         let successMsg = this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_SUCCESS(playlistTitle);
@@ -181,7 +179,7 @@ export class PlayCommand extends BaseCommand {
 
         if (watchEndpoint) {
             const { metadata } = message.guild!.queue!.tracks.first()!;
-            const videoTitle = `**[${metadata.title}](${PlayCommand.generateYouTubeURL(metadata.id, "video")})**`;
+            const videoTitle = `**[${metadata.title}](${this.client.util.generateYouTubeURL(metadata.id, "video")})**`;
 
             addingPlaylistVideoMessage = await message.channel.send(
                 generateMessage(this.client.lang.COMMAND_PLAY_YOUTUBE_PLAYLIST_ADDING_VIDEOS_FROM(videoTitle, playlistTitle), "info")
@@ -223,7 +221,7 @@ export class PlayCommand extends BaseCommand {
         const alreadyQueued = this.playlistAlreadyQueued.get(message.guild!.id) ?? [];
         if (alreadyQueued.length !== 0) {
             let num = 1;
-            const tracks = alreadyQueued.map(t => `**${num++}.** **[${t.title}](${PlayCommand.generateYouTubeURL(t.id, "video")})**`);
+            const tracks = alreadyQueued.map(t => `**${num++}.** **[${t.title}](${this.client.util.generateYouTubeURL(t.id, "video")})**`);
             message.channel.send({
                 embeds: [createEmbed("warn", this.client.lang.COMMAND_PLAY_ALREADY_QUEUED_MSG2(alreadyQueued.length, message.client.config.prefix))]
             }).catch(e => this.client.logger.error(e));
@@ -278,7 +276,7 @@ export class PlayCommand extends BaseCommand {
                 createEmbed("info")
                     .setAuthor({ name: this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_TITLE() })
                     .setDescription(
-                        `${videos.map(video => `**${++index} -** ${PlayCommand.cleanTitle(video.title)}`).join("\n")}\n` +
+                        `${videos.map(video => `**${++index} -** ${this.client.util.cleanTitle(video.title)}`).join("\n")}\n` +
                     `*${this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_CANCEL_MSG()}*`
                     )
                     .setThumbnail(message.client.user!.displayAvatarURL())
@@ -326,21 +324,6 @@ export class PlayCommand extends BaseCommand {
                 }
                 return this.selectNextVideo(videos, message, videoIndex + 1);// Pass to the next video from search.
             });
-    }
-
-    private static cleanTitle(title: string): string {
-        return Util.escapeMarkdown(decodeHTML(title));
-    }
-
-    // eslint-disable-next-line max-lines
-    private static generateYouTubeURL(id: string, type: "playlist" | "video"): string {
-        return type === "video" ? `https://youtube.com/watch?v=${id}` : `https://youtube.com/playlist?list=${id}`;
-    }
-
-    private static getURL(string: string): URL | undefined {
-        if (!string.startsWith("http://") && !string.startsWith("https://")) return undefined;
-
-        return new URL(string);
     }
 }
 
