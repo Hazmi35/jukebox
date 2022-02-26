@@ -268,7 +268,9 @@ export class PlayCommand extends BaseCommand {
             await message.channel.send({ embeds: [createEmbed("warn", this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_NO_RESULTS())] });
             return undefined;
         }
-        if (videos.length === 1 || this.client.config.disableTrackSelection) return this.youtube.getVideo(videos[0].id);
+        if (videos.length === 1 || this.client.config.disableTrackSelection) {
+            return this.selectNextVideo(videos, message);
+        }
 
         let index = 0;
         const videosSliced = videos.slice(0, this.client.config.searchMaxResults);
@@ -314,10 +316,24 @@ export class PlayCommand extends BaseCommand {
         }
     }
 
+    private async selectNextVideo(videos: VideoCompact[], message: Message, videoIndex = 0): Promise<LiveVideo | Video | "canceled" | undefined> {
+        return this.youtube.getVideo(videos[videoIndex].id)
+            .catch(err => { // Possible private/doesn't exist/age restricted video
+                const error = err as Error;
+                this.client.logger.error(error); // log error for traceability
+                if (videos.length === videoIndex + 1) { // if last video in search result
+                    void message.channel.send({ embeds: [createEmbed("warn", this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_NO_RESULTS())] });
+                    return undefined;
+                }
+                return this.selectNextVideo(videos, message, videoIndex + 1);// Pass to the next video from search.
+            });
+    }
+
     private static cleanTitle(title: string): string {
         return Util.escapeMarkdown(decodeHTML(title));
     }
 
+    // eslint-disable-next-line max-lines
     private static generateYouTubeURL(id: string, type: "playlist" | "video"): string {
         return type === "video" ? `https://youtube.com/watch?v=${id}` : `https://youtube.com/playlist?list=${id}`;
     }
