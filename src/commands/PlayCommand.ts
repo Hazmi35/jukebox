@@ -263,7 +263,7 @@ export class PlayCommand extends BaseCommand {
     }
 
     private async createSearchPrompt(searchString: string, message: Message): Promise<LiveVideo | Video | "canceled" | undefined> {
-        const videos = await this.youtube.search(searchString, { type: "video" }) as unknown as VideoCompact[];
+        const videos = (await this.youtube.search(searchString, { type: "video" }) as unknown as VideoCompact[]).slice(0, this.client.config.searchMaxResults);
         if (videos.length === 0) {
             await message.channel.send({ embeds: [createEmbed("warn", this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_NO_RESULTS())] });
             return undefined;
@@ -273,17 +273,16 @@ export class PlayCommand extends BaseCommand {
         }
 
         let index = 0;
-        const videosSliced = videos.slice(0, this.client.config.searchMaxResults);
         const msg = await message.channel.send({
             embeds: [
                 createEmbed("info")
                     .setAuthor({ name: this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_TITLE() })
                     .setDescription(
-                        `${videosSliced.map(video => `**${++index} -** ${PlayCommand.cleanTitle(video.title)}`).join("\n")}\n` +
+                        `${videos.map(video => `**${++index} -** ${PlayCommand.cleanTitle(video.title)}`).join("\n")}\n` +
                     `*${this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_CANCEL_MSG()}*`
                     )
                     .setThumbnail(message.client.user!.displayAvatarURL())
-                    .setFooter({ text: this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_FOOTER(videosSliced.length) })
+                    .setFooter({ text: this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_RESULTS_EMBED_FOOTER(videos.length) })
             ]
         });
 
