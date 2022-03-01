@@ -52,7 +52,7 @@
     "@typescript-eslint/parser": "^5.12.1",
     "eslint": "^8.9.0",
     "ts-node": "^10.5.0",
-    "typescript": "^4.5.5"
+    "typescript": "^4.6.2"
   },
   "optionalDependencies": {
     "@discordjs/opus": "^0.7.0",
