@@ -42,7 +42,7 @@
     "strip-indent": "^3.0.0",
     "tslib": "^2.3.1",
     "tweetnacl": "^1.0.3",
-    "youtube-dl-exec": "^2.0.6",
+    "youtube-dl-exec": "^2.0.7",
     "youtubei": "^0.0.1-rc.28"
   },
   "devDependencies": {
