@@ -45,6 +45,7 @@ export interface ITrackMetadata {
     title: string;
     url: string;
     thumbnail: string;
+    duration: number;// In seconds
 }
 
 export interface IAboutCommandData {

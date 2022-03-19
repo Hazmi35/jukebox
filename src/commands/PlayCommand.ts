@@ -101,11 +101,18 @@ export class PlayCommand extends BaseCommand {
         restPlaylist = false
     ): Promise<any> {
         // NOTE: handleVideo function can only add YouTube videos, for now.
+        let duration = 0;
+
+        if (resource instanceof Video || resource instanceof VideoCompact) {
+            duration = resource.duration ?? 0;
+        }
+
         const metadata = {
             id: resource.id,
             thumbnail: resource.thumbnails.best!,
             title: this.client.util.cleanTitle(resource.title),
-            url: this.client.util.generateYouTubeURL(resource.id, "video")
+            url: this.client.util.generateYouTubeURL(resource.id, "video"),
+            duration
         };
         const addedTrackMsg = (): void => {
             message.channel.send({
@@ -325,6 +332,7 @@ export class PlayCommand extends BaseCommand {
                 return this.selectNextVideo(videos, message, videoIndex + 1);// Pass to the next video from search.
             });
     }
+    // eslint-disable-next-line max-lines
 }
 
 type handleVideoResourceType = LiveVideo | Video | VideoCompact;

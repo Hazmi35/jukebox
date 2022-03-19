@@ -18,7 +18,8 @@ export class NowPlayingCommand extends BaseCommand {
         const track = message.guild!.queue!.tracks.first()!;
         const embed = createEmbed("info",
             `${message.guild?.queue?.playing ? this.client.lang.COMMAND_NOWPLAYING_MESSAGE() : this.client.lang.COMMAND_NOWPLAYING_MESSAGE_PAUSED()} ` +
-            `**[${track.metadata.title}](${track.metadata.url})**`)
+            `**[${track.metadata.title}](${track.metadata.url})**
+            (${track.getPlaybackDuration()} / ${track.getTotalDuration()})`)
             .setThumbnail(track.metadata.thumbnail);
 
         if (message.guild?.queue?.repeatMode !== repeatMode.disable) {
