@@ -32,7 +32,7 @@
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "entities": "^4.1.1",
-    "ffmpeg-static": "^4.4.1",
+    "ffmpeg-static": "^5.0.0",
     "opusscript": "^0.0.8",
     "pino": "^7.8.0",
     "pino-pretty": "^7.5.1",
