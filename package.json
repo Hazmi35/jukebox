@@ -43,7 +43,7 @@
     "tslib": "^2.3.1",
     "tweetnacl": "^1.0.3",
     "youtube-dl-exec": "^2.0.9",
-    "youtubei": "^0.0.1-rc.28"
+    "youtubei": "^0.0.1-rc.32"
   },
   "devDependencies": {
     "@hazmi35/eslint-config": "^8.1.1",
