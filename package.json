@@ -34,7 +34,7 @@
     "entities": "^4.1.1",
     "ffmpeg-static": "^5.0.0",
     "opusscript": "^0.0.8",
-    "pino": "^7.8.0",
+    "pino": "^7.9.2",
     "pino-pretty": "^7.6.0",
     "plur": "^4.0.0",
     "pretty-ms": "^7.0.1",
