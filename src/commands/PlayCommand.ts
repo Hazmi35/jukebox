@@ -141,7 +141,7 @@ export class PlayCommand extends BaseCommand {
                 const connection = joinVoiceChannel({
                     channelId: voiceChannel.id,
                     guildId: message.guild!.id,
-                    adapterCreator: message.guild!.voiceAdapterCreator, // TODO: Fix this properly?
+                    adapterCreator: message.guild!.voiceAdapterCreator,
                     selfDeaf: true
                 });
                 message.guild!.queue.connection = connection;
@@ -305,8 +305,8 @@ export class PlayCommand extends BaseCommand {
 
             const videoIndex = parseInt(response.first()!.content);
             return await this.youtube.getVideo(videos[videoIndex - 1].id);
-        } catch {
-            msg.delete().catch(e => this.client.logger.error(e));
+        } catch (err) {
+            this.client.logger.error(err);
             message.channel.send({ embeds: [createEmbed("error", this.client.lang.COMMAND_PLAY_YOUTUBE_SEARCH_INVALID_INPUT())] })
                 .catch(e => this.client.logger.error(e));
             return undefined;
