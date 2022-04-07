@@ -37,6 +37,7 @@ export class ServerQueue {
 
         this._volume = textChannel!.client.config.defaultVolume;
 
+        // @ts-expect-error Huh? typed-emitter is messed up here...
         this.player.on("stateChange", (oldState, newState) => this.stateChange(oldState, newState));
         this.player.on("error", err => {
             this.textChannel?.send({ embeds: [createEmbed("error", this.client.lang.MUSIC_QUEUE_ERROR_WHILE_PLAYING(err.message))] })
