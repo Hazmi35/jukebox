@@ -1,4 +1,9 @@
 ![](.github/images/jukebox.png)
+# Maintenance Notice
+⚠️ Due to rapid changes on the library Jukebox used, and Discord API, this branch of Jukebox is discontinued.
+
+New Jukebox would be created in `new` branch.
+
 # Jukebox
 > Just a simple Discord music bot
 
