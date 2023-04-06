@@ -6,6 +6,7 @@ import { ServerQueue } from "./ServerQueue";
 import execa from "execa";
 import { SnowflakeUtil } from "discord.js";
 import { YtFlags } from "youtube-dl-exec";
+import { TimeUtil } from "../utils/TimeUtil";
 
 export enum TrackType {
     unknown = 0,
@@ -66,6 +67,22 @@ export class Track {
                 })
                 .catch(onError);
         });
+    }
+
+    public getPlaybackDuration(): string {
+        if (this._resource) {
+            const playbackDuration: number = this._resource.playbackDuration;
+            return TimeUtil.millisecondsToFormat(playbackDuration);
+        }
+        return "00:00:00";
+    }
+
+    public getTotalDuration(): string {
+        if (this._resource) {
+            const duration: number = this.metadata.duration;
+            return TimeUtil.secondsToFormat(duration);
+        }
+        return "00:00:00";
     }
 
     public setVolume(newVolume: number): void {

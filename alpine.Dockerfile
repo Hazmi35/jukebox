@@ -1,7 +1,7 @@
 FROM hazmi35/node:16-dev-alpine as build-stage
 
-LABEL name "Jukebox (build stage)"
-LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
+LABEL name = "Jukebox (build stage)"
+LABEL maintainer = "Hazmi35 <contact@hzmi.xyz>"
 
 # Copy package.json, lockfile and .npmrc
 COPY package*.json ./
@@ -31,8 +31,8 @@ RUN YOUTUBE_DL_FILENAME="yt-dlp" node -p "console.log((require('prism-media').FF
 # Get ready for production
 FROM hazmi35/node:16-alpine
 
-LABEL name "Jukebox"
-LABEL maintainer "Hazmi35 <contact@hzmi.xyz>"
+LABEL name = "Jukebox"
+LABEL maintainer = "Hazmi35 <contact@hzmi.xyz>"
 
 # Install python3 (required for youtube-dl/yt-dlp), ffmpeg and sudo then create cache and logs directory
 # Plus delete user "node" and create user "jukebox"
