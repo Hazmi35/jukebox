@@ -60,7 +60,7 @@
     "erlpack": "github:hzmifork/erlpack",
     "libsodium-wrappers": "^0.7.10",
     "utf-8-validate": "^5.0.9",
-    "zlib-sync": "^0.1.7"
+    "zlib-sync": "^0.1.8"
   },
   "engines": {
     "node": ">=16.6.0",
