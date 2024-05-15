@@ -59,7 +59,7 @@ jobs:
         run: if [ "${{ matrix.identifier }}" = "alpine" ]; then echo ::set-output name=name::; else echo ::set-output name=name::-${{ matrix.identifier }}; fi
 
       - name: Generate Docker image metadata
-        uses: docker/metadata-action@v3.7.0
+        uses: docker/metadata-action@v4.3.0
         id: img_meta
         with:
           flavor: |
